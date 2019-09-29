@@ -1,0 +1,49 @@
+{
+  "name": "@ngneat/transloco-keys-manager",
+  "version": "1.0.0",
+  "description": "Angular Transloco keys managing cli tool and Webpack plugin",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "transloco-keys-manager": "src/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngneat/transloco-keys-manager.git"
+  },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "i18n",
+    "transloco",
+    "translate",
+    "keys",
+    "tool",
+    "cli",
+    "webpack"
+  ],
+  "author": "Shahar Kazaz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngneat/transloco-keys-manager/issues"
+  },
+  "homepage": "https://github.com/ngneat/transloco-keys-manager#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cli-table": "^0.3.1",
+    "deep-diff": "^1.0.2",
+    "find": "^0.3.0",
+    "glob": "^7.1.4",
+    "inquirer": "^7.0.0",
+    "inquirer-directory": "^2.2.0",
+    "inquirer-file-tree-selection-prompt": "^1.0.2",
+    "ora": "^3.4.0",
+    "os-locale": "^4.0.0",
+    "pkg-dir": "^4.2.0"
+  }
+}
