@@ -2,8 +2,8 @@
 const fs = require('fs');
 const promptDirectory = require('inquirer-directory');
 const inquirer = require('inquirer');
-const { buildKeys, getScopesMap, readFile } = require('./keysBuilder');
-const { getLogger, isString, buildPathRecursively } = require('./helpers');
+const { buildKeys, getScopesMap } = require('./keys-builder');
+const { getLogger, isString, buildPathRecursively, readFile } = require('./helpers');
 const [localLang] = require('os-locale')
   .sync()
   .split('-');
@@ -101,14 +101,14 @@ function compareKeysToFiles({ keys, i18nPath, addMissing, prodMode, translationF
   for (const fileName of currentFiles) {
     /** extract the lang name from the file */
     const { scope, fileLang } = regexs.fileLang(i18nPath).exec(fileName).groups;
-    const extracted = scope ? keys[scope.slice(0, -1)] : keys.__global;
+    const extracted = scope ? keys[scope] : keys.__global;
     if (!extracted) continue;
     /** Read the current file */
     const file = readFile(fileName);
     const fileObj = JSON.parse(file);
     const diffArr = DeepDiff(fileObj, extracted);
     if (diffArr) {
-      const lang = `${scope || ''}${fileLang}`;
+      const lang = `${scope ? scope + "/" : ''}${fileLang}`;
       result[lang] = {
         missing: [],
         extra: []

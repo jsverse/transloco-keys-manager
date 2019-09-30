@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const { buildTranslationFiles } = require('./keysBuilder');
-const { findMissingKeys } = require('./keysDetective');
-const { toCamelCase, mergeDeep } = require('./helpers');
+const { buildTranslationFiles } = require('./keys-builder');
+const { findMissingKeys } = require('./keys-detective');
+const { toCamelCase, mergeDeep, readFile } = require('./helpers');
 const path = require('path');
 const ACTIONS = { EXTRACT: '--extract', FIND_MISSING: '--find-missing' };
 const [action, ...argv] = process.argv.slice(2);
-const pkgDir = require('pkg-dir');
 
 const argvMap = argv.reduce((acc, arg, i, arr) => {
   if (arg.includes('--')) {
@@ -17,17 +16,21 @@ const argvMap = argv.reduce((acc, arg, i, arr) => {
   return acc;
 }, {});
 const basePath = path.resolve(process.cwd());
-const pkgFile = pkgDir.sync();
-const packageConfig = fs.readFileSync(`${pkgFile}/package.json`, { encoding: 'UTF-8' });
-const cliConfig = mergeDeep({ extract: {}, find: {} }, JSON.parse(packageConfig)['transloco-keys-manager'] || {}, {
-  [action.replace('--', '')]: argvMap
-});
+const tkmConfig = fs.existsSync(`${basePath}/tkmConfig.json`)
+    ? JSON.parse(readFile(`${basePath}/tkmConfig.json`))
+    : {};
+const config = mergeDeep({}, tkmConfig, argvMap);
+if (Object.keys(config).length === 0) {
+  console.log(`No config found... quiting`);
+  return;
+}
+const options = { config, basePath };
 switch (action) {
   case ACTIONS.EXTRACT:
-    buildTranslationFiles({ config: cliConfig.extract, basePath });
+    buildTranslationFiles(options);
     break;
   case ACTIONS.FIND_MISSING:
-    findMissingKeys({ config: cliConfig.find, basePath });
+    findMissingKeys(options);
     break;
   default:
     console.log(`No action was passed... quiting`);

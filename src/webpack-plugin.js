@@ -1,7 +1,6 @@
 const { mergeDeep } = require('./helpers');
-const { initProcessParams, extractTemplateKeys, extractTSKeys } = require('./keysBuilder');
-const { compareKeysToFiles } = require('./keysDetective');
-const pkgDir = require('pkg-dir');
+const { initProcessParams, extractTemplateKeys, extractTSKeys } = require('./keys-builder');
+const { compareKeysToFiles } = require('./keys-detective');
 const fs = require('fs');
 
 let init = true;
@@ -12,10 +11,9 @@ class TranslocoPlugin {
     if (config) {
       managerConfig = config;
     } else {
-      const packageConfig = fs.readFileSync(`${pkgDir.sync()}/package.json`, { encoding: 'UTF-8' });
-      managerConfig = JSON.parse(packageConfig)['transloco-keys-manager'];
+      managerConfig = fs.readFileSync(`${process.cwd()}/tkmConfig.json`, { encoding: 'UTF-8' }).toJSON();
     }
-    commonConfig = initProcessParams({}, managerConfig.extract);
+    commonConfig = initProcessParams({}, managerConfig);
   }
 
   apply(compiler) {
@@ -27,10 +25,10 @@ class TranslocoPlugin {
       }
       const keysExtractions = { html: [], ts: [] };
       const files = Object.keys(comp.watchFileSystem.watcher.mtimes);
-      if (managerConfig.extract.configPath) {
-        const configChanged = files.some(file => file.includes(managerConfig.extract.configPath));
+      if (managerConfig.configPath) {
+        const configChanged = files.some(file => file.includes(managerConfig.configPath));
         if (configChanged) {
-          commonConfig = initProcessParams({}, managerConfig.extract);
+          commonConfig = initProcessParams({}, managerConfig);
         }
       }
       for (const file of files) {
@@ -51,7 +49,7 @@ class TranslocoPlugin {
           const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
           // hold a file map and deep compare?
           keysFound &&
-            compareKeysToFiles({ keys: allKeys, i18nPath: managerConfig.find.i18n, addMissing: true, prodMode: true });
+            compareKeysToFiles({ keys: allKeys, i18nPath: managerConfig.i18n, addMissing: true, prodMode: true });
           cb();
         });
       } else {

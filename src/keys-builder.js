@@ -9,7 +9,7 @@ const [localLang] = require('os-locale')
   .sync()
   .split('-');
 const messages = require('./messages').getMessages(localLang);
-const { mergeDeep, buildObjFromPath, isObject, toCamelCase, countKeysRecursively, getLogger, getPipeValue } = require('./helpers');
+const { mergeDeep, buildObjFromPath, isObject, toCamelCase, countKeysRecursively, getLogger, getPipeValue, readFile } = require('./helpers');
 const { regexs } = require('./regexs');
 
 /** ENUMS */
@@ -27,7 +27,7 @@ const queries = basePath => [
   },
   {
     type: 'directory',
-    name: 'output',
+    name: 'i18n',
     message: messages.output,
     basePath
   },
@@ -82,11 +82,6 @@ function getTemplateBasedKeys(rgxResult, templateType) {
   scopeKeys = matchedStr.match(regexs.templateKey(varName));
   read = readSearch && readSearch.groups.read;
   return { scopeKeys, read, varName };
-}
-
-/** Read a utf-8 file synchronously  */
-function readFile(file) {
-  return fs.readFileSync(file, { encoding: 'UTF-8' });
 }
 
 /** Init the values needed for extraction */
@@ -289,7 +284,6 @@ function verifyOutputDir(outputPath, folders) {
 
 /** Create/Merge the translation files */
 function createFiles({ keys, langs, outputPath }) {
-  logger.startSpinner(`${messages.creatingFiles} 🗂`);
   const scopes = Object.keys(keys);
   const langArr = langs.split(',').map(l => l.trim());
   /** Build an array of the expected translation files (based on all the scopes and langs) */
@@ -319,16 +313,20 @@ function createFiles({ keys, langs, outputPath }) {
   }
   /** If there are items in the array, that means that we need to create missing translation files */
   if (expectedFiles.length) {
+    logger.succeed(`${messages.creatingFiles} 🗂`);
     expectedFiles.forEach(fileName => {
       const { scope } = fileNameRgx.exec(fileName).groups;
+      logger.log(`  - ${scope 
+          ? fileName.substring(fileName.indexOf(scope)) 
+          : fileName.substring(fileName.lastIndexOf('/') + 1)}`
+      );
       const scopeKey = scope || '__global';
       const json = JSON.stringify(keys[scopeKey], null, 2);
       createJson(fileName, json);
     });
   }
-  logger.succeed();
   if (currentFiles.length) {
-    logger.succeed(messages.merged(currentFiles));
+    logger.succeed(`${messages.merged(currentFiles.length)} 🧙`);
   }
   logger.log(`\n              🌵 ${messages.done} 🌵`);
 }
@@ -367,13 +365,13 @@ function initProcessParams(input, config) {
   const src = input.src || config.src || defaultConfig.src;
   const langs = input.langs || config.langs || defaultConfig.langs;
   const defaultValue = input.defaultValue || config.defaultValue;
-  let output = input.output || config.output || defaultConfig.output;
-  output = output.endsWith('/') ? output.slice(0, -1) : output;
+  let i18n = input.i18n || config.i18n || defaultConfig.i18n;
+  i18n = i18n.endsWith('/') ? i18n.slice(0, -1) : i18n;
   const scopes = getScopesMap(input.configPath || config.configPath);
   let keepFlat = input.keepFlat || config.keepFlat;
   keepFlat = keepFlat ? keepFlat.split(',').map(l => l.trim()) : [];
 
-  return { src, langs, defaultValue, output, scopes, keepFlat };
+  return { src, langs, defaultValue, i18n, scopes, keepFlat };
 }
 
 /** The main function, collects the settings and starts the files build. */
@@ -382,7 +380,7 @@ function buildTranslationFiles({ config, basePath }) {
   return inquirer
     .prompt(config.interactive ? queries(basePath) : [])
     .then(input => {
-      const { src, langs, defaultValue, output, scopes, keepFlat } = initProcessParams(input, config);
+      const { src, langs, defaultValue, i18n, scopes, keepFlat } = initProcessParams(input, config);
       logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(langs.length)} 👷🏗\n`);
       logger.startSpinner(`${messages.extract} 🗝`);
       const options = { src, keepFlat, scopes, defaultValue };
@@ -390,8 +388,8 @@ function buildTranslationFiles({ config, basePath }) {
         logger.succeed(`${messages.extract} 🗝`);
         /** Count all the keys found and reduce the scopes & global keys */
         const keysFound = countKeysRecursively(keys) - Object.keys(keys).length;
-        logger.log(`${messages.keysFound(keysFound, fileCount)}`);
-        createFiles({ keys, langs, outputPath: `${process.cwd()}/${output}` });
+        logger.log('\x1b[34m%s\x1b[0m','ℹ', messages.keysFound(keysFound, fileCount));
+        createFiles({ keys, langs, outputPath: `${process.cwd()}/${i18n}` });
       });
     })
     .catch(e => logger.log(e));
@@ -401,7 +399,6 @@ module.exports = {
   buildTranslationFiles,
   buildKeys,
   getScopesMap,
-  readFile,
   initProcessParams,
   extractTemplateKeys,
   extractTSKeys

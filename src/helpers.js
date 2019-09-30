@@ -1,4 +1,5 @@
 const ora = require('ora');
+const fs = require('fs');
 
 function isString(val) {
   return typeof val === 'string';
@@ -91,6 +92,10 @@ function getLogger(prodMode) {
   return prodMode ? prodModeLogger : defaultLogger;
 }
 
+function readFile(file) {
+  return fs.readFileSync(file, { encoding: 'UTF-8' }).toString();
+}
+
 module.exports = {
   mergeDeep,
   buildObjFromPath,
@@ -101,5 +106,6 @@ module.exports = {
   countKeysRecursively,
   buildPathRecursively,
   getLogger,
-  getPipeValue
+  getPipeValue,
+  readFile
 };
