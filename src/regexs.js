@@ -2,7 +2,7 @@ const { sanitizeForRegex } = require('./helpers');
 
 const regexs = {
   structural: /<([a-zA-Z-]*)[^*>]*\*transloco=('|")\s*let\s+(?<varName>\w*)[^>]*\2>[^]+?<\/\1\s*>/g,
-  templateKey: varName => new RegExp(`${varName}(?:(?:\\[(?:'|"))|\\.)([^}|:]*)`, 'g'),
+  templateKey: varName => new RegExp(`${varName}\\((?![^,)+]*\\+)('|")(?<key>[^)"']*?)\\1`, 'g'),
   template: /<ng-template[^>]*transloco[^>]*>[^]+?<\/ng-template>/g,
   directive: /\stransloco\s*=\s*("|')(?<key>[^]+?)\1/g,
   directiveTernary: /\s\[transloco\]\s*=\s*("|')[^"'?]*\?(?<key>[^]+?)\1/g,

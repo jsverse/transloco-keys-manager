@@ -2,10 +2,10 @@
   {{ t('1') }} {{t('2')}} {{t(dontgrab1)}}
 </ng-template>
 <ng-template transloco let-translate>
-  {{ translate('3') }} {{ translate('4')}} {{ translate(dontgrab2) }}
+  {{ translate('3') }} {{ translate('4')}} {{ translate(dontgrab7 + "key") }} {{ translate("key" + dontgrab8) }}
 </ng-template>
 <ng-container *transloco="let t">
-  {{ t('5') }} {{ t('6') }} {{ t("7") }} {{ t(dontgrab3)}}
+  {{ t('5') }} {{ t('6') }} {{ t("7") }} {{ t(dontgrab3)}} {{ t(dontgrab3)}}
 </ng-container>
 <ng-container *transloco="let translate">
   {{ translate("8") }} {{ translate('9') }} {{ translate("10") }} {{ translate(dontgrab4) }}

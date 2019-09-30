@@ -70,7 +70,7 @@ let logger;
 
 /** Get the keys from an ngTemplate based html code. */
 function getTemplateBasedKeys(rgxResult, templateType) {
-  let scopeKeys, read, readSearch, varName;
+  let scopeKeys = [], read, readSearch, varName;
   const [matchedStr] = rgxResult;
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     varName = rgxResult.groups.varName;
@@ -79,7 +79,12 @@ function getTemplateBasedKeys(rgxResult, templateType) {
     varName = matchedStr.match(/let-(?<varName>\w*)/).groups.varName;
     readSearch = matchedStr.match(/(?:\[?read\]?=\s*(?:'|"){1,2}(?<read>[a-zA-Z-0-9-_]*)(?:'|"){1,2})/);
   }
-  scopeKeys = matchedStr.match(regexs.templateKey(varName));
+  const keyRegex = regexs.templateKey(varName);
+  let keySearch = keyRegex.exec(matchedStr);
+  while (keySearch) {
+    scopeKeys.push(keySearch.groups.key);
+    keySearch = keyRegex.exec(matchedStr);
+  }
   read = readSearch && readSearch.groups.read;
   return { scopeKeys, read, varName };
 }
