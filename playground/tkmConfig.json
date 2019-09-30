@@ -1,0 +1,7 @@
+{
+  "src": "src",
+  "langs": "en",
+  "configPath": "src/app/app.module.ts",
+  "i18n": "src/assets/i18n",
+  "addMissing": false
+}

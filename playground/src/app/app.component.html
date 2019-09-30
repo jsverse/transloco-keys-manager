@@ -1,0 +1,59 @@
+<ng-template let-t transloco>
+  {{ t('1') }} {{t('2')}} {{t(dontgrab1)}}
+</ng-template>
+<ng-template transloco let-translate>
+  {{ translate('3') }} {{ translate('4')}} {{ translate(dontgrab2) }}
+</ng-template>
+<ng-container *transloco="let t">
+  {{ t('5') }} {{ t('6') }} {{ t("7") }} {{ t(dontgrab3)}}
+</ng-container>
+<ng-container *transloco="let translate">
+  {{ translate("8") }} {{ translate('9') }} {{ translate("10") }} {{ translate(dontgrab4) }}
+</ng-container>
+<span transloco="11"></span>
+<div transloco="12" [translocoParams]="{value: 'hello'}"></div>
+<span>{{ condition ? '13' : '14' | transloco}}</span>
+<span>{{ condition ? "15" : '16' | transloco }}</span>
+<span>{{ '17' | transloco: { value: 'dynamic'} }}</span>
+<span [hello]="'18' | transloco"></span>
+<span [hello]='"19" | transloco'></span>
+<span [attr.hello]=" dynamic ? '20' : '21' | transloco"></span>
+<span [hello]=" dontgrab6 | transloco"></span>
+<span title="{{ '22' | transloco }}"></span>
+<span title='{{ "23" | transloco }}'></span>
+<ng-container *transloco="let t; read: 'admin'">
+  {{t('1')}} // {admin: {1: ''}}
+</ng-container>
+<span [hello]='"49" | transloco | another'></span>
+<ng-container *transloco="let t read: 'admin'">
+  {{t("2")}} // {admin: {2: ''}} {{t("3.4")}} // {admin: {23: {24: ''}}}
+</ng-container>
+<ng-template let-t transloco read="admin">
+  {{ t("5") }}
+</ng-template>
+<ng-template let-t transloco [read]="'admin'">
+  {{ t('6') }}
+</ng-template>
+<span>{{ '24.25.26' | transloco}}</span>
+<span transloco="27.28"></span>
+<div transloco="29.30.31" [translocoParams]="{value: 'hello'}"></div>
+<div [transloco]="ternary ? '45' : '46'"></div>
+<div [transloco]="'dontgrabme' ? 'stam' : 'stam_2'"></div>
+<ng-container *transloco="let t">
+  {{ condition ? t('47') : t("48") }}
+</ng-container>
+<ng-container *transloco="let t; read: 'admin'">
+  {{ condition ? t("7") : t('8') }}
+</ng-container>
+<ng-template let-t transloco>
+  {{ t('todos.1') }}
+</ng-template>
+<ng-template transloco let-test>
+  {{ test("todos.2") }}
+</ng-template>
+<ng-template let-t transloco>
+  {{ t('mf.1') }}
+</ng-template>
+<ng-template let-t transloco read="mf">
+  {{ t("2") }}
+</ng-template>
