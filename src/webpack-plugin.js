@@ -1,5 +1,5 @@
 const { mergeDeep } = require('./helpers');
-const { initProcessParams, extractTemplateKeys, extractTSKeys } = require('./keys-builder');
+const { initProcessParams, extractTemplateKeys, extractTSKeys } = require('./builder/public_api');
 const { compareKeysToFiles } = require('./keys-detective');
 const fs = require('fs');
 
@@ -58,4 +58,4 @@ class TranslocoPlugin {
     });
   }
 }
-module.exports = TranslocoPlugin;
+module.exports = { TranslocoPlugin };

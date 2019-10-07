@@ -2,7 +2,7 @@
   "name": "@ngneat/transloco-keys-manager",
   "version": "1.0.0",
   "description": "Angular Transloco keys managing cli tool and Webpack plugin",
-  "main": "src/index.js",
+  "main": "public_api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -35,6 +35,7 @@
   "homepage": "https://github.com/ngneat/transloco-keys-manager#readme",
   "dependencies": {
     "chalk": "^2.4.2",
+    "cheerio": "^1.0.0-rc.3",
     "cli-table": "^0.3.1",
     "deep-diff": "^1.0.2",
     "find": "^0.3.0",

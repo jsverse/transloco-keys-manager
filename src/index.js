@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const { buildTranslationFiles } = require('./keys-builder');
+const { buildTranslationFiles } = require('./builder/public_api');
 const { findMissingKeys } = require('./keys-detective');
 const { toCamelCase, mergeDeep, readFile } = require('./helpers');
 const path = require('path');
@@ -16,8 +16,9 @@ const argvMap = argv.reduce((acc, arg, i, arr) => {
   return acc;
 }, {});
 const basePath = path.resolve(process.cwd());
-const tkmConfig = fs.existsSync(`${basePath}/tkmConfig.json`)
-    ? JSON.parse(readFile(`${basePath}/tkmConfig.json`))
+const configPath = `${basePath}/${argvMap.config || 'transloco.json'}`;
+const tkmConfig = fs.existsSync(configPath)
+    ? JSON.parse(readFile(configPath))
     : {};
 const config = mergeDeep({}, tkmConfig, argvMap);
 if (Object.keys(config).length === 0) {

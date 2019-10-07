@@ -8,9 +8,10 @@ const glob = require('glob');
 const [localLang] = require('os-locale')
   .sync()
   .split('-');
-const messages = require('./messages').getMessages(localLang);
-const { mergeDeep, buildObjFromPath, isObject, toCamelCase, countKeysRecursively, getLogger, getPipeValue, readFile } = require('./helpers');
-const { regexs } = require('./regexs');
+const cheerio = require('cheerio');
+const messages = require('../messages').getMessages(localLang);
+const { mergeDeep, buildObjFromPath, isObject, toCamelCase, countKeysRecursively, getLogger, getPipeValue, readFile, defaultConfig } = require('../helpers');
+const { regexs } = require('../regexs');
 
 /** ENUMS */
 const TEMPLATE_TYPE = { STRUCTURAL: 0, NG_TEMPLATE: 1 };
@@ -61,31 +62,31 @@ const queries = basePath => [
     message: messages.defaultValue
   }
 ];
-const defaultConfig = {
-  src: 'src',
-  output: 'assets/i18n',
-  langs: 'en'
-};
 let logger;
 
 /** Get the keys from an ngTemplate based html code. */
-function getTemplateBasedKeys(rgxResult, templateType) {
+function getTemplateBasedKeys(element, templateType, matchedStr) {
   let scopeKeys = [], read, readSearch, varName;
-  const [matchedStr] = rgxResult;
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
-    varName = rgxResult.groups.varName;
-    readSearch = matchedStr.match(/read:\s*(?:'|")(?<read>[a-zA-Z-0-9-_]*)(?:'|")/);
+    const data = element.attribs.__transloco;
+    readSearch = data.match(/read:\s*('|")(?<read>[^"']*)\1/);
+    read = readSearch && readSearch.groups.read;
+    varName = data.match(/let\s+(?<varName>\w*)/).groups.varName;
   } else {
-    varName = matchedStr.match(/let-(?<varName>\w*)/).groups.varName;
-    readSearch = matchedStr.match(/(?:\[?read\]?=\s*(?:'|"){1,2}(?<read>[a-zA-Z-0-9-_]*)(?:'|"){1,2})/);
+    let attrs = Object.keys(element.attribs);
+    varName = (attrs.find(attr => attr.includes('let-')) || '').replace('let-', '');
+    readSearch = attrs.find(attr => attr === 'translocoRead' || attr === '[translocoRead]');
+    read = readSearch && element.attribs[readSearch].replace(/'|"/g, '');
   }
-  const keyRegex = regexs.templateKey(varName);
-  let keySearch = keyRegex.exec(matchedStr);
-  while (keySearch) {
-    scopeKeys.push(keySearch.groups.key);
-    keySearch = keyRegex.exec(matchedStr);
+  if (varName) {
+    const keyRegex = regexs.templateKey(varName);
+    let keySearch = keyRegex.exec(matchedStr);
+    while (keySearch) {
+      scopeKeys.push(keySearch.groups.key);
+      keySearch = keyRegex.exec(matchedStr);
+    }
   }
-  read = readSearch && readSearch.groups.read;
+
   return { scopeKeys, read, varName };
 }
 
@@ -145,49 +146,62 @@ function extractTSKeys({ src, keepFlat = [], scopes, defaultValue, files }) {
  * 2. If this is a global key, enter to the reserved '__global' key in the map.
  */
 function insertValueToKeys({ inner, keys, scopes, key, defaultValue }) {
-  const keyValue = defaultValue || `${messages.missingValue} '${inner.length ? `${key}.${inner.join('.')}` : key}'`;
-  const value = inner.length ? buildObjFromPath(inner, keyValue) : defaultValue || keyValue;
+  const fullKey = inner.length ? `${key}.${inner.join('.')}` : key;
+  const keyValue = defaultValue || `${messages.missingValue} '${fullKey}'`;
   const scope = scopes.keysMap[key];
   if (scope) {
     if (!keys[scope]) {
       keys[scope] = {};
     }
-    keys[scope] = keys[scope] && isObject(value) ? mergeDeep(keys[scope], value) : value;
+    keys[scope][inner.join('.')] = keyValue;
   } else {
-    keys.__global[key] = keys.__global[key] && isObject(value) ? mergeDeep(keys.__global[key], value) : value;
+    keys.__global[fullKey] = keyValue;
   }
 }
 
 function performTemplateExtraction({ file, scopes, defaultValue, keepFlat, keys }) {
   const str = readFile(file);
   if (!str.includes('transloco')) return keys;
-  let result;
+  const hasNgTemplate = str.match(/<ng-template[^>]*transloco[^>]*>/);
+  const hasStructural = str.includes('*transloco');
+  let containers = [];
+  if (hasNgTemplate) containers.push('ng-template[transloco]');
+  if (hasStructural) containers.push('[__transloco]');
   /** structural directive and ng-template */
-  [regexs.structural, regexs.template].forEach((rgx, index) => {
-    result = rgx.exec(str);
-    while (result) {
-      const { scopeKeys, read, varName } = getTemplateBasedKeys(result, index);
-      scopeKeys &&
+  if (containers.length > 0) {
+    const fileTemplate = hasStructural ? str.replace(/\*transloco/g, '__transloco') : str;
+    const $ = cheerio.load(fileTemplate, {decodeEntities: false});
+    containers.forEach((query) => {
+      $(query).each((_, element) => {
+        const containerType = !!element.attribs.__transloco ? TEMPLATE_TYPE.STRUCTURAL : TEMPLATE_TYPE.NG_TEMPLATE;
+        const { scopeKeys, read, varName } = getTemplateBasedKeys(element, containerType, $(element).html());
+        scopeKeys &&
         scopeKeys.forEach(rawKey => {
           /** The raw key may contain square braces we need to align it to '.' */
           let [key, ...inner] = rawKey
-            .trim()
-            .replace(/\[/g, '.')
-            .replace(/'|"|\]/g, '')
-            .replace(`${varName}.`, '')
-            .split('.');
+              .trim()
+              .replace(/\[/g, '.')
+              .replace(/'|"|\]/g, '')
+              .replace(`${varName}.`, '')
+              .split('.');
           /** Set the read as the first key */
           if (read) {
             inner.unshift(key);
-            key = read;
+            const [scope, ...readRest] = read.split('.');
+            if (scopes.keysMap[scope]) {
+              key = scope;
+              readRest.length && inner.unshift(...readRest);
+            } else {
+              key = read;
+            }
           }
           insertValueToKeys({ inner, scopes, keys, key, defaultValue });
         });
-      result = rgx.exec(str);
-    }
-  });
+      });
+    });
+  }
   /** directive & pipe */
-  [regexs.directive, regexs.directiveTernary, regexs.pipe].forEach(rgx => {
+  [regexs.directive(), regexs.directiveTernary(), regexs.pipe()].forEach(rgx => {
     keys = iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue });
   });
 
@@ -220,18 +234,18 @@ function extractTemplateKeys({ src, keepFlat = [], scopes, defaultValue, files }
 }
 
 function handleScope({scopeStr, key, inner, scopes}) {
-  let scope;
-  if (scopeStr.includes('|')) {
-    const pipeValue = getPipeValue(scopeStr, 'scoped');
-    if (pipeValue[0]) {
-      scope = pipeValue[1];
-    }
-  } else if (scopeStr.includes('/')) {
-    const splitted = scopeStr.split('/');
-    splitted.pop();
-    scope = splitted.join('/');
-  }
+  let scope = scopes.scopeMap[scopeStr];
   if (scope) {
+    inner.unshift(key);
+    key = scope;
+    return [key, inner];
+  }
+
+  const splitted = scopeStr.split('/');
+  splitted.pop();
+  scope = splitted.join('/');
+
+  if (scope && scopes.scopeMap[scope]) {
     inner.unshift(key);
     key = scopes.scopeMap[scope];
   }
@@ -247,7 +261,7 @@ function iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue }) {
   while (result) {
     /** support ternary operator */
     const {backtickKey, backtickScope, scope} = result.groups;
-    const regexKeys = (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
+    const regexKeys = result.groups.key2 ? [result.groups.key, result.groups.key2] : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
     for (const regexKey of regexKeys) {
       let [key, ...inner] = regexKey.split('.');
       if (keepFlat.includes(key)) {

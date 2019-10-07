@@ -2,8 +2,8 @@
 const fs = require('fs');
 const promptDirectory = require('inquirer-directory');
 const inquirer = require('inquirer');
-const { buildKeys, getScopesMap } = require('./keys-builder');
-const { getLogger, isString, buildPathRecursively, readFile } = require('./helpers');
+const { buildKeys, getScopesMap } = require('./builder/public_api');
+const { getLogger, isString, buildPathRecursively, readFile, defaultConfig } = require('./helpers');
 const [localLang] = require('os-locale')
   .sync()
   .split('-');
@@ -55,11 +55,6 @@ const queries = basePath => [
     when: ({ addMissing }) => addMissing
   }
 ];
-const defaultConfig = {
-  src: 'src',
-  i18n: 'assets/i18n',
-  addMissing: true
-};
 
 let logger;
 let _prodMode = false;

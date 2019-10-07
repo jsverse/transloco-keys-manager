@@ -58,7 +58,7 @@ function toCamelCase(str) {
 
 function countKeysRecursively(obj) {
   return Object.keys(obj).reduce(
-    (acc, curr) => (isObject(obj[curr]) ? ++acc + countKeysRecursively(obj[curr]) : ++acc),
+    (acc, curr) => (isObject(obj[curr]) ? acc + countKeysRecursively(obj[curr]) : ++acc),
     0
   );
 }
@@ -96,6 +96,13 @@ function readFile(file) {
   return fs.readFileSync(file, { encoding: 'UTF-8' }).toString();
 }
 
+const defaultConfig = {
+  src: 'src',
+  langs: 'en',
+  i18n: 'assets/i18n',
+  addMissing: true
+};
+
 module.exports = {
   mergeDeep,
   buildObjFromPath,
@@ -107,5 +114,6 @@ module.exports = {
   buildPathRecursively,
   getLogger,
   getPipeValue,
-  readFile
+  readFile,
+  defaultConfig
 };
