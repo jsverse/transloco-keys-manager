@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const promptDirectory = require('inquirer-directory');
-const inquirer = require('inquirer');
 const { buildKeys, getScopesMap } = require('./builder/public_api');
 const { getLogger, isString, buildPathRecursively, readFile, defaultConfig } = require('./helpers');
 const [localLang] = require('os-locale')
@@ -14,47 +12,6 @@ const { regexs } = require('./regexs');
 const { DeepDiff } = require('deep-diff');
 const { applyChange } = require('deep-diff');
 const Table = require('cli-table');
-
-inquirer.registerPrompt('directory', promptDirectory);
-
-const queries = basePath => [
-  {
-    type: 'directory',
-    name: 'src',
-    message: messages.src,
-    basePath
-  },
-  {
-    type: 'directory',
-    name: 'i18n',
-    message: messages.translationsLocation,
-    basePath
-  },
-  {
-    type: 'confirm',
-    default: false,
-    name: 'hasScope',
-    message: messages.hasScope
-  },
-  {
-    type: 'file-tree-selection',
-    name: 'configPath',
-    messages: messages.config
-  },
-  {
-    type: 'confirm',
-    default: true,
-    name: 'addMissing',
-    message: messages.addMissing
-  },
-  {
-    type: 'input',
-    name: 'defaultValue',
-    default: '""',
-    message: messages.defaultValue,
-    when: ({ addMissing }) => addMissing
-  }
-];
 
 let logger;
 let _prodMode = false;
@@ -168,37 +125,30 @@ function compareKeysToFiles({ keys, i18nPath, addMissing, prodMode, translationF
 }
 
 /** Merge cli input, argv and defaults */
-function initProcessParams(input, config) {
-  const src = input.src || config.src || defaultConfig.src;
-  const scopes = getScopesMap(input.configPath || config.configPath);
-  const i18nPath = input.i18n || config.i18n || defaultConfig.i18n;
-  let addMissing = input.addMissing;
-  if (addMissing === undefined) addMissing = config.addMissing;
+function initProcessParams(config) {
+  const src = config.src || defaultConfig.src;
+  const scopes = getScopesMap(config.configPath);
+  const i18nPath = config.i18n || defaultConfig.i18n;
+  const defaultValue = config.defaultValue;
+  let addMissing = config.addMissing;
   if (addMissing === undefined) addMissing = defaultConfig.addMissing;
-
-  const defaultValue = input.defaultValue || config.defaultValue;
 
   return { src, i18nPath, defaultValue, addMissing, scopes };
 }
 
-function findMissingKeys({ config, basePath }) {
+function findMissingKeys(config) {
   _prodMode = config.prodMode;
   logger = getLogger(_prodMode);
-  return inquirer
-    .prompt(config.interactive ? queries(basePath) : [])
-    .then(input => {
-      const { src, i18nPath, defaultValue, addMissing, scopes } = initProcessParams(input, config);
-      const translationFiles = verifyTranslationsDir(i18nPath);
-      if (!translationFiles) return;
-      logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
-      logger.startSpinner(`${messages.extract} `);
-      const options = { src, scopes, defaultValue, file: config.file };
-      return buildKeys(options).then(({ keys }) => {
-        logger.succeed(`${messages.extract} 🗝`);
-        compareKeysToFiles({ keys, i18nPath: `${process.cwd()}/${i18nPath}`, addMissing, translationFiles });
-      });
-    })
-    .catch(e => logger.log(e));
+  const { src, i18nPath, defaultValue, addMissing, scopes } = initProcessParams(config);
+  const translationFiles = verifyTranslationsDir(i18nPath);
+  if (!translationFiles) return;
+  logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
+  logger.startSpinner(`${messages.extract} `);
+  const options = { src, scopes, defaultValue, file: config.file };
+  return buildKeys(options).then(({ keys }) => {
+    logger.succeed(`${messages.extract} 🗝`);
+    compareKeysToFiles({ keys, i18nPath: `${process.cwd()}/${i18nPath}`, addMissing, translationFiles });
+  });
 }
 
 module.exports = { findMissingKeys, compareKeysToFiles };

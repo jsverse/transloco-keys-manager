@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const promptDirectory = require('inquirer-directory');
-const inquirerFileTreeSelection = require('inquirer-file-tree-selection-prompt');
-const inquirer = require('inquirer');
 const find = require('find');
 const glob = require('glob');
 const [localLang] = require('os-locale')
@@ -10,58 +7,11 @@ const [localLang] = require('os-locale')
   .split('-');
 const cheerio = require('cheerio');
 const messages = require('../messages').getMessages(localLang);
-const { mergeDeep, buildObjFromPath, isObject, toCamelCase, countKeysRecursively, getLogger, getPipeValue, readFile, defaultConfig } = require('../helpers');
+const { mergeDeep, toCamelCase, countKeysRecursively, getLogger, readFile, defaultConfig } = require('../helpers');
 const { regexs } = require('../regexs');
 
 /** ENUMS */
 const TEMPLATE_TYPE = { STRUCTURAL: 0, NG_TEMPLATE: 1 };
-
-inquirer.registerPrompt('directory', promptDirectory);
-inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
-
-const queries = basePath => [
-  {
-    type: 'directory',
-    name: 'src',
-    message: messages.src,
-    basePath
-  },
-  {
-    type: 'directory',
-    name: 'i18n',
-    message: messages.output,
-    basePath
-  },
-  {
-    type: 'confirm',
-    default: false,
-    name: 'hasScope',
-    message: messages.hasScope
-  },
-  {
-    type: 'file-tree-selection',
-    name: 'configPath',
-    messages: messages.config,
-    when: ({ hasScope }) => hasScope
-  },
-  {
-    type: 'input',
-    default: `en${localLang !== 'en' ? ', ' + localLang : ''}`,
-    name: 'langs',
-    message: messages.langs
-  },
-  {
-    type: 'input',
-    name: 'keepFlat',
-    message: messages.keepFlat
-  },
-  {
-    type: 'input',
-    name: 'defaultValue',
-    default: '""',
-    message: messages.defaultValue
-  }
-];
 let logger;
 
 /** Get the keys from an ngTemplate based html code. */
@@ -94,19 +44,19 @@ function getTemplateBasedKeys(element, templateType, matchedStr) {
 function initExtraction(src) {
   return { srcPath: `${process.cwd()}/${src}`, keys: { __global: {} }, fileCount: 0 };
 }
-function performTSExtraction({ file, scopes, defaultValue, keepFlat, keys }) {
+function performTSExtraction({ file, scopes, defaultValue, keys }) {
   const str = readFile(file);
   if (!str.includes('@ngneat/transloco')) return keys;
   const service = regexs.serviceInjection.exec(str);
   if (service) {
     /** service translationCalls regex */
     const rgx = regexs.translationCalls(service.groups.serviceName);
-    keys = iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue });
+    keys = iterateRegex({ rgx, keys, str, scopes, defaultValue });
   } else {
     const directTranslate = regexs.directImport.exec(str);
     if (directTranslate) {
       const rgx = regexs.translationCalls();
-      keys = iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue });
+      keys = iterateRegex({ rgx, keys, str, scopes, defaultValue });
     }
   }
 
@@ -116,13 +66,13 @@ function performTSExtraction({ file, scopes, defaultValue, keepFlat, keys }) {
 /**
  * Extract all the keys that exists in the ts files. (no dynamic)
  */
-function extractTSKeys({ src, keepFlat = [], scopes, defaultValue, files }) {
+function extractTSKeys({ src, scopes, defaultValue, files }) {
   let { srcPath, keys, fileCount } = initExtraction(src);
   return new Promise(resolve => {
     if (files) {
       for (const file of files) {
         fileCount++;
-        keys = performTSExtraction({ file, defaultValue, keepFlat, scopes, keys });
+        keys = performTSExtraction({ file, defaultValue, scopes, keys });
       }
       resolve({ keys, fileCount });
     } else {
@@ -131,7 +81,7 @@ function extractTSKeys({ src, keepFlat = [], scopes, defaultValue, files }) {
           /** Filter out spec files */
           if (file.endsWith('.spec.ts')) return;
           fileCount++;
-          keys = performTSExtraction({ file, defaultValue, keepFlat, scopes, keys });
+          keys = performTSExtraction({ file, defaultValue, scopes, keys });
         })
         .end(() => {
           resolve({ keys, fileCount });
@@ -159,7 +109,7 @@ function insertValueToKeys({ inner, keys, scopes, key, defaultValue }) {
   }
 }
 
-function performTemplateExtraction({ file, scopes, defaultValue, keepFlat, keys }) {
+function performTemplateExtraction({ file, scopes, defaultValue, keys }) {
   const str = readFile(file);
   if (!str.includes('transloco')) return keys;
   const hasNgTemplate = str.match(/<ng-template[^>]*transloco[^>]*>/);
@@ -202,7 +152,7 @@ function performTemplateExtraction({ file, scopes, defaultValue, keepFlat, keys 
   }
   /** directive & pipe */
   [regexs.directive(), regexs.directiveTernary(), regexs.pipe()].forEach(rgx => {
-    keys = iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue });
+    keys = iterateRegex({ rgx, keys, str, scopes, defaultValue });
   });
 
   return keys;
@@ -211,20 +161,20 @@ function performTemplateExtraction({ file, scopes, defaultValue, keepFlat, keys 
 /**
  * Extract all the keys that exists in the template files.
  */
-function extractTemplateKeys({ src, keepFlat = [], scopes, defaultValue, files }) {
+function extractTemplateKeys({ src, scopes, defaultValue, files }) {
   let { srcPath, keys, fileCount } = initExtraction(src);
   return new Promise(resolve => {
     if (files) {
       for (const file of files) {
         fileCount++;
-        keys = performTemplateExtraction({ file, defaultValue, keepFlat, scopes, keys });
+        keys = performTemplateExtraction({ file, defaultValue, scopes, keys });
       }
       resolve({ keys, fileCount });
     } else {
       find
         .eachfile(/\.html$/, srcPath, file => {
           fileCount++;
-          keys = performTemplateExtraction({ file, defaultValue, keepFlat, scopes, keys });
+          keys = performTemplateExtraction({ file, defaultValue, scopes, keys });
         })
         .end(() => {
           resolve({ keys, fileCount });
@@ -256,7 +206,7 @@ function handleScope({scopeStr, key, inner, scopes}) {
 /**
  * Iterates over a given regex until there a no results and adds all the keys found to the map.
  */
-function iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue }) {
+function iterateRegex({ rgx, keys, str, scopes, defaultValue }) {
   let result = rgx.exec(str);
   while (result) {
     /** support ternary operator */
@@ -264,15 +214,11 @@ function iterateRegex({ rgx, keys, str, keepFlat, scopes, defaultValue }) {
     const regexKeys = result.groups.key2 ? [result.groups.key, result.groups.key2] : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
     for (const regexKey of regexKeys) {
       let [key, ...inner] = regexKey.split('.');
-      if (keepFlat.includes(key)) {
-        keys[regexKey] = defaultValue;
-      } else {
-        const scopeStr = scope || backtickScope;
-        if (scopeStr) {
-          [key, inner] = handleScope({scopeStr, key, inner, scopes});
-        }
-        insertValueToKeys({ inner, scopes, keys, key, defaultValue });
+      const scopeStr = scope || backtickScope;
+      if (scopeStr) {
+        [key, inner] = handleScope({scopeStr, key, inner, scopes});
       }
+      insertValueToKeys({ inner, scopes, keys, key, defaultValue });
     }
     result = rgx.exec(str);
   }
@@ -380,38 +326,31 @@ function getScopesMap(configPath) {
 }
 
 /** Merge cli input, argv and defaults */
-function initProcessParams(input, config) {
-  const src = input.src || config.src || defaultConfig.src;
-  const langs = input.langs || config.langs || defaultConfig.langs;
-  const defaultValue = input.defaultValue || config.defaultValue;
-  let i18n = input.i18n || config.i18n || defaultConfig.i18n;
+function initProcessParams(config) {
+  const src = config.src || defaultConfig.src;
+  const langs = config.langs || defaultConfig.langs;
+  const defaultValue = config.defaultValue;
+  let i18n = config.i18n || defaultConfig.i18n;
   i18n = i18n.endsWith('/') ? i18n.slice(0, -1) : i18n;
-  const scopes = getScopesMap(input.configPath || config.configPath);
-  let keepFlat = input.keepFlat || config.keepFlat;
-  keepFlat = keepFlat ? keepFlat.split(',').map(l => l.trim()) : [];
+  const scopes = getScopesMap(config.configPath);
 
-  return { src, langs, defaultValue, i18n, scopes, keepFlat };
+  return { src, langs, defaultValue, i18n, scopes };
 }
 
 /** The main function, collects the settings and starts the files build. */
-function buildTranslationFiles({ config, basePath }) {
+function buildTranslationFiles(config) {
   logger = getLogger(config.prodMode);
-  return inquirer
-    .prompt(config.interactive ? queries(basePath) : [])
-    .then(input => {
-      const { src, langs, defaultValue, i18n, scopes, keepFlat } = initProcessParams(input, config);
-      logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(langs.length)} 👷🏗\n`);
-      logger.startSpinner(`${messages.extract} 🗝`);
-      const options = { src, keepFlat, scopes, defaultValue };
-      return buildKeys(options).then(({ keys, fileCount }) => {
-        logger.succeed(`${messages.extract} 🗝`);
-        /** Count all the keys found and reduce the scopes & global keys */
-        const keysFound = countKeysRecursively(keys) - Object.keys(keys).length;
-        logger.log('\x1b[34m%s\x1b[0m','ℹ', messages.keysFound(keysFound, fileCount));
-        createFiles({ keys, langs, outputPath: `${process.cwd()}/${i18n}` });
-      });
-    })
-    .catch(e => logger.log(e));
+  const { src, langs, defaultValue, i18n, scopes } = initProcessParams(input, config);
+  logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(langs.length)} 👷🏗\n`);
+  logger.startSpinner(`${messages.extract} 🗝`);
+  const options = { src, scopes, defaultValue };
+  return buildKeys(options).then(({ keys, fileCount }) => {
+    logger.succeed(`${messages.extract} 🗝`);
+    /** Count all the keys found and reduce the scopes & global keys */
+    const keysFound = countKeysRecursively(keys) - Object.keys(keys).length;
+    logger.log('\x1b[34m%s\x1b[0m','ℹ', messages.keysFound(keysFound, fileCount));
+    createFiles({ keys, langs, outputPath: `${process.cwd()}/${i18n}` });
+  });
 }
 
 module.exports = {
