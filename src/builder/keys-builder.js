@@ -7,7 +7,7 @@ const [localLang] = require('os-locale')
   .split('-');
 const cheerio = require('cheerio');
 const messages = require('../messages').getMessages(localLang);
-const { mergeDeep, toCamelCase, countKeysRecursively, getLogger, readFile, defaultConfig } = require('../helpers');
+const { mergeDeep, countKeysRecursively, getLogger, readFile, initParams } = require('../helpers');
 const { regexs } = require('../regexs');
 
 /** ENUMS */
@@ -25,7 +25,7 @@ function getTemplateBasedKeys(element, templateType, matchedStr) {
   } else {
     let attrs = Object.keys(element.attribs);
     varName = (attrs.find(attr => attr.includes('let-')) || '').replace('let-', '');
-    readSearch = attrs.find(attr => attr === 'translocoRead' || attr === '[translocoRead]');
+    readSearch = attrs.find(attr => attr === 'translocoread' || attr === '[translocoread]');
     read = readSearch && element.attribs[readSearch].replace(/'|"/g, '');
   }
   if (varName) {
@@ -247,8 +247,27 @@ function verifyOutputDir(outputPath, folders) {
   }
 }
 
+function mergeTranslationFiles({outputPath, expectedFiles, keys, fileNameRgx}) {
+  /** An array of the existing translation files in the output dir */
+  const currentFiles = glob.sync(`${outputPath}/**/*.json`);
+  if (!currentFiles.length) return expectedFiles;
+  /** iterate over the json files and merge the keys */
+  for (const fileName of currentFiles) {
+    /** extract the lang name from the file */
+    const { scope } = fileNameRgx.exec(fileName).groups;
+    /** remove this file from the expectedFiles array since the file already exists */
+    expectedFiles = expectedFiles.filter(f => f !== fileName);
+    /** Read and write the merged json */
+    const file = readFile(fileName);
+    const merged = mergeDeep({}, scope ? keys[scope] : keys.__global, JSON.parse(file));
+    fs.writeFileSync(fileName, JSON.stringify(merged, null, 2), { encoding: 'UTF-8' });
+  }
+  logger.succeed(`${messages.merged(currentFiles.length)} 🧙`);
+  return expectedFiles;
+}
+
 /** Create/Merge the translation files */
-function createFiles({ keys, langs, outputPath }) {
+function createFiles({ keys, langs, outputPath, replaceFiles }) {
   const scopes = Object.keys(keys);
   const langArr = langs.split(',').map(l => l.trim());
   /** Build an array of the expected translation files (based on all the scopes and langs) */
@@ -259,23 +278,15 @@ function createFiles({ keys, langs, outputPath }) {
     });
     return files;
   }, []);
-  verifyOutputDir(outputPath, scopes);
-  /** An array of the existing translation files in the output dir */
-  const currentFiles = glob.sync(`${outputPath}/**/*.json`);
   const fileNameRgx = regexs.fileLang(outputPath);
-  /** iterate over the json files and merge the keys */
-  if (currentFiles.length) {
-    for (const fileName of currentFiles) {
-      /** extract the lang name from the file */
-      const { scope } = fileNameRgx.exec(fileName).groups;
-      /** remove this file from the expectedFiles array since the file already exists */
-      expectedFiles = expectedFiles.filter(f => f !== fileName);
-      /** Read and write the merged json */
-      const file = readFile(fileName);
-      const merged = mergeDeep({}, scope ? keys[scope] : keys.__global, JSON.parse(file));
-      fs.writeFileSync(fileName, JSON.stringify(merged, null, 2), { encoding: 'UTF-8' });
+  if (replaceFiles) {
+    for (const fileName of expectedFiles) {
+      fs.existsSync(fileName) && fs.unlinkSync(fileName);
     }
+  } else {
+    expectedFiles = mergeTranslationFiles({outputPath, expectedFiles, keys, fileNameRgx});
   }
+  verifyOutputDir(outputPath, scopes);
   /** If there are items in the array, that means that we need to create missing translation files */
   if (expectedFiles.length) {
     logger.succeed(`${messages.creatingFiles} 🗂`);
@@ -290,9 +301,6 @@ function createFiles({ keys, langs, outputPath }) {
       createJson(fileName, json);
     });
   }
-  if (currentFiles.length) {
-    logger.succeed(`${messages.merged(currentFiles.length)} 🧙`);
-  }
   logger.log(`\n              🌵 ${messages.done} 🌵`);
 }
 
@@ -304,43 +312,10 @@ function buildKeys(options) {
   });
 }
 
-/** Extract the scope mapping from the transloco config */
-function getScopesMap(configPath) {
-  if (!configPath) {
-    return { keysMap: {}, scopeMap: {} };
-  }
-  const configFile = readFile(`${process.cwd()}/${configPath}`);
-  const scopeMapping = /scopeMapping[\s\r\t\n]*:[\s\r\t\n]*(?<scopes>{[^}]*})/g.exec(configFile);
-  let scopes = '{}';
-  if (scopeMapping) {
-    scopes = scopeMapping.groups.scopes;
-  }
-  const sanitized = scopes.trim().replace(/'/g, '"');
-  const scopeMap = JSON.parse(`${sanitized}`);
-  const keysMap = Object.keys(scopeMap).reduce((acc, key) => {
-    const mappedScope = toCamelCase(scopeMap[key]);
-    acc[mappedScope] = key;
-    return acc;
-  }, {});
-  return { keysMap, scopeMap };
-}
-
-/** Merge cli input, argv and defaults */
-function initProcessParams(config) {
-  const src = config.src || defaultConfig.src;
-  const langs = config.langs || defaultConfig.langs;
-  const defaultValue = config.defaultValue;
-  let i18n = config.i18n || defaultConfig.i18n;
-  i18n = i18n.endsWith('/') ? i18n.slice(0, -1) : i18n;
-  const scopes = getScopesMap(config.configPath);
-
-  return { src, langs, defaultValue, i18n, scopes };
-}
-
 /** The main function, collects the settings and starts the files build. */
 function buildTranslationFiles(config) {
   logger = getLogger(config.prodMode);
-  const { src, langs, defaultValue, i18n, scopes } = initProcessParams(input, config);
+  const { src, langs, defaultValue, i18n, scopes, replaceFiles } = initParams(config);
   logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(langs.length)} 👷🏗\n`);
   logger.startSpinner(`${messages.extract} 🗝`);
   const options = { src, scopes, defaultValue };
@@ -349,15 +324,13 @@ function buildTranslationFiles(config) {
     /** Count all the keys found and reduce the scopes & global keys */
     const keysFound = countKeysRecursively(keys) - Object.keys(keys).length;
     logger.log('\x1b[34m%s\x1b[0m','ℹ', messages.keysFound(keysFound, fileCount));
-    createFiles({ keys, langs, outputPath: `${process.cwd()}/${i18n}` });
+    createFiles({ keys, langs, outputPath: `${process.cwd()}/${i18n}`, replaceFiles });
   });
 }
 
 module.exports = {
   buildTranslationFiles,
   buildKeys,
-  getScopesMap,
-  initProcessParams,
   extractTemplateKeys,
   extractTSKeys
 };

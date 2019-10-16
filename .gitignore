@@ -2,3 +2,4 @@
 node_modules
 assets
 dist
+**/i18n

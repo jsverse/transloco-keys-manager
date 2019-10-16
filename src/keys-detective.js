@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const { buildKeys, getScopesMap } = require('./builder/public_api');
-const { getLogger, isString, buildPathRecursively, readFile, defaultConfig } = require('./helpers');
+const { buildKeys } = require('./builder/public_api');
+const { getLogger, isString, buildPathRecursively, readFile, initParams } = require('./helpers');
 const [localLang] = require('os-locale')
   .sync()
   .split('-');
@@ -42,17 +42,17 @@ function mapDiffToKeys(diffArr, side) {
     .join(', ');
 }
 
-function compareKeysToFiles({ keys, i18nPath, addMissing, prodMode, translationFiles }) {
+function compareKeysToFiles({ keys, i18n, addMissing, prodMode, translationFiles }) {
   _prodMode = _prodMode || prodMode;
   logger = getLogger(_prodMode);
   logger.startSpinner(`${messages.checkMissing} ✨`);
   const result = {};
   /** An array of the existing translation files in the i18n dir */
-  const currentFiles = translationFiles || verifyTranslationsDir(i18nPath);
+  const currentFiles = translationFiles || verifyTranslationsDir(i18n);
   if (!currentFiles) return;
   for (const fileName of currentFiles) {
     /** extract the lang name from the file */
-    const { scope, fileLang } = regexs.fileLang(i18nPath).exec(fileName).groups;
+    const { scope, fileLang } = regexs.fileLang(i18n).exec(fileName).groups;
     const extracted = scope ? keys[scope] : keys.__global;
     if (!extracted) continue;
     /** Read the current file */
@@ -124,22 +124,10 @@ function compareKeysToFiles({ keys, i18nPath, addMissing, prodMode, translationF
   }
 }
 
-/** Merge cli input, argv and defaults */
-function initProcessParams(config) {
-  const src = config.src || defaultConfig.src;
-  const scopes = getScopesMap(config.configPath);
-  const i18nPath = config.i18n || defaultConfig.i18n;
-  const defaultValue = config.defaultValue;
-  let addMissing = config.addMissing;
-  if (addMissing === undefined) addMissing = defaultConfig.addMissing;
-
-  return { src, i18nPath, defaultValue, addMissing, scopes };
-}
-
 function findMissingKeys(config) {
   _prodMode = config.prodMode;
   logger = getLogger(_prodMode);
-  const { src, i18nPath, defaultValue, addMissing, scopes } = initProcessParams(config);
+  const { src, i18n, defaultValue, addMissing, scopes } = initParams(config);
   const translationFiles = verifyTranslationsDir(i18nPath);
   if (!translationFiles) return;
   logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
@@ -147,7 +135,7 @@ function findMissingKeys(config) {
   const options = { src, scopes, defaultValue, file: config.file };
   return buildKeys(options).then(({ keys }) => {
     logger.succeed(`${messages.extract} 🗝`);
-    compareKeysToFiles({ keys, i18nPath: `${process.cwd()}/${i18nPath}`, addMissing, translationFiles });
+    compareKeysToFiles({ keys, i18nPath: `${process.cwd()}/${i18n}`, addMissing, translationFiles });
   });
 }
 
