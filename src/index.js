@@ -11,6 +11,7 @@ const { extract, findMissing, help } = commandLineArgs([...actionsDefinitions, .
 
 if(help) {
   const usage = commandLineUsage(sections);
+  // Don't delete, it's the help menu
   console.log(usage);
   return;
 }
