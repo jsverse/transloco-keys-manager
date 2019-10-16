@@ -1,34 +1,33 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const {buildTranslationFiles} = require('./builder/public_api');
-const {findMissingKeys} = require('./keys-detective');
-const {toCamelCase, mergeDeep, readFile} = require('./helpers');
-const path = require('path');
+const commandLineArgs = require('command-line-args');
+const commandLineUsage = require('command-line-usage');
+const { getConfig } = require('@ngneat/transloco-utils');
 
-const argvMap = process.argv.slice(2).reduce((acc, arg, i, arr) => {
-    if (arg.startsWith('--')) {
-        const key = toCamelCase(arg.replace('--', ''));
-        const nextArg = arr[i + 1];
-        const isFlag = nextArg === undefined || nextArg.includes('--');
-        acc[key] = isFlag || nextArg;
-    }
-    return acc;
-}, {});
-const basePath = path.resolve(process.cwd());
-let config = mergeDeep({}, argvMap);
-const configPath = `${basePath}/${argvMap.config || 'transloco.config.json'}`;
-const tkmConfig = fs.existsSync(configPath)
-    ? JSON.parse(readFile(configPath))
-    : {};
-config = mergeDeep(tkmConfig, config);
-if (Object.keys(config).length === 0) {
-    console.log(`No config found... quiting`);
-    return;
+const { actionsDefinitions, optionDefinitions, sections } = require('./cli-options');
+
+const { extract, findMissing, help } = commandLineArgs([...actionsDefinitions, ...optionDefinitions], {
+  camelCase: true
+});
+
+if(help) {
+  const usage = commandLineUsage(sections);
+  console.log(usage);
+  return;
 }
-if (argvMap['e'] || argvMap['extract']) {
-    buildTranslationFiles(config);
-} else if (argvMap['fm'] || argvMap['find-missing']) {
-    findMissingKeys(config);
+
+const config = getConfig();
+
+if(Object.keys(config).length === 0) {
+  console.log(`Missing transloco.config.js file`);
+  return;
+}
+
+if(extract) {
+  const { buildTranslationFiles } = require('./builder/public_api');
+  buildTranslationFiles(config);
+} else if(findMissing) {
+  const { findMissingKeys } = require('./keys-detective');
+  findMissingKeys(config);
 } else {
-    console.log(`No action was passed... quiting`);
+  console.log(`Please provide an action...`);
 }
