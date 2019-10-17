@@ -1,11 +1,19 @@
 import { readFile } from '../helpers/readFile';
 import { mergeDeep } from '../helpers/mergeDeep';
-import * as fs from 'fs';
 import { messages } from '../messages';
 import * as glob from 'glob';
 import { getLogger } from '../helpers/logger';
+import { ScopeMap } from '../types';
+import { writeFile } from '../helpers/writeFile';
 
-export function mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNameRgx }) {
+type Params = {
+  outputPath: string;
+  expectedFiles: string[];
+  keys: ScopeMap;
+  fileNameRgx: RegExp;
+}
+
+export function mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNameRgx }: Params) {
   const logger = getLogger();
   /** An array of the existing translation files in the output dir */
   const currentFiles = glob.sync(`${outputPath}/**/*.json`);
@@ -20,10 +28,10 @@ export function mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNam
     /** remove this file from the expectedFiles array since the file already exists */
     expectedFiles = expectedFiles.filter(f => f !== fileName);
 
-    /** Read and write the merged json */
+    /** Write the new keys with the existing file */
     const file = readFile(fileName);
     const merged = mergeDeep({}, scope ? keys[scope] : keys.__global, JSON.parse(file));
-    fs.writeFileSync(fileName, JSON.stringify(merged, null, 2), { encoding: 'UTF-8' });
+    writeFile(fileName, merged);
   }
 
   logger.success(`${messages.merged(currentFiles.length)} 🧙`);

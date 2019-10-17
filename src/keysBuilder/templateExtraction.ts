@@ -42,7 +42,7 @@ export function templateExtraction({ file, scopes, defaultValue, keys }: Extract
             inner.unshift(key);
             const [scope, ...readRest] = read.split('.');
 
-            if(scopes.keysMap[scope]) {
+            if(scopes.aliasMap[scope]) {
               key = scope;
               readRest.length && inner.unshift(...readRest);
             } else {

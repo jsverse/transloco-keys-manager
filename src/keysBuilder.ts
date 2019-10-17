@@ -20,8 +20,12 @@ export async function buildTranslationFiles(inlineConfig: Config) {
   const { keys, fileCount } = result;
 
   logger.success(`${messages.extract} 🗝`);
-  /** Count all the keys found and reduce the scopes & global keys */
-  const keysFound = countKeys(keys) - Object.keys(keys).length;
+
+  let keysFound = 0;
+  for(const [_, scopeKeys] of Object.entries(keys)) {
+    keysFound += countKeys(scopeKeys as object);
+  }
+
   logger.log('\x1b[34m%s\x1b[0m', 'ℹ', messages.keysFound(keysFound, fileCount));
 
   createFiles({

@@ -3,7 +3,7 @@ import * as fs from "fs";
 /**
  * Verifies that the output dir (and sub-dirs) exists, if not create them.
  */
-export function verifyOutputDir(outputPath, folders) {
+export function createDirs(outputPath: string, folders: string[]) {
   const scopes = folders.filter(key => key !== '__global');
 
   if(!fs.existsSync(outputPath)) {
@@ -11,8 +11,9 @@ export function verifyOutputDir(outputPath, folders) {
   }
 
   for(const scope of scopes) {
-    if(!fs.existsSync(`${outputPath}/${scope}`)) {
-      fs.mkdirSync(`${outputPath}/${scope}`, { recursive: true });
+    const path = `${outputPath}/${scope}`;
+    if(!fs.existsSync(path)) {
+      fs.mkdirSync(path, { recursive: true });
     }
   }
 

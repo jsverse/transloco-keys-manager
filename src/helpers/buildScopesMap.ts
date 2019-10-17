@@ -13,10 +13,10 @@ function parse(str: string) {
   return JSON.parse(sanitized);
 }
 
-export function buildScopesMap(src: string) {
+export function buildScopesMap(input: string) {
   let scopeMap = {};
- 
-  const modulesMatch = `${process.cwd()}/${src}/**/*.module.ts`;
+
+  const modulesMatch = `${process.cwd()}/${input}/**/*.module.ts`;
   const configModule = glob.sync(modulesMatch).find((module) => readFile(module).includes('TRANSLOCO_CONFIG'));
 
   if(configModule) {
@@ -26,23 +26,23 @@ export function buildScopesMap(src: string) {
     }
   }
 
-  const tsFiles = glob.sync(`${process.cwd()}/${src}/**/*.ts`, { ignore: modulesMatch });
-  const componentScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:(?=\s*{)\s*(?<value>{[^}]*})/;
+  const tsFiles = glob.sync(`${process.cwd()}/${input}/**/*.ts`);
+  const scopeProviderRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:(?=\s*{)\s*(?<value>{[^}]*})/;
 
   for(const file of tsFiles) {
     const content = readFile(file);
-    const match = componentScopeRegex.exec(content);
+    const match = scopeProviderRegex.exec(content);
     if(!match) continue;
     const { scope, alias } = parse(match.groups.value);
     scopeMap[scope] = alias;
   }
 
-  let keysMap = Object.keys(scopeMap).reduce((acc, key) => {
+  const aliasMap = Object.keys(scopeMap).reduce((acc, key) => {
     const mappedScope = toCamelCase(scopeMap[key]);
     acc[mappedScope] = key;
 
     return acc;
   }, {});
 
-  return { keysMap, scopeMap };
+  return { aliasMap, scopeMap };
 }

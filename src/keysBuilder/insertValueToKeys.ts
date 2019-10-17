@@ -8,7 +8,7 @@ import { messages } from '../messages';
 export function insertValueToKeys({ inner, keys, scopes, key, defaultValue }) {
   const fullKey = inner.length ? `${key}.${inner.join('.')}` : key;
   const keyValue = defaultValue || `${messages.missingValue} '${fullKey}'`;
-  const scope = scopes.keysMap[key];
+  const scope = scopes.aliasMap[key];
 
   if(scope) {
     if(!keys[scope]) {

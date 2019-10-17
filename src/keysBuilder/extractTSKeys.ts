@@ -15,7 +15,6 @@ export function extractTSKeys({ input, scopes, defaultValue, files }: Config): P
       resolve({ keys, fileCount });
     } else {
       find.eachfile(/\.ts$/, src, file => {
-        /** Filter out spec files */
         if(file.endsWith('.spec.ts')) return;
         fileCount++;
         keys = TSExtraction({ file, defaultValue, scopes, keys });

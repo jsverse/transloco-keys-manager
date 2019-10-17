@@ -17,7 +17,15 @@ export type ExtractionResult = {
 
 export type ExtractorConfig = {
   file: string;
-  scopes: any;
+  scopes: {
+    scopeMap: object;
+    aliasMap: object;
+  };
   defaultValue: string;
   keys: any;
+};
+
+export type ScopeMap = {
+  __global: object;
+  [scope: string]: object;
 };

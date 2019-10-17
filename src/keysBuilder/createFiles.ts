@@ -2,20 +2,28 @@ import { regexs } from '../regexs';
 import * as fs from 'fs';
 import { messages } from '../messages';
 import { mergeTranslationFiles } from './mergeTranslationFiles';
-import { verifyOutputDir } from './verifyOutputDir';
+import { createDirs } from './createDirs';
 import { getLogger } from '../helpers/logger';
-import { createJson } from '../helpers/createJSON';
+import { ScopeMap } from '../types';
+import { writeFile } from '../helpers/writeFile';
+
+type Params = {
+  keys: ScopeMap;
+  langs: string[];
+  outputPath: string;
+  replace: boolean;
+}
 
 /** Create/Merge the translation files */
-export function createFiles({ keys, langs, outputPath, replace }) {
+export function createFiles({ keys, langs, outputPath, replace }: Params) {
   const logger = getLogger();
 
+  // all scopes include __global
   const scopes = Object.keys(keys);
-  const langArr = langs.map(l => l.trim());
 
   /** Build an array of the expected translation files (based on all the scopes and langs) */
-  let expectedFiles = scopes.reduce((files, scope) => {
-    langArr.forEach(lang => {
+  let expectedFiles: string[] = scopes.reduce((files, scope) => {
+    langs.forEach(lang => {
       const path = scope === '__global' ? outputPath : `${outputPath}/${scope}`;
       files.push(`${path}/${lang}.json`);
     });
@@ -27,13 +35,14 @@ export function createFiles({ keys, langs, outputPath, replace }) {
 
   if(replace) {
     for(const fileName of expectedFiles) {
+      // delete the file
       fs.existsSync(fileName) && fs.unlinkSync(fileName);
     }
   } else {
     expectedFiles = mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNameRgx });
   }
 
-  verifyOutputDir(outputPath, scopes);
+  createDirs(outputPath, scopes);
 
   /** If there are items in the array, that means that we need to create missing translation files */
   if(expectedFiles.length) {
@@ -48,8 +57,7 @@ export function createFiles({ keys, langs, outputPath, replace }) {
       );
 
       const scopeKey = scope || '__global';
-      const json = JSON.stringify(keys[scopeKey], null, 2);
-      createJson(fileName, json);
+      writeFile(fileName, keys[scopeKey]);
     });
   }
 
