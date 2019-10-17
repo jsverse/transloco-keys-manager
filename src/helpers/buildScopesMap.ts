@@ -21,12 +21,19 @@ export function buildScopesMap(input: string) {
   for(const file of tsFiles) {
     const content = readFile(file);
     const match = componentScopeRegex.exec(content);
-    if (!match) continue;
-    const scopeVal = match.groups.value;
-    const {scope, alias} = scopeVal.includes("{") ? parse(`${scopeVal}}`) : {
-      scope: scopeVal.replace(/'|"|`/g, ''),
-      alias: toCamelCase(scopeVal.replace(/'|"|`/g, ''))
+    if(!match) continue;
+    
+    // remove line breaks and white space
+    const scopeVal = match.groups.value
+      .trim()
+      .replace(/(\r\n|\n|\r)/gm, '')
+      .replace(/'|"|`/g, '');
+
+    const { scope, alias } = scopeVal.includes("{") ? parse(`${scopeVal}}`) : {
+      scope: scopeVal,
+      alias: toCamelCase(scopeVal)
     };
+
     scopeMap[scope] = alias;
   }
 
