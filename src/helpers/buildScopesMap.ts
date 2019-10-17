@@ -24,8 +24,8 @@ export function buildScopesMap(input: string) {
     if (!match) continue;
     const scopeVal = match.groups.value;
     const {scope, alias} = scopeVal.includes("{") ? parse(`${scopeVal}}`) : {
-      scope: scopeVal,
-      alias: toCamelCase(scopeVal)
+      scope: scopeVal.replace(/'|"|`/, ''),
+      alias: toCamelCase(scopeVal.replace(/'|"|`/, ''))
     };
     scopeMap[scope] = alias;
   }
