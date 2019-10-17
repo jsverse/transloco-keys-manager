@@ -1,11 +1,8 @@
-const messages = {
+import * as locale from 'os-locale';
+
+const _messages = {
   en: {
-    src: 'Please specify the root source of your project.',
-    output: 'Please specify the output folder for the translation files.',
-    config: 'Please specify the path to Transloco config.',
-    langs: 'To which languages you want to create files for?',
     keepFlat: 'Keep certain keys flat?',
-    hasScope: 'Do you have scopes defined?',
     keysFound: (keysCount, filesCount) =>
       `${keysCount} keys were found in ${filesCount} ${filesCount > 1 ? 'files' : 'file'}.`,
     startBuild: langsCount => `Starting Translation ${langsCount > 1 ? 'Files' : 'File'} Build`,
@@ -24,9 +21,6 @@ const messages = {
     done: 'Done!'
   },
   ru: {
-    src: 'Please specify the root source of your project.',
-    output: 'Please specify the output folder for the translation files.',
-    langs: 'Для каких языков вы хотите создать файлы',
     keysFound: (keysCount, filesCount) =>
       `- В ${filesCount} ${filesCount > 1 ? 'файлах' : 'файле'} найдено ${keysCount} ключей.`,
     startBuild: langsCount => `Начало сборки ${langsCount > 1 ? 'файлов' : 'файла'} перевода`,
@@ -40,9 +34,6 @@ const messages = {
     done: 'Готово!'
   },
   fr: {
-    src: 'Please specify the root source of your project.',
-    output: 'Please specify the output folder for the translation files.',
-    langs: 'Pour quelles languages souhaitez vous créer des fichiers de traduction?',
     keysFound: (keysCount, filesCount) =>
       `- ${keysCount} clés ${filesCount} ${filesCount > 1 ? 'fichiers' : 'fichier'}.`,
     startBuild: langsCount => `Initialisation de la traduction des ${langsCount > 1 ? 'fichiers' : 'fichier'}`,
@@ -56,9 +47,6 @@ const messages = {
     done: 'Fini!'
   },
   es: {
-    src: 'Please specify the root source of your project.',
-    output: 'Please specify the output folder for the translation files.',
-    langs: '¿Para qué idiomas desea crear archivos?',
     keysFound: (keysCount, filesCount) =>
       `- ${keysCount} llaves fueron encontradas en ${filesCount} ${filesCount > 1 ? 'archivos' : 'archivo'}.`,
     startBuild: langsCount => `Iniciando la construcción del ${langsCount > 1 ? 'archivos' : 'archivo'} de traducción`,
@@ -75,8 +63,9 @@ const messages = {
   zh: {}
 };
 
-module.exports = {
-  getMessages(locale) {
-    return messages[locale] || messages.en;
-  }
-};
+export const messages = getMessages();
+
+export function getMessages() {
+  const [localLang] = locale.sync().split('-');
+  return _messages[localLang] || _messages.en;
+}

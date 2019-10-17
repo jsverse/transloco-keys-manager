@@ -1,9 +1,9 @@
-const actionsDefinitions = [
+export const actionsDefinitions = [
   { name: 'extract', alias: 'e', type: Boolean, },
   { name: 'find-missing', alias: 'f', type: Boolean }
 ];
 
-const optionDefinitions = [
+export const optionDefinitions = [
   { name: 'input', alias: 'i', type: String, description: 'Paths you would like to extract strings from' },
   { name: 'translationsPath', alias: 'p', type: String, description: 'Where are the main translation files' },
   { name: 'langs', alias: 'l', type: Array, description: 'Which languages files to generate' },
@@ -23,7 +23,7 @@ const optionDefinitions = [
   { name: 'help', alias: 'h', type: Boolean, description: 'Help me please!' },
 ];
 
-const sections = [
+export const sections = [
   {
     header : '🔥 Transloco Keys Manager',
     content: 'Extract and find missing keys easily'
@@ -39,9 +39,3 @@ const sections = [
     optionList: optionDefinitions
   },
 ];
-
-module.exports = {
-  sections,
-  optionDefinitions,
-  actionsDefinitions
-};

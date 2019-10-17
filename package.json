@@ -5,12 +5,14 @@
   "main": "public_api.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run clean:dist && npm run copy:dist",
-    "clean:dist": "rm -rf dist && mkdir -p dist/src",
-    "copy:dist": "cp package.json package-lock.json README.md LICENSE public_api.js dist && cp -a src/. dist/src"
+    "start": "tsc --watch",
+    "build": "npm run clean:dist && tsc && npm run copy:dist && npm run uglify",
+    "uglify": "uglifyjs-folder dist --each --extension .js --output dist",
+    "clean:dist": "rm -rf dist",
+    "copy:dist": "cp package.json package-lock.json README.md LICENSE dist"
   },
   "bin": {
-    "transloco-keys-manager": "src/index.js"
+    "transloco-keys-manager": "dist/index.js"
   },
   "publishConfig": {
     "access": "public"
@@ -50,8 +52,10 @@
     "os-locale": "^4.0.0"
   },
   "devDependencies": {
-    "jest": "^24.9.0",
     "fs-extra": "^8.1.0",
-    "lodash.isequal": "^4.5.0"
+    "jest": "^24.9.0",
+    "lodash.isequal": "^4.5.0",
+    "typescript": "^3.6.4",
+    "uglifyjs-folder": "^1.5.1"
   }
 }

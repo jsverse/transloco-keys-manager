@@ -1,0 +1,4 @@
+export enum TEMPLATE_TYPE {
+  STRUCTURAL,
+  NG_TEMPLATE
+}

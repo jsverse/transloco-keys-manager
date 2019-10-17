@@ -1,4 +1,6 @@
-module.exports = {
+import { Config } from './types';
+
+export const defaultConfig: Config = {
   // Paths you would like to extract strings from.
   // You can use path expansion, glob patterns and multiple
   input: 'src',
@@ -14,7 +16,7 @@ module.exports = {
    */
 
   // What's the default value for a generated key
-  defaultValue: '',
+  defaultValue: undefined,
 
   // Replace the contents of output file if it exists (Merges by default)
   replace: false,
