@@ -15,25 +15,18 @@ function parse(str: string) {
 
 export function buildScopesMap(input: string) {
   let scopeMap = {};
-
-  const modulesMatch = `${process.cwd()}/${input}/**/*.module.ts`;
-  const configModule = glob.sync(modulesMatch).find((module) => readFile(module).includes('TRANSLOCO_CONFIG'));
-
-  if(configModule) {
-    const scopeMapping = /scopeMapping[\s\r\t\n]*:[\s\r\t\n]*(?<scopes>{[^}]*})/.exec(readFile(configModule));
-    if(scopeMapping) {
-      scopeMap = parse(scopeMapping.groups.scopes);
-    }
-  }
-
   const tsFiles = glob.sync(`${process.cwd()}/${input}/**/*.ts`);
-  const scopeProviderRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:(?=\s*{)\s*(?<value>{[^}]*})/;
+  const componentScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
 
   for(const file of tsFiles) {
     const content = readFile(file);
-    const match = scopeProviderRegex.exec(content);
-    if(!match) continue;
-    const { scope, alias } = parse(match.groups.value);
+    const match = componentScopeRegex.exec(content);
+    if (!match) continue;
+    const scopeVal = match.groups.value;
+    const {scope, alias} = scopeVal.includes("{") ? parse(`${scopeVal}}`) : {
+      scope: scopeVal,
+      alias: toCamelCase(scopeVal)
+    };
     scopeMap[scope] = alias;
   }
 
