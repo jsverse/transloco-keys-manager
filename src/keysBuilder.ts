@@ -5,7 +5,7 @@ import { countKeys } from './helpers/countKeys';
 import { getLogger } from './helpers/logger';
 import { resolveConfig } from './helpers/resolveConfig';
 import { buildKeys } from './keysBuilder/buildKeys';
-import { createFiles } from './keysBuilder/createFiles';
+import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
 import { Config } from './types';
 
 /** The main function, collects the settings and starts the files build. */
@@ -28,8 +28,9 @@ export async function buildTranslationFiles(inlineConfig: Config) {
 
   logger.log('\x1b[34m%s\x1b[0m', 'ℹ', messages.keysFound(keysFound, fileCount));
 
-  createFiles({
+  createTranslationFiles({
     scopeToKeys,
+    scopes: config.scopes,
     langs: config.langs,
     outputPath: `${process.cwd()}/${config.translationsPath}`,
     replace: config.replace
