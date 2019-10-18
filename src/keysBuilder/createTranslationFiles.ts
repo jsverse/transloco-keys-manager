@@ -4,7 +4,7 @@ import { ScopeMap, Scopes } from '../types';
 import { buildTranslationFile, FileAction } from './buildTranslationFile';
 
 type Params = {
-  keys: ScopeMap;
+  scopeToKeys: ScopeMap;
   langs: string[];
   outputPath: string;
   replace: boolean;
@@ -13,10 +13,10 @@ type Params = {
 
 type Files = { path: string, name: string }[]
 
-export function createTranslationFiles({ keys, langs, outputPath, replace, scopes }: Params) {
+export function createTranslationFiles({ scopeToKeys, langs, outputPath, replace, scopes }: Params) {
   const logger = getLogger();
 
-  const scopeFiles: Files = Object.values(scopes.aliasMap).reduce((files: Files, scopeName: string) => {
+  const scopeFiles: Files = Object.values(scopes.aliasToScope).reduce((files: Files, scopeName: string) => {
     langs.forEach(lang => files.push({
       path: `${outputPath}/${scopeName}/${lang}.json`,
       name: scopeName
@@ -30,11 +30,11 @@ export function createTranslationFiles({ keys, langs, outputPath, replace, scope
   const actions: FileAction[] = [];
 
   for(const { path } of globalFiles) {
-    actions.push(buildTranslationFile(path, keys.__global, replace))
+    actions.push(buildTranslationFile(path, scopeToKeys.__global, replace))
   }
 
   for(const { path, name } of scopeFiles) {
-    actions.push(buildTranslationFile(path, keys[name], replace));
+    actions.push(buildTranslationFile(path, scopeToKeys[name], replace));
   }
 
   const newFiles = actions.filter(action => action.type === 'new');
