@@ -9,5 +9,5 @@ export function resolveConfig(inlineConfig: Config): Config {
 
   const config = { ...defaults, ...fileConfig, ...inlineConfig };
 
-  return { ...config, scopes: buildScopesMap(config.input) }
+  return { ...config, scopes: buildScopesMap(config.input) };
 }

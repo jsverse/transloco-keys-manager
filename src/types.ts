@@ -8,17 +8,17 @@ export type Config = {
   prodMode?: boolean;
   scopes?: any;
   files?: any;
-}
+};
 
 export type ExtractionResult = {
   scopeToKeys: object;
   fileCount: number;
-}
+};
 
 export type Scopes = {
   scopeToAlias: object;
   aliasToScope: object;
-}
+};
 
 export type ExtractorConfig = {
   file: string;

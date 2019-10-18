@@ -7,15 +7,17 @@ import { insertValueToKeys } from './insertValueToKeys';
 export function regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue }) {
   let result = rgx.exec(str);
 
-  while(result) {
+  while (result) {
     /** Support ternary operator */
     const { backtickKey, backtickScope, scope } = result.groups;
-    const regexKeys = result.groups.key2 ? [result.groups.key, result.groups.key2] : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
-    for(const regexKey of regexKeys) {
+    const regexKeys = result.groups.key2
+      ? [result.groups.key, result.groups.key2]
+      : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
+    for (const regexKey of regexKeys) {
       let [key, ...inner] = regexKey.split('.');
       const scopeStr = scope || backtickScope;
 
-      if(scopeStr) {
+      if (scopeStr) {
         [key, inner] = handleScope({ scopeStr, key, inner, scopes });
       }
 

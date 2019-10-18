@@ -1,5 +1,5 @@
 export const actionsDefinitions = [
-  { name: 'extract', alias: 'e', type: Boolean, },
+  { name: 'extract', alias: 'e', type: Boolean },
   { name: 'find-missing', alias: 'f', type: Boolean }
 ];
 
@@ -25,7 +25,7 @@ export const optionDefinitions = [
     type: Boolean,
     description: 'Whether to add missing keys that were found by the detective'
   },
-  { name: 'help', alias: 'h', type: Boolean, description: 'Help me please!' },
+  { name: 'help', alias: 'h', type: Boolean, description: 'Help me please!' }
 ];
 
 export const sections = [
@@ -35,12 +35,10 @@ export const sections = [
   },
   {
     header: 'Actions',
-    content: [
-      '$ transloco-keys-manager --extract',
-      '$ transloco-keys-manager --find-missing',
-    ],
-  }, {
+    content: ['$ transloco-keys-manager --extract', '$ transloco-keys-manager --find-missing']
+  },
+  {
     header: 'Options',
     optionList: optionDefinitions
-  },
+  }
 ];

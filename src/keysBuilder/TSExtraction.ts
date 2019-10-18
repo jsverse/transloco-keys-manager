@@ -5,17 +5,17 @@ import { ExtractorConfig } from '../types';
 
 export function TSExtraction({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
   const str = readFile(file);
-  if(!str.includes('@ngneat/transloco')) return scopeToKeys;
+  if (!str.includes('@ngneat/transloco')) return scopeToKeys;
 
   const service = regexs.serviceInjection.exec(str);
 
-  if(service) {
+  if (service) {
     /** service translationCalls regex */
     const rgx = regexs.translationCalls(service.groups.serviceName);
     scopeToKeys = regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue });
   } else {
     const directTranslate = regexs.directImport.exec(str);
-    if(directTranslate) {
+    if (directTranslate) {
       const rgx = regexs.translationCalls();
       scopeToKeys = regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue });
     }

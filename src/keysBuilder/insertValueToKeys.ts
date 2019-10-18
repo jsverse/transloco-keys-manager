@@ -10,8 +10,8 @@ export function insertValueToKeys({ inner, scopeToKeys, scopes, key, defaultValu
   const keyValue = defaultValue || `${messages.missingValue} '${fullKey}'`;
   const scope = scopes.aliasToScope[key];
 
-  if(scope) {
-    if(!scopeToKeys[scope]) {
+  if (scope) {
+    if (!scopeToKeys[scope]) {
       scopeToKeys[scope] = {};
     }
     scopeToKeys[scope][inner.join('.')] = keyValue;

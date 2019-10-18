@@ -3,9 +3,12 @@ import { TEMPLATE_TYPE } from './TEMPLATE_TYPE';
 
 /** Get the keys from an ngTemplate/ngContainer */
 export function getStructuralDirectiveBasedKeys(element, templateType, matchedStr) {
-  let scopeKeys = [], read, readSearch, varName;
+  let scopeKeys = [],
+    read,
+    readSearch,
+    varName;
 
-  if(templateType === TEMPLATE_TYPE.STRUCTURAL) {
+  if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
     readSearch = data.match(/read:\s*('|")(?<read>[^"']*)\1/);
     read = readSearch && readSearch.groups.read;
@@ -17,11 +20,11 @@ export function getStructuralDirectiveBasedKeys(element, templateType, matchedSt
     read = readSearch && element.attribs[readSearch].replace(/'|"/g, '');
   }
 
-  if(varName) {
+  if (varName) {
     const keyRegex = regexs.templateKey(varName);
     let keySearch = keyRegex.exec(matchedStr);
 
-    while(keySearch) {
+    while (keySearch) {
       scopeKeys.push(keySearch.groups.key);
       keySearch = keyRegex.exec(matchedStr);
     }

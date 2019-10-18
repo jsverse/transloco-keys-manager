@@ -1,7 +1,7 @@
 export function handleScope({ scopeStr, key, inner, scopes }) {
   let scope = scopes.scopeToAlias[scopeStr];
 
-  if(scope) {
+  if (scope) {
     inner.unshift(key);
     key = scope;
 
@@ -12,7 +12,7 @@ export function handleScope({ scopeStr, key, inner, scopes }) {
   splitted.pop();
   scope = splitted.join('/');
 
-  if(scope && scopes.scopeToAlias[scope]) {
+  if (scope && scopes.scopeToAlias[scope]) {
     inner.unshift(key);
     key = scopes.scopeToAlias[scope];
   }

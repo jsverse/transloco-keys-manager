@@ -4,8 +4,8 @@ import * as fsExtra from 'fs-extra';
 
 export type FileAction = {
   path: string;
-  type: 'new' | 'modified'
-}
+  type: 'new' | 'modified';
+};
 
 export function buildTranslationFile(path: string, translation: object, replace = false): FileAction {
   const currentTranslation = fsExtra.readJsonSync(path, { throws: false });
@@ -13,7 +13,7 @@ export function buildTranslationFile(path: string, translation: object, replace 
 
   let newTranslation;
 
-  if(replace) {
+  if (replace) {
     newTranslation = mergeDeep({}, translation);
   } else {
     newTranslation = mergeDeep({}, currentTranslation || {}, translation);

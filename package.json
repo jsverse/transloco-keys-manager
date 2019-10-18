@@ -4,12 +4,13 @@
   "description": "Angular Transloco keys managing cli tool and Webpack plugin",
   "main": "public_api.js",
   "scripts": {
-    "test": "PRODUCTION=true jest",
-    "start": "tsc --watch",
+    "test": "npm run build && PRODUCTION=true jest",
+    "start": "npm run prettier && tsc --watch",
     "build": "npm run clean:dist && tsc && npm run copy:dist",
     "uglify": "uglifyjs-folder dist --each --extension .js --output dist",
     "clean:dist": "rm -rf dist",
-    "copy:dist": "cp package.json package-lock.json README.md LICENSE dist"
+    "copy:dist": "cp package.json package-lock.json README.md LICENSE dist",
+    "prettier": "prettier --write 'src/**/*.ts'"
   },
   "bin": {
     "transloco-keys-manager": "dist/index.js"
@@ -55,6 +56,7 @@
     "fs-extra": "^8.1.0",
     "jest": "^24.9.0",
     "lodash.isequal": "^4.5.0",
+    "prettier": "^1.18.2",
     "typescript": "^3.6.4",
     "uglifyjs-folder": "^1.5.1"
   }

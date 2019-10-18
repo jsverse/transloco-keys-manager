@@ -18,8 +18,7 @@ export class TranslocoExtractKeysPlugin {
 
   apply(compiler) {
     compiler.hooks.watchRun.tapAsync('WatchRun', (comp, cb) => {
-
-      if(init) {
+      if (init) {
         cb();
         init = false;
         return;
@@ -29,23 +28,23 @@ export class TranslocoExtractKeysPlugin {
       const files = Object.keys(comp.watchFileSystem.watcher.mtimes);
       const configChanged = files.some(file => file.includes('.module'));
 
-      if(configChanged) {
+      if (configChanged) {
         // Rebuild the scopeMap
         this.config = resolveConfig(this.inlineConfig);
       }
 
-      for(const file of files) {
+      for (const file of files) {
         let fileType;
-        if(file.endsWith('.html')) {
+        if (file.endsWith('.html')) {
           fileType = 'html';
-        } else if(!file.endsWith('spec.ts') && file.endsWith('.ts')) {
+        } else if (!file.endsWith('spec.ts') && file.endsWith('.ts')) {
           fileType = 'ts';
         }
 
         fileType ? keysExtractions[fileType].push(file) : keysExtractions;
       }
 
-      if(keysExtractions.html.length || keysExtractions.ts.length) {
+      if (keysExtractions.html.length || keysExtractions.ts.length) {
         Promise.all([
           extractTemplateKeys({ ...this.config, files: keysExtractions.html }),
           extractTSKeys({ ...this.config, files: keysExtractions.ts })
@@ -54,12 +53,13 @@ export class TranslocoExtractKeysPlugin {
           const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
 
           // hold a file map and deep compare?
-          keysFound && compareKeysToFiles({
-            translationFiles: undefined,
-            keys: allKeys,
-            translationPath: this.config.translationsPath,
-            addMissingKeys: true,
-          });
+          keysFound &&
+            compareKeysToFiles({
+              translationFiles: undefined,
+              keys: allKeys,
+              translationPath: this.config.translationsPath,
+              addMissingKeys: true
+            });
 
           cb();
         });

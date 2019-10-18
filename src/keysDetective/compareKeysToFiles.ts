@@ -16,44 +16,43 @@ export function compareKeysToFiles({ keys, translationPath, addMissingKeys, tran
   const result = {};
   /** An array of the existing translation files in the i18n dir */
   const currentFiles = translationFiles || verifyTranslationsDir(translationPath);
-  if(!currentFiles) return;
+  if (!currentFiles) return;
 
-  for(const fileName of currentFiles) {
+  for (const fileName of currentFiles) {
     /** extract the lang name from the file */
     const { scope, fileLang } = regexs.fileLang(translationPath).exec(fileName).groups;
     const extracted = scope ? keys[scope] : keys.__global;
 
-    if(!extracted) continue;
+    if (!extracted) continue;
 
     /** Read the current file */
     const file = readFile(fileName);
     const fileObj = JSON.parse(file);
     const diffArr = DeepDiff(fileObj, extracted);
 
-    if(diffArr) {
-      const lang = `${scope ? scope + "/" : ''}${fileLang}`;
+    if (diffArr) {
+      const lang = `${scope ? scope + '/' : ''}${fileLang}`;
       result[lang] = {
         missing: [],
         extra: []
       };
 
-      for(const diff of diffArr) {
-        if(diff.kind === 'N') {
+      for (const diff of diffArr) {
+        if (diff.kind === 'N') {
           result[lang].missing.push(diff);
-          if(addMissingKeys) {
+          if (addMissingKeys) {
             applyChange(fileObj, extracted, diff);
           }
-        } else if(diff.kind === 'D') {
+        } else if (diff.kind === 'D') {
           result[lang].extra.push(diff);
         }
       }
 
-      if(addMissingKeys) {
+      if (addMissingKeys) {
         const json = JSON.stringify(fileObj, null, 2);
         /** Write the corrected object to the original file */
         fs.writeFileSync(fileName, json, 'utf8');
       }
-
     }
   }
 
@@ -64,7 +63,7 @@ export function compareKeysToFiles({ keys, translationPath, addMissingKeys, tran
     return missing.length || extra.length;
   });
 
-  if(resultFiles.length > 0) {
+  if (resultFiles.length > 0) {
     logger.log();
     logger.success(`🏁 \x1b[4m${messages.summary}\x1b[0m 🏁`);
 
@@ -73,19 +72,19 @@ export function compareKeysToFiles({ keys, translationPath, addMissingKeys, tran
       colWidths: [40, 40, 30]
     });
 
-    for(let i = 0; i < resultFiles.length; i++) {
+    for (let i = 0; i < resultFiles.length; i++) {
       const row = [];
       const { missing, extra } = result[resultFiles[i]];
       const hasMissing = missing.length > 0;
       const hasExtra = extra.length > 0;
-      if(!(hasExtra || hasMissing)) continue;
+      if (!(hasExtra || hasMissing)) continue;
       row.push(`${resultFiles[i]}`);
-      if(hasMissing) {
+      if (hasMissing) {
         row.push(mapDiffToKeys(missing, 'rhs'));
       } else {
         row.push('--');
       }
-      if(hasExtra) {
+      if (hasExtra) {
         row.push(mapDiffToKeys(extra, 'lhs'));
       } else {
         row.push('--');
@@ -95,7 +94,6 @@ export function compareKeysToFiles({ keys, translationPath, addMissingKeys, tran
 
     logger.log(table.toString());
     addMissingKeys && logger.success(`Added all missing keys to files 📜\n`);
-
   } else {
     logger.log(`\n🎉 ${messages.noMissing} 🎉\n`);
   }

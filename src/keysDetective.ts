@@ -13,7 +13,7 @@ export async function findMissingKeys(inlineConfig: Config) {
   const config = resolveConfig(inlineConfig);
   const translationFiles = verifyTranslationsDir(config.translationsPath);
 
-  if(!translationFiles) return;
+  if (!translationFiles) return;
 
   logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
   logger.startSpinner(`${messages.extract} `);
@@ -27,5 +27,4 @@ export async function findMissingKeys(inlineConfig: Config) {
     addMissingKeys: config.addMissingKeys,
     translationFiles
   });
-
 }

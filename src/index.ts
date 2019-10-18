@@ -12,16 +12,16 @@ const config = commandLineArgs([...actionsDefinitions, ...optionDefinitions], {
 
 const { extract, findMissing, help } = config;
 
-if(help) {
+if (help) {
   const usage = commandLineUsage(sections);
   // Don't delete, it's the help menu
   console.log(usage);
   process.exit();
 }
 
-if(extract) {
+if (extract) {
   buildTranslationFiles(config);
-} else if(findMissing) {
+} else if (findMissing) {
   findMissingKeys(config);
 } else {
   console.log(`Please provide an action...`);

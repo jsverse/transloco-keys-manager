@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 import { stringify } from './stringify';
 
 export function writeFile(fileName: string, content: object) {
