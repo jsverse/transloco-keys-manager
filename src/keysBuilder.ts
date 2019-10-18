@@ -28,11 +28,11 @@ export async function buildTranslationFiles(inlineConfig: Config) {
 
   logger.log('\x1b[34m%s\x1b[0m', 'ℹ', messages.keysFound(keysFound, fileCount));
 
-  createTranslationFiles({
-    scopeToKeys,
-    scopes: config.scopes,
-    langs: config.langs,
-    outputPath: `${process.cwd()}/${config.translationsPath}`,
-    replace: config.replace
-  });
+  // createTranslationFiles({
+  //   scopeToKeys,
+  //   scopes: config.scopes,
+  //   langs: config.langs,
+  //   outputPath: `${process.cwd()}/${config.translationsPath}`,
+  //   replace: config.replace
+  // });
 }

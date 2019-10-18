@@ -1,4 +1,17 @@
+import { ScopeMap } from '../types';
+
+type Params = {
+  // scope name todos <===.title
+  key: string;
+  scopeStr: string; // scope name from service?
+  inner: string; // todos. ===>title
+  scopes: ScopeMap;
+};
+
 export function handleScope({ scopeStr, key, inner, scopes }) {
+
+  console.log(arguments);
+
   let scope = scopes.scopeToAlias[scopeStr];
 
   if (scope) {

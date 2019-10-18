@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run build && PRODUCTION=true jest",
     "start": "npm run prettier && tsc --watch",
-    "build": "npm run clean:dist && tsc && npm run copy:dist",
+    "build": "tsc && npm run copy:dist",
     "uglify": "uglifyjs-folder dist --each --extension .js --output dist",
     "clean:dist": "rm -rf dist",
     "copy:dist": "cp package.json package-lock.json README.md LICENSE dist",

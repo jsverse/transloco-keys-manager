@@ -1,9 +1,9 @@
 import { readFile } from '../helpers/readFile';
 import { regexs } from '../regexs';
 import { regexIterator } from './regexIterator';
-import { ExtractorConfig } from '../types';
+import { ExtractorConfig, ScopeMap } from '../types';
 
-export function TSExtraction({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
+export function TSExtraction({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const str = readFile(file);
   if (!str.includes('@ngneat/transloco')) return scopeToKeys;
 
