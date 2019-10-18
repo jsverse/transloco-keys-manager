@@ -15,12 +15,14 @@ export type ExtractionResult = {
   fileCount: number;
 }
 
+export type Scopes = {
+  scopeMap: object;
+  aliasMap: object;
+}
+
 export type ExtractorConfig = {
   file: string;
-  scopes: {
-    scopeMap: object;
-    aliasMap: object;
-  };
+  scopes: Scopes;
   defaultValue: string;
   keys: any;
 };

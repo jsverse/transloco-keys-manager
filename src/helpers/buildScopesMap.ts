@@ -22,7 +22,7 @@ export function buildScopesMap(input: string) {
     const content = readFile(file);
     const match = componentScopeRegex.exec(content);
     if(!match) continue;
-    
+
     // remove line breaks and white space
     const scopeVal = match.groups.value
       .trim()
