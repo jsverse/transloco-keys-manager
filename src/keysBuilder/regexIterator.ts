@@ -4,7 +4,7 @@ import { insertValueToKeys } from './insertValueToKeys';
 /**
  * Iterates over a given regex until there a no results and adds all the keys found to the map.
  */
-export function regexIterator({ rgx, keys, str, scopes, defaultValue }) {
+export function regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue }) {
   let result = rgx.exec(str);
 
   while(result) {
@@ -19,11 +19,11 @@ export function regexIterator({ rgx, keys, str, scopes, defaultValue }) {
         [key, inner] = handleScope({ scopeStr, key, inner, scopes });
       }
 
-      insertValueToKeys({ inner, scopes, keys, key, defaultValue });
+      insertValueToKeys({ inner, scopes, scopeToKeys, key, defaultValue });
     }
 
     result = rgx.exec(str);
   }
 
-  return keys;
+  return scopeToKeys;
 }

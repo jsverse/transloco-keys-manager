@@ -11,7 +11,7 @@ import { TransitionStore } from '../../general/state/transition.store';
 import { isElementInViewport } from '../../../../app/util/browser.util';
 import { debounce, intersection, size } from '@datorama/core';
 import { isMobile } from '@datorama/ngutils/user-agent.util';
-import { TranslocoService, translate } from '@ngneat/transloco';
+import { TranslocoService, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 const SEARCH_INTERVAL = 400;
 const ITEM_ANIMATION_DURATION = 350;
@@ -20,6 +20,12 @@ const SCROLL_ANIMATION = 500;
 @Component({
     selector: 'da-left-nav',
     templateUrl: './left-nav.component.html',
+    providers: [
+        {
+            provide: TRANSLOCO_SCOPE,
+            useValue: "nested/scope"
+        }
+    ]
 })
 @LeftPaneComponent('da-left-nav')
 export class LeftNavComponent implements OnInit, AfterViewInit, OnDestroy {

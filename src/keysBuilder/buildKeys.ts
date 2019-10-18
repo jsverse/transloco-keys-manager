@@ -10,8 +10,8 @@ export async function buildKeys(config: Config) {
 
   const [template, ts] = result;
 
-  const keys = mergeDeep({}, template.keys, ts.keys);
+  const scopeToKeys = mergeDeep({}, template.scopeToKeys, ts.scopeToKeys);
   const fileCount = template.fileCount + ts.fileCount;
 
-  return Promise.resolve({ keys, fileCount });
+  return Promise.resolve({ scopeToKeys, fileCount });
 }

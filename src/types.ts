@@ -11,18 +11,18 @@ export type Config = {
 }
 
 export type ExtractionResult = {
-  keys: object;
+  scopeToKeys: object;
   fileCount: number;
 }
 
 export type ExtractorConfig = {
   file: string;
   scopes: {
-    scopeMap: object;
-    aliasMap: object;
+    scopeToAlias: object;
+    aliasToScope: object;
   };
   defaultValue: string;
-  keys: any;
+  scopeToKeys: any;
 };
 
 export type ScopeMap = {

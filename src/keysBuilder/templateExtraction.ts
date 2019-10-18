@@ -7,9 +7,9 @@ import { regexIterator } from './regexIterator';
 import { insertValueToKeys } from './insertValueToKeys';
 import { ExtractorConfig } from '../types';
 
-export function templateExtraction({ file, scopes, defaultValue, keys }: ExtractorConfig) {
+export function templateExtraction({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
   const str = readFile(file);
-  if(!str.includes('transloco')) return keys;
+  if(!str.includes('transloco')) return scopeToKeys;
 
   const hasNgTemplate = str.match(/<ng-template[^>]*transloco[^>]*>/);
   const hasStructural = str.includes('*transloco');
@@ -42,7 +42,7 @@ export function templateExtraction({ file, scopes, defaultValue, keys }: Extract
             inner.unshift(key);
             const [scope, ...readRest] = read.split('.');
 
-            if(scopes.aliasMap[scope]) {
+            if(scopes.aliasToScope[scope]) {
               key = scope;
               readRest.length && inner.unshift(...readRest);
             } else {
@@ -50,7 +50,7 @@ export function templateExtraction({ file, scopes, defaultValue, keys }: Extract
             }
           }
 
-          insertValueToKeys({ inner, scopes, keys, key, defaultValue });
+          insertValueToKeys({ inner, scopes, scopeToKeys, key, defaultValue });
         });
       });
     });
@@ -58,8 +58,8 @@ export function templateExtraction({ file, scopes, defaultValue, keys }: Extract
 
   /** Directive & pipe */
   [regexs.directive(), regexs.directiveTernary(), regexs.pipe()].forEach(rgx => {
-    keys = regexIterator({ rgx, keys, str, scopes, defaultValue });
+    scopeToKeys = regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue });
   });
 
-  return keys;
+  return scopeToKeys;
 }

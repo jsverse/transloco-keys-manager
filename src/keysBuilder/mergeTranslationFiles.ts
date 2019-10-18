@@ -9,11 +9,11 @@ import { writeFile } from '../helpers/writeFile';
 type Params = {
   outputPath: string;
   expectedFiles: string[];
-  keys: ScopeMap;
+  scopeToKeys: ScopeMap;
   fileNameRgx: RegExp;
 }
 
-export function mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNameRgx }: Params) {
+export function mergeTranslationFiles({ outputPath, expectedFiles, scopeToKeys, fileNameRgx }: Params) {
   const logger = getLogger();
   /** An array of the existing translation files in the output dir */
   const currentFiles = glob.sync(`${outputPath}/**/*.json`);
@@ -30,7 +30,7 @@ export function mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNam
 
     /** Write the new keys with the existing file */
     const file = readFile(fileName);
-    const merged = mergeDeep({}, scope ? keys[scope] : keys.__global, JSON.parse(file));
+    const merged = mergeDeep({}, scope ? scopeToKeys[scope] : scopeToKeys.__global, JSON.parse(file));
     writeFile(fileName, merged);
   }
 

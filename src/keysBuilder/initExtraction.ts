@@ -1,3 +1,3 @@
 export function initExtraction(input: string) {
-  return { src: `${process.cwd()}/${input}`, keys: { __global: {} }, fileCount: 0 };
+  return { src: `${process.cwd()}/${input}`, scopeToKeys: { __global: {} }, fileCount: 0 };
 }

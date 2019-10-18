@@ -17,19 +17,19 @@ export async function buildTranslationFiles(inlineConfig: Config) {
   logger.startSpinner(`${messages.extract} 🗝`);
 
   const result = await buildKeys(config);
-  const { keys, fileCount } = result;
+  const { scopeToKeys, fileCount } = result;
 
   logger.success(`${messages.extract} 🗝`);
 
   let keysFound = 0;
-  for(const [_, scopeKeys] of Object.entries(keys)) {
+  for(const [_, scopeKeys] of Object.entries(scopeToKeys)) {
     keysFound += countKeys(scopeKeys as object);
   }
 
   logger.log('\x1b[34m%s\x1b[0m', 'ℹ', messages.keysFound(keysFound, fileCount));
 
   createFiles({
-    keys,
+    scopeToKeys,
     langs: config.langs,
     outputPath: `${process.cwd()}/${config.translationsPath}`,
     replace: config.replace

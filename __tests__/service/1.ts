@@ -10,12 +10,13 @@ import { size, isEqual, isNil } from '@datorama/utils';
 import { IDataPreviewColumn } from '@datorama/modules/connect-and-mix/data-streams/light-connect/light-connect.models';
 import { DataSegmentation } from '@datorama/modules/connect-and-mix/data-streams/light-connect/light-connect.enums';
 import { DatoOptionDefault } from '@datorama/modules/shared/shared.types';
-import { TranslocoService, translate } from '@ngneat/transloco';
+import { TranslocoService, translate, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 @Component({
   selector: 'da-lc-left-nav-partitions',
   templateUrl: './left-nav-partitions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: TRANSLOCO_SCOPE, useValue: {scope: 'admin-page', alias: "adminPage" }}]
 })
 export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy {
   @Input() partitionsPanel: MatExpansionPanel;

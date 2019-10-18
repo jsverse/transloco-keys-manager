@@ -50,7 +50,7 @@ export class TranslocoExtractKeysPlugin {
           extractTemplateKeys({ ...this.config, files: keysExtractions.html }),
           extractTSKeys({ ...this.config, files: keysExtractions.ts })
         ]).then(([htmlResult, tsResult]) => {
-          const allKeys = mergeDeep({}, htmlResult.keys, tsResult.keys);
+          const allKeys = mergeDeep({}, htmlResult.scopeToKeys, tsResult.scopeToKeys);
           const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
 
           // hold a file map and deep compare?

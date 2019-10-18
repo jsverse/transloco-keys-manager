@@ -4,7 +4,7 @@
   "description": "Angular Transloco keys managing cli tool and Webpack plugin",
   "main": "public_api.js",
   "scripts": {
-    "test": "jest",
+    "test": "PRODUCTION=true jest",
     "start": "tsc --watch",
     "build": "npm run clean:dist && tsc && npm run copy:dist",
     "uglify": "uglifyjs-folder dist --each --extension .js --output dist",

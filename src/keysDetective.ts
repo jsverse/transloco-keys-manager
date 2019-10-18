@@ -22,7 +22,7 @@ export async function findMissingKeys(inlineConfig: Config) {
   logger.success(`${messages.extract} 🗝`);
 
   compareKeysToFiles({
-    keys: result.keys,
+    keys: result.scopeToKeys,
     translationPath: `${process.cwd()}/${config.translationsPath}`,
     addMissingKeys: config.addMissingKeys,
     translationFiles

@@ -8,18 +8,18 @@ import { ScopeMap } from '../types';
 import { writeFile } from '../helpers/writeFile';
 
 type Params = {
-  keys: ScopeMap;
+  scopeToKeys: ScopeMap;
   langs: string[];
   outputPath: string;
   replace: boolean;
 }
 
 /** Create/Merge the translation files */
-export function createFiles({ keys, langs, outputPath, replace }: Params) {
+export function createFiles({ scopeToKeys, langs, outputPath, replace }: Params) {
   const logger = getLogger();
 
   // all scopes include __global
-  const scopes = Object.keys(keys);
+  const scopes = Object.keys(scopeToKeys);
 
   /** Build an array of the expected translation files (based on all the scopes and langs) */
   let expectedFiles: string[] = scopes.reduce((files, scope) => {
@@ -39,7 +39,7 @@ export function createFiles({ keys, langs, outputPath, replace }: Params) {
       fs.existsSync(fileName) && fs.unlinkSync(fileName);
     }
   } else {
-    expectedFiles = mergeTranslationFiles({ outputPath, expectedFiles, keys, fileNameRgx });
+    expectedFiles = mergeTranslationFiles({ outputPath, expectedFiles, scopeToKeys, fileNameRgx });
   }
 
   createDirs(outputPath, scopes);
@@ -57,7 +57,7 @@ export function createFiles({ keys, langs, outputPath, replace }: Params) {
       );
 
       const scopeKey = scope || '__global';
-      writeFile(fileName, keys[scopeKey]);
+      writeFile(fileName, scopeToKeys[scopeKey]);
     });
   }
 
