@@ -1,6 +1,6 @@
-import { handleScope } from './handleScope';
-import { insertValueToKeys } from './insertValueToKeys';
+import { resolveScopeAlias } from './resolveScopeAlias';
 import { ScopeMap, Scopes } from '../types';
+import { messages } from '../messages';
 
 type Params = {
   rgx: RegExp;
@@ -9,6 +9,19 @@ type Params = {
   scopes: Scopes;
   defaultValue: string;
 };
+
+function resolveAliasAndKeyFromService(key: string, scopePath: string, scopes: Scopes): [string, string] {
+  const scopeAlias = resolveScopeAlias({ scopePath, scopes });
+  return [key, scopeAlias];
+}
+
+function resolveAliasAndKeyFromTemplate(key: string, scopes: Scopes): [string, string] {
+  const [scopeAliasOrKey, ...actualKey] = key.split('.');
+  const scopeAliasExists = scopes.aliasToScope.hasOwnProperty(scopeAliasOrKey);
+  const fullKey = scopeAliasExists ? actualKey.join('.') : scopeAliasOrKey;
+
+  return [fullKey, scopeAliasExists ? scopeAliasOrKey : null];
+}
 
 export function regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue }: Params): ScopeMap {
   let result = rgx.exec(str);
@@ -20,38 +33,19 @@ export function regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue }: P
       ? [result.groups.key, result.groups.key2]
       : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
 
+    /**
+     *
+     * When this is a template `currentKey` is the full key from the template include scope: `someScope.title`
+     * When this is a service `currentKey` is only the key because `scope` is the third function parameter: `title`
+     *
+     */
     for(const currentKey of keys) {
-      /**
-       *
-       * When the string comes from templates the `scopeAlias` is the first item:
-       *
-       * @example
-       *
-       * someNested.title => someNested
-       *
-       * And `actualKey` is: `title`
-       *
-       * When the string comes from the service the `scopeAlias` is extracted in the upcoming `if` condition:
-       *
-       * @example
-       *
-       * translate('fromService', {}, 'some/nested')
-       *
-       * scopeAlias => some/nested
-       *
-       * And `actualKey` is fromService
-       *
-       */
-      let [scopeAlias, ...actualKey] = currentKey.split('.');
-      console.log('\n------------------\n');
-
-      console.log('scopeAlias', scopeAlias);
-      console.log('actualKey', actualKey);
-
-      console.log('\n------------------\n');
+      const scopePath = scope || backtickScope;
+      let keyWithoutScope: string;
+      let scopeAlias: null | string;
 
       /**
-       * When we use a translation in the service this will be the scope path
+       * When we use a translation in the service we'll get a `scopePath`
        *
        * @example
        *
@@ -59,26 +53,40 @@ export function regexIterator({ rgx, scopeToKeys, str, scopes, defaultValue }: P
        *
        * scopePath: some/nested
        */
-      const scopePath = scope || backtickScope;
-      console.log('\n------------------\n');
-      console.log('scopePath', scopePath);
-      console.log('\n------------------\n');
       if(scopePath) {
-        [scopeAlias, actualKey] = handleScope({ scopeStr: scopePath, key: scopeAlias, inner: actualKey, scopes });
+        [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(currentKey, scopePath, scopes);
+      } else {
+        [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromTemplate(currentKey, scopes);
       }
 
-      console.log('\n------------------\n');
-
-      console.log('scopeAlias', scopeAlias);
-      console.log('actualKey', actualKey);
-
-      console.log('\n------------------\n');
-
-      insertValueToKeys({ inner: actualKey, scopes, scopeToKeys, key: scopeAlias, defaultValue });
+      addKey({ defaultValue, keyWithoutScope, scopeAlias, scopes, scopeToKeys });
     }
 
     result = rgx.exec(str);
   }
 
   return scopeToKeys;
+}
+
+type AddKeysParams = {
+  defaultValue: string;
+  scopeToKeys: ScopeMap;
+  scopeAlias: string;
+  keyWithoutScope: string;
+  scopes: Scopes;
+};
+
+function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope, scopes }: AddKeysParams) {
+  const scopePath = scopes.aliasToScope[scopeAlias];
+  const keyWithScope = scopeAlias ? `${scopeAlias}.${keyWithoutScope}` : keyWithoutScope;
+  const keyValue = defaultValue || `${messages.missingValue} '${keyWithScope}'`;
+
+  if(scopePath) {
+    if(!scopeToKeys[scopePath]) {
+      scopeToKeys[scopePath] = {};
+    }
+    scopeToKeys[scopePath][keyWithoutScope] = keyValue;
+  } else {
+    scopeToKeys.__global[keyWithoutScope] = keyValue;
+  }
 }

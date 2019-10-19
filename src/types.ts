@@ -29,5 +29,5 @@ export type Scopes = {
 
 export type ScopeMap = {
   __global: object;
-  [scope: string]: object;
+  [scopePath: string]: object;
 };

@@ -1,7 +1,9 @@
 import * as ora from 'ora';
 
 let spinner;
+
 function noop() {}
+
 const isProd = process.env.PRODUCTION;
 const defaultLogger = {
   log: (...msg) => (isProd ? noop : console.log(...msg)),
@@ -11,4 +13,10 @@ const defaultLogger = {
 
 export function getLogger() {
   return defaultLogger;
+}
+
+export function log(tag: string, variable: any) {
+  console.log(`\n------------------Log ${tag}------------------\n`);
+  console.log(variable);
+  console.log(`\n------------------End log ${tag} ------------------\n`);
 }
