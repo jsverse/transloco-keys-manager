@@ -142,7 +142,7 @@ describe('buildTranslationFiles', () => {
 
       buildTranslationFiles(config);
       assertResult(type, expected.global);
-      // assertResult(type, expected.todos, 'todos-page/');
+      assertResult(type, expected.todos, 'todos-page/');
     });
   });
 
