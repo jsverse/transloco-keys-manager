@@ -11,6 +11,7 @@ const config = commandLineArgs([...actionsDefinitions, ...optionDefinitions], {
 });
 
 const { extract, findMissing, help } = config;
+console.log(config);
 
 if (help) {
   const usage = commandLineUsage(sections);

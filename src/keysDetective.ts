@@ -8,7 +8,7 @@ import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
 import { buildKeys } from './keysBuilder/buildKeys';
 import { Config } from './types';
 
-export async function findMissingKeys(inlineConfig: Config) {
+export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
   const translationFiles = getTranslationFilesPath(config.translationsPath);
@@ -17,7 +17,7 @@ export async function findMissingKeys(inlineConfig: Config) {
   logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
   logger.startSpinner(`${messages.extract} `);
 
-  const result = await buildKeys(config);
+  const result = buildKeys(config);
   logger.success(`${messages.extract} 🗝`);
 
   compareKeysToFiles({
