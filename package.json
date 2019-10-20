@@ -47,12 +47,14 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.0.2",
     "deep-diff": "^1.0.2",
-    "find": "^0.3.0",
     "glob": "^7.1.4",
     "ora": "^3.4.0",
     "os-locale": "^4.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/jest": "^24.0.19",
     "fs-extra": "^8.1.0",
     "jest": "^24.9.0",
     "lodash.isequal": "^4.5.0",

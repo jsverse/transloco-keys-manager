@@ -8,6 +8,7 @@
       "esnext",
       "es2015"
     ],
+    "typeRoots": [],
     "sourceMap": true
   },
   "include": [

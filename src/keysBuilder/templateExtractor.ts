@@ -5,6 +5,7 @@ import * as cheerio from 'cheerio';
 import { ExtractorConfig, Scopes, TEMPLATE_TYPE } from '../types';
 import { forEachKey } from './forEachKey';
 import { addKey } from './addKey';
+import { devlog } from '../helpers/logger';
 
 function getNgTemplateContainers(content: string) {
   const hasNgTemplate = content.match(/<ng-template[^>]*transloco[^>]*>/);
@@ -44,11 +45,14 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
               .replace(/'|"|\]/g, '')
               .replace(`${varName}.`, '');
 
-            if(read) {
-              sanitizedKey = `${read}.${sanitizedKey}`;
-            }
+            const withRead = read ? `${read}.${sanitizedKey}` : sanitizedKey;
 
-            let [translationKey, scopeAlias] = resolveAliasAndKeyFromTemplate(sanitizedKey, scopes);
+            let [translationKey, scopeAlias] = resolveAliasAndKeyFromTemplate(withRead, scopes);
+
+            if(!scopeAlias) {
+              // It means it is a global key
+              translationKey = withRead;
+            }
 
             addKey({
               defaultValue,
