@@ -2,7 +2,7 @@
   "name": "@skazaz/transloco-keys-manager",
   "version": "1.0.0-beta.24",
   "description": "Angular Transloco keys managing cli tool and Webpack plugin",
-  "main": "public_api.js",
+  "main": "dist/public_api.js",
   "scripts": {
     "test": "npm run build && PRODUCTION=true jest",
     "start": "npm run prettier && tsc --watch",

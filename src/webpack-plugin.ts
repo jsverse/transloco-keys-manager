@@ -3,7 +3,8 @@ import { extractTemplateKeys } from './keysBuilder/extractTemplateKeys';
 import { extractTSKeys } from './keysBuilder/extractTSKeys';
 import { mergeDeep } from './helpers/mergeDeep';
 import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
-import { Config } from './types';
+import { Config, ExtractionResult } from './types';
+import { initExtraction } from './keysBuilder/initExtraction';
 
 let init = true;
 
@@ -17,9 +18,9 @@ export class TranslocoExtractKeysPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.watchRun.tapAsync('WatchRun', (comp, cb) => {
+
+    compiler.hooks.watchRun.tap('WatchRun', (comp) => {
       if(init) {
-        cb();
         init = false;
         return;
       }
@@ -43,29 +44,33 @@ export class TranslocoExtractKeysPlugin {
           fileType = 'ts';
         }
 
-        fileType ? keysExtractions[fileType].push(file) : keysExtractions;
+        fileType && keysExtractions[fileType].push(file);
       }
 
+      let htmlResult: ExtractionResult = initExtraction();
+      let tsResult: ExtractionResult = initExtraction();
+
       if(keysExtractions.html.length || keysExtractions.ts.length) {
-        const [htmlResult, tsResult] = [
-          extractTemplateKeys({ ...this.config, files: keysExtractions.html }),
-          extractTSKeys({ ...this.config, files: keysExtractions.ts })
-        ];
+        if(keysExtractions.html.length) {
+          htmlResult = extractTemplateKeys({ ...this.config, files: keysExtractions.html });
+        }
 
-        const allKeys = mergeDeep({}, htmlResult.scopeToKeys, tsResult.scopeToKeys);
-        const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
+        if(keysExtractions.ts.length) {
+          tsResult = extractTSKeys({ ...this.config, files: keysExtractions.ts });
+        }
 
-        // hold a file map and deep compare?
-        keysFound &&
-        compareKeysToFiles({
-          translationFiles: undefined,
-          scopeToKeys: allKeys,
-          translationPath: this.config.translationsPath,
-          addMissingKeys: true
-        });
-        cb();
-      } else {
-        cb();
+        const allKeys = mergeDeep({}, (htmlResult).scopeToKeys, tsResult.scopeToKeys);
+        const hasTranslateKeys = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
+
+        if(hasTranslateKeys) {
+          compareKeysToFiles({
+            pluginMode: true,
+            translationFiles: undefined,
+            scopeToKeys: allKeys,
+            translationPath: this.config.translationsPath,
+            addMissingKeys: true
+          });
+        }
       }
     });
   }
