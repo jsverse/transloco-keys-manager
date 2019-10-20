@@ -6,8 +6,8 @@ export type Config = {
   replace?: boolean;
   addMissingKeys?: boolean;
   prodMode?: boolean;
-  scopes?: any;
-  files?: any;
+  scopes?: Scopes;
+  files?: string[];
 };
 
 export type ExtractionResult = {
@@ -31,3 +31,8 @@ export type ScopeMap = {
   __global: object;
   [scopePath: string]: object;
 };
+
+export enum TEMPLATE_TYPE {
+  STRUCTURAL,
+  NG_TEMPLATE
+}

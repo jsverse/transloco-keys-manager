@@ -1,20 +1,20 @@
-import { Config, ExtractionResult } from '../types';
+import { Config, ExtractionResult, ExtractorConfig, ScopeMap } from '../types';
 import { initExtraction } from './initExtraction';
 import * as glob from 'glob';
 
 export function extractKeys(
-  { input, scopes, defaultValue, files: specificFiles }: Config,
+  { input, scopes, defaultValue, files }: Config,
   fileType: 'ts' | 'html',
-  extractor
-): Promise<ExtractionResult> {
+  extractor: (config: ExtractorConfig) => ScopeMap
+): ExtractionResult {
   let { src, scopeToKeys, fileCount } = initExtraction(input);
 
-  return new Promise(resolve => {
-    const files = specificFiles || glob.sync(`${src}/**/*.${fileType}`);
-    for (const file of files) {
-      fileCount++;
-      scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });
-    }
-    resolve({ scopeToKeys, fileCount });
-  });
+  const fileList = files || glob.sync(`${src}/**/*.${fileType}`);
+
+  for (const file of fileList) {
+    fileCount++;
+    scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });
+  }
+
+  return { scopeToKeys, fileCount };
 }

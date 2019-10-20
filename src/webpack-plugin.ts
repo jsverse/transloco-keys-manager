@@ -45,24 +45,23 @@ export class TranslocoExtractKeysPlugin {
       }
 
       if (keysExtractions.html.length || keysExtractions.ts.length) {
-        Promise.all([
+        const [htmlResult, tsResult] = [
           extractTemplateKeys({ ...this.config, files: keysExtractions.html }),
           extractTSKeys({ ...this.config, files: keysExtractions.ts })
-        ]).then(([htmlResult, tsResult]) => {
-          const allKeys = mergeDeep({}, htmlResult.scopeToKeys, tsResult.scopeToKeys);
-          const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
+        ];
 
-          // hold a file map and deep compare?
-          keysFound &&
-            compareKeysToFiles({
-              translationFiles: undefined,
-              keys: allKeys,
-              translationPath: this.config.translationsPath,
-              addMissingKeys: true
-            });
+        const allKeys = mergeDeep({}, htmlResult.scopeToKeys, tsResult.scopeToKeys);
+        const keysFound = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
 
-          cb();
-        });
+        // hold a file map and deep compare?
+        keysFound &&
+          compareKeysToFiles({
+            translationFiles: undefined,
+            keys: allKeys,
+            translationPath: this.config.translationsPath,
+            addMissingKeys: true
+          });
+        cb();
       } else {
         cb();
       }

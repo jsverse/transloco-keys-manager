@@ -17,7 +17,7 @@ type Params = {
  */
 export function resolveScopeAlias({ scopePath, scopes }: Params) {
   const scopeAlias = scopes.scopeToAlias[scopePath];
-  if(scopeAlias) {
+  if (scopeAlias) {
     return scopeAlias;
   }
 

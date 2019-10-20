@@ -15,7 +15,7 @@ export function getLogger() {
   return defaultLogger;
 }
 
-export function log(tag: string, variable: any) {
+export function devlog(tag: string, variable: any) {
   console.log(`\n------------------Log ${tag}------------------\n`);
   console.log(variable);
   console.log(`\n------------------End log ${tag} ------------------\n`);
