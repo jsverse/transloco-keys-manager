@@ -2,9 +2,9 @@ import { resolveConfig } from './helpers/resolveConfig';
 import { extractTemplateKeys } from './keysBuilder/extractTemplateKeys';
 import { extractTSKeys } from './keysBuilder/extractTSKeys';
 import { mergeDeep } from './helpers/mergeDeep';
-import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
 import { Config, ExtractionResult } from './types';
 import { initExtraction } from './keysBuilder/initExtraction';
+import { generateKeys } from './keysDetective/generateKeys';
 
 let init = true;
 
@@ -18,7 +18,6 @@ export class TranslocoExtractKeysPlugin {
   }
 
   apply(compiler) {
-
     compiler.hooks.watchRun.tap('WatchRun', (comp) => {
       if(init) {
         init = false;
@@ -59,16 +58,13 @@ export class TranslocoExtractKeysPlugin {
           tsResult = extractTSKeys({ ...this.config, files: keysExtractions.ts });
         }
 
-        const allKeys = mergeDeep({}, (htmlResult).scopeToKeys, tsResult.scopeToKeys);
-        const hasTranslateKeys = Object.keys(allKeys).some(key => Object.keys(allKeys[key]).length > 0);
+        const scopeToKeys = mergeDeep({}, (htmlResult).scopeToKeys, tsResult.scopeToKeys);
+        const hasTranslateKeys = Object.keys(scopeToKeys).some(key => Object.keys(scopeToKeys[key]).length > 0);
 
         if(hasTranslateKeys) {
-          compareKeysToFiles({
-            pluginMode: true,
-            translationFiles: undefined,
-            scopeToKeys: allKeys,
+          generateKeys({
             translationPath: this.config.translationsPath,
-            addMissingKeys: true
+            scopeToKeys
           });
         }
       }

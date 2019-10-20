@@ -13,10 +13,9 @@ type Params = {
   translationPath: string;
   addMissingKeys: boolean;
   translationFiles: string[];
-  pluginMode?: boolean;
 }
 
-export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys, translationFiles, pluginMode }: Params) {
+export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys, translationFiles }: Params) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
 
@@ -66,7 +65,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
     return missing.length || extra.length;
   });
 
-  !pluginMode && buildTable({
+   buildTable({
     langs,
     diffsPerLang,
     addMissingKeys
