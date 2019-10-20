@@ -21,7 +21,7 @@ export const optionDefinitions = [
   },
   {
     name: 'add-missing-keys',
-    alias: 'm',
+    alias: 'a',
     type: Boolean,
     description: 'Whether to add missing keys that were found by the detective'
   },

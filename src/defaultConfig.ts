@@ -26,5 +26,5 @@ export const defaultConfig: Config = {
    */
 
   // Whether to add missing keys that were found by the detective
-  addMissingKeys: true
+  addMissingKeys: false
 };
