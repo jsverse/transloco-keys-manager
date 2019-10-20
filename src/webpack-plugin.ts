@@ -26,7 +26,9 @@ export class TranslocoExtractKeysPlugin {
 
       const keysExtractions = { html: [], ts: [] };
       const files = Object.keys(comp.watchFileSystem.watcher.mtimes);
-      const configChanged = files.some(file => file.includes('.module'));
+
+      // Maybe someone added a TRANSLOCO_SCOPE
+      const configChanged = files.some(file => file.includes('.module') || file.includes('.component'));
 
       if(configChanged) {
         // Rebuild the scopeMap

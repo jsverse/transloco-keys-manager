@@ -5,7 +5,6 @@ export type Config = {
   defaultValue?: undefined | string;
   replace?: boolean;
   addMissingKeys?: boolean;
-  prodMode?: boolean;
   scopes?: Scopes;
   files?: string[];
 };

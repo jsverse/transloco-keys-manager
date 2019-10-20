@@ -11,6 +11,7 @@ import { Config } from './types';
 export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
+
   const translationFiles = getTranslationFilesPath(config.translationsPath);
   if (!translationFiles) return;
 
