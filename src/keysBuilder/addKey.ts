@@ -14,8 +14,8 @@ export function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope,
   const keyWithScope = scopeAlias ? `${scopeAlias}.${keyWithoutScope}` : keyWithoutScope;
   const keyValue = defaultValue || `${messages.missingValue} '${keyWithScope}'`;
 
-  if(scopePath) {
-    if(!scopeToKeys[scopePath]) {
+  if (scopePath) {
+    if (!scopeToKeys[scopePath]) {
       scopeToKeys[scopePath] = {};
     }
     scopeToKeys[scopePath][keyWithoutScope] = keyValue;

@@ -22,7 +22,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
   logger.success(`${messages.extract} 🗝`);
 
   let keysFound = 0;
-  for(const [_, scopeKeys] of Object.entries(scopeToKeys)) {
+  for (const [_, scopeKeys] of Object.entries(scopeToKeys)) {
     keysFound += countKeys(scopeKeys as object);
   }
 

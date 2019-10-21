@@ -1,7 +1,7 @@
 export function forEachKey(content: string, regex, cb) {
   let result = regex.exec(content);
 
-  while(result) {
+  while (result) {
     /** Support ternary operator */
     const { backtickKey, backtickScope, scope } = result.groups;
     const keys = result.groups.key2
@@ -14,7 +14,7 @@ export function forEachKey(content: string, regex, cb) {
      * When this is a service `currentKey` is only the key because `scope` is the third function parameter: `title`
      *
      */
-    for(const currentKey of keys) {
+    for (const currentKey of keys) {
       const scopePath = scope || backtickScope;
       cb(currentKey, scopePath);
     }

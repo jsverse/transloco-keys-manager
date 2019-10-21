@@ -11,7 +11,7 @@ export type Config = {
 
 export type ExtractionResult = {
   scopeToKeys: object;
-  fileCount: number;
+  fileCount?: number;
 };
 
 export type ExtractorConfig = {
@@ -22,8 +22,14 @@ export type ExtractorConfig = {
 };
 
 export type Scopes = {
-  scopeToAlias: object;
-  aliasToScope: object;
+  // scope/path => scopePath
+  scopeToAlias: {
+    [scope: string]: string
+  };
+  // scopePath => scope/path
+  aliasToScope: {
+    [scopeAlias: string]: string
+  };
 };
 
 export type ScopeMap = {

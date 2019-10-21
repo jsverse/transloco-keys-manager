@@ -7,21 +7,21 @@ import { addKey } from './addKey';
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
-  if(!content.includes('@ngneat/transloco')) return scopeToKeys;
+  if (!content.includes('@ngneat/transloco')) return scopeToKeys;
 
   const serviceMethod = regexs.serviceInjection.exec(content);
   let regex: RegExp;
 
-  if(serviceMethod) {
+  if (serviceMethod) {
     regex = regexs.translationCalls(serviceMethod.groups.serviceName);
   } else {
     const translateFunction = regexs.directImport.exec(content);
-    if(translateFunction) {
+    if (translateFunction) {
       regex = regexs.translationCalls();
     }
   }
 
-  if(regex) {
+  if (regex) {
     forEachKey(content, regex, (translatioKey, scopePath) => {
       const [key, scopeAlias] = resolveAliasAndKeyFromService(translatioKey, scopePath, scopes);
       addKey({
@@ -48,7 +48,7 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
  */
 function resolveAliasAndKeyFromService(key: string, scopePath: string, scopes: Scopes): [string, string] {
   // It means that is the global
-  if(!scopePath) {
+  if (!scopePath) {
     return [key, null];
   }
 

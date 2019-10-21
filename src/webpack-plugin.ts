@@ -5,6 +5,8 @@ import { mergeDeep } from './helpers/mergeDeep';
 import { Config, ExtractionResult } from './types';
 import { initExtraction } from './keysBuilder/initExtraction';
 import { generateKeys } from './keysDetective/generateKeys';
+import { updateScopesMap } from './helpers/updateScopesMap';
+import { buildTranslationFiles } from './keysBuilder';
 
 let init = true;
 
@@ -18,22 +20,15 @@ export class TranslocoExtractKeysPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.watchRun.tap('WatchRun', (comp) => {
+    compiler.hooks.watchRun.tap('WatchRun', comp => {
       if(init) {
+        buildTranslationFiles(this.config);
         init = false;
         return;
       }
 
       const keysExtractions = { html: [], ts: [] };
       const files = Object.keys(comp.watchFileSystem.watcher.mtimes);
-
-      // Maybe someone added a TRANSLOCO_SCOPE
-      const configChanged = files.some(file => file.includes('.module') || file.includes('.component'));
-
-      if(configChanged) {
-        // Rebuild the scopeMap
-        this.config = resolveConfig(this.inlineConfig);
-      }
 
       for(const file of files) {
         let fileType;
@@ -50,15 +45,17 @@ export class TranslocoExtractKeysPlugin {
       let tsResult: ExtractionResult = initExtraction();
 
       if(keysExtractions.html.length || keysExtractions.ts.length) {
+        if(keysExtractions.ts.length) {
+          // Maybe someone added a TRANSLOCO_SCOPE
+          updateScopesMap({ files });
+          tsResult = extractTSKeys({ ...this.config, files: keysExtractions.ts });
+        }
+
         if(keysExtractions.html.length) {
           htmlResult = extractTemplateKeys({ ...this.config, files: keysExtractions.html });
         }
 
-        if(keysExtractions.ts.length) {
-          tsResult = extractTSKeys({ ...this.config, files: keysExtractions.ts });
-        }
-
-        const scopeToKeys = mergeDeep({}, (htmlResult).scopeToKeys, tsResult.scopeToKeys);
+        const scopeToKeys = mergeDeep({}, htmlResult.scopeToKeys, tsResult.scopeToKeys);
         const hasTranslateKeys = Object.keys(scopeToKeys).some(key => Object.keys(scopeToKeys[key]).length > 0);
 
         if(hasTranslateKeys) {

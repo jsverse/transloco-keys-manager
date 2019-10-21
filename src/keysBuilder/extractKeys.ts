@@ -7,14 +7,13 @@ export function extractKeys(
   fileType: 'ts' | 'html',
   extractor: (config: ExtractorConfig) => ScopeMap
 ): ExtractionResult {
-  let { src, scopeToKeys, fileCount } = initExtraction(input);
+  let { scopeToKeys } = initExtraction();
 
-  const fileList = files || glob.sync(`${src}/**/*.${fileType}`);
+  const fileList = files || glob.sync(`${process.cwd()}/${input}/**/*.${fileType}`);
 
   for (const file of fileList) {
-    fileCount++;
     scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });
   }
 
-  return { scopeToKeys, fileCount };
+  return { scopeToKeys, fileCount: fileList.length };
 }

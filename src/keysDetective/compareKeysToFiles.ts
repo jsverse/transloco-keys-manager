@@ -13,7 +13,7 @@ type Params = {
   translationPath: string;
   addMissingKeys: boolean;
   translationFiles: string[];
-}
+};
 
 export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys, translationFiles }: Params) {
   const logger = getLogger();
@@ -23,21 +23,21 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
 
   /** An array of the existing translation files paths */
   const currentFiles = translationFiles || getTranslationFilesPath(translationPath);
-  if(!currentFiles) return;
+  if (!currentFiles) return;
 
-  for(const fileName of currentFiles) {
+  for (const fileName of currentFiles) {
     /** extract the scope and the lang name from the file */
     const { scope, fileLang } = regexs.fileLang(translationPath).exec(fileName).groups;
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
 
-    if(!keys) continue;
+    if (!keys) continue;
 
     const translation = readFile(fileName, { parse: true });
 
     // Compare the current file with the extracted keys
     const differences = DeepDiff(translation, keys);
 
-    if(differences) {
+    if (differences) {
       const lang = `${scope ? scope + '/' : ''}${fileLang}`;
 
       diffsPerLang[lang] = {
@@ -45,11 +45,11 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
         extra: []
       };
 
-      for(const diff of differences) {
-        if(diff.kind === 'N') {
+      for (const diff of differences) {
+        if (diff.kind === 'N') {
           diffsPerLang[lang].missing.push(diff);
           addMissingKeys && applyChange(translation, keys, diff);
-        } else if(diff.kind === 'D') {
+        } else if (diff.kind === 'D') {
           diffsPerLang[lang].extra.push(diff);
         }
       }
@@ -65,10 +65,9 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
     return missing.length || extra.length;
   });
 
-   buildTable({
+  buildTable({
     langs,
     diffsPerLang,
     addMissingKeys
   });
 }
-

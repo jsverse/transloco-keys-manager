@@ -1,7 +1,8 @@
 import { getConfig, TranslocoConfig } from '@ngneat/transloco-utils';
-import { buildScopesMap } from './buildScopesMap';
+import { updateScopesMap } from './updateScopesMap';
 import { Config } from '../types';
 import { defaultConfig } from '../defaultConfig';
+import { getScopes } from '../keysBuilder/scopes';
 
 export function resolveConfig(inlineConfig: Config): Config {
   const defaults = defaultConfig;
@@ -9,7 +10,8 @@ export function resolveConfig(inlineConfig: Config): Config {
 
   const config = { ...defaults, ...flatFileConfig(fileConfig), ...inlineConfig };
 
-  return { ...config, scopes: buildScopesMap(config.input) };
+  updateScopesMap({ input: config.input });
+  return { ...config, scopes: getScopes() };
 }
 
 function flatFileConfig(fileConfig: TranslocoConfig) {
@@ -18,5 +20,5 @@ function flatFileConfig(fileConfig: TranslocoConfig) {
     translationsPath: fileConfig.rootTranslationsPath,
     langs: fileConfig.langs,
     ...keysManager
-  }
+  };
 }

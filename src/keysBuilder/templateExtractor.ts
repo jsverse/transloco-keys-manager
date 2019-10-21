@@ -12,8 +12,8 @@ function getNgTemplateContainers(content: string) {
   const hasStructural = content.includes('*transloco');
 
   const containers = [];
-  if(hasNgTemplate) containers.push('ng-template[transloco]');
-  if(hasStructural) containers.push('[__transloco]');
+  if (hasNgTemplate) containers.push('ng-template[transloco]');
+  if (hasStructural) containers.push('[__transloco]');
 
   return {
     containers,
@@ -23,24 +23,28 @@ function getNgTemplateContainers(content: string) {
 
 export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
   const content = readFile(file);
-  if(!content.includes('transloco')) return scopeToKeys;
+  if (!content.includes('transloco')) return scopeToKeys;
 
   const { containers, hasStructural } = getNgTemplateContainers(content);
 
-  if(containers.length > 0) {
+  if (containers.length > 0) {
     const fileTemplate = hasStructural ? content.replace(/\*transloco/g, '__transloco') : content;
     const $ = cheerio.load(fileTemplate, { decodeEntities: false });
 
-    for(const query of containers) {
+    for (const query of containers) {
       $(query).each((_, element) => {
         const containerType = !!element.attribs.__transloco ? TEMPLATE_TYPE.STRUCTURAL : TEMPLATE_TYPE.NG_TEMPLATE;
-        const { translationKeys, read, varName } = getStructuralDirectiveBasedKeys(element, containerType, $(element).html());
+        const { translationKeys, read, varName } = getStructuralDirectiveBasedKeys(
+          element,
+          containerType,
+          $(element).html()
+        );
 
-        if(Array.isArray(translationKeys)) {
-          for(const currentKey of translationKeys) {
-
+        if (Array.isArray(translationKeys)) {
+          for (const currentKey of translationKeys) {
             /** The raw key may contain square braces we need to align it to '.' */
-            let sanitizedKey = currentKey.trim()
+            let sanitizedKey = currentKey
+              .trim()
               .replace(/\[/g, '.')
               .replace(/'|"|\]/g, '')
               .replace(`${varName}.`, '');
@@ -49,7 +53,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
 
             let [translationKey, scopeAlias] = resolveAliasAndKeyFromTemplate(withRead, scopes);
 
-            if(!scopeAlias) {
+            if (!scopeAlias) {
               // It means it is a global key
               translationKey = withRead;
             }
@@ -73,7 +77,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
    *
    */
   [regexs.directive(), regexs.directiveTernary(), regexs.pipe()].forEach(regex => {
-    forEachKey(content, regex, (translationKey) => {
+    forEachKey(content, regex, translationKey => {
       const [key, scopeAlias] = resolveAliasAndKeyFromTemplate(translationKey, scopes);
       addKey({
         defaultValue,

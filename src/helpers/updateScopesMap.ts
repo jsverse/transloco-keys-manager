@@ -1,6 +1,7 @@
 import { toCamelCase } from './toCamelCase';
 import { readFile } from './readFile';
 import * as glob from 'glob';
+import { addScope } from '../keysBuilder/scopes';
 
 function parse(str: string) {
   const sanitized = str
@@ -18,17 +19,16 @@ function parse(str: string) {
   return JSON.parse(sanitized);
 }
 
-export function buildScopesMap(input: string) {
-  let scopeToAlias = {};
-  const tsFiles = glob.sync(`${process.cwd()}/${input}/**/*.ts`);
+export function updateScopesMap({ input, files }: { input?: string, files?: string[] }) {
+  const tsFiles = files || glob.sync(`${process.cwd()}/${input}/**/*.ts`);
   const translocoScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
 
-  for (const file of tsFiles) {
+  for(const file of tsFiles) {
     const content = readFile(file);
     const match = translocoScopeRegex.exec(content);
-    if (!match) continue;
+    if(!match) continue;
 
-    // remove line breaks and white space
+    // Remove line breaks and white space
     const scopeVal = match.groups.value
       .trim()
       .replace(/(\r\n|\n|\r)/gm, '')
@@ -37,19 +37,10 @@ export function buildScopesMap(input: string) {
     const { scope, alias } = scopeVal.includes('{')
       ? parse(`${scopeVal}}`)
       : {
-          scope: scopeVal,
-          alias: toCamelCase(scopeVal)
-        };
-
-    scopeToAlias[scope] = alias;
+        scope: scopeVal,
+        alias: toCamelCase(scopeVal)
+      };
+    
+    addScope(scope, alias);
   }
-
-  const aliasToScope = Object.keys(scopeToAlias).reduce((acc, key) => {
-    const mappedScope = scopeToAlias[key];
-    acc[mappedScope] = key;
-
-    return acc;
-  }, {});
-
-  return { aliasToScope, scopeToAlias };
 }

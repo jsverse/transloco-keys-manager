@@ -8,7 +8,7 @@ export function getTranslationFilesPath(path: string): string[] | undefined {
   const dirExists = fs.existsSync(fullPath);
   const files = dirExists && glob.sync(`${fullPath}/**/*.json`);
 
-  if(!dirExists || files.length === 0) {
+  if (!dirExists || files.length === 0) {
     const msg = dirExists ? messages.noTranslationFilesFound(fullPath) : messages.pathDoesntExists;
     console.log(chalk.bgRed.black(`Transloco Keys Manager: ${msg}`));
     return;
