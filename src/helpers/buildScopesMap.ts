@@ -21,11 +21,11 @@ function parse(str: string) {
 export function buildScopesMap(input: string) {
   let scopeToAlias = {};
   const tsFiles = glob.sync(`${process.cwd()}/${input}/**/*.ts`);
-  const componentScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
+  const translocoScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
 
   for (const file of tsFiles) {
     const content = readFile(file);
-    const match = componentScopeRegex.exec(content);
+    const match = translocoScopeRegex.exec(content);
     if (!match) continue;
 
     // remove line breaks and white space
