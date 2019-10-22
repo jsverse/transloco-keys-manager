@@ -2,11 +2,14 @@ import { resolveConfig } from './helpers/resolveConfig';
 import { extractTemplateKeys } from './keysBuilder/extractTemplateKeys';
 import { extractTSKeys } from './keysBuilder/extractTSKeys';
 import { mergeDeep } from './helpers/mergeDeep';
-import { Config, ExtractionResult } from './types';
+import { Config } from './types';
 import { initExtraction } from './keysBuilder/initExtraction';
 import { generateKeys } from './keysDetective/generateKeys';
 import { updateScopesMap } from './helpers/updateScopesMap';
 import { buildTranslationFiles } from './keysBuilder';
+import { buildTranslationFile } from './keysBuilder/buildTranslationFile';
+import { resolveOutputPath } from './helpers/resolveOutputPath';
+import { buildScopeFilePaths } from './helpers/buildScopeFilePaths';
 
 let init = true;
 
@@ -41,13 +44,21 @@ export class TranslocoExtractKeysPlugin {
         fileType && keysExtractions[fileType].push(file);
       }
 
-      let htmlResult: ExtractionResult = initExtraction();
-      let tsResult: ExtractionResult = initExtraction();
+      let htmlResult = initExtraction();
+      let tsResult = initExtraction();
 
       if(keysExtractions.html.length || keysExtractions.ts.length) {
         if(keysExtractions.ts.length) {
           // Maybe someone added a TRANSLOCO_SCOPE
-          updateScopesMap({ files });
+          const newScopes = updateScopesMap({ files });
+
+          const paths = buildScopeFilePaths({
+            aliasToScope: newScopes,
+            langs: this.config.langs,
+            outputPath: resolveOutputPath(this.config),
+          });
+
+          paths.forEach(({ path }) => buildTranslationFile(path, {}));
           tsResult = extractTSKeys({ ...this.config, files: keysExtractions.ts });
         }
 

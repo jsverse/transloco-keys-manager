@@ -7,6 +7,7 @@ import { resolveConfig } from './helpers/resolveConfig';
 import { buildKeys } from './keysBuilder/buildKeys';
 import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
 import { Config } from './types';
+import { resolveOutputPath } from './helpers/resolveOutputPath';
 
 /** The main function, collects the settings and starts the files build. */
 export function buildTranslationFiles(inlineConfig: Config) {
@@ -22,7 +23,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
   logger.success(`${messages.extract} 🗝`);
 
   let keysFound = 0;
-  for (const [_, scopeKeys] of Object.entries(scopeToKeys)) {
+  for(const [_, scopeKeys] of Object.entries(scopeToKeys)) {
     keysFound += countKeys(scopeKeys as object);
   }
 
@@ -32,7 +33,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
     scopeToKeys,
     scopes: config.scopes,
     langs: config.langs,
-    outputPath: `${process.cwd()}/${config.translationsPath}`,
+    outputPath: resolveOutputPath(config),
     replace: config.replace
   });
 }

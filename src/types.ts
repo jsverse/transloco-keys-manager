@@ -10,7 +10,7 @@ export type Config = {
 };
 
 export type ExtractionResult = {
-  scopeToKeys: object;
+  scopeToKeys: ScopeMap;
   fileCount?: number;
 };
 

@@ -1,7 +1,8 @@
 import { toCamelCase } from './toCamelCase';
 import { readFile } from './readFile';
 import * as glob from 'glob';
-import { addScope } from '../keysBuilder/scopes';
+import { addScope, hasScope } from '../keysBuilder/scopes';
+import { Scopes } from '../types';
 
 function parse(str: string) {
   const sanitized = str
@@ -19,9 +20,11 @@ function parse(str: string) {
   return JSON.parse(sanitized);
 }
 
-export function updateScopesMap({ input, files }: { input?: string, files?: string[] }) {
+export function updateScopesMap({ input, files }: { input?: string, files?: string[] }): Scopes['aliasToScope'] {
   const tsFiles = files || glob.sync(`${process.cwd()}/${input}/**/*.ts`);
   const translocoScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
+  // Return only the new scopes (for the plugin)
+  const aliasToScope = {};
 
   for(const file of tsFiles) {
     const content = readFile(file);
@@ -40,7 +43,12 @@ export function updateScopesMap({ input, files }: { input?: string, files?: stri
         scope: scopeVal,
         alias: toCamelCase(scopeVal)
       };
-    
-    addScope(scope, alias);
+
+    if(hasScope(scope) === false) {
+      addScope(scope, alias);
+      aliasToScope[alias] = scope;
+    }
   }
+
+  return aliasToScope;
 }

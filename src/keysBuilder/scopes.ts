@@ -12,4 +12,7 @@ export function getScopes() {
   return { scopeToAlias, aliasToScope }
 }
 
+export function hasScope(scope: string) {
+  return scopeToAlias.hasOwnProperty(scope);
+}
 
