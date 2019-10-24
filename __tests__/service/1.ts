@@ -11,7 +11,7 @@ import { IDataPreviewColumn } from '@datorama/modules/connect-and-mix/data-strea
 import { DataSegmentation } from '@datorama/modules/connect-and-mix/data-streams/light-connect/light-connect.enums';
 import { DatoOptionDefault } from '@datorama/modules/shared/shared.types';
 import { TranslocoService, translate, TRANSLOCO_SCOPE } from '@ngneat/transloco';
-
+/** t(18) * */
 @Component({
   selector: 'da-lc-left-nav-partitions',
   templateUrl: './left-nav-partitions.component.html',
@@ -31,9 +31,11 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
     label2: this.transloco.translate(`1`),
     id: DataSegmentation[key],
   }));
-
+  /** me no */
   private dispose: any[] = [];
-
+  /**
+   * t(19)
+   * */
   constructor(
     private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder,
@@ -49,7 +51,9 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
     this.aaccd = transloco.translate('17')
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {   /**
+   * t(20.21.22.23, 24, 25)
+   * */
     const metadata = this.lightConnectStore.dataPreview.metadata;
     this.form = this.formBuilder.group({
       shouldUsePartitions: [size(toJS(metadata.segmentationFields)) > 0],

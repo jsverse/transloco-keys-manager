@@ -8,12 +8,13 @@ import { buildKeys } from './keysBuilder/buildKeys';
 import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
 import { Config } from './types';
 import { resolveOutputPath } from './helpers/resolveOutputPath';
+import {setConfig} from "./config";
 
 /** The main function, collects the settings and starts the files build. */
 export function buildTranslationFiles(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
-
+  setConfig(config);
   logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(config.langs.length)} 👷🏗\n`);
   logger.startSpinner(`${messages.extract} 🗝`);
 

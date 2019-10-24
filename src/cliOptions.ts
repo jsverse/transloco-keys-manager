@@ -13,6 +13,7 @@ export const optionDefinitions = [
     description: 'Which languages files to generate'
   },
   { name: 'default-value', alias: 'd', type: String, description: `What's the default value for a generated key` },
+  { name: 'marker', alias: 'm', type: String, description: `What's the dynamic values marker` },
   {
     name: 'replace',
     alias: 'r',

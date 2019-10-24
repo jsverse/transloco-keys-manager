@@ -4,6 +4,8 @@ import { ExtractorConfig, ScopeMap, Scopes } from '../types';
 import { forEachKey } from './forEachKey';
 import { resolveScopeAlias } from './resolveScopeAlias';
 import { addKey } from './addKey';
+import {extractCommentsValues} from "./commentsSectionExtractor";
+import {resolveAliasAndKey} from "./resolveAliasAndKey";
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
@@ -22,8 +24,8 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
   }
 
   if (regex) {
-    forEachKey(content, regex, (translatioKey, scopePath) => {
-      const [key, scopeAlias] = resolveAliasAndKeyFromService(translatioKey, scopePath, scopes);
+    forEachKey(content, regex, (translationKey, scopePath) => {
+      const [key, scopeAlias] = resolveAliasAndKeyFromService(translationKey, scopePath, scopes);
       addKey({
         defaultValue,
         scopeAlias,
@@ -33,6 +35,15 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
       });
     });
   }
+
+  /** Check for dynamic markings */
+  extractCommentsValues({
+    content,
+    regex: regexs.tsCommentsSection(),
+    scopes,
+    defaultValue,
+    scopeToKeys
+  });
 
   return scopeToKeys;
 }

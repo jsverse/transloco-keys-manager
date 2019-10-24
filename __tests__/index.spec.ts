@@ -34,6 +34,7 @@ describe('buildTranslationFiles', () => {
 
     it('should work with pipe', () => {
       let expected = gKeys(48);
+      expected["53"] = expected['49.50.51.52'] = 'missing';
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
@@ -92,7 +93,10 @@ describe('buildTranslationFiles', () => {
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with service', () => {
-      let expected = gKeys(17);
+      let expected = gKeys(19);
+      expected["20.21.22.23"] = 'missing';
+      expected["24"] = 'missing';
+      expected["25"] = 'missing';
       buildTranslationFiles(config);
       assertResult(type, expected);
     });

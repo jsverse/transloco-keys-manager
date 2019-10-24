@@ -26,5 +26,8 @@ export const defaultConfig: Config = {
    */
 
   // Whether to add missing keys that were found by the detective
-  addMissingKeys: false
+  addMissingKeys: false,
+
+  // The marker for comment values
+  marker: "t"
 };
