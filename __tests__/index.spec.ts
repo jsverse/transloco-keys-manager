@@ -11,6 +11,8 @@ function gKeys(len: number, prefix?: string) {
   return expected;
 }
 
+const m = 'missing';
+
 function gConfig(type, config = {}) {
   return {
     "defaultValue": "missing",
@@ -24,6 +26,8 @@ function gConfig(type, config = {}) {
 
 function assertResult(type: string, expected: object, path?: string) {
   const translation = fs.readJsonSync(`./__tests__/${type}/i18n/${path || ''}en.json`);
+  console.log({ translation, expected });
+
   expect(equal(translation, expected)).toBe(true);
 }
 
@@ -148,6 +152,78 @@ describe('buildTranslationFiles', () => {
       assertResult(type, expected.global);
       assertResult(type, expected.todos, 'todos-page/');
     });
+  });
+
+  describe.only('comments', () => {
+    const type = 'comments', config = gConfig(type);
+    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+
+    it('show work with comments', () => {
+      const expected = {
+        global: {
+          'a.some.key': m,
+          'b.some.key': m,
+          'need.transloco': m,
+          '1.some': m,
+          '1': m,
+          '2': m,
+          '3': m,
+          '4': m,
+          '5': m,
+          '6': m,
+          '7': m,
+          '8': m,
+          '10': m,
+          '13': m,
+          '11.12': m,
+          'hey.man': m,
+          'whats.app': m,
+          '101': m,
+          '111.12': m,
+          'hello': m,
+          'hey1.man': m,
+          'whats1.app': m,
+          hello1: m,
+          '131': m,
+          '10.1': m,
+          '10.2': m,
+          '10.3': m,
+          '10.4': m,
+          '10.5': m,
+          '10.6.7': m,
+          '11': m,
+          '11.1': m,
+          '11.2.3': m,
+          '200': m,
+          '201': m,
+          '202': m,
+          '203.204': m,
+          '205': m,
+          '206': m,
+          '207.208': m,
+          '209': m,
+          '210': m,
+          '211': m,
+          '212': m,
+          '213.214': m,
+          '215': m,
+          '216': m,
+          '217.218': m,
+          'from.comment': m,
+          'pretty.cool.da': m,
+        },
+        admin: {
+          '1': m,
+          '2.3': m,
+          '4': m
+        }
+      };
+      buildTranslationFiles(config);
+
+      assertResult(type, expected.global);
+      assertResult(type, expected.admin, 'admin/');
+    });
+
   });
 
 });

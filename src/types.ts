@@ -25,11 +25,11 @@ export type ExtractorConfig = {
 export type Scopes = {
   // scope/path => scopePath
   scopeToAlias: {
-    [scope: string]: string
+    [scope: string]: string;
   };
   // scopePath => scope/path
   aliasToScope: {
-    [scopeAlias: string]: string
+    [scopeAlias: string]: string;
   };
 };
 

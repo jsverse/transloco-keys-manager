@@ -8,7 +8,7 @@ import { buildKeys } from './keysBuilder/buildKeys';
 import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
 import { Config } from './types';
 import { resolveOutputPath } from './helpers/resolveOutputPath';
-import {setConfig} from "./config";
+import { setConfig } from './config';
 
 /** The main function, collects the settings and starts the files build. */
 export function buildTranslationFiles(inlineConfig: Config) {
@@ -24,7 +24,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
   logger.success(`${messages.extract} 🗝`);
 
   let keysFound = 0;
-  for(const [_, scopeKeys] of Object.entries(scopeToKeys)) {
+  for (const [_, scopeKeys] of Object.entries(scopeToKeys)) {
     keysFound += countKeys(scopeKeys as object);
   }
 

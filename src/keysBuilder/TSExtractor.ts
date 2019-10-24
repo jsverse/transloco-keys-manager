@@ -4,8 +4,8 @@ import { ExtractorConfig, ScopeMap, Scopes } from '../types';
 import { forEachKey } from './forEachKey';
 import { resolveScopeAlias } from './resolveScopeAlias';
 import { addKey } from './addKey';
-import {extractCommentsValues} from "./commentsSectionExtractor";
-import {resolveAliasAndKey} from "./resolveAliasAndKey";
+import { extractCommentsValues } from './commentsSectionExtractor';
+import { resolveAliasAndKey } from './resolveAliasAndKey';
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);

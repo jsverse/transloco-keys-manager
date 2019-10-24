@@ -20,16 +20,16 @@ function parse(str: string) {
   return JSON.parse(sanitized);
 }
 
-export function updateScopesMap({ input, files }: { input?: string, files?: string[] }): Scopes['aliasToScope'] {
+export function updateScopesMap({ input, files }: { input?: string; files?: string[] }): Scopes['aliasToScope'] {
   const tsFiles = files || glob.sync(`${process.cwd()}/${input}/**/*.ts`);
   const translocoScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
   // Return only the new scopes (for the plugin)
   const aliasToScope = {};
 
-  for(const file of tsFiles) {
+  for (const file of tsFiles) {
     const content = readFile(file);
     const match = translocoScopeRegex.exec(content);
-    if(!match) continue;
+    if (!match) continue;
 
     // Remove line breaks and white space
     const scopeVal = match.groups.value
@@ -40,11 +40,11 @@ export function updateScopesMap({ input, files }: { input?: string, files?: stri
     const { scope, alias } = scopeVal.includes('{')
       ? parse(`${scopeVal}}`)
       : {
-        scope: scopeVal,
-        alias: toCamelCase(scopeVal)
-      };
+          scope: scopeVal,
+          alias: toCamelCase(scopeVal)
+        };
 
-    if(hasScope(scope) === false) {
+    if (hasScope(scope) === false) {
       addScope(scope, alias);
       aliasToScope[alias] = scope;
     }

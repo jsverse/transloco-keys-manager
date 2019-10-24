@@ -29,5 +29,5 @@ export const defaultConfig: Config = {
   addMissingKeys: false,
 
   // The marker for comment values
-  marker: "t"
+  marker: 't'
 };

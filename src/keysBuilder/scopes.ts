@@ -9,10 +9,9 @@ export function addScope(scope: string, alias: string) {
 }
 
 export function getScopes() {
-  return { scopeToAlias, aliasToScope }
+  return { scopeToAlias, aliasToScope };
 }
 
 export function hasScope(scope: string) {
   return scopeToAlias.hasOwnProperty(scope);
 }
-

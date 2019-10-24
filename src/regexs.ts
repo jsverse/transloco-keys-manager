@@ -26,7 +26,7 @@ export const regexs = {
   },
   tsCommentsSection: () => /\/\*\*[^]+?\*\//g,
   templateCommentsSection: () => /<!--[^-]+?-->/g,
-  markerValues: (marker) => new RegExp(`${sanitizeForRegex(marker)}\\(([^)]+)\\)`, 'g'),
+  markerValues: marker => new RegExp(`${sanitizeForRegex(marker)}\\(([^)]+)\\)`, 'g'),
   /** use the translate function directly */
   directImport: /import\s*{\s*[^}]*translate[^}]*}\s*from\s*("|')@ngneat\/transloco\1/
 };

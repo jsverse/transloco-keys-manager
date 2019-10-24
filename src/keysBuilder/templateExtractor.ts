@@ -1,12 +1,12 @@
-import {readFile} from '../helpers/readFile';
-import {getStructuralDirectiveBasedKeys} from './getStructuralDirectiveBasedKeys';
-import {regexs} from '../regexs';
+import { readFile } from '../helpers/readFile';
+import { getStructuralDirectiveBasedKeys } from './getStructuralDirectiveBasedKeys';
+import { regexs } from '../regexs';
 import * as cheerio from 'cheerio';
-import {ExtractorConfig, TEMPLATE_TYPE} from '../types';
-import {forEachKey} from './forEachKey';
-import {addKey} from './addKey';
-import {extractCommentsValues} from "./commentsSectionExtractor";
-import {resolveAliasAndKey} from "./resolveAliasAndKey";
+import { ExtractorConfig, TEMPLATE_TYPE } from '../types';
+import { forEachKey } from './forEachKey';
+import { addKey } from './addKey';
+import { extractCommentsValues } from './commentsSectionExtractor';
+import { resolveAliasAndKey } from './resolveAliasAndKey';
 
 function getNgTemplateContainers(content: string) {
   const hasNgTemplate = content.match(/<ng-template[^>]*transloco[^>]*>/);
@@ -101,4 +101,3 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
 
   return scopeToKeys;
 }
-

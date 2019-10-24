@@ -7,7 +7,7 @@ import { getTranslationFilesPath } from './keysDetective/getTranslationFilesPath
 import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
 import { buildKeys } from './keysBuilder/buildKeys';
 import { Config } from './types';
-import {setConfig} from "./config";
+import { setConfig } from './config';
 
 export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();

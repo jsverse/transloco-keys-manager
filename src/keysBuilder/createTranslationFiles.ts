@@ -19,17 +19,17 @@ export function createTranslationFiles({ scopeToKeys, langs, outputPath, replace
   const globalFiles = langs.map(lang => ({ path: `${outputPath}/${lang}.json` }));
   const actions: FileAction[] = [];
 
-  for(const { path } of globalFiles) {
+  for (const { path } of globalFiles) {
     actions.push(buildTranslationFile(path, scopeToKeys.__global, replace));
   }
 
-  for(const { path, scope } of scopeFiles) {
+  for (const { path, scope } of scopeFiles) {
     actions.push(buildTranslationFile(path, scopeToKeys[scope], replace));
   }
 
   const newFiles = actions.filter(action => action.type === 'new');
 
-  if(newFiles.length) {
+  if (newFiles.length) {
     logger.success(`${messages.creatingFiles} 🗂`);
     logger.log(newFiles.map(action => action.path).join('\n'));
   }

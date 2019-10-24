@@ -1,4 +1,4 @@
-import { getTranslationFilesPath } from './getTranslationFilesPath';
+import { getTranslationFilesPath } from '../keysDetective/getTranslationFilesPath';
 import { regexs } from '../regexs';
 import { readFile } from '../helpers/readFile';
 import { writeFile } from '../helpers/writeFile';
