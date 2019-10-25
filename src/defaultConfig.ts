@@ -1,8 +1,7 @@
 import { Config } from './types';
 
 export const defaultConfig: Config = {
-  // Paths you would like to extract strings from.
-  // You can use path expansion, glob patterns and multiple
+  // Paths you would like to extract strings from
   input: 'src',
 
   // Where are the main translation files
