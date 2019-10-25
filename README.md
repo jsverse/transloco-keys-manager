@@ -1,6 +1,6 @@
-# Transloco Keys Manager
+# Transloco Keys Manager 
 
-This library includes:
+COMING SOON:
 
 - CLI tool: 
     - Extract translation keys from template/ts files 
