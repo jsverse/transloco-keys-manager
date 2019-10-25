@@ -17,7 +17,7 @@
     "prettier": "prettier --write 'src/**/*.ts'"
   },
   "bin": {
-    "transloco-keys-manager": "dist/index.js"
+    "transloco-keys-manager": "index.js"
   },
   "publishConfig": {
     "access": "public"
