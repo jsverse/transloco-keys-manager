@@ -43,7 +43,7 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 ## 🔑 Keys Extractor
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
 
-### 🏁 Options
+### Options
 
 - `input` : Paths you would like to extract strings from:
 ```
@@ -54,10 +54,10 @@ example
 example
 ```
 
-### 🔧Transloco Config File
+### Transloco Config File
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
 
-### 🎁 Dynamic Keys
+### Dynamic Keys
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
 
 ## 🕵️‍ Keys Detective
