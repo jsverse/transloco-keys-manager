@@ -6,7 +6,7 @@
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
 
-## 🍩 Features
+## 🍻Features
 - ✅ Extract Translate Keys
 - ✅ Find Missing and Extra Keys
 - ✅ Webpack Plugin
@@ -22,7 +22,7 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Join the chat at https://gitter.im/ngneat-transloco](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/ngneat-transloco/lobby?source=orgpage)
 
-## Table of Contents
+## 📖 Table of Contents
 - [Installation](#installation)
 - [Keys Extractor](#keys-extractor)
   - [Options](#dynamic-keys)
@@ -31,7 +31,7 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 - [Keys Detective](#keys-detective)
 - [Webpack Plugin](#webpack-plugin)
 
-## Installation
+## 🌩 Installation
 ### NPM
 
 `npm install @ngneat/transloco-keys-manager --save-dev`
@@ -40,10 +40,10 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
 `yarn add @ngneat/transloco-keys-manager --dev`
 
-## Keys Extractor
+## 🔑 Keys Extractor
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
 
-### Options
+### 🏁 Options
 
 - `input` : Paths you would like to extract strings from:
 ```
@@ -54,17 +54,18 @@ example
 example
 ```
 
-### Transloco Config File
+### 🔧Transloco Config File
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
 
-### Dynamic Keys
+### 🎁 Dynamic Keys
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
 
-## Keys Detective
+## 🕵️‍ Keys Detective
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
 
-## Webpack Plugin
+## 🌟 Webpack Plugin
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+
 ## Core Team
 
 <table>
