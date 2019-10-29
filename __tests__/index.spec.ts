@@ -1,5 +1,6 @@
 import equal from 'lodash.isequal';
 import * as fs from 'fs-extra';
+import diff from 'deep-diff';
 import { buildTranslationFiles } from '../src/keysBuilder';
 
 function gKeys(len: number, prefix?: string) {
@@ -26,19 +27,24 @@ function gConfig(type, config = {}) {
 
 function assertResult(type: string, expected: object, path?: string) {
   const translation = fs.readJsonSync(`./__tests__/${type}/i18n/${path || ''}en.json`);
-  console.log({ translation, expected });
+  // console.log({translation, expected});
 
   expect(equal(translation, expected)).toBe(true);
 }
 
 describe('buildTranslationFiles', () => {
+  
   describe('Pipe', () => {
     const type = 'pipe', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with pipe', () => {
       let expected = gKeys(48);
-      expected["53"] = expected['49.50.51.52'] = 'missing';
+      expected['62.63.64'] = expected['49.50.51.52'] = 'missing';
+      for (let i = 53; i <= 61; i++) {
+        expected[`${i}`] = 'missing';
+      }
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
@@ -46,6 +52,7 @@ describe('buildTranslationFiles', () => {
 
   describe('ngContainer', () => {
     const type = 'ngContainer', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with ngContainer', () => {
@@ -68,8 +75,10 @@ describe('buildTranslationFiles', () => {
     });
   });
 
+  
   describe('ngTemplate', () => {
     const type = 'ngTemplate', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with ngTemplate', () => {
@@ -94,6 +103,7 @@ describe('buildTranslationFiles', () => {
 
   describe('service', () => {
     const type = 'service', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with service', () => {
@@ -130,6 +140,7 @@ describe('buildTranslationFiles', () => {
 
   describe('read', () => {
     const type = 'read', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with read', () => {
@@ -154,8 +165,9 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-  describe.only('comments', () => {
+  describe('comments', () => {
     const type = 'comments', config = gConfig(type);
+    
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('show work with comments', () => {
@@ -215,7 +227,8 @@ describe('buildTranslationFiles', () => {
         admin: {
           '1': m,
           '2.3': m,
-          '4': m
+          '4': m,
+          '5555': m
         }
       };
       buildTranslationFiles(config);

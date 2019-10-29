@@ -86,7 +86,7 @@
     "@commitlint/cli": "8.1.0",
     "@commitlint/config-angular": "8.1.0",
     "@commitlint/config-conventional": "8.1.0",
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^24.0.20",
     "all-contributors-cli": "^6.8.1",
     "fs-extra": "^8.1.0",
     "git-cz": "^3.2.1",

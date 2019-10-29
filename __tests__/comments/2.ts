@@ -13,6 +13,7 @@ import { DatoGridAPI } from '../dato-grid-api';
 import { combineLatest } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { DatoGridHelper } from '../grid-helper';
+import { translate } from '@ngneat/transloco';
 
 export type ExtendedGridOptions = {
   onRowDataUpdated: (event) => void;
@@ -67,7 +68,7 @@ export class DatoGridComponent extends BaseCustomControl implements ControlValue
   gridOptions: DatoGridOptions;
 
   /**
-   * t(admin.1, admin.2.3, admin.4, admon.5555)
+   * t(admin.1, admin.2.3, admin.4, admin.5555)
    */
   @HostBinding('class.grid-pagination') hasPagination = true;
 

@@ -11,7 +11,7 @@ const stringToKeys = valueRegex => {
       // Support multi keys t(a, b.c, d)
       .split(',')
       // Remove spaces
-      .map(v => v.trim());
+      .map(v => v.replace(/\*|\n/g, '').trim());
 };
 
 const toOneDimArray = (acc, strings) => {
