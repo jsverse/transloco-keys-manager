@@ -1,3 +1,7 @@
 export function stringify(val: object) {
-  return JSON.stringify(val, null, 2);
+  const sorted = Object.keys(val).sort().reduce((acc, key) => {
+    acc[key] = val[key];
+    return acc;
+  }, {});
+  return JSON.stringify(sorted, null, 2);
 }
