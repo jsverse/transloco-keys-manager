@@ -23,7 +23,7 @@ export class TranslocoExtractKeysPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.watchRun.tap('WatchRun', comp => {
+    compiler.hooks.watchRun.tap('TranslocoExtractKeysPlugin', comp => {
       if (init) {
         buildTranslationFiles(this.config);
         init = false;
