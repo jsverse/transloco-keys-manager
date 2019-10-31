@@ -1,5 +1,5 @@
 import { Config } from '../types';
 
-export function resolveOutputPath(config: Config) {
-  return `${process.cwd()}/${config.translationsPath}`;
+export function resolveOutputPath(output: Config['output']) {
+  return `${process.cwd()}/${output}`;
 }

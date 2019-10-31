@@ -7,6 +7,7 @@ export type Config = {
   addMissingKeys?: boolean;
   scopes?: Scopes;
   files?: string[];
+  output?: string;
   marker?: string;
 };
 

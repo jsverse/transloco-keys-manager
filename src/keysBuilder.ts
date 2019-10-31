@@ -34,7 +34,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
     scopeToKeys,
     scopes: config.scopes,
     langs: config.langs,
-    outputPath: resolveOutputPath(config),
+    outputPath: resolveOutputPath(config.output),
     replace: config.replace
   });
 }

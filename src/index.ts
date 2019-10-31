@@ -2,15 +2,23 @@
 import * as commandLineArgs from 'command-line-args';
 import * as commandLineUsage from 'command-line-usage';
 
-import { actionsDefinitions, optionDefinitions, sections } from './cliOptions';
+import { optionDefinitions, sections } from './cliOptions';
 import { buildTranslationFiles } from './keysBuilder';
 import { findMissingKeys } from './keysDetective';
 
-const config = commandLineArgs([...actionsDefinitions, ...optionDefinitions], {
-  camelCase: true
+const mainDefinitions = [
+  { name: 'command', defaultOption: true }
+]
+
+const mainOptions = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true })
+const argv = mainOptions._unknown || []
+
+const config = commandLineArgs(optionDefinitions, {
+  camelCase: true,
+  argv
 });
 
-const { extract, findMissing, help } = config;
+const { help } = config;
 
 if (help) {
   const usage = commandLineUsage(sections);
@@ -19,9 +27,9 @@ if (help) {
   process.exit();
 }
 
-if (extract) {
+if (mainOptions.command === 'extract') {
   buildTranslationFiles(config);
-} else if (findMissing) {
+} else if (mainOptions.command === 'find') {
   findMissingKeys(config);
 } else {
   console.log(`Please provide an action...`);

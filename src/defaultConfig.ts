@@ -1,32 +1,36 @@
 import { Config } from './types';
 
 export const defaultConfig: Config = {
-  // Paths you would like to extract strings from
+  // The source directory for all files using the translation keys
   input: 'src',
 
-  // Where are the main translation files
-  translationsPath: 'src/assets/i18n',
+   // The target directory for all generated translation files
+  output: 'src/assets/i18n',
 
-  // Which languages files to generate
+  // The marker sign for dynamic values
+  marker: 't',
+
+  // The languages files to generate
   langs: ['en'],
 
   /**
    *  Relevant only for the Extractor
    */
 
-  // What's the default value for a generated key
+  // The default value of a generated key
   defaultValue: undefined,
 
-  // Replace the contents of output file if it exists (Merges by default)
+  // Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)
   replace: false,
+  
 
   /**
    *   Relevant only for the Detective
    */
 
-  // Whether to add missing keys that were found by the detective
+  // Add missing keys that were found by the detective (default value is false)
   addMissingKeys: false,
 
-  // The marker for comment values
-  marker: 't'
+  // The path for the root translation files (for example: assets/i18n)
+  translationsPath: 'src/assets/i18n',
 };

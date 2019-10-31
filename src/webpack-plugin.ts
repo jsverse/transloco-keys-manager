@@ -55,7 +55,7 @@ export class TranslocoExtractKeysPlugin {
           const paths = buildScopeFilePaths({
             aliasToScope: newScopes,
             langs: this.config.langs,
-            outputPath: resolveOutputPath(this.config)
+            outputPath: resolveOutputPath(this.config.output)
           });
 
           paths.forEach(({ path }) => buildTranslationFile(path, {}));
