@@ -18,11 +18,11 @@ function flatFileConfig(fileConfig: TranslocoConfig) {
   const keysManager = fileConfig.keysManager || {};
   const { rootTranslationsPath, langs } = fileConfig;
 
-  if(rootTranslationsPath) {
+  if (rootTranslationsPath) {
     keysManager['translationsPath'] = fileConfig.rootTranslationsPath;
   }
 
-  if(langs) {
+  if (langs) {
     keysManager['langs'] = fileConfig.langs;
   }
 

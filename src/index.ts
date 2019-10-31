@@ -6,12 +6,10 @@ import { optionDefinitions, sections } from './cliOptions';
 import { buildTranslationFiles } from './keysBuilder';
 import { findMissingKeys } from './keysDetective';
 
-const mainDefinitions = [
-  { name: 'command', defaultOption: true }
-]
+const mainDefinitions = [{ name: 'command', defaultOption: true }];
 
-const mainOptions = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true })
-const argv = mainOptions._unknown || []
+const mainOptions = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true });
+const argv = mainOptions._unknown || [];
 
 const config = commandLineArgs(optionDefinitions, {
   camelCase: true,

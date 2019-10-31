@@ -1,6 +1,10 @@
-
 export const optionDefinitions = [
-  { name: 'input', alias: 'i', type: String, description: 'The source directory for all files using the translation keys' },
+  {
+    name: 'input',
+    alias: 'i',
+    type: String,
+    description: 'The source directory for all files using the translation keys'
+  },
   { name: 'output', alias: 'o', type: String, description: 'The target directory for all generated translation files' },
   { name: 'translations-path', alias: 'p', type: String, description: 'Where are the main translation files' },
   {
@@ -14,7 +18,8 @@ export const optionDefinitions = [
     name: 'replace',
     alias: 'r',
     type: Boolean,
-    description: 'Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)'
+    description:
+      'Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)'
   },
   { name: 'default-value', alias: 'd', type: String, description: `The default value of a generated key` },
   { name: 'marker', alias: 'm', type: String, description: `The marker sign for dynamic values` },
