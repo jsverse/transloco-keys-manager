@@ -41,8 +41,8 @@ describe('buildTranslationFiles', () => {
 
     it('should work with pipe', () => {
       let expected = gKeys(48);
-      expected['62.63.64'] = expected['49.50.51.52'] = 'missing';
-      for (let i = 53; i <= 61; i++) {
+      expected['63.64.65'] = expected['49.50.51.52'] = 'missing';
+      for (let i = 53; i <= 62; i++) {
         expected[`${i}`] = 'missing';
       }
       buildTranslationFiles(config);

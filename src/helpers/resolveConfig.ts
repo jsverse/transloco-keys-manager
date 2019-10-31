@@ -16,9 +16,15 @@ export function resolveConfig(inlineConfig: Config): Config {
 
 function flatFileConfig(fileConfig: TranslocoConfig) {
   const keysManager = fileConfig.keysManager || {};
-  return {
-    translationsPath: fileConfig.rootTranslationsPath,
-    langs: fileConfig.langs,
-    ...keysManager
-  };
+  const { rootTranslationsPath, langs } = fileConfig;
+
+  if(rootTranslationsPath) {
+    keysManager['translationsPath'] = fileConfig.rootTranslationsPath;
+  }
+
+  if(langs) {
+    keysManager['langs'] = fileConfig.langs;
+  }
+
+  return keysManager;
 }

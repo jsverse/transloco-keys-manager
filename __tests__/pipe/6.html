@@ -13,5 +13,11 @@
     </div>
     <span>{{ var + 'not'  | transloco }}</span>
 
-    {{ '62.63.64' another | other | transloco }}
 </div>
+
+<textarea formControlName="outputContent" rows="10" cols="30"
+          class="mt-6" [ngClass]="txtareaClass"
+          placeholder="{{'62' | transloco }}" readonly>
+                </textarea>
+
+<div>{{ '63.64.65' another | other | transloco }}</div>
