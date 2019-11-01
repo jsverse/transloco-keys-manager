@@ -160,7 +160,7 @@ Note that when using a Typescript file, you must have an `import { } from '@ngne
 </ng-container>
 ```
 
-The extracted key for the code above will be:
+The extracted keys for the code above will be:
 ```json
 {
  "dashboard.title": "",
