@@ -5,6 +5,7 @@
 > 👻 Make Translation Fun Again
 
 Translation is a tiresome and repetitive task. Each time we add new text, we need to create a new entry in the translation file, find the correct placement for it, etc. Moreover, when we delete existing keys, we need to remember to remove them from each translation file.
+
 To make the process less burdensome, we've created two tools for the Transloco library, which will do the monotonous work for you.
 
 ## 🍻Features
@@ -93,9 +94,7 @@ The angular-cli doesn't support adding a custom Webpack config out of the box. T
 ng g @ngneat/transloco:keys-manager-webpack
 ```
 
-Note that if you're adding Transloco to your project with `ng add @ngneat/transloco`, it'll let you add it from there.
-
-If you want to learn what it does, you can follow this [article](https://netbasal.com/customize-webpack-configuration-in-your-angular-application-d09683f6bd22).
+You should now see a new file named `webpack.config.js` configured with `TranslocoExtractKeysPlugin`:
 
 ```ts
 // webpack.config.js
@@ -108,14 +107,22 @@ module.exports = {
 };
 ```
 
+If you want to learn what the schematics command does, you can follow this [article](https://netbasal.com/customize-webpack-configuration-in-your-angular-application-d09683f6bd22).
+
 Now run `npm start`, and it'll generate new keys when a **save** is made to the project.
+
+Note that if you're adding Transloco to your project with `ng add @ngneat/transloco`, it'll let you add it from there.
 
 ### Dynamic Keys
 There are times when we need to extract keys that aren't static. One example can be when you need to use a dynamic expression:
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
 
-const value = translocoService.translate(`key.${type}.postfix`);
+class MyComponent {
+  someMethod() {
+    const value = translocoService.translate(`key.${type}.postfix`);
+  }
+}
 ```
 
 To support such cases, you can add a special comment to your code, which tells the CLI to extract it. You can use it in your Typescript files:
@@ -139,12 +146,10 @@ Or in your templates:
 
 ```html
 <!-- t('I.am.going.to.extract.it', 'this.is.cool') -->
-<ng-container *transloco="let t">
-  ...
-</ng-container>
+<ng-container *transloco="let t">...</ng-container>
 ```
 
-Note that when using a Typescript file, you must have an `import { } from '@ngneat/transloco''` statement in it.
+Note that when using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
 
 ### Extra Support
 - Supports for the `read` [input](https://netbasal.gitbook.io/transloco/translation-in-the-template/structural-directive#utilizing-the-read-input):
