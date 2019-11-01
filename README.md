@@ -34,8 +34,8 @@ To make the process less burdensome, we've created two tools for the Transloco l
   - [Dynamic Keys](#dynamic-keys)
   - [Extra Support](#extra-support)
 - [Options](#dynamic-keys)
+ - [Transloco Config File](#transloco-config-file)
 - [Keys Detective](#keys-detective)
-- [Transloco Config File](#transloco-config-file)
 
 ## 🌩 Installation
 ### NPM
@@ -187,7 +187,7 @@ Add the following script to your project's `package.json` file:
 
 Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys found.
 
-## Options
+## 🕹 Options
 
 - `input`: The source directory for all files using the translation keys: (defaults to `src`)
 ```
@@ -243,7 +243,7 @@ transloco-keys-manager --help
 transloco-keys-manager -h
 ```
 
-## Transloco Config File
+### Transloco Config File
 One more option to define the `config` object for this library is to create a `transloco.config.js` file in the project's root folder and add the configuration in it:
 
 ```ts
