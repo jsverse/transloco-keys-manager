@@ -1,1 +1,1 @@
-export { TranslocoExtractKeysPlugin } from './webpack-plugin';
+export { TranslocoExtractKeysWebpackPlugin } from './webpack-plugin';

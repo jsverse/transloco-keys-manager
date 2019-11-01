@@ -13,7 +13,7 @@ import { generateKeys } from './keysBuilder/generateKeys';
 
 let init = true;
 
-export class TranslocoExtractKeysPlugin {
+export class TranslocoExtractKeysWebpackPlugin {
   config: Config;
   inlineConfig: Config;
 

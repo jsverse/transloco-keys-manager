@@ -86,7 +86,7 @@ It'll extract the `admin` scope keys to the relevant folder:
 ```
 
 ### Webpack Plugin
-The `TranslocoExtractKeysPlugin` provides you with the ability to extract the keys live while you're working on the project.
+The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys live while you're working on the project.
 
 The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, we've added a schematics command that'll do the work for you:
 
@@ -94,15 +94,15 @@ The angular-cli doesn't support adding a custom Webpack config out of the box. T
 ng g @ngneat/transloco:keys-manager-webpack
 ```
 
-You should now see a new file named `webpack.config.js` configured with `TranslocoExtractKeysPlugin`:
+You should now see a new file named `webpack.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
 
 ```ts
 // webpack.config.js
-const { TranslocoExtractKeysPlugin } = require('@ngneat/transloco-keys-manager');
+const { TranslocoExtractKeysWebpackPlugin } = require('@ngneat/transloco-keys-manager');
 
 module.exports = {
   plugins: [
-    new TranslocoExtractKeysPlugin(config?),
+    new TranslocoExtractKeysWebpackPlugin(config?),
   ]
 };
 ```
