@@ -4,12 +4,14 @@
 
 > 👻 Make Translation Fun Again
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
+Translation is a tiresome and repetitive task. Each time we add new text, we need to create a new entry in the translation file, find the correct placement for it, etc. Moreover, when we delete existing keys, we need to remember to remove them from each translation file.
+To make the process less burdensome, we've created two tools for the Transloco library, which will do the monotonous work for you.
 
 ## 🍻Features
 - ✅ Extract Translate Keys
-- ✅ Find Missing and Extra Keys
+- ✅ Scopes Support
 - ✅ Webpack Plugin
+- ✅ Find Missing and Extra Keys
 
 <hr />
 
@@ -25,11 +27,14 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 ## 📖 Table of Contents
 - [Installation](#installation)
 - [Keys Extractor](#keys-extractor)
-  - [Options](#dynamic-keys)
-  - [Transloco Config File](#transloco-config-file)
+  - [CLI](#cli)
+  - [Scopes Support](#scopes-support)
+  - [Webpack Plugin](#webpack-plugin)
   - [Dynamic Keys](#dynamic-keys)
+  - [Extra Support](#extra-support)
+- [Options](#dynamic-keys)
 - [Keys Detective](#keys-detective)
-- [Webpack Plugin](#webpack-plugin)
+- [Transloco Config File](#transloco-config-file)
 
 ## 🌩 Installation
 ### NPM
@@ -41,30 +46,216 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 `yarn add @ngneat/transloco-keys-manager --dev`
 
 ## 🔑 Keys Extractor
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
+This tool extracts translatable keys from template and typescript files. Transloco provides two ways of using it:
 
-### Options
-
-- `input` : Paths you would like to extract strings from:
-```
-example
-```
-- `...` : description:
-```
-example
+### CLI
+Add the following script to your project's `package.json` file:
+```bash
+{
+  "i18n:extract": "transloco-keys-manager extract"
+}
 ```
 
-### Transloco Config File
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+Run `npm run i18n:extract`, and it'll extract translatable keys from your project.
+
+### Scopes Support
+The extractor supports [scopes](https://netbasal.gitbook.io/transloco/lazy-load-translation-files/scope-configuration) out of the box. When you define a new scope in the `providers` array:
+```ts
+import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+
+@Component({
+  template: `
+    <ng-container *transloco="let t">{{ t('admin.title') }}</ng-container>
+  `,
+  providers: [{  provide: TRANSLOCO_SCOPE, useValue: 'admin' } ]
+})
+export class AdminPageComponent {}
+```
+
+It'll extract the `admin` scope keys to the relevant folder:
+
+```
+📦assets
+ ┗ 📂i18n
+ ┃ ┣ 📂admin
+ ┃ ┃ ┣ 📜en.json
+ ┃ ┃ ┗ 📜es.json
+ ┃ ┣ 📜en.json
+ ┃ ┗ 📜es.json
+```
+
+### Webpack Plugin
+The `TranslocoExtractKeysPlugin` provides you with the ability to extract the keys live while you're working on the project.
+
+The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, we've added a schematics command that'll do the work for you:
+
+```
+ng g @ngneat/transloco:keys-manager-webpack
+```
+
+Note that if you're adding Transloco to your project with `ng add @ngneat/transloco`, it'll let you add it from there.
+
+If you want to learn what it does, you can follow this [article](https://netbasal.com/customize-webpack-configuration-in-your-angular-application-d09683f6bd22).
+
+```ts
+// webpack.config.js
+const { TranslocoExtractKeysPlugin } = require('@ngneat/transloco-keys-manager');
+
+module.exports = {
+  plugins: [
+    new TranslocoExtractKeysPlugin(config?),
+  ]
+};
+```
+
+Now run `npm start`, and it'll generate new keys when a **save** is made to the project.
 
 ### Dynamic Keys
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+There are times when we need to extract keys that aren't static. One example can be when you need to use a dynamic expression:
+```ts
+import { TranslocoService } from '@ngneat/transloco';
+
+const value = translocoService.translate(`key.${type}.postfix`);
+```
+
+To support such cases, you can add a special comment to your code, which tells the CLI to extract it. You can use it in your Typescript files:
+
+```ts
+import { TranslocoService } from '@ngneat/transloco';
+
+class MyComponent {
+
+  /**
+   * t(key.typeOne.postfix, key.typeTwo.postfix)
+   * t(this.will.be.extracted)
+   */
+  someMethod() {
+    const value = translocoService.translate(`key.${type}.postfix`);
+  }
+}
+```
+
+Or in your templates:
+
+```html
+<!-- t('I.am.going.to.extract.it', 'this.is.cool') -->
+<ng-container *transloco="let t">
+  ...
+</ng-container>
+```
+
+Note that when using a Typescript file, you must have an `import { } from '@ngneat/transloco''` statement in it.
+
+### Extra Support
+- Supports for the `read` [input](https://netbasal.gitbook.io/transloco/translation-in-the-template/structural-directive#utilizing-the-read-input):
+```html
+<ng-container *transloco="let t; read: 'dashboard'">
+  <h1>{{ t('title') }}</h1>]
+  <p>{{ t('desc') }}</p>
+</ng-container>
+```
+
+The extracted key for the code above will be:
+```json
+{
+ "dashboard.title": "",
+ "dashboard.desc": ""
+}
+```
+
+- Supports **static** ternary operators:
+
+```html
+<comp [placeholder]="condition ? 'keyOne' : 'keyTwo' | transloco"></comp>
+<h1>{{ condition ? 'keyOne' : 'keyTwo' | transloco }}</h1>
+```
 
 ## 🕵️‍ Keys Detective
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+This tool detects two things: First, it detects any key that exists in one of your translation files, but is missing in any of the others. Secondly, it detects any key that exists in the translation files, but is missing from any of the templates or typescript files.
+Add the following script to your project's `package.json` file:
 
-## 🌟 Webpack Plugin
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+```
+{
+  "i18n:find": "transloco-keys-manager find"
+}
+```
+
+Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys found.
+
+## Options
+
+- `input`: The source directory for all files using the translation keys: (defaults to `src`)
+```
+transloco-keys-manager extract --input src/my/path
+transloco-keys-manager extract -i src/my/path
+```
+
+- `output`: The target directory for all generated translation files: (defaults to `src/assets/i18n`)
+```
+transloco-keys-manager extract --output my/path
+transloco-keys-manager extract -o my/path
+```
+
+- `langs`: The languages files to generate: (defaults to `[en]`)
+```
+transloco-keys-manager extract --langs en es it
+transloco-keys-manager extract -l en es it
+```
+
+- `marker`: The marker sign for dynamic values: (defaults to `t`)
+```
+transloco-keys-manager extract --marker _
+transloco-keys-manager extract -m  _
+```
+
+- `defaultValue`: The default value of a generated key: (defaults to `Missing value for {key}`)
+```
+transloco-keys-manager extract --default-value missingValue
+transloco-keys-manager extract -d missingValue
+```
+
+- `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)
+```
+transloco-keys-manager extract --replace
+transloco-keys-manager extract -r
+```
+
+- `addMissingKeys`: Add missing keys that were found by the detective (defaults to `false`)
+```
+transloco-keys-manager find --add-missing-keys
+transloco-keys-manager find -a
+```
+
+- `translationsPath`: The path for the root translation files (defaults to `src/assets/i18n`)
+```
+transloco-keys-manager find --translations-path my/path
+transloco-keys-manager find -p my/path
+```
+
+- `help`:
+```
+transloco-keys-manager --help
+transloco-keys-manager -h
+```
+
+## Transloco Config File
+One more option to define the `config` object for this library is to create a `transloco.config.js` file in the project's root folder and add the configuration in it:
+
+```ts
+// transloco.config.js
+module.exports = {
+  rootTranslationsPath?: string;
+  langs?: string[];
+  keysManager: {
+    input?: string;
+    output?: string;
+    marker?: string;
+    addMissingKeys?: boolean;
+    replace?: boolean;
+    defaultValue?: string | undefined;
+  };
+}
+```
 
 ## Core Team
 

@@ -7,11 +7,11 @@ export const defaultConfig: Config = {
   // The target directory for all generated translation files
   output: 'src/assets/i18n',
 
-  // The marker sign for dynamic values
-  marker: 't',
-
   // The languages files to generate
   langs: ['en'],
+
+  // The marker sign for dynamic values
+  marker: 't',
 
   /**
    *  Relevant only for the Extractor
