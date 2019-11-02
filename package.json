@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/transloco-keys-manager",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-beta.3",
   "description": "Extract translate keys from projects using transloco",
   "main": "public_api.js",
   "scripts": {
@@ -10,10 +10,11 @@
     "commit": "git-cz",
     "test": "PRODUCTION=true jest",
     "start": "npm run prettier && tsc --watch",
-    "build": "tsc && npm run copy:dist",
-    "uglify": "uglifyjs-folder dist --each --extension .js --output dist",
+    "build": "tsc && npm run copy:dist && npm run uglify",
+    "build:dev": "tsc && npm run copy:dist",
+    "uglify": "terser-folder dist -e -o dist -x .js",
     "clean:dist": "rm -rf dist",
-    "copy:dist": "cp package.json package-lock.json README.md LICENSE dist",
+    "copy:dist": "cp package.json package-lock.json README.md dist",
     "prettier": "prettier --write 'src/**/*.ts'"
   },
   "bin": {
@@ -96,7 +97,8 @@
     "lodash.isequal": "^4.5.0",
     "prettier": "^1.18.2",
     "standard-version": "^6.0.1",
-    "typescript": "^3.6.4",
-    "uglifyjs-folder": "^1.5.1"
+    "terser": "^4.3.9",
+    "terser-folder": "^2.0.0",
+    "typescript": "^3.6.4"
   }
 }

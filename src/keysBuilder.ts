@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { messages } from './messages';
 import { countKeys } from './helpers/countKeys';
 import { getLogger } from './helpers/logger';

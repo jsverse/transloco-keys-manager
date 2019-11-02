@@ -94,10 +94,10 @@ The angular-cli doesn't support adding a custom Webpack config out of the box. T
 ng g @ngneat/transloco:keys-manager-webpack
 ```
 
-You should now see a new file named `webpack.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
+You should now see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
 
 ```ts
-// webpack.config.js
+// webpack-dev.config.js
 const { TranslocoExtractKeysWebpackPlugin } = require('@ngneat/transloco-keys-manager');
 
 module.exports = {
@@ -107,7 +107,13 @@ module.exports = {
 };
 ```
 
-If you want to learn what the schematics command does, you can follow this [article](https://netbasal.com/customize-webpack-configuration-in-your-angular-application-d09683f6bd22).
+And updated `npm start` script to:
+
+```json
+{
+ "start": "ng serve --extra-webpack-config webpack-dev.config.js"
+}
+```
 
 Now run `npm start`, and it'll generate new keys when a **save** is made to the project.
 

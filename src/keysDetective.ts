@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { messages } from './messages';
 import { getLogger } from './helpers/logger';
 import { resolveConfig } from './helpers/resolveConfig';
