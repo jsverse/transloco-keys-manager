@@ -1,12 +1,12 @@
 import { getLogger } from '../helpers/logger';
 import { getTranslationFilesPath } from './getTranslationFilesPath';
-import { regexs } from '../regexs';
 import { readFile } from '../helpers/readFile';
 import { messages } from '../messages';
 import { applyChange, DeepDiff } from 'deep-diff';
 import { ScopeMap } from '../types';
 import { writeFile } from '../helpers/writeFile';
 import { buildTable } from './buildTable';
+import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';
 
 type Params = {
   scopeToKeys: ScopeMap;
@@ -27,7 +27,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
 
   for (const fileName of currentFiles) {
     /** extract the scope and the lang name from the file */
-    const { scope, fileLang } = regexs.fileLang(translationPath).exec(fileName).groups;
+    const { scope, lang: fileLang } = getScopeAndLangFromFullPath(fileName, translationPath);
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
 
     if (!keys) continue;
