@@ -38,9 +38,9 @@ describe('buildTranslationFiles', () => {
 
     it('should work with pipe', () => {
       let expected = gKeys(48);
-      expected['63.64.65'] = expected['49.50.51.52'] = 'missing';
+      expected['63.64.65'] = expected['49.50.51.52'] = m;
       for (let i = 53; i <= 62; i++) {
-        expected[`${i}`] = 'missing';
+        expected[`${i}`] = m;
       }
       buildTranslationFiles(config);
       assertResult(type, expected);

@@ -1,7 +1,7 @@
 import { isString } from '../helpers/isString';
 import { buildPath } from '../helpers/buildPath';
 
-export function mapDiffToKeys(diffArr: any[], side: string) {
+export function mapDiffToKeys(diffArr: any[], side: string): string {
   return diffArr
     .reduce((acc, diff) => {
       const base = diff.path.join('.');
@@ -9,5 +9,5 @@ export function mapDiffToKeys(diffArr: any[], side: string) {
 
       return acc.push(...keys) && acc;
     }, [])
-    .join(', ');
+      .join('\n');
 }

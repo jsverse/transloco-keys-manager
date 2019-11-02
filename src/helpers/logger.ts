@@ -1,4 +1,4 @@
-import * as ora from 'ora';
+import ora from 'ora';
 
 let spinner;
 
