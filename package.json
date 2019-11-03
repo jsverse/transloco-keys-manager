@@ -10,7 +10,7 @@
     "commit": "git-cz",
     "test": "PRODUCTION=true jest",
     "start": "npm run prettier && tsc --watch",
-    "build": "tsc && npm run copy:dist && npm run uglify",
+    "build": "npm run clean:dist && tsc && npm run copy:dist && npm run uglify",
     "build:dev": "tsc && npm run copy:dist",
     "uglify": "terser-folder dist -e -o dist -x .js",
     "clean:dist": "rm -rf dist",
