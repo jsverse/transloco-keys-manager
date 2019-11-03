@@ -2,7 +2,7 @@ import { Config } from './types';
 
 export const defaultConfig: Config = {
   // The source directory for all files using the translation keys
-  input: 'src',
+  input: 'src/app',
 
   // The target directory for all generated translation files
   output: 'src/assets/i18n',

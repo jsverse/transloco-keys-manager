@@ -7,7 +7,7 @@ export function getScopeAndLangFromFullPath(filePath: string, translationPath: s
 
   const scopePath = pathwithScope.split('/');
   let scope, lang;
-  if(scopePath.length > 1) {
+  if (scopePath.length > 1) {
     lang = scopePath.pop().replace('.json', '');
     scope = scopePath.join('/');
   } else {

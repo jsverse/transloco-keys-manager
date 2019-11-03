@@ -38,19 +38,18 @@ To make the process less burdensome, we've created two tools for the Transloco l
 - [Keys Detective](#keys-detective)
 
 ## 🌩 Installation
-### NPM
+Assuming that you've already added Transloco to your project, run the following schematics command:
+```
+ng g @ngneat/transloco:keys-manager
+```
 
-`npm install @ngneat/transloco-keys-manager --save-dev`
-
-### Yarn
-
-`yarn add @ngneat/transloco-keys-manager --dev`
+At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. The project will be updated according to your choice.
 
 ## 🔑 Keys Extractor
 This tool extracts translatable keys from template and typescript files. Transloco provides two ways of using it:
 
-### CLI
-Add the following script to your project's `package.json` file:
+### CLI Usage
+If you chose the CLI option you should see the following script in your project's `package.json` file:
 ```bash
 {
   "i18n:extract": "transloco-keys-manager extract"
@@ -68,12 +67,12 @@ import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
   template: `
     <ng-container *transloco="let t">{{ t('admin.title') }}</ng-container>
   `,
-  providers: [{  provide: TRANSLOCO_SCOPE, useValue: 'admin' } ]
+  providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'admin' }]
 })
 export class AdminPageComponent {}
 ```
 
-It'll extract the `admin` scope keys to the relevant folder:
+It'll extract the scope (`admin` in our case) keys into the relevant folder:
 
 ```
 📦assets
@@ -88,13 +87,9 @@ It'll extract the `admin` scope keys to the relevant folder:
 ### Webpack Plugin
 The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys live while you're working on the project.
 
-The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, we've added a schematics command that'll do the work for you:
+The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, when you choose the Webpack Plugin option it'll do the work for you.
 
-```
-ng g @ngneat/transloco:keys-manager-webpack
-```
-
-You should now see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
+You should see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
 
 ```ts
 // webpack-dev.config.js
@@ -116,8 +111,6 @@ And updated `npm start` script to:
 ```
 
 Now run `npm start`, and it'll generate new keys when a **save** is made to the project.
-
-Note that if you're adding Transloco to your project with `ng add @ngneat/transloco`, it'll let you add it from there.
 
 ### Dynamic Keys
 There are times when we need to extract keys that aren't static. One example can be when you need to use a dynamic expression:
@@ -183,7 +176,7 @@ The extracted keys for the code above will be:
 
 ## 🕵️‍ Keys Detective
 This tool detects two things: First, it detects any key that exists in one of your translation files, but is missing in any of the others. Secondly, it detects any key that exists in the translation files, but is missing from any of the templates or typescript files.
-Add the following script to your project's `package.json` file:
+After installing the library you should see the following script in your project's `package.json` file:
 
 ```
 {
@@ -195,7 +188,7 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `input`: The source directory for all files using the translation keys: (defaults to `src`)
+- `input`: The source directory for all files using the translation keys: (defaults to `src/app`)
 ```
 transloco-keys-manager extract --input src/my/path
 transloco-keys-manager extract -i src/my/path

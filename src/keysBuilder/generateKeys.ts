@@ -15,16 +15,15 @@ type Params = {
  */
 export function generateKeys({ translationPath, scopeToKeys }: Params) {
   const currentFiles = getTranslationFilesPath(translationPath);
-  if(!currentFiles) return;
+  if (!currentFiles) return;
 
-  for(const filePath of currentFiles) {
+  for (const filePath of currentFiles) {
     const { scope } = getScopeAndLangFromFullPath(filePath, translationPath);
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
 
-    if(!keys) continue;
+    if (!keys) continue;
 
     const translation = readFile(filePath, { parse: true });
     writeFile(filePath, mergeDeep({}, translation, keys));
   }
 }
-

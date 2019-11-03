@@ -9,5 +9,5 @@ export function mapDiffToKeys(diffArr: any[], side: string): string {
 
       return acc.push(...keys) && acc;
     }, [])
-      .join('\n');
+    .join('\n');
 }
