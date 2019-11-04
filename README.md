@@ -92,12 +92,14 @@ The extractor supports [scopes](https://netbasal.gitbook.io/transloco/lazy-load-
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
 
 @Component({
-  template: `
-    <ng-container *transloco="let t">{{ t('admin.title') }}</ng-container>
-  `,
+  templateUrl: './admin-page.component.html',
   providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'admin' }]
 })
 export class AdminPageComponent {}
+```
+
+```html
+<ng-container *transloco="let t">{{ t('admin.title') }}</ng-container>
 ```
 
 It'll extract the scope (`admin` in our case) keys into the relevant folder:
