@@ -43,13 +43,13 @@ Assuming that you've already added Transloco to your project, run the following 
 ng g @ngneat/transloco:keys-manager
 ```
 
-At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. The project will be updated according to your choice.
+At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. Note that if you want to use the Webpack plugin and you've already defined other Webpack plugins in you project, you should simply add the Keys Manager plugin to the list, rather than using the schematics command. The project will be updated according to your choice. The following functionality is available once installation is complete: 
 
 ## 🔑 Keys Extractor
-This tool extracts translatable keys from template and typescript files. Transloco provides two ways of using it:
+This tool extracts translatable keys from template and typescript files. Transloco Keys Manager provides two ways of using it:
 
 ### CLI Usage
-If you chose the CLI option you should see the following script in your project's `package.json` file:
+If you chose the CLI option, you should see the following script in your project's `package.json` file:
 ```bash
 {
   "i18n:extract": "transloco-keys-manager extract"
@@ -57,6 +57,34 @@ If you chose the CLI option you should see the following script in your project'
 ```
 
 Run `npm run i18n:extract`, and it'll extract translatable keys from your project.
+
+### Webpack Plugin
+The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys during development, while you're working on the project.
+
+The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, when you choose the Webpack Plugin option, it'll do the work for you.
+
+You should see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
+
+```ts
+// webpack-dev.config.js
+const { TranslocoExtractKeysWebpackPlugin } = require('@ngneat/transloco-keys-manager');
+
+module.exports = {
+  plugins: [
+    new TranslocoExtractKeysWebpackPlugin(config?),
+  ]
+};
+```
+
+Also you should see an updated defintion of the `npm start` command:
+
+```json
+{
+ "start": "ng serve --extra-webpack-config webpack-dev.config.js"
+}
+```
+
+Now run `npm start`, and it'll generate new keys whenever a **save** is made to the project.
 
 ### Scopes Support
 The extractor supports [scopes](https://netbasal.gitbook.io/transloco/lazy-load-translation-files/scope-configuration) out of the box. When you define a new scope in the `providers` array:
@@ -83,37 +111,8 @@ It'll extract the scope (`admin` in our case) keys into the relevant folder:
  ┃ ┣ 📜en.json
  ┃ ┗ 📜es.json
 ```
-
-### Webpack Plugin
-The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys live while you're working on the project.
-
-The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, when you choose the Webpack Plugin option it'll do the work for you.
-
-You should see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
-
-```ts
-// webpack-dev.config.js
-const { TranslocoExtractKeysWebpackPlugin } = require('@ngneat/transloco-keys-manager');
-
-module.exports = {
-  plugins: [
-    new TranslocoExtractKeysWebpackPlugin(config?),
-  ]
-};
-```
-
-And updated `npm start` script to:
-
-```json
-{
- "start": "ng serve --extra-webpack-config webpack-dev.config.js"
-}
-```
-
-Now run `npm start`, and it'll generate new keys when a **save** is made to the project.
-
 ### Dynamic Keys
-There are times when we need to extract keys that aren't static. One example can be when you need to use a dynamic expression:
+There are times when we need to extract keys with valus that may change during runtime. One example can be when you need to use a dynamic expression:
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
 
@@ -124,7 +123,7 @@ class MyComponent {
 }
 ```
 
-To support such cases, you can add a special comment to your code, which tells the CLI to extract it. You can use it in your Typescript files:
+To support such cases, you can add a special comment to your code, which tells the CLI to extract it. It can be added to Typescript files:
 
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
@@ -141,7 +140,7 @@ class MyComponent {
 }
 ```
 
-Or in your templates:
+Or to templates:
 
 ```html
 <!-- t('I.am.going.to.extract.it', 'this.is.cool') -->
