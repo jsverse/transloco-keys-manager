@@ -43,7 +43,11 @@ Assuming that you've already added Transloco to your project, run the following 
 ng g @ngneat/transloco:keys-manager
 ```
 
-At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. Note that if you want to use the Webpack plugin and you've already defined other Webpack plugins in you project, you should simply add the Keys Manager plugin to the list, rather than using the schematics command. The project will be updated according to your choice. The following functionality is available once installation is complete: 
+At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. The project will be updated according to your choice.
+
+Note that if you're going to use the Webpack plugin and you've already defined other Webpack plugins in your project, you should add the Keys Manager plugin to the list, rather than using the schematics command. 
+
+The following functionality is available once the installation is complete:  
 
 ## 🔑 Keys Extractor
 This tool extracts translatable keys from template and typescript files. Transloco Keys Manager provides two ways of using it:
@@ -76,7 +80,7 @@ module.exports = {
 };
 ```
 
-Also you should see an updated defintion of the `npm start` command:
+Also you should see an updated definition of the `npm start` command:
 
 ```json
 {
