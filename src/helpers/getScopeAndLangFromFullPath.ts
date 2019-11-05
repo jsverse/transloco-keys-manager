@@ -3,9 +3,13 @@
  * /Users/username/www/folderName/src/assets/i18n/es.json => { scope: undefined, lang: es }
  */
 export function getScopeAndLangFromFullPath(filePath: string, translationPath: string) {
-  const [_, pathwithScope] = filePath.split(translationPath);
+  if (translationPath.endsWith('/') === false) {
+    translationPath = `${translationPath}/`;
+  }
 
+  const [_, pathwithScope] = filePath.split(translationPath);
   const scopePath = pathwithScope.split('/');
+
   let scope, lang;
   if (scopePath.length > 1) {
     lang = scopePath.pop().replace('.json', '');
