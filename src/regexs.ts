@@ -1,3 +1,9 @@
+/**
+ *  All Rights Reserved.
+ *
+ *  COPYING THIS CODE IS PROHIBITED
+ *
+ */
 import { sanitizeForRegex } from './helpers/sanitizeForRegex';
 
 export const regexs = {
