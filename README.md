@@ -2,7 +2,7 @@
  <img width="50%" height="50%" src="./logo.png">
 </p>
 
-> 👻 Make Translation Fun Again
+> 🦄 The Key to a Better Translation Experience
 
 Translation is a tiresome and repetitive task. Each time we add new text, we need to create a new entry in the translation file, find the correct placement for it, etc. Moreover, when we delete existing keys, we need to remember to remove them from each translation file.
 
