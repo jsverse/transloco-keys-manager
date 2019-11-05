@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "ES2017",
+    "lib": [
+      "es2017",
+      "esnext",
+      "es2015"
+    ],
+    "typeRoots": [],
+    "sourceMap": true
+  },
+  "include": [
+    "src"
+  ]
+}
