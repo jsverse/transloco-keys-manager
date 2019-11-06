@@ -9,6 +9,7 @@ export type Config = {
   files?: string[];
   output?: string;
   marker?: string;
+  sort?: boolean;
 };
 
 export type ExtractionResult = {

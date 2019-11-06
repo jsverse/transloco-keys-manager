@@ -8,7 +8,7 @@ export type FileAction = {
 };
 
 export function buildTranslationFile(path: string, translation: object, replace = false): FileAction {
-  const currentTranslation = fsExtra.readJsonSync(path, { throws: false });
+  const currentTranslation = fsExtra.readJsonSync(path, { throws: false }) || {};
   const action: FileAction = { type: currentTranslation ? 'modified' : 'new', path };
 
   let newTranslation;
@@ -16,7 +16,7 @@ export function buildTranslationFile(path: string, translation: object, replace 
   if (replace) {
     newTranslation = mergeDeep({}, translation);
   } else {
-    newTranslation = mergeDeep({}, currentTranslation || {}, translation);
+    newTranslation = mergeDeep(translation, currentTranslation);
   }
 
   fsExtra.outputFileSync(path, stringify(newTranslation));

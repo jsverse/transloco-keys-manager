@@ -21,6 +21,7 @@ export const optionDefinitions = [
     description:
       'Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)'
   },
+  { name: 'sort', alias: 's', type: Boolean, description: `Sort keys using the sort() method` },
   { name: 'default-value', alias: 'd', type: String, description: `The default value of a generated key` },
   {
     name: 'add-missing-keys',

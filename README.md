@@ -238,6 +238,12 @@ transloco-keys-manager extract --marker _
 transloco-keys-manager extract -m  _
 ```
 
+- `sort`: Whether to sort the keys using JS `sort()` method: (defaults to `false`)
+
+```
+transloco-keys-manager extract --sort
+```
+
 - `defaultValue`: The default value of a generated key: (defaults to `Missing value for {key}`)
 
 ```

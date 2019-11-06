@@ -24,6 +24,6 @@ export function generateKeys({ translationPath, scopeToKeys }: Params) {
     if (!keys) continue;
 
     const translation = readFile(filePath, { parse: true });
-    writeFile(filePath, mergeDeep({}, translation, keys));
+    writeFile(filePath, mergeDeep({}, keys, translation));
   }
 }

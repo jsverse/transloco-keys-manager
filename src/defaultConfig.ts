@@ -13,6 +13,9 @@ export const defaultConfig: Config = {
   // The marker sign for dynamic values
   marker: 't',
 
+  // Whether to sort the keys
+  sort: false,
+
   /**
    *  Relevant only for the Extractor
    */
