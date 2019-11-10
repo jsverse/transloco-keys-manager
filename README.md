@@ -128,6 +128,46 @@ It'll extract the scope (`admin` in our case) keys into the relevant folder:
  ┃ ┗ 📜es.json
 ```
 
+### Inline Loaders
+
+Let's say that we're using the following [inline](https://netbasal.gitbook.io/transloco/lazy-load-translation-files/inline-loaders) loader:
+
+```ts
+export const loader = ['en', 'es'].reduce((acc, lang) => {
+  acc[lang] = () => import(`../i18n/${lang}.json`);
+  return acc;
+}, {});
+
+@NgModule({
+  imports: [TranslocoModule],
+  providers: [
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: {
+        scope: 'scopeName',
+        loader
+      }
+    }
+  ],
+  declarations: [YourComponent],
+  exports: [YourComponent]
+})
+export class FeatureModule {}
+```
+
+We can add it to the `scopePathMap` key in the `transloco.config.js` file:
+
+```js
+module.exports = {
+  langs: ['en', 'es'],
+  scopePathMap: {
+    scopeName: 'src/app/feature/i18n'
+  }
+};
+```
+
+Now, it'll create the files in the provided folder.
+
 ### Dynamic Keys
 
 There are times when we need to extract keys with valus that may change during runtime. One example can be when you need to use a dynamic expression:
@@ -242,6 +282,13 @@ transloco-keys-manager extract -m  _
 
 ```
 transloco-keys-manager extract --sort
+```
+
+- `unflat`: Whether to `unflat` instead of `flat`: (defaults to `flat`)
+
+```
+transloco-keys-manager extract --unflat
+transloco-keys-manager extract -u
 ```
 
 - `defaultValue`: The default value of a generated key: (defaults to `Missing value for {key}`)

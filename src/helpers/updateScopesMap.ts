@@ -3,48 +3,48 @@ import { readFile } from './readFile';
 import * as glob from 'glob';
 import { addScope, hasScope } from '../keysBuilder/scopes';
 import { Scopes } from '../types';
+import { tsquery } from '@phenomnomnominal/tsquery';
 
-function parse(str: string) {
-  const sanitized = str
-    .trim()
-    .replace(/,\s*}/g, '}')
-    .split(':')
-    .map(str =>
-      str
-        .split(',')
-        .map(_str => (!_str.includes('"') ? _str.replace(/([\w-$]+)/, `"$1"`) : _str))
-        .join(',')
-    )
-    .join(':');
-
-  return JSON.parse(sanitized);
-}
+const base = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) PropertyAssignment:has(Identifier[name=/useValue|useFactory/])`;
+const useStringQuery = `${base} > StringLiteral`;
+const useObjectQuery = `${base} > ObjectLiteralExpression`;
 
 export function updateScopesMap({ input, files }: { input?: string; files?: string[] }): Scopes['aliasToScope'] {
   const tsFiles = files || glob.sync(`${process.cwd()}/${input}/**/*.ts`);
-  const translocoScopeRegex = /provide:\s*TRANSLOCO_SCOPE\s*,\s*useValue:\s*(?<value>[^}]*)}/;
   // Return only the new scopes (for the plugin)
   const aliasToScope = {};
 
   for (const file of tsFiles) {
     const content = readFile(file);
-    const match = translocoScopeRegex.exec(content);
-    if (!match) continue;
 
-    // Remove line breaks and white space
-    const scopeVal = match.groups.value
-      .trim()
-      .replace(/(\r\n|\n|\r)/gm, '')
-      .replace(/'|"|`/g, '');
+    if (content.includes('TRANSLOCO_SCOPE') === false) continue;
 
-    const { scope, alias } = scopeVal.includes('{')
-      ? parse(`${scopeVal}}`)
-      : {
-          scope: scopeVal,
-          alias: toCamelCase(scopeVal)
-        };
+    let result: { scope?: string; alias?: string } = {};
 
-    if (hasScope(scope) === false) {
+    const ast = tsquery.ast(content);
+    const scopeByString: any = tsquery(ast, useStringQuery);
+    if (scopeByString.length === 0) {
+      const scopeByObject: any = tsquery(ast, useObjectQuery);
+      for (const identifier of scopeByObject) {
+        for (const prop of identifier.properties) {
+          if (prop.initializer) {
+            const key = prop.name.text;
+            if (key === 'scope' || key === 'alias') {
+              result[key] = prop.initializer.text;
+            }
+          }
+        }
+      }
+    } else {
+      result.scope = scopeByString[0].text;
+    }
+
+    let { scope, alias } = result;
+
+    if (scope && hasScope(scope) === false) {
+      if (!alias) {
+        alias = toCamelCase(scope);
+      }
       addScope(scope, alias);
       aliasToScope[alias] = scope;
     }

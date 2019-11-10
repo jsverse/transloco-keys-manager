@@ -1,17 +1,22 @@
 import { mergeDeep } from '../helpers/mergeDeep';
 import { stringify } from '../helpers/stringify';
+import { getConfig } from '../config';
 import * as fsExtra from 'fs-extra';
+import * as flat from 'flat';
 
 export type FileAction = {
   path: string;
   type: 'new' | 'modified';
 };
 
-export function buildTranslationFile(path: string, translation: object, replace = false): FileAction {
+export function buildTranslationFile(path: string, translation = {}, replace = false): FileAction {
   const currentTranslation = fsExtra.readJsonSync(path, { throws: false }) || {};
   const action: FileAction = { type: currentTranslation ? 'modified' : 'new', path };
 
   let newTranslation;
+  if (getConfig().unflat) {
+    translation = flat.unflatten(translation);
+  }
 
   if (replace) {
     newTranslation = mergeDeep({}, translation);

@@ -1,4 +1,5 @@
 import { Scopes } from '../types';
+import { getConfig } from '@ngneat/transloco-utils';
 
 export type ScopeFiles = { path: string; scope: string }[];
 
@@ -11,13 +12,16 @@ export function buildScopeFilePaths({
   outputPath: string;
   langs: string[];
 }) {
+  const { scopePathMap = {} } = getConfig();
   return Object.values(aliasToScope).reduce((files: ScopeFiles, scope: string) => {
-    langs.forEach(lang =>
+    langs.forEach(lang => {
+      let bastPath = scopePathMap[scope] ? scopePathMap[scope] : `${outputPath}/${scope}`;
+
       files.push({
-        path: `${outputPath}/${scope}/${lang}.json`,
+        path: `${bastPath}/${lang}.json`,
         scope
-      })
-    );
+      });
+    });
 
     return files;
   }, []);

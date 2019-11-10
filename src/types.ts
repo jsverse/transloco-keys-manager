@@ -10,6 +10,7 @@ export type Config = {
   output?: string;
   marker?: string;
   sort?: boolean;
+  unflat?: boolean;
 };
 
 export type ExtractionResult = {
