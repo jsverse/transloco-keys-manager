@@ -1,4 +1,4 @@
-{
-    provide: TRANSLOCO_SCOPE,
-        useValue: "todos-page"
-}
+const d = {
+  provide: TRANSLOCO_SCOPE,
+  useValue: 'todos-page'
+};

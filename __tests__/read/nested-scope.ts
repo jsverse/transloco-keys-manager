@@ -1,4 +1,4 @@
-{
-    provide: TRANSLOCO_SCOPE,
-        useValue: "nested/scope"
-}
+export const v = {
+  provide: TRANSLOCO_SCOPE,
+  useValue: 'nested/scope'
+};

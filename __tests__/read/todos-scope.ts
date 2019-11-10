@@ -1,4 +1,4 @@
-{
-    provide: TRANSLOCO_SCOPE,
-        useValue: "todos-page"
-}
+export const f = {
+  provide: TRANSLOCO_SCOPE,
+  useValue: 'todos-page'
+};

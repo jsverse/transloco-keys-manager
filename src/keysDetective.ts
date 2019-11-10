@@ -23,7 +23,6 @@ export function findMissingKeys(inlineConfig: Config) {
   compareKeysToFiles({
     scopeToKeys: result.scopeToKeys,
     translationPath: `${process.cwd()}/${config.translationsPath}`,
-    addMissingKeys: config.addMissingKeys,
-    translationFiles
+    addMissingKeys: config.addMissingKeys
   });
 }

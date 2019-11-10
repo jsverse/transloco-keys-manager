@@ -7,54 +7,80 @@ import { ScopeMap } from '../types';
 import { writeFile } from '../helpers/writeFile';
 import { buildTable } from './buildTable';
 import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';
-
+import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
+import * as glob from 'glob';
 type Params = {
   scopeToKeys: ScopeMap;
   translationPath: string;
   addMissingKeys: boolean;
-  translationFiles: string[];
 };
 
-export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys, translationFiles }: Params) {
+export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys }: Params) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
 
   const diffsPerLang = {};
 
   /** An array of the existing translation files paths */
-  const currentFiles = translationFiles || getTranslationFilesPath(translationPath);
-  if (!currentFiles) return;
+  const translationFiles = getTranslationFilesPath(translationPath);
 
-  for (const fileName of currentFiles) {
-    /** extract the scope and the lang name from the file */
-    const { scope, lang: fileLang } = getScopeAndLangFromFullPath(fileName, translationPath);
+  if (!translationFiles.length) return;
+
+  let result = [];
+  const scopePaths = translocoConfig().scopePathMap || {};
+  for (const [scope, path] of Object.entries(scopePaths)) {
+    const keys = scopeToKeys[scope];
+    if (keys) {
+      result.push({
+        keys,
+        scope,
+        translationPath: path,
+        files: glob.sync(`${path}/*.json`)
+      });
+    }
+  }
+
+  for (const file of translationFiles) {
+    const { scope } = getScopeAndLangFromFullPath(file, translationPath);
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
+    const isGlobal = scope === '__global';
+    if (keys) {
+      result.push({
+        keys,
+        scope,
+        translationPath,
+        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}/**/*.json`)
+      });
+    }
+  }
 
-    if (!keys) continue;
+  for (const { files, keys, scope, translationPath } of result) {
+    for (const filePath of files) {
+      const { lang } = getScopeAndLangFromFullPath(filePath, translationPath);
+      const translation = readFile(filePath, { parse: true });
 
-    const translation = readFile(fileName, { parse: true });
+      // Compare the current file with the extracted keys
+      const differences = DeepDiff(translation, keys);
 
-    // Compare the current file with the extracted keys
-    const differences = DeepDiff(translation, keys);
+      if (differences) {
+        const langPath = `${scope ? scope + '/' : ''}${lang}`;
 
-    if (differences) {
-      const lang = `${scope ? scope + '/' : ''}${fileLang}`;
+        diffsPerLang[langPath] = {
+          missing: [],
+          extra: []
+        };
 
-      diffsPerLang[lang] = {
-        missing: [],
-        extra: []
-      };
-
-      for (const diff of differences) {
-        if (diff.kind === 'N') {
-          diffsPerLang[lang].missing.push(diff);
-          addMissingKeys && applyChange(translation, keys, diff);
-        } else if (diff.kind === 'D') {
-          diffsPerLang[lang].extra.push(diff);
+        for (const diff of differences) {
+          if (diff.kind === 'N') {
+            diffsPerLang[langPath].missing.push(diff);
+            addMissingKeys && applyChange(translation, keys, diff);
+          } else if (diff.kind === 'D') {
+            diffsPerLang[langPath].extra.push(diff);
+          }
         }
-      }
 
-      addMissingKeys && writeFile(fileName, translation);
+        addMissingKeys && writeFile(filePath, translation);
+      }
     }
   }
 

@@ -70,12 +70,14 @@
   },
   "dependencies": {
     "@ngneat/transloco-utils": "^1.0.6",
+    "@phenomnomnominal/tsquery": "^4.0.0",
     "chalk": "^2.4.2",
     "cheerio": "^1.0.0-rc.3",
     "cli-table3": "^0.5.1",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.0.2",
     "deep-diff": "^1.0.2",
+    "flat": "^5.0.0",
     "glob": "^7.1.4",
     "ora": "^3.4.0",
     "os-locale": "^4.0.0"
