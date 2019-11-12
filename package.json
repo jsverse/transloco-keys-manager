@@ -6,7 +6,7 @@
   "scripts": {
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors init",
-    "release": "cd dist && standard-version --infile ../CHANGELOG.md",
+    "release": "cd dist && standard-version --infile ./CHANGELOG.md",
     "commit": "git-cz",
     "test": "PRODUCTION=true jest",
     "start": "npm run prettier && tsc --watch",
