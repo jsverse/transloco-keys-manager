@@ -43,14 +43,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
 
         if (Array.isArray(translationKeys)) {
           for (const currentKey of translationKeys) {
-            /** The raw key may contain square braces we need to align it to '.' */
-            let sanitizedKey = currentKey
-              .trim()
-              .replace(/\[/g, '.')
-              .replace(/'|"|\]/g, '')
-              .replace(`${varName}.`, '');
-
-            const withRead = read ? `${read}.${sanitizedKey}` : sanitizedKey;
+            const withRead = read ? `${read}.${currentKey}` : currentKey;
 
             let [translationKey, scopeAlias] = resolveAliasAndKey(withRead, scopes);
 
