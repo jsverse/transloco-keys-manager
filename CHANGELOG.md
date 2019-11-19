@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.1.0...v1.2.0) (2019-11-19)
+
+
+### Bug Fixes
+
+* 🐛 remove legacy code which changed extracted keys ([ee46e00](https://github.com/ngneat/transloco-keys-manager/commit/ee46e00)), closes [#7](https://github.com/ngneat/transloco-keys-manager/issues/7)
+* 🐛 respect the langs in webpack plugin ([10891ee](https://github.com/ngneat/transloco-keys-manager/commit/10891ee)), closes [#5](https://github.com/ngneat/transloco-keys-manager/issues/5)
+
+
+### Features
+
+* 🎸 support key injection in custom default value ([581d933](https://github.com/ngneat/transloco-keys-manager/commit/581d933)), closes [#8](https://github.com/ngneat/transloco-keys-manager/issues/8)
+
+
+
 ## [1.1.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.0.1...v1.1.0) (2019-11-12)
 
 
