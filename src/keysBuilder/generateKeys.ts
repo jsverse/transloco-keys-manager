@@ -1,22 +1,29 @@
 import { readFile } from '../helpers/readFile';
 import { writeFile } from '../helpers/writeFile';
 import { mergeDeep } from '../helpers/mergeDeep';
-import { ScopeMap } from '../types';
+import { ScopeMap, Config } from '../types';
 import * as flat from 'flat';
-import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
-import { getConfig } from '../config';
 import * as glob from 'glob';
+import * as nodePath from 'path';
+import { TranslocoConfig } from '@ngneat/transloco-utils';
 
 type Params = {
   translationPath: string;
   scopeToKeys: ScopeMap;
+  config: Config & TranslocoConfig;
 };
+
+function filterLangs(config: Params['config']) {
+  return function(path: string) {
+    return config.langs.find(lang => lang === nodePath.basename(path).replace('.json', ''));
+  };
+}
 
 /**
  * In use in the Webpack Plugin
  */
-export function generateKeys({ translationPath, scopeToKeys }: Params) {
-  const scopePaths = translocoConfig().scopePathMap || {};
+export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
+  const scopePaths = config.scopePathMap || {};
 
   let result = [];
 
@@ -25,7 +32,7 @@ export function generateKeys({ translationPath, scopeToKeys }: Params) {
     if (keys) {
       result.push({
         keys,
-        files: glob.sync(`${path}/*.json`)
+        files: glob.sync(`${path}/*.json`).filter(filterLangs(config))
       });
     }
   }
@@ -36,14 +43,14 @@ export function generateKeys({ translationPath, scopeToKeys }: Params) {
 
       result.push({
         keys,
-        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}*.json`)
+        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}*.json`).filter(filterLangs(config))
       });
     }
   }
 
   for (let { files, keys } of result) {
     for (const filePath of files) {
-      if (getConfig().unflat) {
+      if (config.unflat) {
         keys = flat.unflatten(keys);
       }
       const translation = readFile(filePath, { parse: true });

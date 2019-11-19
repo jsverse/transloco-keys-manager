@@ -71,6 +71,7 @@ export class TranslocoExtractKeysWebpackPlugin {
 
         if (hasTranslateKeys) {
           generateKeys({
+            config: this.config,
             translationPath: this.config.translationsPath,
             scopeToKeys
           });
