@@ -41,6 +41,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
   }
 
   for (const file of translationFiles) {
+
     const { scope } = getScopeAndLangFromFullPath(file, translationPath);
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
     if (keys) {
