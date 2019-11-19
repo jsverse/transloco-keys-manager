@@ -291,11 +291,11 @@ transloco-keys-manager extract --unflat
 transloco-keys-manager extract -u
 ```
 
-- `defaultValue`: The default value of a generated key: (defaults to `Missing value for {key}`)
+- `defaultValue`: The default value of a generated key: (defaults to `Missing value for {{key}}`)
 
 ```
 transloco-keys-manager extract --default-value missingValue
-transloco-keys-manager extract -d missingValue
+transloco-keys-manager extract -d "{{key}} translation is missing"
 ```
 
 - `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)

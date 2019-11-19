@@ -12,7 +12,7 @@ type AddKeysParams = {
 export function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope, scopes }: AddKeysParams) {
   const scopePath = scopes.aliasToScope[scopeAlias];
   const keyWithScope = scopeAlias ? `${scopeAlias}.${keyWithoutScope}` : keyWithoutScope;
-  const keyValue = defaultValue || `${messages.missingValue} '${keyWithScope}'`;
+  const keyValue = defaultValue ? defaultValue.replace('{{key}}', keyWithScope) : `${messages.missingValue} '${keyWithScope}'`;
 
   if (scopePath) {
     if (!scopeToKeys[scopePath]) {

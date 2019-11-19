@@ -12,7 +12,6 @@ const _messages = {
     merged: len => `Existing translation file${len > 1 ? 's were' : ' was'} found and merged`,
     checkMissing: 'Checking for missing keys',
     pathDoesntExists: `The path provided for the translation files doesn't exists!`,
-    noTranslationFilesFound: path => `No translation files found in the given path! \n ${path}`,
     summary: 'Summary',
     noMissing: 'No missing keys were found',
     defaultValue: 'Enter default key value',
