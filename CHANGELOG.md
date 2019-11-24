@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.0...v1.2.1) (2019-11-24)
+
+
+### Bug Fixes
+
+* 🐛 fix PC directory path conflict ([#9](https://github.com/ngneat/transloco-keys-manager/issues/9)) ([3e01c08](https://github.com/ngneat/transloco-keys-manager/commit/3e01c08))
+* 🐛 include only marking comments in the template ([8883135](https://github.com/ngneat/transloco-keys-manager/commit/8883135)), closes [#10](https://github.com/ngneat/transloco-keys-manager/issues/10)
+
+
+
 ## [1.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.1.0...v1.2.0) (2019-11-19)
 
 
