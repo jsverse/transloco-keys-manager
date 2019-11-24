@@ -7,6 +7,7 @@ import { forEachKey } from './forEachKey';
 import { addKey } from './addKey';
 import { extractCommentsValues } from './commentsSectionExtractor';
 import { resolveAliasAndKey } from './resolveAliasAndKey';
+import { getConfig } from '../config';
 
 function getNgTemplateContainers(content: string) {
   const hasNgTemplate = content.match(/<ng-template[^>]*transloco[^>]*>/);
@@ -22,9 +23,20 @@ function getNgTemplateContainers(content: string) {
   };
 }
 
+function keepMarkingCommentsOnly(content: string) {
+  const {marker} = getConfig();
+  const validMarking = regexs.templateValidComment(marker);
+  /* Search all comments, if they include anything but the markings remove them */
+  return content.replace(regexs.templateCommentsSection(), (comment) => {
+    return validMarking.test(comment) ? comment : '';
+  });
+}
+
 export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
-  const content = readFile(file);
+  let content = readFile(file);
   if (!content.includes('transloco')) return scopeToKeys;
+
+  content = keepMarkingCommentsOnly(content);
 
   const { containers, hasStructural } = getNgTemplateContainers(content);
 
@@ -35,7 +47,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
     for (const query of containers) {
       $(query).each((_, element) => {
         const containerType = !!element.attribs.__transloco ? TEMPLATE_TYPE.STRUCTURAL : TEMPLATE_TYPE.NG_TEMPLATE;
-        const { translationKeys, read, varName } = getStructuralDirectiveBasedKeys(
+        const { translationKeys, read } = getStructuralDirectiveBasedKeys(
           element,
           containerType,
           $(element).html()

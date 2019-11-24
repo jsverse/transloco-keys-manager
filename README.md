@@ -205,7 +205,11 @@ Or to templates:
 <ng-container *transloco="let t">...</ng-container>
 ```
 
-Note that when using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
+*Notes:* 
+1. When using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
+2. When using comments in your HTML files, they *must* contain only the markers without additional text.  
+Here's an example for invalid comment:  
+`<!-- For dropdown t('dynamic.1', 'dynamic.2') -->`
 
 ### Extra Support
 
@@ -214,7 +218,7 @@ Note that when using a Typescript file, you must have an `import { } from '@ngne
 ```html
 <ng-container *transloco="let t; read: 'dashboard'">
   <h1>{{ t('title') }}</h1>
-  ]
+  
   <p>{{ t('desc') }}</p>
 </ng-container>
 ```

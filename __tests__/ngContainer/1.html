@@ -20,6 +20,11 @@
               <dato-icon class="mr-5" datoIcon="group" width="15px" height="14px"></dato-icon>
               {{t('2')}}
             </dato-button>
+<!--            <dato-button datoType="secondary" datoSize="sm" [disabled]="applyGroupButtonDisabled"-->
+<!--                         (click)="applyGroupFilters()">-->
+<!--              <dato-icon class="mr-5" datoIcon="group" width="15px" height="14px"></dato-icon>-->
+<!--              {{t('4444')}}-->
+<!--            </dato-button>-->
             <button class="menu-trigger" daMenuHandler [matMenuTriggerFor]="expandMenu">
               <dato-icon datoIcon="more-vertical" datoColor="primary-300" width="3px" height="18px"></dato-icon>
             </button>
@@ -38,6 +43,13 @@
                         </span>
             {{t('4')}}
           </button>
+<!--          <button mat-menu-item (click)="collapseAll()">
+                        <span class="icon-wrapper">
+                            <dato-icon datoIcon="collapse" width="11px" height="17px"></dato-icon>
+                        </span>
+            {{t('39394')}}
+          </button>
+          -->
         </mat-menu>
         <div *ngIf="!hasFilter; else filtersView" class="mt-15" datoFont="note" datoColor="primary-400">
           {{t("5", {name: "avo"})}}

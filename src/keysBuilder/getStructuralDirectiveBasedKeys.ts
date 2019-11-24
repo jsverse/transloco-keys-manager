@@ -1,12 +1,17 @@
 import { regexs } from '../regexs';
 import { TEMPLATE_TYPE } from '../types';
 
+type StructuralExtractionResult = {
+  translationKeys: string[];
+  read: string;
+};
+
 /** Get the keys from an ngTemplate/ngContainer */
-export function getStructuralDirectiveBasedKeys(element, templateType: TEMPLATE_TYPE, matchedStr: string) {
-  let translationKeys = [],
-    read,
+export function getStructuralDirectiveBasedKeys(element, templateType: TEMPLATE_TYPE, matchedStr: string): StructuralExtractionResult {
+  let translationKeys: string[] = [],
+    read: string,
     readSearch,
-    varName;
+    varName: string;
 
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
@@ -30,5 +35,5 @@ export function getStructuralDirectiveBasedKeys(element, templateType: TEMPLATE_
     }
   }
 
-  return { translationKeys, read, varName };
+  return { translationKeys, read };
 }
