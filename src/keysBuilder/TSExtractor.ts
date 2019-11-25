@@ -1,40 +1,31 @@
-import { readFile } from '../helpers/readFile';
-import { regexs } from '../regexs';
-import { ExtractorConfig, ScopeMap, Scopes } from '../types';
-import { forEachKey } from './forEachKey';
-import { resolveScopeAlias } from './resolveScopeAlias';
-import { addKey } from './addKey';
-import { extractCommentsValues } from './commentsSectionExtractor';
-import { resolveAliasAndKey } from './resolveAliasAndKey';
+import {readFile} from '../helpers/readFile';
+import {regexs} from '../regexs';
+import {ExtractorConfig, ScopeMap, Scopes} from '../types';
+import {resolveScopeAlias} from './resolveScopeAlias';
+import {addKey} from './addKey';
+import {extractCommentsValues} from './commentsSectionExtractor';
+import {tsquery} from '@phenomnomnominal/tsquery';
+import {extractPureKeys} from "./extractTSPureKeys";
+import {extractServiceKeys} from "./extractTsServiceKeys";
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
   if (!content.includes('@ngneat/transloco')) return scopeToKeys;
 
-  const serviceMethod = regexs.serviceInjection.exec(content);
-  let regex: RegExp;
+  const ast = tsquery.ast(content);
 
-  if (serviceMethod) {
-    regex = regexs.translationCalls(serviceMethod.groups.serviceName);
-  } else {
-    const translateFunction = regexs.directImport.exec(content);
-    if (translateFunction) {
-      regex = regexs.translationCalls();
-    }
-  }
-
-  if (regex) {
-    forEachKey(content, regex, (translationKey, scopePath) => {
-      const [key, scopeAlias] = resolveAliasAndKeyFromService(translationKey, scopePath, scopes);
-      addKey({
-        defaultValue,
-        scopeAlias,
-        keyWithoutScope: key,
-        scopeToKeys,
-        scopes
-      });
-    });
-  }
+  const serviceCalls = extractServiceKeys(ast);
+  const pureCalls = extractPureKeys(ast);
+  serviceCalls.concat(pureCalls).forEach(({key, lang}) => {
+    const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
+        addKey({
+          defaultValue,
+          scopeAlias,
+          keyWithoutScope,
+          scopeToKeys,
+          scopes
+        });
+  });
 
   /** Check for dynamic markings */
   extractCommentsValues({
