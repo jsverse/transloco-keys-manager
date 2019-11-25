@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.1...v1.2.2) (2019-11-25)
+
+
+### Bug Fixes
+
+* 🐛 ts keys extraction ([97a786d](https://github.com/ngneat/transloco-keys-manager/commit/97a786d)), closes [#11](https://github.com/ngneat/transloco-keys-manager/issues/11)
+
+
+
 ### [1.2.1](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.0...v1.2.1) (2019-11-24)
 
 
