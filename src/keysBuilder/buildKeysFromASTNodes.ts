@@ -1,26 +1,43 @@
-import {isCallExpression, isNoSubstitutionTemplateLiteral, isStringLiteral} from "typescript";
+import {
+  isCallExpression,
+  isNoSubstitutionTemplateLiteral,
+  isStringLiteral,
+  isIdentifier,
+  isPropertyAccessExpression
+} from 'typescript';
 
-export function buildKeysFromASTNodes(nodes): {key: string, lang: string}[] {
-    const result = [];
+export function buildKeysFromASTNodes(nodes): { key: string; lang: string }[] {
+  const result = [];
 
-    for (let node of nodes) {
-        if (isCallExpression(node.parent)) {
-            const data = {};
+  for (let node of nodes) {
+    if (isCallExpression(node.parent)) {
+      const method = node.parent.expression;
+      let methodName = '';
+      if (isIdentifier(method)) {
+        methodName = method.text;
+      } else if (isPropertyAccessExpression(method)) {
+        methodName = method.name.text;
+      }
 
-            const [key, _, lang] = node.parent.arguments;
-            if (isStringLiteral(key) || isNoSubstitutionTemplateLiteral(key)) {
-                data["key"] = key.text;
-            }
+      if (['translate', 'selectTranslate'].includes(methodName) === false) {
+        continue;
+      }
+      const data = {};
 
-            if (!data["key"]) continue;
+      const [key, _, lang] = node.parent.arguments;
+      if (isStringLiteral(key) || isNoSubstitutionTemplateLiteral(key)) {
+        data['key'] = key.text;
+      }
 
-            if (lang && (isStringLiteral(lang) || isNoSubstitutionTemplateLiteral(lang))) {
-                data["lang"] = lang.text;
-            }
+      if (!data['key']) continue;
 
-            result.push(data);
-        }
+      if (lang && (isStringLiteral(lang) || isNoSubstitutionTemplateLiteral(lang))) {
+        data['lang'] = lang.text;
+      }
+
+      result.push(data);
     }
+  }
 
-    return result;
+  return result;
 }

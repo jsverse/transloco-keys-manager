@@ -45,6 +45,7 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
     private dataStreamsService: DataStreamsService,
     @Inject('$state') private $state
   ) {
+    this.transloco.setActive(`1`)
     this.fff = translate('15');
     this.aacc = this.transloco
       .translate('16');
