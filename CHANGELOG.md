@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.3...v1.2.4) (2019-12-03)
+
+
+### Bug Fixes
+
+* 🐛 keys detective should find global keys ([2e38f8c](https://github.com/ngneat/transloco-keys-manager/commit/2e38f8c)), closes [#12](https://github.com/ngneat/transloco-keys-manager/issues/12)
+* 🐛 should ignore unrelated methods ([b4ae85a](https://github.com/ngneat/transloco-keys-manager/commit/b4ae85a))
+
+
+
 ### [1.2.2](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.1...v1.2.2) (2019-11-25)
 
 
