@@ -1,12 +1,12 @@
-import {readFile} from '../helpers/readFile';
-import {regexs} from '../regexs';
-import {ExtractorConfig, ScopeMap, Scopes} from '../types';
-import {resolveScopeAlias} from './resolveScopeAlias';
-import {addKey} from './addKey';
-import {extractCommentsValues} from './commentsSectionExtractor';
-import {tsquery} from '@phenomnomnominal/tsquery';
-import {extractPureKeys} from "./extractTSPureKeys";
-import {extractServiceKeys} from "./extractTsServiceKeys";
+import { readFile } from '../helpers/readFile';
+import { regexs } from '../regexs';
+import { ExtractorConfig, ScopeMap, Scopes } from '../types';
+import { resolveScopeAlias } from './resolveScopeAlias';
+import { addKey } from './addKey';
+import { extractCommentsValues } from './commentsSectionExtractor';
+import { tsquery } from '@phenomnomnominal/tsquery';
+import { extractPureKeys } from './extractTSPureKeys';
+import { extractServiceKeys } from './extractTsServiceKeys';
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
@@ -16,15 +16,15 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
 
   const serviceCalls = extractServiceKeys(ast);
   const pureCalls = extractPureKeys(ast);
-  serviceCalls.concat(pureCalls).forEach(({key, lang}) => {
+  serviceCalls.concat(pureCalls).forEach(({ key, lang }) => {
     const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
-        addKey({
-          defaultValue,
-          scopeAlias,
-          keyWithoutScope,
-          scopeToKeys,
-          scopes
-        });
+    addKey({
+      defaultValue,
+      scopeAlias,
+      keyWithoutScope,
+      scopeToKeys,
+      scopes
+    });
   });
 
   /** Check for dynamic markings */

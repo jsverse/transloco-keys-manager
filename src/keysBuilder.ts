@@ -12,6 +12,7 @@ import { setConfig } from './config';
 export function buildTranslationFiles(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
+
   setConfig(config);
   logger.log('\x1b[4m%s\x1b[0m', `\n${messages.startBuild(config.langs.length)} 👷🏗\n`);
   logger.startSpinner(`${messages.extract} 🗝`);

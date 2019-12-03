@@ -39,10 +39,15 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
       });
     }
   }
+  const cache = {};
 
   for (const file of translationFiles) {
+    const { scope = '__global' } = getScopeAndLangFromFullPath(file, translationPath);
+    if (cache[scope]) {
+      continue;
+    }
 
-    const { scope } = getScopeAndLangFromFullPath(file, translationPath);
+    cache[scope] = true;
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
     if (keys) {
       const isGlobal = scope === '__global';
@@ -51,7 +56,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
         keys,
         scope,
         translationPath,
-        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}/**/*.json`)
+        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}/*.json`)
       });
     }
   }
@@ -65,7 +70,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
       const differences = DeepDiff(translation, keys);
 
       if (differences) {
-        const langPath = `${scope ? scope + '/' : ''}${lang}`;
+        const langPath = `${scope !== '__global' ? scope + '/' : ''}${lang}`;
 
         diffsPerLang[langPath] = {
           missing: [],

@@ -7,7 +7,11 @@ type StructuralExtractionResult = {
 };
 
 /** Get the keys from an ngTemplate/ngContainer */
-export function getStructuralDirectiveBasedKeys(element, templateType: TEMPLATE_TYPE, matchedStr: string): StructuralExtractionResult {
+export function getStructuralDirectiveBasedKeys(
+  element,
+  templateType: TEMPLATE_TYPE,
+  matchedStr: string
+): StructuralExtractionResult {
   let translationKeys: string[] = [],
     read: string,
     readSearch,

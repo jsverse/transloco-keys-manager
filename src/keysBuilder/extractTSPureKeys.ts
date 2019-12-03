@@ -1,8 +1,8 @@
-import {tsquery} from "@phenomnomnominal/tsquery";
-import {buildKeysFromASTNodes} from "./buildKeysFromASTNodes";
+import { tsquery } from '@phenomnomnominal/tsquery';
+import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 
-export function extractPureKeys(ast): {key: string, lang: string}[] {
-    const fns = tsquery(ast, `CallExpression Identifier[text=translate]`);
+export function extractPureKeys(ast): { key: string; lang: string }[] {
+  const fns = tsquery(ast, `CallExpression Identifier[text=translate]`);
 
-    return buildKeysFromASTNodes(fns);
+  return buildKeysFromASTNodes(fns);
 }

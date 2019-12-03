@@ -24,10 +24,10 @@ function getNgTemplateContainers(content: string) {
 }
 
 function keepMarkingCommentsOnly(content: string) {
-  const {marker} = getConfig();
+  const { marker } = getConfig();
   const validMarking = regexs.templateValidComment(marker);
   /* Search all comments, if they include anything but the markings remove them */
-  return content.replace(regexs.templateCommentsSection(), (comment) => {
+  return content.replace(regexs.templateCommentsSection(), comment => {
     return validMarking.test(comment) ? comment : '';
   });
 }
@@ -47,11 +47,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
     for (const query of containers) {
       $(query).each((_, element) => {
         const containerType = !!element.attribs.__transloco ? TEMPLATE_TYPE.STRUCTURAL : TEMPLATE_TYPE.NG_TEMPLATE;
-        const { translationKeys, read } = getStructuralDirectiveBasedKeys(
-          element,
-          containerType,
-          $(element).html()
-        );
+        const { translationKeys, read } = getStructuralDirectiveBasedKeys(element, containerType, $(element).html());
 
         if (Array.isArray(translationKeys)) {
           for (const currentKey of translationKeys) {

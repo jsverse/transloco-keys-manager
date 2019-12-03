@@ -10,6 +10,7 @@ export function getTranslationFilesPath(path: string): string[] {
   if (!dirExists) {
     const msg = messages.pathDoesntExists;
     console.log(chalk.bgRed.black(`Transloco Keys Manager: ${msg}`));
+    process.exit();
     return [];
   }
 
