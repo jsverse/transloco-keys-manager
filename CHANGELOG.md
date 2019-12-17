@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.6](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.4...v1.2.6) (2019-12-17)
+
+
+### Bug Fixes
+
+* 🐛 add fs-extra as a dependency ([7b58b6d](https://github.com/ngneat/transloco-keys-manager/commit/7b58b6d)), closes [#13](https://github.com/ngneat/transloco-keys-manager/issues/13)
+* 🐛 keys detective flatten files before comparing ([f87b128](https://github.com/ngneat/transloco-keys-manager/commit/f87b128))
+
+
+
 ### [1.2.4](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.3...v1.2.4) (2019-12-03)
 
 
