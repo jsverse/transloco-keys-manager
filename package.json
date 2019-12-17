@@ -80,7 +80,8 @@
     "flat": "^5.0.0",
     "glob": "^7.1.4",
     "ora": "^3.4.0",
-    "os-locale": "^4.0.0"
+    "os-locale": "^4.0.0",
+    "fs-extra": "8.1.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.6.3",
@@ -90,7 +91,6 @@
     "@commitlint/config-conventional": "8.1.0",
     "@types/jest": "24.0.20",
     "all-contributors-cli": "6.8.1",
-    "fs-extra": "8.1.0",
     "git-cz": "3.2.1",
     "husky": "^3.0.9",
     "jest": "24.9.0",
