@@ -236,6 +236,26 @@ describe('buildTranslationFiles', () => {
 
   });
 
+  describe('unflat', () => {
+    const type = 'unflat', config = gConfig(type, { unflat: true });
+
+    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+
+    it('show work with unflat true', () => {
+      const expected = {
+        global: {
+          'a': {
+            '1': m,
+          }
+        }
+      };
+      buildTranslationFiles(config);
+
+      assertResult(type, expected.global);
+    });
+
+  });
+
 });
 
 
