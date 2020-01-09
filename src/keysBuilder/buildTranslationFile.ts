@@ -15,7 +15,7 @@ export function buildTranslationFile(path: string, translation = {}, replace = f
 
   let newTranslation;
   if (getConfig().unflat) {
-    translation = flat.unflatten(translation);
+    translation = flat.unflatten(translation, { object: true });
   }
 
   if (replace) {
