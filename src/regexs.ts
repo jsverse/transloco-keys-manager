@@ -7,7 +7,7 @@
 import { sanitizeForRegex } from './helpers/sanitizeForRegex';
 
 export const regexs = {
-  templateKey: varName => new RegExp(`${varName}\\((?![^,)+]*\\+)('|")(?<key>[^)"']*?)\\1`, 'g'),
+  templateKey: varName => new RegExp(`\\b${varName}\\((?![^,)+]*\\+)('|")(?<key>[^)"']*?)\\1`, 'g'),
   directive: () => new RegExp(`\\stransloco\\s*=\\s*("|')(?<key>[^]+?)\\1`, 'g'),
   directiveTernary: () => new RegExp(`\\s\\[transloco\\]\\s*=\\s*("|')[^"'?]*\\?(?<key>[^]+?)\\1`, 'g'),
   pipe: () =>
