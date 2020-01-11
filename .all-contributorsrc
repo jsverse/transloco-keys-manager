@@ -18,6 +18,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "darkv",
+      "name": "Johann Werner",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/582546?v=4",
+      "profile": "https://github.com/darkv",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7
