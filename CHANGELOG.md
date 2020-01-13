@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.6...v1.3.0) (2020-01-13)
+
+
+### Bug Fixes
+
+* 🐛 unflatten with number as last key ([#16](https://github.com/ngneat/transloco-keys-manager/issues/16)) ([cb2cf07](https://github.com/ngneat/transloco-keys-manager/commit/cb2cf07))
+
+
+### Features
+
+* 🎸 add config & project options ([000aff5](https://github.com/ngneat/transloco-keys-manager/commit/000aff5)), closes [#17](https://github.com/ngneat/transloco-keys-manager/issues/17)
+
+
+
 ### [1.2.6](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.4...v1.2.6) (2019-12-17)
 
 
