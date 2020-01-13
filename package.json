@@ -85,8 +85,8 @@
     "os-locale": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.6.3",
-    "@babel/preset-typescript": "7.6.0",
+    "@babel/preset-env": "7.8.2",
+    "@babel/preset-typescript": "7.8.0",
     "@commitlint/cli": "8.1.0",
     "@commitlint/config-angular": "8.1.0",
     "@commitlint/config-conventional": "8.1.0",
