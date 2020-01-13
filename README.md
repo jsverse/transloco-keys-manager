@@ -259,7 +259,6 @@ In addition, the transloco config file will be searched in the project's `root` 
 
 ```
 transloco-keys-manager extract --project first-app
-transloco-keys-manager extract -pr second-app
 ```
 
 - `config`: The root search directory for the transloco config file: (defaults to `process.cwd()`)

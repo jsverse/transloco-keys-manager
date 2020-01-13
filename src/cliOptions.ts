@@ -1,7 +1,6 @@
 export const optionDefinitions = [
   {
     name: 'project',
-    alias: 'pr',
     type: String,
     description: 'Name of the targeted project'
   },
