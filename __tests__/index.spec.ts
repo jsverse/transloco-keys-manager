@@ -79,7 +79,7 @@ describe('buildTranslationFiles', () => {
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
     it('should work with ngTemplate', () => {
-      let expected = gKeys(35);
+      let expected = gKeys(36);
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
