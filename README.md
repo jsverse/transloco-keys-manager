@@ -254,6 +254,21 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
+- `project`: The targeted project. When given, the `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
+In addition, the transloco config file will be searched in the project's `root` (unless the `config` option is passed):
+
+```
+transloco-keys-manager extract --project first-app
+transloco-keys-manager extract -pr second-app
+```
+
+- `config`: The root search directory for the transloco config file: (defaults to `process.cwd()`)
+
+```
+transloco-keys-manager extract --config src/my/path
+transloco-keys-manager extract -c src/my/path
+```
+
 - `input`: The source directory for all files using the translation keys: (defaults to `src/app`)
 
 ```

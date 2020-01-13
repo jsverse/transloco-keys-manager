@@ -1,5 +1,17 @@
 export const optionDefinitions = [
   {
+    name: 'project',
+    alias: 'pr',
+    type: String,
+    description: 'Name of the targeted project'
+  },
+  {
+    name: 'config',
+    alias: 'c',
+    type: String,
+    description: 'Path to a custom transloco config'
+  },
+  {
     name: 'input',
     alias: 'i',
     type: String,

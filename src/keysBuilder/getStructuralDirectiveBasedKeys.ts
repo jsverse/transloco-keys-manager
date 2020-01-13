@@ -20,7 +20,7 @@ export function getStructuralDirectiveBasedKeys(
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
     readSearch = data.match(/read:\s*('|")(?<read>[^"']*)\1/);
-    read = readSearch && readSearch.groups.read;
+    read = readSearch?.groups.read;
     varName = data.match(/let\s+(?<varName>\w*)/).groups.varName;
   } else {
     const attrs = Object.keys(element.attribs);

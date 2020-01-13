@@ -1,5 +1,7 @@
 export type Config = {
   input?: string;
+  config?: string;
+  project?: string;
   translationsPath?: string;
   langs?: string[];
   defaultValue?: undefined | string;
