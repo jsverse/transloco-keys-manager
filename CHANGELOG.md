@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v1.3.0...v1.3.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* 🐛 cli options invalid alias ([c43a439](https://github.com/ngneat/transloco-keys-manager/commit/c43a439)), closes [#19](https://github.com/ngneat/transloco-keys-manager/issues/19)
+* 🐛 regex should look for full word template key only ([#18](https://github.com/ngneat/transloco-keys-manager/issues/18)) ([9d8cb86](https://github.com/ngneat/transloco-keys-manager/commit/9d8cb86))
+
+
+
 ## [1.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.2.6...v1.3.0) (2020-01-13)
 
 
