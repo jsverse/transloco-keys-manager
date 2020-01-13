@@ -77,6 +77,7 @@
     "command-line-args": "^5.1.1",
     "command-line-usage": "^6.0.2",
     "cosmiconfig": "6.0.0",
+    "debug": "^4.1.1",
     "deep-diff": "^1.0.2",
     "flat": "^5.0.0",
     "fs-extra": "8.1.0",

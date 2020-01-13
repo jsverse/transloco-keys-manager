@@ -4,7 +4,7 @@ import { Config } from '../types';
 import { defaultConfig } from '../defaultConfig';
 import { getScopes } from '../keysBuilder/scopes';
 import {resolveProjectPath} from "./resolveProjectPath";
-import * as path from 'path';
+import * as debug from 'debug';
 
 export function resolveConfig(inlineConfig: Config): Config {
   const defaults = defaultConfig;
@@ -13,15 +13,22 @@ export function resolveConfig(inlineConfig: Config): Config {
     project = resolveProjectPath(inlineConfig.project);
   }
   const fileConfig = getConfig(inlineConfig.config || project?.root);
-
-  const config = { ...defaults, ...flatFileConfig(fileConfig), ...inlineConfig };
+  const config = { ...defaults, ...flatFileConfig(fileConfig), ...inlineConfig};
 
   if (project) {
     const {sourceRoot} = project;
     /* Search for the config within the matching project */
-    config.translationsPath = path.resolve(sourceRoot, config.translationsPath);
-    config.input = path.resolve(sourceRoot, config.input);
-    config.output = path.resolve(sourceRoot, config.output);
+    config.translationsPath = `${sourceRoot}/${config.translationsPath}`;
+    config.input = `${sourceRoot}/${config.input}`;
+    config.output = `${sourceRoot}/${config.output}`;
+  }
+
+  if(debug.enabled('config')) {
+    const log = debug('config');
+    log(`Default: %o`, defaults);
+    log(`Transloco file: %o`, flatFileConfig(fileConfig));
+    log(`Inline: %o`, inlineConfig);
+    log(`Merged: %o`, config);
   }
 
   updateScopesMap({ input: config.input });
