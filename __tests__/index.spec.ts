@@ -237,7 +237,7 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('unflat', () => {
-    const type = 'unflat', config = gConfig(type, { unflat: true, sort: true });
+    const type = 'unflat', config = gConfig(type, { unflat: true });
 
     beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
 
@@ -246,7 +246,24 @@ describe('buildTranslationFiles', () => {
         global: {
           'a': {
             '1': m,
-          },
+          }
+        }
+      };
+      buildTranslationFiles(config);
+
+      assertResult(type, expected.global);
+    });
+
+  });
+
+  describe('unflat-sort', () => {
+    const type = 'unflat-sort', config = gConfig(type, { unflat: true, sort: true });
+
+    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+
+    it('show work with unflat and sort true', () => {
+      const expected = {
+        global: {
           'b': {
             'b': {
               'a': m,
@@ -256,7 +273,7 @@ describe('buildTranslationFiles', () => {
               'a': m,
               'p': m,
               'x': m,
-            },
+            }
           }
         }
       };
