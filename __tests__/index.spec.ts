@@ -256,6 +256,34 @@ describe('buildTranslationFiles', () => {
 
   });
 
+  describe('unflat-sort', () => {
+    const type = 'unflat-sort', config = gConfig(type, { unflat: true, sort: true });
+
+    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+
+    it('show work with unflat and sort true', () => {
+      const expected = {
+        global: {
+          'b': {
+            'b': {
+              'a': m,
+              'b': m,
+            },
+            'c': {
+              'a': m,
+              'p': m,
+              'x': m,
+            }
+          }
+        }
+      };
+      buildTranslationFiles(config);
+
+      assertResult(type, expected.global);
+    });
+
+  });
+
 });
 
 
