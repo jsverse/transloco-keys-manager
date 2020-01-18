@@ -7,7 +7,6 @@ import { initExtraction } from './keysBuilder/initExtraction';
 import { updateScopesMap } from './helpers/updateScopesMap';
 import { buildTranslationFiles } from './keysBuilder';
 import { buildTranslationFile } from './keysBuilder/buildTranslationFile';
-import { resolveOutputPath } from './helpers/resolveOutputPath';
 import { buildScopeFilePaths } from './helpers/buildScopeFilePaths';
 import { generateKeys } from './keysBuilder/generateKeys';
 
@@ -55,7 +54,7 @@ export class TranslocoExtractKeysWebpackPlugin {
           const paths = buildScopeFilePaths({
             aliasToScope: newScopes,
             langs: this.config.langs,
-            outputPath: resolveOutputPath(this.config.output)
+            outputPath: this.config.output
           });
 
           paths.forEach(({ path }) => buildTranslationFile(path, {}));

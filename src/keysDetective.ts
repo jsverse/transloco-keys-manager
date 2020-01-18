@@ -11,8 +11,13 @@ export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
   setConfig(config);
+
   const translationFiles = getTranslationFilesPath(config.translationsPath);
-  if (!translationFiles) return;
+
+  if (translationFiles.length === 0) {
+    console.log('No translation files found.');
+    return;
+  }
 
   logger.log('\n 🕵 🔎', `\x1b[4m${messages.startSearch}\x1b[0m`, '🔍 🕵\n');
   logger.startSpinner(`${messages.extract} `);
@@ -22,7 +27,7 @@ export function findMissingKeys(inlineConfig: Config) {
 
   compareKeysToFiles({
     scopeToKeys: result.scopeToKeys,
-    translationPath: `${process.cwd()}/${config.translationsPath}`,
+    translationPath: config.translationsPath,
     addMissingKeys: config.addMissingKeys
   });
 }

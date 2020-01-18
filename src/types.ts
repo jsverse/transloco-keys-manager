@@ -13,6 +13,7 @@ export type Config = {
   marker?: string;
   sort?: boolean;
   unflat?: boolean;
+  command?: 'extract' | 'find'
 };
 
 export type ExtractionResult = {

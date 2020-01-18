@@ -330,7 +330,7 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `translationsPath`: The path for the root translation files (defaults to `src/assets/i18n`)
+- `translationsPath`: The path for the root directory of the translation files (defaults to `src/assets/i18n`)
 
 ```
 transloco-keys-manager find --translations-path my/path

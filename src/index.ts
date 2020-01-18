@@ -15,7 +15,7 @@ const config = commandLineArgs(optionDefinitions, {
   camelCase: true,
   argv
 });
-
+config.command = mainOptions.command;
 const { help } = config;
 
 if (help) {
@@ -24,7 +24,6 @@ if (help) {
   console.log(usage);
   process.exit();
 }
-
 if (mainOptions.command === 'extract') {
   buildTranslationFiles(config);
 } else if (mainOptions.command === 'find') {

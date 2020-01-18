@@ -9,7 +9,7 @@ export function extractKeys(
 ): ExtractionResult {
   let { scopeToKeys } = initExtraction();
 
-  const fileList = files || glob.sync(`${process.cwd()}/${input}/**/*.${fileType}`);
+  const fileList = files || glob.sync(`${input}/**/*.${fileType}`);
 
   for (const file of fileList) {
     scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });

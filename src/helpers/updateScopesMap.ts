@@ -10,7 +10,7 @@ const useStringQuery = `${base} > StringLiteral`;
 const useObjectQuery = `${base} > ObjectLiteralExpression`;
 
 export function updateScopesMap({ input, files }: { input?: string; files?: string[] }): Scopes['aliasToScope'] {
-  const tsFiles = files || glob.sync(`${process.cwd()}/${input}/**/*.ts`);
+  const tsFiles = files || glob.sync(`${input}/**/*.ts`);
   // Return only the new scopes (for the plugin)
   const aliasToScope = {};
 

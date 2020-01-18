@@ -5,7 +5,6 @@ import { resolveConfig } from './helpers/resolveConfig';
 import { buildKeys } from './keysBuilder/buildKeys';
 import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
 import { Config } from './types';
-import { resolveOutputPath } from './helpers/resolveOutputPath';
 import { setConfig } from './config';
 
 /** The main function, collects the settings and starts the files build. */
@@ -33,7 +32,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
     scopeToKeys,
     scopes: config.scopes,
     langs: config.langs,
-    outputPath: resolveOutputPath(config.output),
+    outputPath: config.output,
     replace: config.replace
   });
 }
