@@ -1,30 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LightConnectStore } from '../../../state/light-connect.store';
-import { DataStreamsService } from '../../../../state/data-streams.service';
-import { autorun, toJS } from 'mobx';
 import { MatExpansionPanel } from '@angular/material';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ID } from '@datorama/akita';
 import { untilDestroyed } from 'ngx-take-until-destroy';
-import { size, isEqual, isNil } from '@datorama/utils';
-import { IDataPreviewColumn } from '@datorama/modules/connect-and-mix/data-streams/light-connect/light-connect.models';
-import { DataSegmentation } from '@datorama/modules/connect-and-mix/data-streams/light-connect/light-connect.enums';
-import { DatoOptionDefault } from '@datorama/modules/shared/shared.types';
 import { TranslocoService, translate, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 /** t(18) * */
 @Component({
-  selector: 'da-lc-left-nav-partitions',
-  templateUrl: './left-nav-partitions.component.html',
+  selector: 'nav-partitions',
+  templateUrl: './partitions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: TRANSLOCO_SCOPE, useValue: {scope: 'admin-page', alias: "adminPage" }}]
 })
-export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy {
-  @Input() partitionsPanel: MatExpansionPanel;
-  isDimensionOnly = false;
+export class NavPartitionsComponent implements OnInit, OnDestroy {
   brandDataSourceId: ID;
-  form: FormGroup;
-  dimensionsColumns = [];
-  activeIds: number[] = [];
   dataSegmentation = new FormControl(DataSegmentation.DAILY);
   dataSegmentationList = Object.keys(DataSegmentation).map((key) => ({
     label: this.transloco.translate(`frequency.${DataSegmentation[key]}`),
@@ -39,11 +27,8 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
   constructor(
     private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    private lightConnectStore: LightConnectStore,
 
     public transloco: TranslocoService,
-    private dataStreamsService: DataStreamsService,
-    @Inject('$state') private $state
   ) {
     this.transloco.setActive(`1`)
     this.fff = translate('15');
@@ -55,9 +40,7 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
   ngOnInit(): void {   /**
    * t(20.21.22.23, 24, 25)
    * */
-    const metadata = this.lightConnectStore.dataPreview.metadata;
     this.form = this.formBuilder.group({
-      shouldUsePartitions: [size(toJS(metadata.segmentationFields)) > 0],
       segmentationBucketsNum: [metadata.segmentationBucketsNum || 0],
       segmentationFields: [metadata.segmentationFields || []],
       dd: translate('13', { id: 'fdfd'}, 'ess'),
@@ -68,8 +51,6 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
       .get('segmentationBucketsNum')
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((res: number) => {
-        this.lightConnectStore.setIsChangeInStreamDetected(true);
-        this.lightConnectStore.setSegmentationNumber(res);
         this.cdr.detectChanges();
         this.transloco = this.transloco.translate(`2`),
       });
@@ -78,8 +59,6 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
       .get('segmentationFields')
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((res: IDataPreviewColumn[]) => {
-        this.lightConnectStore.setIsChangeInStreamDetected(true);
-        this.lightConnectStore.setSegmentationFields(res);
         this.cdr.detectChanges();
       });
 
@@ -100,16 +79,11 @@ export class LightConnectLeftNavPartitionsComponent implements OnInit, OnDestroy
 
     this.dispose.push(
       autorun(() => {
-        if (this.lightConnectStore.dimensionsColumns) {
           translate('11');
-          this.dimensionsColumns = this.lightConnectStore.dimensionsColumns;
         }
       }),
       autorun(() => {
-        if (this.lightConnectStore.segmentationFields) {
           const fields = toJS(this.lightConnectStore.segmentationFields);
-          const segmentationFields = this.form.get('segmentationFields');
-          if (!isEqual(segmentationFields.value, fields)) {
             segmentationFields.patchValue(fields);
             this.a =           translate('12');
             this.form.get('shouldUsePartitions').patchValue(true);

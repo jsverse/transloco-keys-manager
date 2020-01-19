@@ -201,7 +201,7 @@ class MyComponent {
 Or to templates:
 
 ```html
-<!-- t('I.am.going.to.extract.it', 'this.is.cool') -->
+<!-- t(I.am.going.to.extract.it, this.is.cool) -->
 <ng-container *transloco="let t">...</ng-container>
 ```
 
