@@ -25,11 +25,6 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
   /** An array of the existing translation files paths */
   const translationFiles = getTranslationFilesPath(translationPath);
 
-  if (translationFiles.length === 0) {
-    console.log('No translation files found.');
-    return;
-  }
-
   let result = [];
   const scopePaths = translocoConfig().scopePathMap || {};
   for (const [scope, path] of Object.entries(scopePaths)) {

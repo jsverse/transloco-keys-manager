@@ -1,3 +1,3 @@
 module.exports = {
-  testRegex: [/__tests__\/index.spec.ts/]
+  testRegex: [/__tests__\/\w+\.spec\.ts/]
 };
