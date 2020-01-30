@@ -1,7 +1,11 @@
+jest.mock('../src/helpers/resolveProjectBasePath');
 import equal from 'lodash.isequal';
 import * as fs from 'fs-extra';
 import diff from 'deep-diff';
 import { buildTranslationFiles } from '../src/keysBuilder';
+import {resolveProjectBasePath} from "../src/helpers/resolveProjectBasePath";
+
+const sourceRoot = "__tests__";
 
 function gKeys(len: number, prefix?: string) {
   let expected = {};
@@ -16,8 +20,8 @@ const m = 'missing';
 
 function gConfig(type, config = {}) {
   return {
-    "input": `__tests__/${type}`,
-    "output": `__tests__/${type}/i18n`,
+    "input": `${type}`,
+    "output": `${type}/i18n`,
     "langs": ['en', 'es', 'it'],
     "defaultValue": "missing",
     ...config
@@ -25,16 +29,23 @@ function gConfig(type, config = {}) {
 }
 
 function assertResult(type: string, expected: object, path?: string) {
-  const translation = fs.readJsonSync(`./__tests__/${type}/i18n/${path || ''}en.json`);
+  const translation = fs.readJsonSync(`./${sourceRoot}/${type}/i18n/${path || ''}en.json`);
   expect(equal(translation, expected)).toBe(true);
 }
 
+function removeI18nFolder(type: string) {
+  fs.removeSync(`./${sourceRoot}/${type}/i18n`);
+}
+
 describe('buildTranslationFiles', () => {
+  beforeAll(() => {
+    (resolveProjectBasePath as any).mockImplementation(() => sourceRoot);
+  });
 
   describe('Pipe', () => {
     const type = 'pipe', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('should work with pipe', () => {
       let expected = gKeys(48);
@@ -50,7 +61,7 @@ describe('buildTranslationFiles', () => {
   describe('ngContainer', () => {
     const type = 'ngContainer', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('should work with ngContainer', () => {
       let expected = gKeys(39);
@@ -76,7 +87,7 @@ describe('buildTranslationFiles', () => {
   describe('ngTemplate', () => {
     const type = 'ngTemplate', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('should work with ngTemplate', () => {
       let expected = gKeys(36);
@@ -101,7 +112,7 @@ describe('buildTranslationFiles', () => {
   describe('service', () => {
     const type = 'service', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('should work with service', () => {
       let expected = gKeys(19);
@@ -138,7 +149,7 @@ describe('buildTranslationFiles', () => {
   describe('read', () => {
     const type = 'read', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('should work with read', () => {
       const expected = {
@@ -165,7 +176,7 @@ describe('buildTranslationFiles', () => {
   describe('comments', () => {
     const type = 'comments', config = gConfig(type);
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('show work with comments', () => {
       const expected = {
@@ -239,7 +250,7 @@ describe('buildTranslationFiles', () => {
   describe('unflat', () => {
     const type = 'unflat', config = gConfig(type, { unflat: true });
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('show work with unflat true', () => {
       const expected = {
@@ -259,7 +270,7 @@ describe('buildTranslationFiles', () => {
   describe('unflat-sort', () => {
     const type = 'unflat-sort', config = gConfig(type, { unflat: true, sort: true });
 
-    beforeEach(() => fs.removeSync(`./__tests__/${type}/i18n`));
+    beforeEach(() => removeI18nFolder(type));
 
     it('show work with unflat and sort true', () => {
       const expected = {

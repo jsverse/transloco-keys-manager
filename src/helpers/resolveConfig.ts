@@ -3,30 +3,20 @@ import {updateScopesMap} from './updateScopesMap';
 import {Config} from '../types';
 import {defaultConfig} from '../defaultConfig';
 import {getScopes} from '../keysBuilder/scopes';
-import {resolveProjectPath} from "./resolveProjectPath";
+import {resolveProjectBasePath} from "./resolveProjectBasePath";
 import * as debug from 'debug';
 import chalk from 'chalk';
 import * as fs from "fs";
+import * as path from "path";
 import {messages} from "../messages";
 import {isDirectory} from "./isDirectory";
 
 export function resolveConfig(inlineConfig: Config): Config {
     const defaults = defaultConfig;
-    let project;
-    if (inlineConfig.project) {
-        project = resolveProjectPath(inlineConfig.project);
-    }
-    const fileConfig = getConfig(inlineConfig.config || project?.root);
+    const projectBsePath = resolveProjectBasePath(inlineConfig.project);
+    const fileConfig = getConfig(inlineConfig.config || projectBsePath);
     const userConfig = {...flatFileConfig(fileConfig), ...inlineConfig};
     const config = {...defaults, ...userConfig};
-
-    if (project) {
-        const {sourceRoot} = project;
-        /* Search for the config within the matching project */
-        config.translationsPath = `${sourceRoot}/${userConfig.translationsPath ? config.translationsPath : 'assets/i18n'}`;
-        config.input = `${sourceRoot}/${userConfig.input ? config.input : 'app'}`;
-        config.output = `${sourceRoot}/${userConfig.output ? config.output : 'assets/i18n'}`;
-    }
 
     if (debug.enabled('config')) {
         const log = debug('config');
@@ -36,7 +26,7 @@ export function resolveConfig(inlineConfig: Config): Config {
         log(`Merged: %o`, config);
     }
 
-    resolveConfigPaths(config);
+    resolveConfigPaths(config, projectBsePath);
     validateDirectories(config);
 
     updateScopesMap({input: config.input});
@@ -44,23 +34,23 @@ export function resolveConfig(inlineConfig: Config): Config {
 }
 
 function flatFileConfig(fileConfig: TranslocoConfig) {
-    const keysManager = fileConfig.keysManager || {};
+    const keysManager: Partial<Config> = fileConfig.keysManager || {};
     const {rootTranslationsPath, langs} = fileConfig;
 
     if (rootTranslationsPath) {
-        keysManager['translationsPath'] = fileConfig.rootTranslationsPath;
+        keysManager.translationsPath = rootTranslationsPath;
     }
 
     if (langs) {
-        keysManager['langs'] = fileConfig.langs;
+        keysManager.langs = langs;
     }
 
     return keysManager;
 }
 
-function resolveConfigPaths(config: Config) {
+function resolveConfigPaths(config: Config, sourceRoot: string) {
     ['input', 'output', 'translationsPath'].forEach((prop) => {
-       config[prop] = `${process.cwd()}/${config[prop]}`;
+       config[prop] = path.resolve(process.cwd(), sourceRoot, config[prop]);
     });
 }
 

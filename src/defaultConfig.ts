@@ -2,10 +2,10 @@ import { Config } from './types';
 
 export const defaultConfig: Config = {
   // The source directory for all files using the translation keys
-  input: 'src/app',
+  input: 'app',
 
   // The target directory for all generated translation files
-  output: 'src/assets/i18n',
+  output: 'assets/i18n',
 
   // The languages files to generate
   langs: ['en'],
@@ -34,5 +34,5 @@ export const defaultConfig: Config = {
   addMissingKeys: false,
 
   // The path for the root translation files (for example: assets/i18n)
-  translationsPath: 'src/assets/i18n'
+  translationsPath: 'assets/i18n'
 };
