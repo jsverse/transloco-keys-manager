@@ -15,7 +15,7 @@
     "uglify": "terser-folder dist -e -o dist -x .js",
     "clean:dist": "rm -rf dist",
     "copy:dist": "cp package.json package-lock.json README.md dist",
-    "prettier": "prettier --write 'src/**/*.ts'"
+    "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'"
   },
   "bin": {
     "transloco-keys-manager": "index.js"
@@ -67,6 +67,10 @@
     "src/*.{ts}": [
       "prettier --write",
       "git add"
+    ],
+    "__tests__/*.{ts}": [
+      "prettier --write",
+      "git add"
     ]
   },
   "dependencies": {
@@ -100,7 +104,7 @@
     "jest": "24.9.0",
     "lint-staged": "9.2.0",
     "lodash.isequal": "4.5.0",
-    "prettier": "1.18.2",
+    "prettier": "1.19.1",
     "standard-version": "6.0.1",
     "terser": "4.3.9",
     "terser-folder": "2.0.0",

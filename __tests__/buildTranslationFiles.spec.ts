@@ -3,13 +3,13 @@ import equal from 'lodash.isequal';
 import * as fs from 'fs-extra';
 import diff from 'deep-diff';
 import { buildTranslationFiles } from '../src/keysBuilder';
-import {resolveProjectBasePath} from "../src/helpers/resolveProjectBasePath";
+import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
 
-const sourceRoot = "__tests__";
+const sourceRoot = '__tests__';
 
 function gKeys(len: number, prefix?: string) {
   let expected = {};
-  for(let i = 1; i <= len; i++) {
+  for (let i = 1; i <= len; i++) {
     expected[prefix ? `${prefix}.${i}` : i] = 'missing';
   }
 
@@ -20,10 +20,10 @@ const m = 'missing';
 
 function gConfig(type, config = {}) {
   return {
-    "input": `${type}`,
-    "output": `${type}/i18n`,
-    "langs": ['en', 'es', 'it'],
-    "defaultValue": "missing",
+    input: `${type}`,
+    output: `${type}/i18n`,
+    langs: ['en', 'es', 'it'],
+    defaultValue: 'missing',
     ...config
   };
 }
@@ -43,7 +43,8 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('Pipe', () => {
-    const type = 'pipe', config = gConfig(type);
+    const type = 'pipe',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -59,7 +60,8 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('ngContainer', () => {
-    const type = 'ngContainer', config = gConfig(type);
+    const type = 'ngContainer',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -71,11 +73,11 @@ describe('buildTranslationFiles', () => {
 
     it('should work with scopes', () => {
       let expected = {
-        "1": "missing",
-        "2.1": "missing",
-        "3.1": "missing",
-        "4": "missing",
-        "5": "missing"
+        '1': 'missing',
+        '2.1': 'missing',
+        '3.1': 'missing',
+        '4': 'missing',
+        '5': 'missing'
       };
 
       buildTranslationFiles(config);
@@ -83,9 +85,9 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-
   describe('ngTemplate', () => {
-    const type = 'ngTemplate', config = gConfig(type);
+    const type = 'ngTemplate',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -97,11 +99,11 @@ describe('buildTranslationFiles', () => {
 
     it('should work with scopes', () => {
       let expected = {
-        "1": "missing",
-        "2.1": "missing",
-        "3.1": "missing",
-        "4": "missing",
-        "5": "missing"
+        '1': 'missing',
+        '2.1': 'missing',
+        '3.1': 'missing',
+        '4': 'missing',
+        '5': 'missing'
       };
 
       buildTranslationFiles(config);
@@ -110,15 +112,16 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('service', () => {
-    const type = 'service', config = gConfig(type);
+    const type = 'service',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
     it('should work with service', () => {
       let expected = gKeys(19);
-      expected["20.21.22.23"] = 'missing';
-      expected["24"] = 'missing';
-      expected["25"] = 'missing';
+      expected['20.21.22.23'] = 'missing';
+      expected['24'] = 'missing';
+      expected['25'] = 'missing';
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
@@ -126,16 +129,16 @@ describe('buildTranslationFiles', () => {
     it('should work with scopes', () => {
       const expected = {
         todos: {
-          "1": "missing",
-          "2.1": "missing"
+          '1': 'missing',
+          '2.1': 'missing'
         },
         admin: {
-          "3.1": "missing",
-          "4": "missing",
+          '3.1': 'missing',
+          '4': 'missing'
         },
         nested: {
-          "5": "missing",
-          "6.1": "missing"
+          '5': 'missing',
+          '6.1': 'missing'
         }
       };
 
@@ -147,7 +150,8 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('read', () => {
-    const type = 'read', config = gConfig(type);
+    const type = 'read',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -160,10 +164,10 @@ describe('buildTranslationFiles', () => {
           ...gKeys(10, 'right-pane.actions'),
           ...gKeys(1, 'templates.translations'),
           ...gKeys(3, 'nested.translation'),
-          ...gKeys(3, 'some.other.nested.that-is-tested'),
+          ...gKeys(3, 'some.other.nested.that-is-tested')
         },
         todos: {
-          ...gKeys(2, 'numbers'),
+          ...gKeys(2, 'numbers')
         }
       };
 
@@ -174,7 +178,8 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('comments', () => {
-    const type = 'comments', config = gConfig(type);
+    const type = 'comments',
+      config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -200,7 +205,7 @@ describe('buildTranslationFiles', () => {
           'whats.app': m,
           '101': m,
           '111.12': m,
-          'hello': m,
+          hello: m,
           'hey1.man': m,
           'whats1.app': m,
           hello1: m,
@@ -230,7 +235,7 @@ describe('buildTranslationFiles', () => {
           '216': m,
           '217.218': m,
           'from.comment': m,
-          'pretty.cool.da': m,
+          'pretty.cool.da': m
         },
         admin: {
           '1': m,
@@ -244,19 +249,19 @@ describe('buildTranslationFiles', () => {
       assertResult(type, expected.global);
       assertResult(type, expected.admin, 'admin/');
     });
-
   });
 
   describe('unflat', () => {
-    const type = 'unflat', config = gConfig(type, { unflat: true });
+    const type = 'unflat',
+      config = gConfig(type, { unflat: true });
 
     beforeEach(() => removeI18nFolder(type));
 
     it('show work with unflat true', () => {
       const expected = {
         global: {
-          'a': {
-            '1': m,
+          a: {
+            '1': m
           }
         }
       };
@@ -264,26 +269,26 @@ describe('buildTranslationFiles', () => {
 
       assertResult(type, expected.global);
     });
-
   });
 
   describe('unflat-sort', () => {
-    const type = 'unflat-sort', config = gConfig(type, { unflat: true, sort: true });
+    const type = 'unflat-sort',
+      config = gConfig(type, { unflat: true, sort: true });
 
     beforeEach(() => removeI18nFolder(type));
 
     it('show work with unflat and sort true', () => {
       const expected = {
         global: {
-          'b': {
-            'b': {
-              'a': m,
-              'b': m,
+          b: {
+            b: {
+              a: m,
+              b: m
             },
-            'c': {
-              'a': m,
-              'p': m,
-              'x': m,
+            c: {
+              a: m,
+              p: m,
+              x: m
             }
           }
         }
@@ -292,9 +297,5 @@ describe('buildTranslationFiles', () => {
 
       assertResult(type, expected.global);
     });
-
   });
-
 });
-
-

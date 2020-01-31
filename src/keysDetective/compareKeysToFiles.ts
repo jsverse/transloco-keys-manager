@@ -65,7 +65,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
       const { lang } = getScopeAndLangFromFullPath(filePath, translationPath);
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flatten file
-      const flatten = flat(translation, {safe: true});
+      const flatten = flat(translation, { safe: true });
       // Compare the current file with the extracted keys
       const differences = DeepDiff(flatten, keys);
 
