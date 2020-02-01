@@ -1,13 +1,10 @@
-import { ScopeMap, Scopes } from '../types';
+import {BaseParams} from '../types';
 import { messages } from '../messages';
 
-type AddKeysParams = {
-  defaultValue: string;
-  scopeToKeys: ScopeMap;
+interface AddKeysParams extends BaseParams {
   scopeAlias: string;
   keyWithoutScope: string;
-  scopes: Scopes;
-};
+}
 
 export function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope, scopes }: AddKeysParams) {
   const scopePath = scopes.aliasToScope[scopeAlias];

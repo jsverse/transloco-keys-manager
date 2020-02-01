@@ -48,3 +48,9 @@ export enum TEMPLATE_TYPE {
   STRUCTURAL,
   NG_TEMPLATE
 }
+
+export type BaseParams = {
+  defaultValue: string;
+  scopeToKeys: ScopeMap;
+  scopes: Scopes;
+};

@@ -1,42 +1,43 @@
-import { readFile } from '../helpers/readFile';
-import { regexs } from '../regexs';
-import { ExtractorConfig, ScopeMap, Scopes } from '../types';
-import { resolveScopeAlias } from './resolveScopeAlias';
-import { addKey } from './addKey';
-import { extractCommentsValues } from './commentsSectionExtractor';
-import { tsquery } from '@phenomnomnominal/tsquery';
-import { extractPureKeys } from './extractTSPureKeys';
-import { extractServiceKeys } from './extractTsServiceKeys';
+import {readFile} from '../helpers/readFile';
+import {regexs} from '../regexs';
+import {ExtractorConfig, ScopeMap, Scopes} from '../types';
+import {resolveScopeAlias} from './resolveScopeAlias';
+import {addKey} from './addKey';
+import {extractCommentsValues} from './commentsSectionExtractor';
+import {tsquery} from '@phenomnomnominal/tsquery';
+import {extractPureKeys} from './extractTSPureKeys';
+import {extractServiceKeys} from './extractTsServiceKeys';
 
-export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
-  const content = readFile(file);
-  if (!content.includes('@ngneat/transloco')) return scopeToKeys;
+export function TSExtractor({file, scopes, defaultValue, scopeToKeys}: ExtractorConfig): ScopeMap {
+    const content = readFile(file);
+    if (!content.includes('@ngneat/transloco')) return scopeToKeys;
 
-  const ast = tsquery.ast(content);
+    const ast = tsquery.ast(content);
 
-  const serviceCalls = extractServiceKeys(ast);
-  const pureCalls = extractPureKeys(ast);
-  serviceCalls.concat(pureCalls).forEach(({ key, lang }) => {
-    const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
-    addKey({
+    const serviceCalls = extractServiceKeys(ast);
+    const pureCalls = extractPureKeys(ast);
+    const baseParams = {
+        scopeToKeys,
+        scopes,
       defaultValue,
-      scopeAlias,
-      keyWithoutScope,
-      scopeToKeys,
-      scopes
+    };
+    serviceCalls.concat(pureCalls).forEach(({key, lang}) => {
+        const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
+        addKey({
+            scopeAlias,
+            keyWithoutScope,
+            ...baseParams
+        });
     });
-  });
 
-  /** Check for dynamic markings */
-  extractCommentsValues({
-    content,
-    regex: regexs.tsCommentsSection(),
-    scopes,
-    defaultValue,
-    scopeToKeys
-  });
+    /** Check for dynamic markings */
+    extractCommentsValues({
+        content,
+        regex: regexs.tsCommentsSection,
+        ...baseParams
+    });
 
-  return scopeToKeys;
+    return scopeToKeys;
 }
 
 /**
@@ -49,11 +50,11 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
  *
  */
 function resolveAliasAndKeyFromService(key: string, scopePath: string, scopes: Scopes): [string, string] {
-  // It means that is the global
-  if (!scopePath) {
-    return [key, null];
-  }
+    // It means that it's the global
+    if (!scopePath) {
+        return [key, null];
+    }
 
-  const scopeAlias = resolveScopeAlias({ scopePath, scopes });
-  return [key, scopeAlias];
+    const scopeAlias = resolveScopeAlias({scopePath, scopes});
+    return [key, scopeAlias];
 }

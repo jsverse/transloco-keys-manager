@@ -2,6 +2,13 @@ import { regexs } from '../regexs';
 import { addKey } from './addKey';
 import { resolveAliasAndKey } from './resolveAliasAndKey';
 import { getConfig } from '../config';
+import {BaseParams} from "../types";
+
+interface ExtractCommentsParams extends BaseParams {
+    content: string,
+    regex: () => RegExp,
+    read?: string,
+}
 
 const stringToKeys = valueRegex => {
   return v =>
@@ -19,24 +26,31 @@ const toOneDimArray = (acc, strings) => {
   return acc;
 };
 
-export function extractCommentsValues({ content, regex, defaultValue, scopes, scopeToKeys }) {
+export function extractCommentsValues({ content, regex: regexConstructor, read = '', ...baseParams }: ExtractCommentsParams) {
   const marker = getConfig().marker;
+  const regex = regexConstructor();
   let commentsSection = regex.exec(content);
-  while (commentsSection) {
+    while (commentsSection) {
     const valueRegex = regexs.markerValues(marker);
     // Get the rawKeys from the dynamic section
     const markers = commentsSection[0].match(valueRegex);
-    if (markers) {
+      if (markers) {
       markers
         .map(stringToKeys(valueRegex))
         .reduce(toOneDimArray, [])
-        .forEach(translationKey => {
-          const [key, scopeAlias] = resolveAliasAndKey(translationKey, scopes);
+        .forEach(currentKey => {
+          const withRead = read ? `${read}.${currentKey}` : currentKey;
+
+          let [translationKey, scopeAlias] = resolveAliasAndKey(withRead,  baseParams.scopes);
+
+          if (!scopeAlias) {
+            // It means this is a global key
+            translationKey = withRead;
+          }
+
           addKey({
-            defaultValue,
-            scopes,
-            scopeToKeys,
-            keyWithoutScope: key,
+              ...baseParams,
+            keyWithoutScope: translationKey,
             scopeAlias
           });
         });
