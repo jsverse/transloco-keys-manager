@@ -64,11 +64,7 @@
     }
   },
   "lint-staged": {
-    "src/*.{ts}": [
-      "prettier --write",
-      "git add"
-    ],
-    "__tests__/*.{ts}": [
+    "*.{ts}": [
       "prettier --write",
       "git add"
     ]

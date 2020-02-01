@@ -1,4 +1,4 @@
-import {BaseParams} from '../types';
+import { BaseParams } from '../types';
 import { messages } from '../messages';
 
 interface AddKeysParams extends BaseParams {

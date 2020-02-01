@@ -253,7 +253,7 @@ describe('buildTranslationFiles', () => {
           'inner.read.3': m,
           'inner.read.4': m,
           'another.container.1': m,
-          'another.container.2': m,
+          'another.container.2': m
         },
         admin: {
           '1': m,
