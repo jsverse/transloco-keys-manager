@@ -88,7 +88,7 @@ module.exports = {
 };
 ```
 
-Also you should see an updated definition of the `npm start` command:
+Also, you should see an updated definition of the `npm start` command:
 
 ```json
 {
@@ -96,7 +96,7 @@ Also you should see an updated definition of the `npm start` command:
 }
 ```
 
-Now run `npm start`, and it'll generate new keys whenever a **save** is made to the project.
+Now run `npm start` and it'll generate new keys whenever a **save** is made to the project.
 
 ### Scopes Support
 
@@ -170,7 +170,7 @@ Now, it'll create the files in the provided folder.
 
 ### Dynamic Keys
 
-There are times when we need to extract keys with valus that may change during runtime. One example can be when you need to use a dynamic expression:
+There are times when we need to extract keys with values that may change during runtime. One example can be when you need to use a dynamic expression:
 
 ```ts
 import { TranslocoService } from '@ngneat/transloco';
@@ -205,11 +205,35 @@ Or to templates:
 <ng-container *transloco="let t">...</ng-container>
 ```
 
+When using comments in the templates they will also **inherit the `read` [input](https://netbasal.gitbook.io/transloco/translation-in-the-template/structural-directive#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+```html
+<!-- t(this.is.cool) -->
+<ng-container *transloco="let m; read: 'messages'">
+    ...
+    <!-- t(success, error) -->
+    <ng-container *transloco="let g; read: 'general'">
+        ...
+        <!-- t(ok, cancel) -->
+    </ng-container>
+</ng-container>
+```
+
+The extracted keys for the code above will be:
+```json
+{
+  "this.is.cool": "",
+  "messages.success": "",
+  "messages.error": "",
+  "general.ok": "",
+  "general.cancel": ""
+}
+```
+
 *Notes:* 
 1. When using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
 2. When using comments in your HTML files, they *must* contain only the markers without additional text.  
 Here's an example for invalid comment:  
-`<!-- For dropdown t('dynamic.1', 'dynamic.2') -->`
+`<!-- For dropdown t(dynamic.1, dynamic.2) -->`
 
 ### Extra Support
 
@@ -241,8 +265,8 @@ The extracted keys for the code above will be:
 
 ## 🕵️‍ Keys Detective
 
-This tool detects two things: First, it detects any key that exists in one of your translation files, but is missing in any of the others. Secondly, it detects any key that exists in the translation files, but is missing from any of the templates or typescript files.
-After installing the library you should see the following script in your project's `package.json` file:
+This tool detects two things: First, it detects any key that exists in one of your translation files but is missing in any of the others. Secondly, it detects any key that exists in the translation files but is missing from any of the templates or typescript files.
+After installing the library, you should see the following script in your project's `package.json` file:
 
 ```
 {
@@ -254,12 +278,14 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `project`: The targeted project. When given, the `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
-In addition, the transloco config file will be searched in the project's `root` (unless the `config` option is passed):
+- `project`*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
+In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):  
 
 ```
 transloco-keys-manager extract --project first-app
 ```
+
+\* **Note:** If no `angular.json` file is present, `sourceRoot` will be `src`.
 
 - `config`: The root search directory for the transloco config file: (defaults to `process.cwd()`)
 
@@ -268,14 +294,14 @@ transloco-keys-manager extract --config src/my/path
 transloco-keys-manager extract -c src/my/path
 ```
 
-- `input`: The source directory for all files using the translation keys: (defaults to `src/app`)
+- `input`: The source directory for all files using the translation keys: (defaults to `app`)
 
 ```
 transloco-keys-manager extract --input src/my/path
 transloco-keys-manager extract -i src/my/path
 ```
 
-- `output`: The target directory for all generated translation files: (defaults to `src/assets/i18n`)
+- `output`: The target directory for all generated translation files: (defaults to `assets/i18n`)
 
 ```
 transloco-keys-manager extract --output my/path
@@ -330,7 +356,7 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `translationsPath`: The path for the root directory of the translation files (defaults to `src/assets/i18n`)
+- `translationsPath`: The path for the root directory of the translation files (defaults to `assets/i18n`)
 
 ```
 transloco-keys-manager find --translations-path my/path
