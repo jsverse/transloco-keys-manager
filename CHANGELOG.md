@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v1.3.2...v2.0.0) (2020-02-02)
+
+
+### Bug Fixes
+
+* 🐛 sort on all levels if using unflat ([#22](https://github.com/ngneat/transloco-keys-manager/issues/22)) ([bab0a57](https://github.com/ngneat/transloco-keys-manager/commit/bab0a57))
+* 🐛 validate directory paths ([d936b01](https://github.com/ngneat/transloco-keys-manager/commit/d936b01)), closes [#21](https://github.com/ngneat/transloco-keys-manager/issues/21)
+
+
+### Features
+
+* 🎸 add support for read in comments ([9b6093a](https://github.com/ngneat/transloco-keys-manager/commit/9b6093a))
+
+
+### refactor
+
+* 💡 change base path default value and behavior ([3f7729f](https://github.com/ngneat/transloco-keys-manager/commit/3f7729f))
+
+
+### Tests
+
+* 💍 add config specs ([5cf747c](https://github.com/ngneat/transloco-keys-manager/commit/5cf747c))
+
+
+### BREAKING CHANGES
+
+* comments inside a container with read will be prefixed with the read's
+value
+* changed config.
+
+
+
 ### [1.3.2](https://github.com/ngneat/transloco-keys-manager/compare/v1.3.1...v1.3.2) (2020-01-13)
 
 
