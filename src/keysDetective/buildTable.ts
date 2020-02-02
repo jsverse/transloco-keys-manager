@@ -53,7 +53,13 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys }: Params) {
     }
 
     logger.log(table.toString());
-    addMissingKeys && displayAddedMsg && logger.success(`Added all missing keys\n`);
+    if (displayAddedMsg) {
+      if (addMissingKeys) {
+        logger.success(`Added all missing keys\n` );
+      } else {
+       process.exit(1);
+      }
+    }
   } else {
     logger.log(`\n🎉 ${messages.noMissing} 🎉\n`);
   }
