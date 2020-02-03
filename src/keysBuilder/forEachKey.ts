@@ -4,9 +4,10 @@ export function forEachKey(content: string, regex, cb) {
   while (result) {
     /** Support ternary operator */
     const { backtickKey, backtickScope, scope } = result.groups;
+
     const keys = result.groups.key2
       ? [result.groups.key, result.groups.key2]
-      : (result.groups.key || backtickKey).replace(/'|"|\s/g, '').split(':');
+      : [(result.groups.key || backtickKey).replace(/'|"/g, '')];
 
     /**
      *

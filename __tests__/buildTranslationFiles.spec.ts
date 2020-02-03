@@ -54,6 +54,9 @@ describe('buildTranslationFiles', () => {
       for (let i = 53; i <= 62; i++) {
         expected[`${i}`] = m;
       }
+      expected['Restore Options'] = m;
+      expected['Processing archive...'] = m;
+
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
