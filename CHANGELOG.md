@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.1...v2.0.2) (2020-02-03)
+
+
+### Bug Fixes
+
+* 🐛 extraction remove spaces from keys ([6cd78ce](https://github.com/ngneat/transloco-keys-manager/commit/6cd78ce)), closes [#26](https://github.com/ngneat/transloco-keys-manager/issues/26)
+
+
+
 ### [2.0.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.0...v2.0.1) (2020-02-02)
 
 
