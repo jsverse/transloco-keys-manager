@@ -18,7 +18,8 @@ const _messages = {
     defaultValue: 'Enter default key value',
     addMissing: 'Add missing keys automatically?',
     missingValue: 'Missing value for',
-    done: 'Done!'
+    done: 'Done!',
+    problematicKeysForUnflat: (keys: string[]) => `Problematic keys for unflat files found:\n    ${keys.join('\n    ')}`
   },
   ru: {
     keysFound: (keysCount, filesCount) =>
