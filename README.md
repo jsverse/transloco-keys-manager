@@ -335,6 +335,10 @@ transloco-keys-manager extract --unflat
 transloco-keys-manager extract -u
 ```
 
+  If you are using unflat files keep in mind that “parent” keys won't be usable for a separate translation value, i.e. if you have two keys `first` and `first.second` you cannot assign a value to `first` as the translation file will look like `{ "first": { "second": "…" } }`.
+
+  During key extraction you will get a warning with a list of concerned keys you have to check for.
+
 - `defaultValue`: The default value of a generated key: (defaults to `Missing value for {{key}}`)
 
 ```
@@ -386,6 +390,7 @@ module.exports = {
     addMissingKeys?: boolean;
     replace?: boolean;
     defaultValue?: string | undefined;
+    unflat?: boolean;
   };
 }
 ```
