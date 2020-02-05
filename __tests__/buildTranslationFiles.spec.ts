@@ -338,6 +338,10 @@ describe('buildTranslationFiles', () => {
           d: {
             '1': m,
             '2': m
+          },
+          e: {
+            a: m,
+            aa: m
           }
         }
       };

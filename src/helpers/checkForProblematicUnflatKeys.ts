@@ -7,12 +7,13 @@ export function checkForProblematicUnflatKeys(obj: object) {
   const max = allKeys.length - 1;
   for (let i = 0; i < max; ) {
     const key = allKeys[i];
-    let index = allKeys[++i].indexOf(key);
+    const prefix = key + '.';
+    let index = allKeys[++i].indexOf(prefix);
     if (index === 0) {
       problematicKeys.push(key);
       while (index === 0 && i <= max) {
         problematicKeys.push(allKeys[i]);
-        index = i < max ? allKeys[++i].indexOf(key) : -1;
+        index = i < max ? allKeys[++i].indexOf(prefix) : -1;
       }
     }
   }
