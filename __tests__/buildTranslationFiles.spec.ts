@@ -321,7 +321,7 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-  describe('unflat-problematic-keys', () => {
+  describe('Unflat problematic keys', () => {
     const type = 'unflat-problematic-keys',
       config = gConfig(type, { unflat: true });
 

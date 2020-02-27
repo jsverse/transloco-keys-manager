@@ -19,7 +19,8 @@ const _messages = {
     addMissing: 'Add missing keys automatically?',
     missingValue: 'Missing value for',
     done: 'Done!',
-    problematicKeysForUnflat: (keys: string[]) => `Problematic keys for unflat files found:\n    ${keys.join('\n    ')}`
+    problematicKeysForUnflat: (keys: string[]) =>
+      `The following keys won't be accessible when unflatting the object:\n    ${keys.join('\n    ')}`
   },
   ru: {
     keysFound: (keysCount, filesCount) =>
