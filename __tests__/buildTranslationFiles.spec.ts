@@ -342,10 +342,24 @@ describe('buildTranslationFiles', () => {
           e: {
             a: m,
             aa: m
-          }
+          },
+          f: m
         }
       };
-      const expectedProblematicKeys = ['a', 'a.b', 'a.c', 'b', 'b.a', 'b.b'];
+      const expectedProblematicKeys = [
+        'a',
+        'a.b',
+        'a.c',
+        'b',
+        'b.a',
+        'b.b',
+        'f',
+        'f.a',
+        'f.a.a',
+        'f.a.b',
+        'f.b',
+        'f.b.a.a'
+      ];
       buildTranslationFiles(config);
 
       expect(spy).toHaveBeenCalledTimes(1);
