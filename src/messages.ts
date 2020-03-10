@@ -20,7 +20,7 @@ const _messages = {
     missingValue: 'Missing value for',
     done: 'Done!',
     problematicKeysForUnflat: (keys: string[]) =>
-      `The following keys won't be accessible when unflatting the object:\n    ${keys.join('\n    ')}`
+      `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
   },
   ru: {
     keysFound: (keysCount, filesCount) =>

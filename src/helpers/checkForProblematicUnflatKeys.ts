@@ -2,18 +2,18 @@ import { messages } from '../messages';
 import { getLogger } from '../helpers/logger';
 
 export function checkForProblematicUnflatKeys(obj: object) {
-  const allKeys = Object.keys(obj).sort();
+  const sortedKeys = Object.keys(obj).sort();
   const problematicKeys = [];
-  const max = allKeys.length - 1;
-  for (let i = 0; i < max; ) {
-    const key = allKeys[i];
-    const prefix = key + '.';
-    let index = allKeys[++i].indexOf(prefix);
-    if (index === 0) {
+  const lastKeyIndex = sortedKeys.length - 1;
+  for (let i = 0; i < lastKeyIndex; ) {
+    const key = sortedKeys[i];
+    const prefix = `${key}.`;
+    let isChildKey = sortedKeys[++i].startsWith(prefix);
+    if (isChildKey) {
       problematicKeys.push(key);
-      while (index === 0 && i <= max) {
-        problematicKeys.push(allKeys[i]);
-        index = i < max ? allKeys[++i].indexOf(prefix) : -1;
+      while (isChildKey && i <= lastKeyIndex) {
+        problematicKeys.push(sortedKeys[i]);
+        isChildKey = i < lastKeyIndex && sortedKeys[++i].startsWith(prefix);
       }
     }
   }
