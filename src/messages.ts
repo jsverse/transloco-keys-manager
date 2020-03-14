@@ -18,7 +18,9 @@ const _messages = {
     defaultValue: 'Enter default key value',
     addMissing: 'Add missing keys automatically?',
     missingValue: 'Missing value for',
-    done: 'Done!'
+    done: 'Done!',
+    problematicKeysForUnflat: (keys: string[]) =>
+      `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
   },
   ru: {
     keysFound: (keysCount, filesCount) =>

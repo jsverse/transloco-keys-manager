@@ -4,6 +4,7 @@ import * as fs from 'fs-extra';
 import diff from 'deep-diff';
 import { buildTranslationFiles } from '../src/keysBuilder';
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
+import { messages } from '../src/messages';
 
 const sourceRoot = '__tests__';
 
@@ -316,6 +317,53 @@ describe('buildTranslationFiles', () => {
       };
       buildTranslationFiles(config);
 
+      assertResult(type, expected.global);
+    });
+  });
+
+  describe('Unflat problematic keys', () => {
+    const type = 'unflat-problematic-keys',
+      config = gConfig(type, { unflat: true });
+
+    beforeEach(() => removeI18nFolder(type));
+
+    it('show work with unflat true and problematic keys', () => {
+      const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
+
+      const expected = {
+        global: {
+          a: m,
+          b: m,
+          c: m,
+          d: {
+            '1': m,
+            '2': m
+          },
+          e: {
+            a: m,
+            aa: m
+          },
+          f: m
+        }
+      };
+      const expectedProblematicKeys = [
+        'a',
+        'a.b',
+        'a.c',
+        'b',
+        'b.a',
+        'b.b',
+        'f',
+        'f.a',
+        'f.a.a',
+        'f.a.b',
+        'f.b',
+        'f.b.a.a'
+      ];
+      buildTranslationFiles(config);
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
       assertResult(type, expected.global);
     });
   });
