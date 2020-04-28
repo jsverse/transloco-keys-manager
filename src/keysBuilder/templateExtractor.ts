@@ -67,6 +67,10 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
 
             let [translationKey, scopeAlias] = resolveAliasAndKey(withRead, scopes);
 
+            if (!translationKey) {
+              continue;
+            }
+
             if (!scopeAlias) {
               // It means this is a global key
               translationKey = withRead;

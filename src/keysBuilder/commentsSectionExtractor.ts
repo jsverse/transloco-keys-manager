@@ -13,12 +13,13 @@ interface ExtractCommentsParams extends BaseParams {
 const stringToKeys = valueRegex => {
   return v =>
     // Remove the wrapper, t(some.key) => some.key
-    v
-      .replace(valueRegex, '$1')
+    v.replace(valueRegex, '$1')
       // Support multi keys t(a, b.c, d)
       .split(',')
       // Remove spaces
-      .map(v => v.replace(/\*|\n/g, '').trim());
+      .map(v => v.replace(/\*|\n/g, '').trim())
+      // Remove empty keys
+        .filter(key => key.length > 0);
 };
 
 const toOneDimArray = (acc, strings) => {

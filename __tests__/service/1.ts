@@ -62,6 +62,7 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
 
+    this.transloco.translate("")
     this.form
       .get('shouldUsePartitions')
       .valueChanges.pipe(untilDestroyed(this))

@@ -6,7 +6,7 @@
           buttonUrl="/register"
           [text]="t('26')"
   ></app-hero>
-
+  {{ t("") }}
   <app-promo [isSmallText]="true"></app-promo>
 
   <app-block [title]="'What people say'" theme="primary"><app-what-people-say>
@@ -15,6 +15,7 @@
 
   <app-block class="register-block">
     <button mat-raised-button color="accent" routerLink="register">{{ t('22') }}</button>
+    {{ t('') }}
   </app-block>
 </ng-template>
 
