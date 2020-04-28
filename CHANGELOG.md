@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.4](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.3...v2.0.4) (2020-04-28)
+
+
+### Bug Fixes
+
+* 🐛 handle empty keys ([71655e4](https://github.com/ngneat/transloco-keys-manager/commit/71655e4)), closes [#30](https://github.com/ngneat/transloco-keys-manager/issues/30)
+* 🐛 support empty string as default value ([0f80435](https://github.com/ngneat/transloco-keys-manager/commit/0f80435)), closes [#31](https://github.com/ngneat/transloco-keys-manager/issues/31)
+
+
+
 ### [2.0.3](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.2...v2.0.3) (2020-03-14)
 
 
