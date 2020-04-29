@@ -11,7 +11,7 @@ export const regexs = {
   directive: () => new RegExp(`\\stransloco\\s*=\\s*("|')(?<key>[^]+?)\\1`, 'g'),
   directiveTernary: () => new RegExp(`\\s\\[transloco\\]\\s*=\\s*("|')[^"'?]*\\?(?<key>[^]+?)\\1`, 'g'),
   pipe: () =>
-    /(?:(?:\{\{(?![^^}\|+]*\+)[^}\|'"]*)|(?:\[[^\]]*\]=(?:"|')(?![^'"+]*\+)[^'"]*))('|")(?<key>[^'"[>=]*?)\1[^'"\|[}]*(?:('|")(?<key2>[^"'[>]*?)\3)?[^\|}>[]*?\|[^}>]*?transloco/g,
+    /(?:(?:\{\{(?![^^}\|+]*\+)[^}\|'"]*)|(?:\[[^\]]*\]=(?:"|')(?![^'"+]*\+)[^'"]*))('|")(?<key>[^'"\[>=]*?)\1[^'"\|\[}]*(?:('|")(?<key2>[^"'\[>]*?)\3)?[^\|}>\[]*?\|[^}>\[]*?transloco/g,
   tsCommentsSection: () => /\/\*\*[^]+?\*\//g,
   templateCommentsSection: () => /<!--[^]+?-->/g,
   templateValidComment: marker => new RegExp(`<!--(\\s*${sanitizeForRegex(marker)}\\(([^)]+)\\)\\s*)+\\s*-->`),

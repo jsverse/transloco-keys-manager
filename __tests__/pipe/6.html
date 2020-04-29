@@ -21,3 +21,10 @@
                 </textarea>
 
 <div>{{ '63.64.65' another | other | transloco }}</div>
+<a [title]="'admin.1' | lowercase
+    | transloco"
+      [routerLink]="'admin' | lowercase">
+</a>
+<a [routerLink]="'admin' | lowercase"
+   [title]="'admin.2' | transloco">
+</a>
