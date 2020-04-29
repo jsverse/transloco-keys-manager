@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.6](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.5...v2.0.6) (2020-04-29)
+
+
+### Bug Fixes
+
+* 🐛 wrong pipe extraction ([7d1d848](https://github.com/ngneat/transloco-keys-manager/commit/7d1d848)), closes [#32](https://github.com/ngneat/transloco-keys-manager/issues/32)
+
+
+
 ### [2.0.5](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.4...v2.0.5) (2020-04-28)
 
 
