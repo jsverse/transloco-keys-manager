@@ -156,6 +156,7 @@ export class FeatureModule {}
 ```
 
 We can add it to the `scopePathMap` key in the `transloco.config.js` file:
+test
 
 ```js
 module.exports = {
@@ -206,19 +207,21 @@ Or to templates:
 ```
 
 When using comments in the templates they will also **inherit the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+
 ```html
 <!-- t(this.is.cool) -->
 <ng-container *transloco="let m; read: 'messages'">
+  ...
+  <!-- t(success, error) -->
+  <ng-container *transloco="let g; read: 'general'">
     ...
-    <!-- t(success, error) -->
-    <ng-container *transloco="let g; read: 'general'">
-        ...
-        <!-- t(ok, cancel) -->
-    </ng-container>
+    <!-- t(ok, cancel) -->
+  </ng-container>
 </ng-container>
 ```
 
 The extracted keys for the code above will be:
+
 ```json
 {
   "this.is.cool": "",
@@ -229,11 +232,12 @@ The extracted keys for the code above will be:
 }
 ```
 
-*Notes:* 
+_Notes:_
+
 1. When using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
-2. When using comments in your HTML files, they *must* contain only the markers without additional text.  
-Here's an example for invalid comment:  
-`<!-- For dropdown t(dynamic.1, dynamic.2) -->`
+2. When using comments in your HTML files, they _must_ contain only the markers without additional text.  
+   Here's an example for invalid comment:  
+   `<!-- For dropdown t(dynamic.1, dynamic.2) -->`
 
 ### Extra Support
 
@@ -242,7 +246,7 @@ Here's an example for invalid comment:
 ```html
 <ng-container *transloco="let t; read: 'dashboard'">
   <h1>{{ t('title') }}</h1>
-  
+
   <p>{{ t('desc') }}</p>
 </ng-container>
 ```
@@ -278,8 +282,8 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `project`*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
-In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):  
+- `project`\*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
+  In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
 ```
 transloco-keys-manager extract --project first-app
@@ -335,9 +339,9 @@ transloco-keys-manager extract --unflat
 transloco-keys-manager extract -u
 ```
 
-  If you are using unflat files keep in mind that “parent” keys won't be usable for a separate translation value, i.e. if you have two keys `first` and `first.second` you cannot assign a value to `first` as the translation file will look like `{ "first": { "second": "…" } }`.
+If you are using unflat files keep in mind that “parent” keys won't be usable for a separate translation value, i.e. if you have two keys `first` and `first.second` you cannot assign a value to `first` as the translation file will look like `{ "first": { "second": "…" } }`.
 
-  During key extraction you will get a warning with a list of concerned keys you have to check for.
+During key extraction you will get a warning with a list of concerned keys you have to check for.
 
 - `defaultValue`: The default value of a generated key: (defaults to `Missing value for {{key}}`)
 
@@ -421,6 +425,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
