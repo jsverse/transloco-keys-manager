@@ -156,7 +156,7 @@ export class FeatureModule {}
 ```
 
 We can add it to the `scopePathMap` key in the `transloco.config.js` file:
-testf
+testff
 
 ```js
 module.exports = {
