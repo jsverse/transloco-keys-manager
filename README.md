@@ -100,7 +100,7 @@ Now run `npm start` and it'll generate new keys whenever a **save** is made to t
 
 ### Scopes Support
 
-The extractor supports [scopes](https://netbasal.gitbook.io/transloco/lazy-load-translation-files/scope-configuration) out of the box. When you define a new scope in the `providers` array:
+The extractor supports [scopes](https://ngneat.github.io/transloco/docs/scope-configuration/) out of the box. When you define a new scope in the `providers` array:
 
 ```ts
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
@@ -130,7 +130,7 @@ It'll extract the scope (`admin` in our case) keys into the relevant folder:
 
 ### Inline Loaders
 
-Let's say that we're using the following [inline](https://netbasal.gitbook.io/transloco/lazy-load-translation-files/inline-loaders) loader:
+Let's say that we're using the following [inline](https://ngneat.github.io/transloco/docs/inline-loaders) loader:
 
 ```ts
 export const loader = ['en', 'es'].reduce((acc, lang) => {
@@ -205,7 +205,7 @@ Or to templates:
 <ng-container *transloco="let t">...</ng-container>
 ```
 
-When using comments in the templates they will also **inherit the `read` [input](https://netbasal.gitbook.io/transloco/translation-in-the-template/structural-directive#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+When using comments in the templates they will also **inherit the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
 ```html
 <!-- t(this.is.cool) -->
 <ng-container *transloco="let m; read: 'messages'">
@@ -237,7 +237,7 @@ Here's an example for invalid comment:
 
 ### Extra Support
 
-- Supports for the `read` [input](https://netbasal.gitbook.io/transloco/translation-in-the-template/structural-directive#utilizing-the-read-input):
+- Supports for the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input):
 
 ```html
 <ng-container *transloco="let t; read: 'dashboard'">
