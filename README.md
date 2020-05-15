@@ -51,7 +51,7 @@ At this point, you'll have to choose whether you want to use the CLI, Webpack Pl
 
 Note that if you're going to use the Webpack plugin and you've already defined other Webpack plugins in your project, you should add the Keys Manager plugin to the list, rather than using the schematics command.
 
-The following functionality is available once the installation is complete:
+The following functionality is available once the installation is complete:d
 
 ## 🔑 Keys Extractor
 
