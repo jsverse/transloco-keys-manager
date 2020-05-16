@@ -29,7 +29,21 @@ export function resolveConfig(inlineConfig: Config): Config {
   resolveConfigPaths(config, projectBsePath);
   validateDirectories(config);
 
+  if (debug.enabled('paths')) {
+    const log = debug('paths');
+    log(`Input: %o`, config.input);
+    log(`Output: %o`, config.output);
+    log(`Translations: %o`, config.translationsPath);
+  }
+
   updateScopesMap({ input: config.input });
+
+  if (debug.enabled('scopes')) {
+    const log = debug('scopes');
+    const {scopeToAlias} = getScopes();
+    log(`Scopes map: %o`, scopeToAlias);
+  }
+
   return { ...config, scopes: getScopes() };
 }
 
@@ -43,6 +57,10 @@ function flatFileConfig(fileConfig: TranslocoConfig) {
 
   if (langs) {
     keysManager.langs = langs;
+  }
+
+  if (fileConfig.scopePathMap) {
+    keysManager.scopePathMap = fileConfig.scopePathMap;
   }
 
   return keysManager;

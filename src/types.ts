@@ -8,6 +8,9 @@ export type Config = {
   replace?: boolean;
   addMissingKeys?: boolean;
   scopes?: Scopes;
+  scopePathMap?: {
+    [scopeAlias: string]: string;
+  };
   files?: string[];
   output?: string;
   marker?: string;

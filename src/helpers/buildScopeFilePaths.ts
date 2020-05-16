@@ -1,5 +1,5 @@
 import { Scopes } from '../types';
-import { getConfig } from '@ngneat/transloco-utils';
+import { getConfig } from '../config';
 
 export type ScopeFiles = { path: string; scope: string }[];
 
