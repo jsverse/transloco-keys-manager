@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.7](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.6...v2.0.7) (2020-05-16)
+
+
+### Bug Fixes
+
+* 🐛 scopes map taken from the wrong config ([1a2c7e2](https://github.com/ngneat/transloco-keys-manager/commit/1a2c7e2)), closes [#37](https://github.com/ngneat/transloco-keys-manager/issues/37)
+
+
+
 ### [2.0.6](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.5...v2.0.6) (2020-04-29)
 
 
