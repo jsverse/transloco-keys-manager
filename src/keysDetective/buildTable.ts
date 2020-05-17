@@ -19,6 +19,8 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys }: Params) {
   const logger = getLogger();
   if (langs.length > 0) {
     let displayAddedMsg = false;
+    let hasExtraKeys = false;
+
     logger.success(`\x1b[4m${messages.summary}\x1b[0m\n`);
     const table = new Table({
       style: {
@@ -46,6 +48,7 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys }: Params) {
 
       if (hasExtra) {
         row.push(mapDiffToKeys(extra, 'lhs'));
+        hasExtraKeys = true;
       } else {
         row.push('--');
       }
@@ -57,8 +60,12 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys }: Params) {
       if (addMissingKeys) {
         logger.success(`Added all missing keys\n` );
       } else {
-       process.exit(1);
+        process.exit(1);
       }
+    }
+    
+    if (hasExtraKeys) {
+      process.exit(2);
     }
   } else {
     logger.log(`\n🎉 ${messages.noMissing} 🎉\n`);
