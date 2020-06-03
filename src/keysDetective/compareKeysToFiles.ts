@@ -14,9 +14,10 @@ type Params = {
   scopeToKeys: ScopeMap;
   translationPath: string;
   addMissingKeys: boolean;
+  exitOnExtraKeys: boolean;
 };
 
-export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys }: Params) {
+export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKeys, exitOnExtraKeys }: Params) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
 
@@ -101,6 +102,7 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
   buildTable({
     langs,
     diffsPerLang,
-    addMissingKeys
+    addMissingKeys,
+    exitOnExtraKeys
   });
 }
