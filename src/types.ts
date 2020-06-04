@@ -7,7 +7,7 @@ export type Config = {
   defaultValue?: undefined | string;
   replace?: boolean;
   addMissingKeys?: boolean;
-  exitOnExtraKeys?: boolean;
+  emitErrorOnExtraKeys?: boolean;
   scopes?: Scopes;
   files?: string[];
   output?: string;

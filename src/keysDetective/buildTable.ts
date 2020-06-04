@@ -6,7 +6,7 @@ import chalk from 'chalk';
 
 type Params = {
   addMissingKeys: boolean;
-  exitOnExtraKeys: boolean;
+  emitErrorOnExtraKeys: boolean;
   langs: string[];
   diffsPerLang: {
     [lang: string]: {
@@ -16,7 +16,7 @@ type Params = {
   };
 };
 
-export function buildTable({ langs, diffsPerLang, addMissingKeys, exitOnExtraKeys }: Params) {
+export function buildTable({ langs, diffsPerLang, addMissingKeys, emitErrorOnExtraKeys }: Params) {
   const logger = getLogger();
   if (langs.length > 0) {
     let displayAddedMsg = false;
@@ -65,7 +65,7 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys, exitOnExtraKey
       }
     }
 
-    if (hasExtraKeys && exitOnExtraKeys) {
+    if (hasExtraKeys && emitErrorOnExtraKeys) {
       process.exit(2);
     }
   } else {

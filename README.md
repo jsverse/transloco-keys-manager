@@ -360,10 +360,10 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `exitOnExtraKeys`: Return exit code if extra keys were found by the detective (defaults to `false`)
+- `emitErrorOnExtraKeys`: Return exit code if extra keys were found by the detective (defaults to `false`)
 
 ```
-transloco-keys-manager find --exit-on-extra-keys
+transloco-keys-manager find --emit-error-on-extra-keys
 transloco-keys-manager find -e
 ```
 
@@ -395,7 +395,7 @@ module.exports = {
     output?: string;
     marker?: string;
     addMissingKeys?: boolean;
-    exitOnExtraKeys?: boolean;
+    emitErrorOnExtraKeys?: boolean;
     replace?: boolean;
     defaultValue?: string | undefined;
     unflat?: boolean;

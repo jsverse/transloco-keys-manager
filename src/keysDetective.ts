@@ -29,6 +29,6 @@ export function findMissingKeys(inlineConfig: Config) {
     scopeToKeys: result.scopeToKeys,
     translationPath: config.translationsPath,
     addMissingKeys: config.addMissingKeys,
-    exitOnExtraKeys: config.exitOnExtraKeys
+    emitErrorOnExtraKeys: config.emitErrorOnExtraKeys
   });
 }

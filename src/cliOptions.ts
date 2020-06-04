@@ -42,7 +42,7 @@ export const optionDefinitions = [
     description: 'Add missing keys that were found by the detective (default value is false)'
   },
   {
-    name: 'exit-on-extra-keys',
+    name: 'emit-error-on-extra-keys',
     alias: 'e',
     type: Boolean,
     description: 'Return exit code if extra keys were found by the detective (defaults to `false`)'
