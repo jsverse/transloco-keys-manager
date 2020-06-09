@@ -360,7 +360,7 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `emitErrorOnExtraKeys`: Return exit code if extra keys were found by the detective (defaults to `false`)
+- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (defaults to `false`)
 
 ```
 transloco-keys-manager find --emit-error-on-extra-keys
