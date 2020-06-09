@@ -33,6 +33,9 @@ export const defaultConfig: Config = {
   // Add missing keys that were found by the detective (default value is false)
   addMissingKeys: false,
 
+  // Emit an error and exit the process if extra keys were found (defaults to `false`)
+  emitErrorOnExtraKeys: false,
+
   // The path for the root translation files (for example: assets/i18n)
   translationsPath: 'assets/i18n'
 };

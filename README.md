@@ -360,6 +360,13 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
+- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (defaults to `false`)
+
+```
+transloco-keys-manager find --emit-error-on-extra-keys
+transloco-keys-manager find -e
+```
+
 - `translationsPath`: The path for the root directory of the translation files (defaults to `assets/i18n`)
 
 ```
@@ -388,6 +395,7 @@ module.exports = {
     output?: string;
     marker?: string;
     addMissingKeys?: boolean;
+    emitErrorOnExtraKeys?: boolean;
     replace?: boolean;
     defaultValue?: string | undefined;
     unflat?: boolean;

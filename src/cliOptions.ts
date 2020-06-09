@@ -41,6 +41,12 @@ export const optionDefinitions = [
     type: Boolean,
     description: 'Add missing keys that were found by the detective (default value is false)'
   },
+  {
+    name: 'emit-error-on-extra-keys',
+    alias: 'e',
+    type: Boolean,
+    description: 'Emit an error and exit the process if extra keys were found (defaults to `false`)'
+  },
   { name: 'translations-path', alias: 'p', type: String, description: 'Where are the main translation files' },
   { name: 'help', alias: 'h', type: Boolean, description: 'Help me, please!' }
 ];

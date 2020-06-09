@@ -7,6 +7,7 @@ export type Config = {
   defaultValue?: undefined | string;
   replace?: boolean;
   addMissingKeys?: boolean;
+  emitErrorOnExtraKeys?: boolean;
   scopes?: Scopes;
   scopePathMap?: {
     [scopeAlias: string]: string;
