@@ -17,7 +17,7 @@ To make the process less burdensome, we've created two tools for the Transloco l
 
 <hr />
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 [![Build Status](https://img.shields.io/travis/datorama/akita.svg?style=flat-square)](https://travis-ci.org/ngneat/transloco-keys-manager)
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
@@ -424,6 +424,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/itayod"><img src="https://avatars2.githubusercontent.com/u/6719615?v=4" width="100px;" alt="Itay Oded"/><br /><sub><b>Itay Oded</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=itayod" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/darkv"><img src="https://avatars3.githubusercontent.com/u/582546?v=4" width="100px;" alt="Johann Werner"/><br /><sub><b>Johann Werner</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=darkv" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=darkv" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/adgoncal"><img src="https://avatars1.githubusercontent.com/u/10856791?v=4" width="100px;" alt="Allan G"/><br /><sub><b>Allan G</b></sub></a><br /><a href="#ideas-adgoncal" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/JerryDoubleU"><img src="https://avatars0.githubusercontent.com/u/16196252?v=4" width="100px;" alt="JerryDoubleU"/><br /><sub><b>JerryDoubleU</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=JerryDoubleU" title="Code">💻</a></td>
   </tr>
 </table>
 
