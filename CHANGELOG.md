@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.7...v2.1.0) (2020-06-10)
+
+
+### Features
+
+* 🎸 exit code 2 if extra keys found ([#39](https://github.com/ngneat/transloco-keys-manager/issues/39)) ([3f8602c](https://github.com/ngneat/transloco-keys-manager/commit/3f8602c)), closes [#34](https://github.com/ngneat/transloco-keys-manager/issues/34) [#34](https://github.com/ngneat/transloco-keys-manager/issues/34) [#34](https://github.com/ngneat/transloco-keys-manager/issues/34) [#34](https://github.com/ngneat/transloco-keys-manager/issues/34)
+
+
+
 ### [2.0.7](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.6...v2.0.7) (2020-05-16)
 
 
