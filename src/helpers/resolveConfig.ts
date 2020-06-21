@@ -40,7 +40,7 @@ export function resolveConfig(inlineConfig: Config): Config {
 
   if (debug.enabled('scopes')) {
     const log = debug('scopes');
-    const {scopeToAlias} = getScopes();
+    const { scopeToAlias } = getScopes();
     log(`Scopes map: %o`, scopeToAlias);
   }
 
@@ -48,27 +48,34 @@ export function resolveConfig(inlineConfig: Config): Config {
 }
 
 function flatFileConfig(fileConfig: TranslocoConfig) {
-  const keysManager: Partial<Config> = fileConfig.keysManager || {};
-  const { rootTranslationsPath, langs } = fileConfig;
+  const keysManager = fileConfig.keysManager || {};
+  const { rootTranslationsPath, langs, scopePathMap } = fileConfig;
+
+  if (keysManager.input) {
+    keysManager.input = Array.isArray(keysManager.input) ? keysManager.input : keysManager.input.split(',');
+  }
+  const config: Partial<Config> = { ...keysManager } as TranslocoConfig['keysManager'] & { input: string[] };
 
   if (rootTranslationsPath) {
-    keysManager.translationsPath = rootTranslationsPath;
+    config.translationsPath = rootTranslationsPath;
   }
 
   if (langs) {
-    keysManager.langs = langs;
+    config.langs = langs;
   }
 
-  if (fileConfig.scopePathMap) {
-    keysManager.scopePathMap = fileConfig.scopePathMap;
+  if (scopePathMap) {
+    config.scopePathMap = scopePathMap;
   }
 
-  return keysManager;
+  return config;
 }
 
 function resolveConfigPaths(config: Config, sourceRoot: string) {
-  ['input', 'output', 'translationsPath'].forEach(prop => {
-    config[prop] = path.resolve(process.cwd(), sourceRoot, config[prop]);
+  const resolvePath = configPath => path.resolve(process.cwd(), sourceRoot, configPath);
+  config.input = config.input.map(resolvePath);
+  ['output', 'translationsPath'].forEach(prop => {
+    config[prop] = resolvePath(config[prop]);
   });
 }
 
@@ -78,9 +85,11 @@ function validateDirectories({ input, translationsPath, command }: Config) {
     const msg = fs.existsSync(path) ? messages.pathIsNotDir : messages.pathDoesntExists;
     console.log(chalk.bgRed.black(`${prop} ${msg}`));
   };
-  if (!isDirectory(input)) {
-    invalidPath = true;
-    log(input, 'Input');
+  for (const path of input) {
+    if (!isDirectory(path)) {
+      invalidPath = true;
+      log(path, 'Input');
+    }
   }
   if (command === 'find' && !isDirectory(translationsPath)) {
     invalidPath = true;

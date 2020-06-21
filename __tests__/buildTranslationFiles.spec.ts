@@ -21,7 +21,7 @@ const m = 'missing';
 
 function gConfig(type, config = {}) {
   return {
-    input: `${type}`,
+    input: [`${type}`],
     output: `${type}/i18n`,
     langs: ['en', 'es', 'it'],
     defaultValue: 'missing',
@@ -55,7 +55,7 @@ describe('buildTranslationFiles', () => {
       for (let i = 53; i <= 62; i++) {
         expected[`${i}`] = m;
       }
-      ['Restore Options', 'Processing archive...', 'admin.1', 'admin.2'].forEach((nonNumericKey) => {
+      ['Restore Options', 'Processing archive...', 'admin.1', 'admin.2'].forEach(nonNumericKey => {
         expected[nonNumericKey] = m;
       });
 
@@ -366,6 +366,32 @@ describe('buildTranslationFiles', () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
       assertResult(type, expected.global);
+    });
+  });
+
+  describe('Multi Inputs', () => {
+    const type = 'multi-input',
+      config = gConfig(type, { input: [`${type}/folder-1`, `${type}/folder-2`] });
+
+    beforeEach(() => removeI18nFolder(type));
+
+    it('show work with multiple inputs', () => {
+      let expected = gKeys(39);
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+
+    it('should work with scopes', () => {
+      let expected = {
+        '1': 'missing',
+        '2.1': 'missing',
+        '3.1': 'missing',
+        '4': 'missing',
+        '5': 'missing'
+      };
+
+      buildTranslationFiles(config);
+      assertResult(type, expected, 'admin-page/');
     });
   });
 });

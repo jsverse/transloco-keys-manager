@@ -15,7 +15,6 @@ const config = commandLineArgs(optionDefinitions, {
   camelCase: true,
   argv
 });
-config.command = mainOptions.command;
 const { help } = config;
 
 if (help) {
@@ -23,6 +22,10 @@ if (help) {
   // Don't delete, it's the help menu
   console.log(usage);
   process.exit();
+}
+config.command = mainOptions.command;
+if (config.input) {
+  config.input = config.input.split(',');
 }
 if (mainOptions.command === 'extract') {
   buildTranslationFiles(config);

@@ -1,5 +1,5 @@
 export type Config = {
-  input?: string;
+  input?: string[];
   config?: string;
   project?: string;
   translationsPath?: string;

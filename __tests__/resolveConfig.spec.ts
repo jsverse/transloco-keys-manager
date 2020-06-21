@@ -9,9 +9,8 @@ import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
 import { getConfig } from '@ngneat/transloco-utils';
 
 describe('resolveConfig', () => {
-  const configPaths = ['input', 'output', 'translationsPath'];
   const sourceRoot = '__tests__';
-  const inlineConfig = { defaultValue: 'test2', input: 'somePath' };
+  const inlineConfig = { defaultValue: 'test2', input: ['somePath'] };
   let spies;
   beforeAll(() => {
     (resolveProjectBasePath as any).mockImplementation(() => sourceRoot);
@@ -19,8 +18,13 @@ describe('resolveConfig', () => {
     spies = [spyOn(process, 'exit'), spyOn(console, 'log')];
   });
 
-  function resolvePath(p: string) {
-    return path.resolve(process.cwd(), sourceRoot, p);
+  function resolvePath(configPath: string | string[], asArray = false) {
+    const resolve = p => path.resolve(process.cwd(), sourceRoot, p);
+    if (Array.isArray(configPath)) {
+      return configPath.map(resolve);
+    }
+
+    return asArray ? [resolve(configPath)] : resolve(configPath);
   }
 
   function assertConfig(expected, inline = {}) {
@@ -68,7 +72,7 @@ describe('resolveConfig', () => {
       const expected = {
         ...defaultConfig,
         defaultValue: translocoConfig.keysManager.defaultValue,
-        input: resolvePath(translocoConfig.keysManager.input),
+        input: resolvePath(translocoConfig.keysManager.input, true),
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
         langs: translocoConfig.langs
@@ -106,29 +110,33 @@ describe('resolveConfig', () => {
     }
 
     it('should fail on invalid input path', () => {
-      resolveConfig({ input: 'noFolder' });
+      resolveConfig({ input: ['noFolder'] });
       shouldFail('Input', 'pathDoesntExists');
-      resolveConfig({ input: 'comments/1.html' });
+      resolveConfig({ input: ['comments', 'anotherMissingFolder'] });
+      shouldFail('Input', 'pathDoesntExists');
+      resolveConfig({ input: ['comments/1.html'] });
       shouldFail('Input', 'pathIsNotDir');
     });
 
     it('should fail on invalid translations path', () => {
       /* should only fail translation path when in find mode */
-      resolveConfig({ input: 'comments', translationsPath: 'noFolder' });
+      resolveConfig({ input: ['comments'], translationsPath: 'noFolder' });
       shouldPass();
-      resolveConfig({ input: 'comments', translationsPath: 'noFolder', command: 'extract' });
+      resolveConfig({ input: ['comments'], translationsPath: 'noFolder', command: 'extract' });
       shouldPass();
-      resolveConfig({ input: 'comments', translationsPath: 'noFolder', command: 'find' });
+      resolveConfig({ input: ['comments'], translationsPath: 'noFolder', command: 'find' });
       shouldFail('Translations path', 'pathDoesntExists');
-      resolveConfig({ input: 'comments', translationsPath: 'comments/1.html', command: 'find' });
+      resolveConfig({ input: ['comments'], translationsPath: 'comments/1.html', command: 'find' });
       shouldFail('Translations path', 'pathIsNotDir');
     });
   });
 
   describe('resolveConfigPaths', () => {
     it('should prefix all the paths in the config with the process cwd', () => {
-      const config = resolveConfig({ input: 'comments' });
-      configPaths.forEach(p => expect(config[p].startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(true));
+      const config = resolveConfig({ input: ['comments'] });
+      const assertPath = p => expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(true);
+      config.input.forEach(assertPath);
+      ['output', 'translationsPath'].forEach(prop => assertPath(config[prop]));
     });
   });
 });

@@ -298,6 +298,7 @@ transloco-keys-manager extract -c src/my/path
 
 ```
 transloco-keys-manager extract --input src/my/path
+transloco-keys-manager extract --input src/my/path,project/another/path
 transloco-keys-manager extract -i src/my/path
 ```
 
@@ -391,7 +392,7 @@ module.exports = {
   rootTranslationsPath?: string;
   langs?: string[];
   keysManager: {
-    input?: string;
+    input?: string | string[];
     output?: string;
     marker?: string;
     addMissingKeys?: boolean;
