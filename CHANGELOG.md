@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.1.0...v2.2.0) (2020-06-21)
+
+
+### Features
+
+* 🎸 support multiple input paths ([f6f21ab](https://github.com/ngneat/transloco-keys-manager/commit/f6f21ab)), closes [#40](https://github.com/ngneat/transloco-keys-manager/issues/40)
+
+
+
 ## [2.1.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.0.7...v2.1.0) (2020-06-10)
 
 
