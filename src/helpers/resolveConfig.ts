@@ -47,14 +47,14 @@ export function resolveConfig(inlineConfig: Config): Config {
   return { ...config, scopes: getScopes() };
 }
 
-function flatFileConfig(fileConfig: TranslocoConfig) {
+function flatFileConfig(fileConfig: TranslocoConfig): Partial<Config> {
   const keysManager = fileConfig.keysManager || {};
   const { rootTranslationsPath, langs, scopePathMap } = fileConfig;
 
   if (keysManager.input) {
     keysManager.input = Array.isArray(keysManager.input) ? keysManager.input : keysManager.input.split(',');
   }
-  const config: Partial<Config> = { ...keysManager } as TranslocoConfig['keysManager'] & { input: string[] };
+  const config: Partial<Config> = { ...keysManager } as TranslocoConfig['keysManager'] & { input?: string[] };
 
   if (rootTranslationsPath) {
     config.translationsPath = rootTranslationsPath;
