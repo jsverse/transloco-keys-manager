@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.2.0...v2.2.1) (2020-06-22)
+
+
+### Bug Fixes
+
+* 🐛 add polyfill to support older node versions ([57a3e8d](https://github.com/ngneat/transloco-keys-manager/commit/57a3e8d))
+
+
+
 ## [2.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.1.0...v2.2.0) (2020-06-21)
 
 
