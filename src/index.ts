@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import './polyfills';
 import * as commandLineArgs from 'command-line-args';
 import * as commandLineUsage from 'command-line-usage';
 
