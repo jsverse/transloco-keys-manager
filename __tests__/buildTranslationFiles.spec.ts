@@ -164,12 +164,15 @@ describe('buildTranslationFiles', () => {
       const expected = {
         global: {
           ...gKeys(3),
-          ...gKeys(21, 'site-header.navigation.route'),
+          ...gKeys(23, 'site-header.navigation.route'),
           ...gKeys(5, 'site-header.navigation'),
           ...gKeys(10, 'right-pane.actions'),
           ...gKeys(1, 'templates.translations'),
           ...gKeys(3, 'nested.translation'),
-          ...gKeys(3, 'some.other.nested.that-is-tested')
+          ...gKeys(3, 'some.other.nested.that-is-tested'),
+          ...gKeys(9, 'ternary.nested'),
+          ...gKeys(2, 'nested'),
+          ...gKeys(2, 'site-header.navigation.route.nested')
         },
         todos: {
           ...gKeys(2, 'numbers')

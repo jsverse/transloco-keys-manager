@@ -256,11 +256,14 @@ The extracted keys for the code above will be:
 }
 ```
 
-- Supports **static** ternary operators:
+- Supports **static** and **structural directive** ternary operators:
 
 ```html
 <comp [placeholder]="condition ? 'keyOne' : 'keyTwo' | transloco"></comp>
 <h1>{{ condition ? 'keyOne' : 'keyTwo' | transloco }}</h1>
+
+<comp *transloco="let t; read: 'ternary'"></comp>
+<h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
 ```
 
 ## 🕵️‍ Keys Detective

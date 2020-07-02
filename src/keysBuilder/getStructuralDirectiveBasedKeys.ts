@@ -31,11 +31,19 @@ export function getStructuralDirectiveBasedKeys(
 
   if (varName) {
     const keyRegex = regexs.templateKey(varName);
+    const ternaryRegex = regexs.structuralDirectiveTernary(varName);
     let keySearch = keyRegex.exec(matchedStr);
+    let ternarySearch = ternaryRegex.exec(matchedStr);
 
     while (keySearch) {
       translationKeys.push(keySearch.groups.key);
       keySearch = keyRegex.exec(matchedStr);
+    }
+
+    while (ternarySearch) {
+      const { keyA, keyB } = ternarySearch.groups;
+      translationKeys.push(keyA, keyB);
+      ternarySearch = ternaryRegex.exec(matchedStr);
     }
   }
 
