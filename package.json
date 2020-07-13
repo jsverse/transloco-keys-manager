@@ -102,7 +102,7 @@
     "lint-staged": "9.2.0",
     "lodash.isequal": "4.5.0",
     "prettier": "1.19.1",
-    "standard-version": "6.0.1",
+    "standard-version": "8.0.1",
     "terser": "4.3.9",
     "terser-folder": "2.0.0",
     "typescript": "3.7.4"
