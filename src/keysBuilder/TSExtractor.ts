@@ -8,20 +8,28 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 import { extractPureKeys } from './extractTSPureKeys';
 import { extractServiceKeys } from './extractTsServiceKeys';
 
-export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
+export function TSExtractor({ file, scopes, defaultValue, scopeToKeys, getTextMarker }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
-  if (!content.includes('@ngneat/transloco')) return scopeToKeys;
+  if (
+    !content.includes('@ngneat/transloco') &&
+    !(
+      // todo: need create dummy function in @ngneat/transloco-utils
+      (content.includes('ngx-translate-extract-marker') && content.includes(`${getTextMarker}(`))
+    )
+  )
+    return scopeToKeys;
 
   const ast = tsquery.ast(content);
 
   const serviceCalls = extractServiceKeys(ast);
   const pureCalls = extractPureKeys(ast);
+  const pureGetTextMarkerCalls = extractPureKeys(ast, getTextMarker);
   const baseParams = {
     scopeToKeys,
     scopes,
     defaultValue
   };
-  serviceCalls.concat(pureCalls).forEach(({ key, lang }) => {
+  serviceCalls.concat(pureCalls, pureGetTextMarkerCalls).forEach(({ key, lang }) => {
     const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
     addKey({
       scopeAlias,

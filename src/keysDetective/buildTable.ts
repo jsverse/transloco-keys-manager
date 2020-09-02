@@ -59,7 +59,7 @@ export function buildTable({ langs, diffsPerLang, addMissingKeys, emitErrorOnExt
     logger.log(table.toString());
     if (displayAddedMsg) {
       if (addMissingKeys) {
-        logger.success(`Added all missing keys\n` );
+        logger.success(`Added all missing keys\n`);
       } else {
         process.exit(1);
       }

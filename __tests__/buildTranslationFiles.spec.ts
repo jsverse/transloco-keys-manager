@@ -394,4 +394,50 @@ describe('buildTranslationFiles', () => {
       assertResult(type, expected, 'admin-page/');
     });
   });
+
+  describe('marker', () => {
+    const type = 'marker';
+
+    beforeEach(() => removeI18nFolder(type));
+
+    it('should work with default getTextMarker = "marker"', () => {
+      const config = gConfig(type);
+
+      let expected = {};
+      expected['username'] = 'missing';
+      expected['password'] = 'missing';
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+
+    it('should work with getTextMarker = "_"', () => {
+      const config = gConfig(type, { getTextMarker: '_' });
+
+      let expected = {};
+      expected['username2'] = 'missing';
+      expected['password2'] = 'missing';
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+
+    it('should work with incorrect import', () => {
+      const config = gConfig(type);
+
+      let expected = {};
+      expected['username'] = 'missing';
+      expected['password'] = 'missing';
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+
+    it('should work with getTextMarker = "t"', () => {
+      const config = gConfig(type, { getTextMarker: 't' });
+
+      let expected = {};
+      expected['username4'] = 'missing';
+      expected['password4'] = 'missing';
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+  });
 });

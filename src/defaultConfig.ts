@@ -13,6 +13,9 @@ export const defaultConfig: Config = {
   // The marker sign for dynamic values
   marker: 't',
 
+  // The marker sign for dynamic values only for extract key
+  getTextMarker: 'marker',
+
   // Whether to sort the keys
   sort: false,
 

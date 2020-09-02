@@ -18,6 +18,7 @@ export type Config = {
   sort?: boolean;
   unflat?: boolean;
   command?: 'extract' | 'find';
+  getTextMarker?: string;
 };
 
 export type ExtractionResult = {
@@ -30,6 +31,7 @@ export type ExtractorConfig = {
   scopes: Scopes;
   defaultValue: string;
   scopeToKeys: ScopeMap;
+  getTextMarker: string;
 };
 
 export type Scopes = {

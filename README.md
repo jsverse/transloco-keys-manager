@@ -375,6 +375,13 @@ transloco-keys-manager find --translations-path my/path
 transloco-keys-manager find -p my/path
 ```
 
+- `getTextMarker`: The marker sign for dynamic values only for extract key: (defaults to `marker`)
+
+```
+transloco-keys-manager extract --get-text-marker _
+transloco-keys-manager extract -g  _
+```
+
 - `help`:
 
 ```
@@ -400,6 +407,7 @@ module.exports = {
     replace?: boolean;
     defaultValue?: string | undefined;
     unflat?: boolean;
+    getTextMarker?: string;
   };
 }
 ```
