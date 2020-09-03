@@ -1,4 +1,4 @@
-import { marker as t } from 'ngx-translate-extract-marker';
+import { marker as t } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
   selector: 'bla-bla',

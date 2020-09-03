@@ -379,7 +379,7 @@ transloco-keys-manager find -p my/path
 
 ```
 # for work need install and import marker function in source code
-# import { marker } from 'ngx-translate-extract-marker';
+# import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 npm install @biesbjerg/ngx-translate-extract-marker --save
 
 transloco-keys-manager extract --get-text-marker _

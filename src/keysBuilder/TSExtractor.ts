@@ -14,7 +14,7 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys, getTextMa
     !content.includes('@ngneat/transloco') &&
     !(
       // todo: need create dummy function in @ngneat/transloco-utils
-      (content.includes('ngx-translate-extract-marker') && content.includes(`${getTextMarker}(`))
+      (content.includes('@biesbjerg/ngx-translate-extract-marker') && content.includes(`${getTextMarker}(`))
     )
   )
     return scopeToKeys;
