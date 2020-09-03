@@ -50,7 +50,6 @@ describe('buildTranslationFiles', () => {
     beforeEach(() => removeI18nFolder(type));
 
     it('should work with pipe', () => {
-      return;
       let expected = gKeys(48);
       expected['63.64.65'] = expected['49.50.51.52'] = m;
       for (let i = 53; i <= 62; i++) {
@@ -66,7 +65,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('ngContainer', () => {
-    return;
     const type = 'ngContainer',
       config = gConfig(type);
 
@@ -93,7 +91,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('ngTemplate', () => {
-    return;
     const type = 'ngTemplate',
       config = gConfig(type);
 
@@ -120,7 +117,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('service', () => {
-    return;
     const type = 'service',
       config = gConfig(type);
 
@@ -159,7 +155,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('read', () => {
-    return;
     const type = 'read',
       config = gConfig(type);
 
@@ -188,7 +183,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('comments', () => {
-    return;
     const type = 'comments',
       config = gConfig(type);
 
@@ -281,7 +275,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('unflat', () => {
-    return;
     const type = 'unflat',
       config = gConfig(type, { unflat: true });
 
@@ -302,7 +295,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('unflat-sort', () => {
-    return;
     const type = 'unflat-sort',
       config = gConfig(type, { unflat: true, sort: true });
 
@@ -331,7 +323,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('Unflat problematic keys', () => {
-    return;
     const type = 'unflat-problematic-keys',
       config = gConfig(type, { unflat: true });
 
@@ -379,7 +370,6 @@ describe('buildTranslationFiles', () => {
   });
 
   describe('Multi Inputs', () => {
-    return;
     const type = 'multi-input',
       config = gConfig(type, { input: [`${type}/folder-1`, `${type}/folder-2`] });
 
@@ -405,50 +395,21 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-  describe('marker', () => {
-    const type = 'marker';
+  describe('getText', () => {
+    const type = 'getText';
 
     beforeEach(() => removeI18nFolder(type));
 
-    it('should work with default getTextMarker = "marker"', () => {
-      const config = gConfig(type);
-
-      let expected = {};
-      expected['username'] = 'missing';
-      expected['password'] = 'missing';
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with getTextMarker = "_"', () => {
-      return;
-      const config = gConfig(type);
-
-      let expected = {};
-      expected['username2'] = 'missing';
-      expected['password2'] = 'missing';
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with incorrect import', () => {
-      return;
-      const config = gConfig(type);
-
-      let expected = {};
-      expected['username'] = 'missing';
-      expected['password'] = 'missing';
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with getTextMarker = "t"', () => {
-      return;
+    it('should work with getText', () => {
       const config = gConfig(type);
 
       let expected = {};
       expected['username4'] = 'missing';
       expected['password4'] = 'missing';
+      expected['username2'] = 'missing';
+      expected['password2'] = 'missing';
+      expected['username'] = 'missing';
+      expected['password'] = 'missing';
       buildTranslationFiles(config);
       assertResult(type, expected);
     });
