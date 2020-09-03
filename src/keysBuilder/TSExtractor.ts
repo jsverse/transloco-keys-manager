@@ -7,23 +7,19 @@ import { extractCommentsValues } from './commentsSectionExtractor';
 import { tsquery } from '@phenomnomnominal/tsquery';
 import { extractPureKeys } from './extractTSPureKeys';
 import { extractServiceKeys } from './extractTsServiceKeys';
+import { extractGetTextMarkerKeys } from './extractTSGetTextMarkerKeys';
 
-export function TSExtractor({ file, scopes, defaultValue, scopeToKeys, getTextMarker }: ExtractorConfig): ScopeMap {
+export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
-  if (
-    !content.includes('@ngneat/transloco') &&
-    !(
-      // todo: need create dummy function in @ngneat/transloco-utils
-      (content.includes('@biesbjerg/ngx-translate-extract-marker') && content.includes(`${getTextMarker}(`))
-    )
-  )
-    return scopeToKeys;
+  const extractTranslocoKeys = content.includes('@ngneat/transloco');
+  const extractTranslocoKeysManagerKeys = content.includes('@ngneat/transloco-keys-manager');
+  if (!extractTranslocoKeys && !extractTranslocoKeysManagerKeys) return scopeToKeys;
 
   const ast = tsquery.ast(content);
 
-  const serviceCalls = extractServiceKeys(ast);
-  const pureCalls = extractPureKeys(ast);
-  const pureGetTextMarkerCalls = extractPureKeys(ast, getTextMarker);
+  const serviceCalls = extractTranslocoKeys ? extractServiceKeys(ast) : [];
+  const pureCalls = extractTranslocoKeys ? extractPureKeys(ast) : [];
+  const pureGetTextMarkerCalls = extractTranslocoKeysManagerKeys ? extractGetTextMarkerKeys(ast) : [];
   const baseParams = {
     scopeToKeys,
     scopes,

@@ -1,4 +1,4 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { getText } from '@ngneat/transloco-keys-manager';
 
 @Component({
   selector: 'bla-bla',
@@ -22,5 +22,5 @@ export class TableComponent {
     { username: 'alex', password: '12345678' },
     { username: 'bob', password: 'password' }
   ];
-  displayedColumns = [marker('username'), marker('password')];
+  displayedColumns = [getText('username'), getText('password')];
 }

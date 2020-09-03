@@ -12,7 +12,7 @@ export function extractServiceKeys(ast): { key: string; lang: string }[] {
       const propName = serviceName.name.getText();
       const methodNodes = tsquery(ast, `PropertyAccessExpression:has([name=${propName}])`);
 
-      result = result.concat(buildKeysFromASTNodes(methodNodes));
+      result = result.concat(buildKeysFromASTNodes(methodNodes, ['translate', 'selectTranslate']));
     }
   }
 

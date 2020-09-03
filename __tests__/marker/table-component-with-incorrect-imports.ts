@@ -1,4 +1,4 @@
-import { marker } from 'incorrect-import';
+import { getText } from 'incorrect-import';
 
 @Component({
   selector: 'bla-bla',
@@ -22,5 +22,5 @@ export class TableComponent {
     { username3: 'alex', password3: '12345678' },
     { username3: 'bob', password3: 'password' }
   ];
-  displayedColumns = [marker('username3'), marker('password3')];
+  displayedColumns = [getText('username3'), getText('password3')];
 }

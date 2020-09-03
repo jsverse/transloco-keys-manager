@@ -48,12 +48,6 @@ export const optionDefinitions = [
     description: 'Emit an error and exit the process if extra keys were found (defaults to `false`)'
   },
   { name: 'translations-path', alias: 'p', type: String, description: 'Where are the main translation files' },
-  {
-    name: 'get-text-marker',
-    alias: 'g',
-    type: String,
-    description: 'The marker sign for dynamic values only for extract key: (defaults to `marker`)'
-  },
   { name: 'help', alias: 'h', type: Boolean, description: 'Help me, please!' }
 ];
 

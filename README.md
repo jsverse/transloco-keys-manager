@@ -375,17 +375,6 @@ transloco-keys-manager find --translations-path my/path
 transloco-keys-manager find -p my/path
 ```
 
-- `getTextMarker`: The marker sign for dynamic values only for extract key: (defaults to `marker`)
-
-```
-# for work need install and import marker function in source code
-# import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-npm install @biesbjerg/ngx-translate-extract-marker --save
-
-transloco-keys-manager extract --get-text-marker _
-transloco-keys-manager extract -g  _
-```
-
 - `help`:
 
 ```
@@ -411,7 +400,6 @@ module.exports = {
     replace?: boolean;
     defaultValue?: string | undefined;
     unflat?: boolean;
-    getTextMarker?: string;
   };
 }
 ```

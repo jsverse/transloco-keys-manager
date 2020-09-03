@@ -1,4 +1,4 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { getText as _ } from '@ngneat/transloco-keys-manager';
 
 @Component({
   selector: 'bla-bla',
