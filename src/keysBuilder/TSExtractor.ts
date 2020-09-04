@@ -1,38 +1,44 @@
+import { tsquery } from '@phenomnomnominal/tsquery';
 import { readFile } from '../helpers/readFile';
 import { regexs } from '../regexs';
 import { ExtractorConfig, ScopeMap, Scopes } from '../types';
-import { resolveScopeAlias } from './resolveScopeAlias';
 import { addKey } from './addKey';
 import { extractCommentsValues } from './commentsSectionExtractor';
-import { tsquery } from '@phenomnomnominal/tsquery';
+import { extractGetTextKeys } from './extractTSGetTextKeys';
 import { extractPureKeys } from './extractTSPureKeys';
 import { extractServiceKeys } from './extractTsServiceKeys';
-import { extractGetTextMarkerKeys } from './extractTSGetTextMarkerKeys';
+import { resolveScopeAlias } from './resolveScopeAlias';
 
 export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig): ScopeMap {
   const content = readFile(file);
-  const extractTranslocoKeys = content.includes('@ngneat/transloco');
-  const extractTranslocoKeysManagerKeys = content.includes('@ngneat/transloco-keys-manager');
-  if (!extractTranslocoKeys && !extractTranslocoKeysManagerKeys) return scopeToKeys;
+  const extractors = [];
+  if (content.includes('@ngneat/transloco')) {
+    extractors.push(extractServiceKeys, extractPureKeys);
+  }
+  if (content.includes('@ngneat/transloco-keys-manager')) {
+    extractors.push(extractGetTextKeys);
+  }
+  if (extractors.length === 0) {
+    return scopeToKeys;
+  }
 
   const ast = tsquery.ast(content);
-
-  const serviceCalls = extractTranslocoKeys ? extractServiceKeys(ast) : [];
-  const pureCalls = extractTranslocoKeys ? extractPureKeys(ast) : [];
-  const pureGetTextMarkerCalls = extractTranslocoKeysManagerKeys ? extractGetTextMarkerKeys(ast) : [];
   const baseParams = {
     scopeToKeys,
     scopes,
     defaultValue
   };
-  serviceCalls.concat(pureCalls, pureGetTextMarkerCalls).forEach(({ key, lang }) => {
-    const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
-    addKey({
-      scopeAlias,
-      keyWithoutScope,
-      ...baseParams
+  extractors
+    .map(ex => ex(ast))
+    .flat()
+    .forEach(({ key, lang }) => {
+      const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(key, lang, scopes);
+      addKey({
+        scopeAlias,
+        keyWithoutScope,
+        ...baseParams
+      });
     });
-  });
 
   /** Check for dynamic markings */
   extractCommentsValues({

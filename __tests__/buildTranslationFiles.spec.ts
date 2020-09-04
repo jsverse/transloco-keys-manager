@@ -406,8 +406,6 @@ describe('buildTranslationFiles', () => {
       let expected = {};
       expected['username4'] = 'missing';
       expected['password4'] = 'missing';
-      expected['username2'] = 'missing';
-      expected['password2'] = 'missing';
       expected['username'] = 'missing';
       expected['password'] = 'missing';
       buildTranslationFiles(config);

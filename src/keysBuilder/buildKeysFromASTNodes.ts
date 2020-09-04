@@ -6,7 +6,10 @@ import {
   isPropertyAccessExpression
 } from 'typescript';
 
-export function buildKeysFromASTNodes(nodes, identifiers: string[]): { key: string; lang: string }[] {
+export function buildKeysFromASTNodes(
+  nodes,
+  allowedMethods = ['translate', 'selectTranslate']
+): { key: string; lang: string }[] {
   const result = [];
 
   for (let node of nodes) {
@@ -18,7 +21,7 @@ export function buildKeysFromASTNodes(nodes, identifiers: string[]): { key: stri
       } else if (isPropertyAccessExpression(method)) {
         methodName = method.name.text;
       }
-      if (identifiers.includes(methodName) === false) {
+      if (allowedMethods.includes(methodName) === false) {
         continue;
       }
       const data = {};
