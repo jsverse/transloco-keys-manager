@@ -1,4 +1,4 @@
-import { getText } from '@ngneat/transloco-keys-manager';
+import { getText } from '@ngneat/transloco-keys-manager/getText';
 
 @Component({
   selector: 'bla-bla',
