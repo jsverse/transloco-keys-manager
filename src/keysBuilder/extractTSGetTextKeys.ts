@@ -3,7 +3,9 @@ import * as ts from 'typescript';
 import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 
 export function extractGetTextKeys(ast): { key: string; lang: string }[] {
-  const [importNode] = tsquery(ast, `ImportDeclaration:has([text=@ngneat/transloco-keys-manager])`);
+  const [importNode] =
+    tsquery(ast, `ImportDeclaration:has([text=@ngneat/transloco-keys-manager/getText])`) ||
+    tsquery(ast, `ImportDeclaration:has([text=@ngneat/transloco-keys-manager])`);
   if (!importNode) {
     return [];
   }
