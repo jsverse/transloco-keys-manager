@@ -4,7 +4,7 @@ import { regexs } from '../regexs';
 import { ExtractorConfig, ScopeMap, Scopes } from '../types';
 import { addKey } from './addKey';
 import { extractCommentsValues } from './commentsSectionExtractor';
-import { extractGetTextKeys } from './extractTSGetTextKeys';
+import { extractMarkerKeys } from './extractTSMarkerKeys';
 import { extractPureKeys } from './extractTSPureKeys';
 import { extractServiceKeys } from './extractTsServiceKeys';
 import { resolveScopeAlias } from './resolveScopeAlias';
@@ -15,11 +15,8 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
   if (content.includes('@ngneat/transloco')) {
     extractors.push(extractServiceKeys, extractPureKeys);
   }
-  if (
-    content.includes('@ngneat/transloco-keys-manager/getText') ||
-    content.includes('@ngneat/transloco-keys-manager')
-  ) {
-    extractors.push(extractGetTextKeys);
+  if (content.includes('@ngneat/transloco-keys-manager/marker') || content.includes('@ngneat/transloco-keys-manager')) {
+    extractors.push(extractMarkerKeys);
   }
   if (extractors.length === 0) {
     return scopeToKeys;

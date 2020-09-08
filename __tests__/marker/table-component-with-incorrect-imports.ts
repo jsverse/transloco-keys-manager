@@ -1,4 +1,4 @@
-import { getText } from '@ngneat/transloco-keys-manager/getText';
+import { marker } from 'incorrect-import';
 
 @Component({
   selector: 'bla-bla',
@@ -19,8 +19,8 @@ import { getText } from '@ngneat/transloco-keys-manager/getText';
 })
 export class TableComponent {
   data = [
-    { username: 'alex', password: '12345678' },
-    { username: 'bob', password: 'password' }
+    { username3: 'alex', password3: '12345678' },
+    { username3: 'bob', password3: 'password' }
   ];
-  displayedColumns = [getText('username'), getText('password')];
+  displayedColumns = [marker('username3'), marker('password3')];
 }

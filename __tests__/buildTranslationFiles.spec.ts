@@ -395,12 +395,12 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-  describe('getText', () => {
-    const type = 'getText';
+  describe('marker', () => {
+    const type = 'marker';
 
     beforeEach(() => removeI18nFolder(type));
 
-    it('should work with getText', () => {
+    it('should work with marker', () => {
       const config = gConfig(type);
 
       let expected = {};
