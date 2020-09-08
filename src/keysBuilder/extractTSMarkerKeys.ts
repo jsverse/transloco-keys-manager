@@ -3,9 +3,8 @@ import * as ts from 'typescript';
 import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 
 export function extractMarkerKeys(ast): { key: string; lang: string }[] {
-  const [importNode] =
-    tsquery(ast, `ImportDeclaration:has([text=@ngneat/transloco-keys-manager/marker])`) ||
-    tsquery(ast, `ImportDeclaration:has([text=@ngneat/transloco-keys-manager])`);
+  // workaround from https://github.com/estools/esquery/issues/68
+  const [importNode] = tsquery(ast, `ImportDeclaration:has([text=/^@ngneat\\x2Ftransloco-keys-manager/])`);
   if (!importNode) {
     return [];
   }

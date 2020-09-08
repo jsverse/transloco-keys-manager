@@ -15,7 +15,7 @@ export function TSExtractor({ file, scopes, defaultValue, scopeToKeys }: Extract
   if (content.includes('@ngneat/transloco')) {
     extractors.push(extractServiceKeys, extractPureKeys);
   }
-  if (content.includes('@ngneat/transloco-keys-manager/marker') || content.includes('@ngneat/transloco-keys-manager')) {
+  if (content.includes('@ngneat/transloco-keys-manager')) {
     extractors.push(extractMarkerKeys);
   }
   if (extractors.length === 0) {
