@@ -394,4 +394,22 @@ describe('buildTranslationFiles', () => {
       assertResult(type, expected, 'admin-page/');
     });
   });
+
+  describe('marker', () => {
+    const type = 'marker';
+
+    beforeEach(() => removeI18nFolder(type));
+
+    it('should work with marker', () => {
+      const config = gConfig(type);
+
+      let expected = {};
+      expected['username4'] = 'missing';
+      expected['password4'] = 'missing';
+      expected['username'] = 'missing';
+      expected['password'] = 'missing';
+      buildTranslationFiles(config);
+      assertResult(type, expected);
+    });
+  });
 });

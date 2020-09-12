@@ -3,15 +3,13 @@ export function forEachKey(content: string, regex, cb) {
 
   while (result) {
     /** Support ternary operator */
-    const { backtickKey , backtickScope, scope, key, key2 } = result.groups;
+    const { backtickKey, backtickScope, scope, key, key2 } = result.groups;
     if (!(key || key2 || backtickKey)) {
       result = regex.exec(content);
       continue;
     }
 
-    const keys = key2
-        ? [key, key2]
-        : [(key || backtickKey).replace(/'|"/g, '')];
+    const keys = key2 ? [key, key2] : [(key || backtickKey).replace(/'|"/g, '')];
 
     /**
      *

@@ -33,7 +33,9 @@ const _messages = {
     checkMissing: 'Checking for missing keys',
     summary: 'Summary',
     noMissing: 'No missing keys were found',
-    done: 'Готово!'
+    done: 'Готово!',
+    problematicKeysForUnflat: (keys: string[]) =>
+      `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
   },
   fr: {
     keysFound: (keysCount, filesCount) =>
@@ -46,7 +48,9 @@ const _messages = {
     checkMissing: 'Checking for missing keys',
     summary: 'Summary',
     noMissing: 'No missing keys were found',
-    done: 'Fini!'
+    done: 'Fini!',
+    problematicKeysForUnflat: (keys: string[]) =>
+      `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
   },
   es: {
     keysFound: (keysCount, filesCount) =>
@@ -59,7 +63,9 @@ const _messages = {
     checkMissing: 'Checking for missing keys',
     summary: 'Summary',
     noMissing: 'No missing keys were found',
-    done: '¡Completo!'
+    done: '¡Completo!',
+    problematicKeysForUnflat: (keys: string[]) =>
+      `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
   },
   ja: {},
   zh: {}

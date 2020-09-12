@@ -1,6 +1,6 @@
 import { BaseParams } from '../types';
 import { messages } from '../messages';
-import {isNil} from "../helpers/isNil";
+import { isNil } from '../helpers/isNil';
 
 interface AddKeysParams extends BaseParams {
   scopeAlias: string;
@@ -11,8 +11,8 @@ export function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope,
   const scopePath = scopes.aliasToScope[scopeAlias];
   const keyWithScope = scopeAlias ? `${scopeAlias}.${keyWithoutScope}` : keyWithoutScope;
   const keyValue = isNil(defaultValue)
-      ? `${messages.missingValue} '${keyWithScope}'`
-      : defaultValue.replace('{{key}}', keyWithScope);
+    ? `${messages.missingValue} '${keyWithScope}'`
+    : defaultValue.replace('{{key}}', keyWithScope);
 
   if (scopePath) {
     if (!scopeToKeys[scopePath]) {
