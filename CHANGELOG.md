@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.3.0...v2.3.1) (2020-09-12)
+
+
+### Bug Fixes
+
+* 🐛 scoped comments were added on a global level ([f2b00be](https://github.com/ngneat/transloco-keys-manager/commit/f2b00be)), closes [#50](https://github.com/ngneat/transloco-keys-manager/issues/50)
+
+
+### Tests
+
+* 💍 rename specs ([edb1291](https://github.com/ngneat/transloco-keys-manager/commit/edb1291))
+
+
+
 ## [2.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.2.1...v2.3.0) (2020-09-12)
 
 
