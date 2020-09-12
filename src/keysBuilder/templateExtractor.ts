@@ -40,6 +40,10 @@ function removeInnerContainers(content: string, allContainers: ContainersMetadat
     .reduce((acc, { containerContent }) => acc.replace(containerContent, ''), content);
 }
 
+function loadCheerio(content: string) {
+  return cheerio.load(content, { decodeEntities: false });
+}
+
 export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: ExtractorConfig) {
   let content = readFile(file);
   if (!content.includes('transloco')) return scopeToKeys;
@@ -52,7 +56,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
   const { containers, hasStructural } = getNgTemplateContainers(content);
   if (containers.length > 0) {
     const fileTemplate = hasStructural ? content.replace(/\*transloco/g, '__transloco') : content;
-    const $ = cheerio.load(fileTemplate, { decodeEntities: false });
+    const $ = loadCheerio(fileTemplate);
 
     for (const query of containers) {
       ($(query) as Cheerio).each((_, element) => {
@@ -106,7 +110,7 @@ export function templateExtractor({ file, scopes, defaultValue, scopeToKeys }: E
    */
   const commentsExtractionConfig = { regex: regexs.templateCommentsSection, ...baseParams };
   /** Add the global content to the containers array */
-  templateContainers.push({ containerContent: content, read: '' });
+  templateContainers.push({ containerContent: loadCheerio(content).html(), read: '' });
   /** Check for dynamic markings */
   templateContainers.forEach(({ containerContent, read }, index, arr) => {
     extractCommentsValues({

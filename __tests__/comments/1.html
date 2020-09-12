@@ -1,2 +1,10 @@
-<!-- t(b.some.key) -->
+<!-- t(c.some.key) -->
 <h2>{{ 'need.transloco' | transloco }}</h2>
+<div>
+    <h1>{{title}}</h1>
+
+    <ng-container *transloco="let t; read: 'b'">
+        <!-- t(some.key) -->
+        <p >{{ t(title) }}</p>
+    </ng-container>
+</div>

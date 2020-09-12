@@ -193,6 +193,7 @@ describe('buildTranslationFiles', () => {
         global: {
           'a.some.key': m,
           'b.some.key': m,
+          'c.some.key': m,
           'need.transloco': m,
           '1.some': m,
           '1': m,
