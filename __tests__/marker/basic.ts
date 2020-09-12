@@ -17,7 +17,7 @@ import { marker } from '@ngneat/transloco-keys-manager/marker';
     </table>
   `
 })
-export class TableComponent {
+export class Basic {
   data = [
     { username: 'alex', password: '12345678' },
     { username: 'bob', password: 'password' }
