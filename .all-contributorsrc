@@ -46,6 +46,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "EndyKaufman",
+      "name": "ILshat Khamitov",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4127109?v=4",
+      "profile": "http://site15.ru",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7
