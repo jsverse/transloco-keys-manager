@@ -1,11 +1,11 @@
-import { messages } from './messages';
+import { setConfig } from './config';
 import { getLogger } from './helpers/logger';
 import { resolveConfig } from './helpers/resolveConfig';
-import { getTranslationFilesPath } from './keysDetective/getTranslationFilesPath';
-import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
 import { buildKeys } from './keysBuilder/buildKeys';
+import { compareKeysToFiles } from './keysDetective/compareKeysToFiles';
+import { getTranslationFilesPath } from './keysDetective/getTranslationFilesPath';
+import { messages } from './messages';
 import { Config } from './types';
-import { setConfig } from './config';
 
 export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();

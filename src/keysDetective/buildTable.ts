@@ -1,8 +1,10 @@
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+
 import { getLogger } from '../helpers/logger';
 import { messages } from '../messages';
+
 import { mapDiffToKeys } from './mapDiffToKeys';
-import * as Table from 'cli-table3';
-import chalk from 'chalk';
 
 type Params = {
   addMissingKeys: boolean;

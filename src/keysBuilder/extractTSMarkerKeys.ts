@@ -1,5 +1,6 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
 import * as ts from 'typescript';
+
 import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 
 export function extractMarkerKeys(ast): { key: string; lang: string }[] {

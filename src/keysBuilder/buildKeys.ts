@@ -1,8 +1,9 @@
 import { checkForProblematicUnflatKeys } from '../helpers/checkForProblematicUnflatKeys';
 import { mergeDeep } from '../helpers/mergeDeep';
 import { Config, ScopeMap } from '../types';
-import { extractTemplateKeys } from './extractTemplateKeys';
+
 import { extractTSKeys } from './extractTSKeys';
+import { extractTemplateKeys } from './extractTemplateKeys';
 
 export function buildKeys(config: Config) {
   const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];

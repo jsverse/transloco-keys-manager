@@ -1,6 +1,6 @@
-import { BaseParams } from '../types';
-import { messages } from '../messages';
 import { isNil } from '../helpers/isNil';
+import { messages } from '../messages';
+import { BaseParams } from '../types';
 
 interface AddKeysParams extends BaseParams {
   scopeAlias: string;

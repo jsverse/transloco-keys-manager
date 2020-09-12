@@ -1,7 +1,9 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
+
 import { readFile } from '../helpers/readFile';
 import { regexs } from '../regexs';
 import { ExtractorConfig, ScopeMap, Scopes } from '../types';
+
 import { addKey } from './addKey';
 import { extractCommentsValues } from './commentsSectionExtractor';
 import { extractMarkerKeys } from './extractTSMarkerKeys';

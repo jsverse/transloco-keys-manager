@@ -1,4 +1,5 @@
 import { getConfig } from '../config';
+
 import { isObject } from './isObject';
 
 export function stringify(val: object) {

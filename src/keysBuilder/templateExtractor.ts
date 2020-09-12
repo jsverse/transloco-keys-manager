@@ -1,13 +1,15 @@
-import { readFile } from '../helpers/readFile';
-import { getStructuralDirectiveBasedKeys } from './getStructuralDirectiveBasedKeys';
-import { regexs } from '../regexs';
 import * as cheerio from 'cheerio';
+
+import { getConfig } from '../config';
+import { readFile } from '../helpers/readFile';
+import { regexs } from '../regexs';
 import { ExtractorConfig, TEMPLATE_TYPE } from '../types';
-import { forEachKey } from './forEachKey';
+
 import { addKey } from './addKey';
 import { extractCommentsValues } from './commentsSectionExtractor';
+import { forEachKey } from './forEachKey';
+import { getStructuralDirectiveBasedKeys } from './getStructuralDirectiveBasedKeys';
 import { resolveAliasAndKey } from './resolveAliasAndKey';
-import { getConfig } from '../config';
 
 type ContainersMetadata = { containerContent: string; read: string };
 

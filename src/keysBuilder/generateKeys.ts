@@ -1,11 +1,12 @@
-import { readFile } from '../helpers/readFile';
-import { writeFile } from '../helpers/writeFile';
-import { mergeDeep } from '../helpers/mergeDeep';
-import { ScopeMap, Config } from '../types';
+import { TranslocoConfig } from '@ngneat/transloco-utils';
 import * as flat from 'flat';
 import * as glob from 'glob';
 import * as nodePath from 'path';
-import { TranslocoConfig } from '@ngneat/transloco-utils';
+
+import { mergeDeep } from '../helpers/mergeDeep';
+import { readFile } from '../helpers/readFile';
+import { writeFile } from '../helpers/writeFile';
+import { ScopeMap, Config } from '../types';
 
 type Params = {
   translationPath: string;

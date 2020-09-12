@@ -1,8 +1,9 @@
+import { getConfig } from '../config';
 import { regexs } from '../regexs';
+import { BaseParams } from '../types';
+
 import { addKey } from './addKey';
 import { resolveAliasAndKey } from './resolveAliasAndKey';
-import { getConfig } from '../config';
-import { BaseParams } from '../types';
 
 interface ExtractCommentsParams extends BaseParams {
   content: string;

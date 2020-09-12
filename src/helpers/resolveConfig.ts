@@ -1,15 +1,17 @@
 import { getConfig, TranslocoConfig } from '@ngneat/transloco-utils';
-import { updateScopesMap } from './updateScopesMap';
-import { Config } from '../types';
-import { defaultConfig } from '../defaultConfig';
-import { getScopes } from '../keysBuilder/scopes';
-import { resolveProjectBasePath } from './resolveProjectBasePath';
-import * as debug from 'debug';
 import chalk from 'chalk';
+import * as debug from 'debug';
 import * as fs from 'fs';
 import * as path from 'path';
+
+import { defaultConfig } from '../defaultConfig';
+import { getScopes } from '../keysBuilder/scopes';
 import { messages } from '../messages';
+import { Config } from '../types';
+
 import { isDirectory } from './isDirectory';
+import { resolveProjectBasePath } from './resolveProjectBasePath';
+import { updateScopesMap } from './updateScopesMap';
 
 export function resolveConfig(inlineConfig: Config): Config {
   const defaults = defaultConfig;

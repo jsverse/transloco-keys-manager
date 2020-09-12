@@ -1,9 +1,11 @@
-import { toCamelCase } from './toCamelCase';
-import { readFile } from './readFile';
+import { tsquery } from '@phenomnomnominal/tsquery';
 import * as glob from 'glob';
+
 import { addScope, hasScope } from '../keysBuilder/scopes';
 import { Scopes } from '../types';
-import { tsquery } from '@phenomnomnominal/tsquery';
+
+import { readFile } from './readFile';
+import { toCamelCase } from './toCamelCase';
 
 const base = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) PropertyAssignment:has(Identifier[name=/useValue|useFactory/])`;
 const useStringQuery = `${base} > StringLiteral`;

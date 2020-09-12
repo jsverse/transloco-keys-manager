@@ -1,15 +1,17 @@
-import { getLogger } from '../helpers/logger';
-import { getTranslationFilesPath } from './getTranslationFilesPath';
-import { readFile } from '../helpers/readFile';
-import { messages } from '../messages';
-import { applyChange, DeepDiff } from 'deep-diff';
-import { ScopeMap } from '../types';
-import { writeFile } from '../helpers/writeFile';
-import { buildTable } from './buildTable';
-import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';
 import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
+import { applyChange, DeepDiff } from 'deep-diff';
 import * as flat from 'flat';
 import * as glob from 'glob';
+
+import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';
+import { getLogger } from '../helpers/logger';
+import { readFile } from '../helpers/readFile';
+import { writeFile } from '../helpers/writeFile';
+import { messages } from '../messages';
+import { ScopeMap } from '../types';
+
+import { buildTable } from './buildTable';
+import { getTranslationFilesPath } from './getTranslationFilesPath';
 type Params = {
   scopeToKeys: ScopeMap;
   translationPath: string;

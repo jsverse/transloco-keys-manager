@@ -1,6 +1,8 @@
-import { Config, ExtractionResult, ExtractorConfig, ScopeMap } from '../types';
-import { initExtraction } from './initExtraction';
 import * as glob from 'glob';
+
+import { Config, ExtractionResult, ExtractorConfig, ScopeMap } from '../types';
+
+import { initExtraction } from './initExtraction';
 
 export function extractKeys(
   { input, scopes, defaultValue, files }: Config,

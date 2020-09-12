@@ -1,11 +1,11 @@
-import { messages } from './messages';
+import { setConfig } from './config';
 import { countKeys } from './helpers/countKeys';
 import { getLogger } from './helpers/logger';
 import { resolveConfig } from './helpers/resolveConfig';
 import { buildKeys } from './keysBuilder/buildKeys';
 import { createTranslationFiles } from './keysBuilder/createTranslationFiles';
+import { messages } from './messages';
 import { Config } from './types';
-import { setConfig } from './config';
 
 /** The main function, collects the settings and starts the files build. */
 export function buildTranslationFiles(inlineConfig: Config) {

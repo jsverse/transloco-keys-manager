@@ -1,6 +1,7 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 import { isParameter } from 'typescript';
+
+import { buildKeysFromASTNodes } from './buildKeysFromASTNodes';
 
 export function extractServiceKeys(ast): { key: string; lang: string }[] {
   const serviceNameNodes = tsquery(ast, `Constructor Parameter:has(TypeReference Identifier[name=TranslocoService])`);

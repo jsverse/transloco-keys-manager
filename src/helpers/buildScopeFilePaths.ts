@@ -1,5 +1,5 @@
-import { Scopes } from '../types';
 import { getConfig } from '../config';
+import { Scopes } from '../types';
 
 export type ScopeFiles = { path: string; scope: string }[];
 

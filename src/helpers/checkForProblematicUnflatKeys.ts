@@ -1,5 +1,5 @@
-import { messages } from '../messages';
 import { getLogger } from '../helpers/logger';
+import { messages } from '../messages';
 
 export function checkForProblematicUnflatKeys(obj: object) {
   const sortedKeys = Object.keys(obj).sort();

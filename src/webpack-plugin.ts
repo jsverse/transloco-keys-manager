@@ -1,14 +1,14 @@
-import { resolveConfig } from './helpers/resolveConfig';
-import { extractTemplateKeys } from './keysBuilder/extractTemplateKeys';
-import { extractTSKeys } from './keysBuilder/extractTSKeys';
+import { buildScopeFilePaths } from './helpers/buildScopeFilePaths';
 import { mergeDeep } from './helpers/mergeDeep';
-import { Config } from './types';
-import { initExtraction } from './keysBuilder/initExtraction';
+import { resolveConfig } from './helpers/resolveConfig';
 import { updateScopesMap } from './helpers/updateScopesMap';
 import { buildTranslationFiles } from './keysBuilder';
 import { buildTranslationFile } from './keysBuilder/buildTranslationFile';
-import { buildScopeFilePaths } from './helpers/buildScopeFilePaths';
+import { extractTSKeys } from './keysBuilder/extractTSKeys';
+import { extractTemplateKeys } from './keysBuilder/extractTemplateKeys';
 import { generateKeys } from './keysBuilder/generateKeys';
+import { initExtraction } from './keysBuilder/initExtraction';
+import { Config } from './types';
 
 let init = true;
 

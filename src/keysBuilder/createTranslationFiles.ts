@@ -1,8 +1,9 @@
-import { messages } from '../messages';
-import { getLogger } from '../helpers/logger';
-import { ScopeMap, Scopes } from '../types';
-import { buildTranslationFile, FileAction } from './buildTranslationFile';
 import { buildScopeFilePaths } from '../helpers/buildScopeFilePaths';
+import { getLogger } from '../helpers/logger';
+import { messages } from '../messages';
+import { ScopeMap, Scopes } from '../types';
+
+import { buildTranslationFile, FileAction } from './buildTranslationFile';
 
 type Params = {
   scopeToKeys: ScopeMap;

@@ -1,8 +1,9 @@
+import * as flat from 'flat';
+import * as fsExtra from 'fs-extra';
+
+import { getConfig } from '../config';
 import { mergeDeep } from '../helpers/mergeDeep';
 import { stringify } from '../helpers/stringify';
-import { getConfig } from '../config';
-import * as fsExtra from 'fs-extra';
-import * as flat from 'flat';
 
 export type FileAction = {
   path: string;
