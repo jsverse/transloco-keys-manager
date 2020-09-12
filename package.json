@@ -15,7 +15,8 @@
     "uglify": "terser-folder dist -e -o dist -x .js",
     "clean:dist": "rm -rf dist",
     "copy:dist": "cp package.json package-lock.json README.md dist",
-    "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'"
+    "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
+    "conduct": "import-conductor"
   },
   "bin": {
     "transloco-keys-manager": "index.js"
@@ -65,46 +66,47 @@
   },
   "lint-staged": {
     "*.{ts}": [
-      "prettier --write",
-      "git add"
+      "import-conductor --staged",
+      "prettier --write"
     ]
   },
   "dependencies": {
-    "@ngneat/transloco-utils": "1.1.1",
-    "@phenomnomnominal/tsquery": "^4.0.0",
-    "chalk": "^2.4.2",
-    "cheerio": "^1.0.0-rc.3",
-    "cli-table3": "^0.5.1",
-    "command-line-args": "^5.1.1",
-    "command-line-usage": "^6.0.2",
-    "cosmiconfig": "6.0.0",
-    "debug": "^4.1.1",
-    "deep-diff": "^1.0.2",
-    "flat": "^5.0.0",
-    "fs-extra": "8.1.0",
-    "glob": "^7.1.4",
-    "ora": "^3.4.0",
-    "os-locale": "^4.0.0"
+    "@ngneat/transloco-utils": "1.1.2",
+    "@phenomnomnominal/tsquery": "4.1.0",
+    "chalk": "4.1.0",
+    "cheerio": "1.0.0-rc.3",
+    "cli-table3": "0.6.0",
+    "command-line-args": "5.1.1",
+    "command-line-usage": "6.1.0",
+    "cosmiconfig": "7.0.0",
+    "debug": "4.1.1",
+    "deep-diff": "1.0.2",
+    "flat": "5.0.2",
+    "fs-extra": "9.0.1",
+    "glob": "7.1.6",
+    "ora": "5.0.0",
+    "os-locale": "5.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.8.2",
-    "@babel/preset-typescript": "7.8.0",
+    "@babel/preset-env": "7.11.0",
+    "@babel/preset-typescript": "7.10.4",
     "@commitlint/cli": "8.1.0",
     "@commitlint/config-angular": "8.1.0",
     "@commitlint/config-conventional": "8.1.0",
     "@types/cheerio": "^0.22.16",
     "@types/cosmiconfig": "6.0.0",
-    "@types/jest": "24.0.20",
-    "all-contributors-cli": "6.8.1",
-    "git-cz": "3.2.1",
+    "@types/jest": "26.0.10",
+    "all-contributors-cli": "6.17.1",
+    "git-cz": "4.7.0",
     "husky": "^4.2.5",
-    "jest": "24.9.0",
-    "lint-staged": "9.2.0",
+    "import-conductor": "^2.0.3",
+    "jest": "26.4.0",
+    "lint-staged": "10.2.11",
     "lodash.isequal": "4.5.0",
-    "prettier": "1.19.1",
-    "standard-version": "6.0.1",
-    "terser": "4.3.9",
+    "prettier": "2.0.5",
+    "standard-version": "9.0.0",
+    "terser": "5.1.0",
     "terser-folder": "2.0.0",
-    "typescript": "3.7.4"
+    "typescript": "3.9.7"
   }
 }
