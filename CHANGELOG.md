@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.2.1...v2.3.0) (2020-09-12)
+
+
+### Features
+
+* 🎸 add support for function marker, not in a comment ([#60](https://github.com/ngneat/transloco-keys-manager/issues/60)) ([7c8636a](https://github.com/ngneat/transloco-keys-manager/commit/7c8636a452bc116e911e1c33db48bcd442bba2da)), closes [#59](https://github.com/ngneat/transloco-keys-manager/issues/59) [#59](https://github.com/ngneat/transloco-keys-manager/issues/59) [#59](https://github.com/ngneat/transloco-keys-manager/issues/59) [#59](https://github.com/ngneat/transloco-keys-manager/issues/59) [#59](https://github.com/ngneat/transloco-keys-manager/issues/59)
+
 ### [2.2.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.2.0...v2.2.1) (2020-06-22)
 
 
