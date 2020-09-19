@@ -34,8 +34,9 @@ To make the process less burdensome, we've created two tools for the Transloco l
   - [Scopes Support](#scopes-support)
   - [Webpack Plugin](#webpack-plugin)
   - [Dynamic Keys](#dynamic-keys)
+  - [Marker Function](#marker-function)
   - [Extra Support](#extra-support)
-- [Options](#dynamic-keys)
+- [Options](#options)
 - [Transloco Config File](#transloco-config-file)
 - [Keys Detective](#keys-detective)
 
@@ -235,6 +236,35 @@ The extracted keys for the code above will be:
 Here's an example for invalid comment:  
 `<!-- For dropdown t(dynamic.1, dynamic.2) -->`
 
+### Marker function
+
+If you want to extract some standalone strings that are not part of any translation call (via the template or service) 
+you can wrap them with the marker function to tell the keys manager to extract them:
+```ts
+import { marker } from '@ngneat/transloco-keys-manager/marker';
+ 
+class MyClass {
+    static titles = {
+        username: marker('auth.username'), // ==> 'auth.username'
+        password: marker('auth.password') // ==> 'auth.password'
+    };
+    ...
+}
+```
+The marker function will return the string which was passed to it.  
+You can alias the marker function if needed:
+```ts
+import { marker as _ } from '@ngneat/transloco-keys-manager/marker';
+ 
+class MyClass {
+    static titles = {
+        username: _('auth.username'),
+        password: _('auth.password')
+    };
+    ...
+}
+```
+
 ### Extra Support
 
 - Supports for the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input):
@@ -256,14 +286,16 @@ The extracted keys for the code above will be:
 }
 ```
 
-- Supports **static** and **structural directive** ternary operators:
+- Supports **static** ternary operators:
 
 ```html
+<!-- Supported by the transloco pipe and structural directive -->
 <comp [placeholder]="condition ? 'keyOne' : 'keyTwo' | transloco"></comp>
 <h1>{{ condition ? 'keyOne' : 'keyTwo' | transloco }}</h1>
 
-<comp *transloco="let t; read: 'ternary'"></comp>
-<h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
+<comp *transloco="let t; read: 'ternary'">
+    <h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
+</comp>
 ```
 
 ## 🕵️‍ Keys Detective
