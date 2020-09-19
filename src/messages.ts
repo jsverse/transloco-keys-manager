@@ -66,9 +66,7 @@ const _messages = {
     done: '¡Completo!',
     problematicKeysForUnflat: (keys: string[]) =>
       `The following keys won't be accessible when unflatting the object:\n ${keys.map(k => `"${k}"`).join(', ')}`
-  },
-  ja: {},
-  zh: {}
+  }
 };
 
 export const messages = getMessages();

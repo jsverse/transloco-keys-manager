@@ -1,12 +1,14 @@
+// import-conductor-skip
 jest.mock('../src/helpers/resolveProjectBasePath');
 jest.mock('@ngneat/transloco-utils');
-import { defaultConfig } from '../src/defaultConfig';
-import * as path from 'path';
+import { getConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
-import { messages } from '../src/messages';
+import * as path from 'path';
+
+import { defaultConfig } from '../src/defaultConfig';
 import { resolveConfig } from '../src/helpers/resolveConfig';
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
-import { getConfig } from '@ngneat/transloco-utils';
+import { messages } from '../src/messages';
 
 describe('resolveConfig', () => {
   const sourceRoot = '__tests__';
