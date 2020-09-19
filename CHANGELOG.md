@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.1...v2.4.2) (2020-09-19)
+
+
+### Bug Fixes
+
+* 🐛 webpack wrong extraction when unflat with several langs ([33cb1cb](https://github.com/ngneat/transloco-keys-manager/commit/33cb1cbb7b475a6e4f3f38f5b148932e6b3a88b4)), closes [#46](https://github.com/ngneat/transloco-keys-manager/issues/46)
+
 ### [2.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.0...v2.4.1) (2020-09-19)
 
 
