@@ -99,7 +99,7 @@
     "@types/jest": "26.0.10",
     "all-contributors-cli": "6.17.3",
     "git-cz": "4.7.0",
-    "husky": "^4.2.5",
+    "husky": "^4.3.0",
     "import-conductor": "^2.0.3",
     "jest": "26.4.0",
     "lint-staged": "10.2.11",
