@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.3.2...v2.4.0) (2020-09-19)
+
+
+### Features
+
+* 🎸 support ternary operator in structural directive ([#47](https://github.com/ngneat/transloco-keys-manager/issues/47)) ([440d8d3](https://github.com/ngneat/transloco-keys-manager/commit/440d8d3c2b842ae911c91f8827b98d4dd631adba))
+
 ### [2.3.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.3.1...v2.3.2) (2020-09-19)
 
 ### [2.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.3.0...v2.3.1) (2020-09-12)
