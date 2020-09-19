@@ -1,3 +1,5 @@
+// import-conductor-skip
+jest.mock('../src/helpers/resolveProjectBasePath');
 import diff from 'deep-diff';
 import * as fs from 'fs-extra';
 import equal from 'lodash.isequal';

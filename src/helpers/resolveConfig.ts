@@ -15,8 +15,8 @@ import { updateScopesMap } from './updateScopesMap';
 
 export function resolveConfig(inlineConfig: Config): Config {
   const defaults = defaultConfig;
-  const projectBsePath = resolveProjectBasePath(inlineConfig.project);
-  const fileConfig = getConfig(inlineConfig.config || projectBsePath);
+  const projectBasePath = resolveProjectBasePath(inlineConfig.project);
+  const fileConfig = getConfig(inlineConfig.config || projectBasePath);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
   const config = { ...defaults, ...userConfig };
 
@@ -28,7 +28,7 @@ export function resolveConfig(inlineConfig: Config): Config {
     log(`Merged: %o`, config);
   }
 
-  resolveConfigPaths(config, projectBsePath);
+  resolveConfigPaths(config, projectBasePath);
   validateDirectories(config);
 
   if (debug.enabled('paths')) {
