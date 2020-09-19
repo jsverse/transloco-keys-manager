@@ -28,17 +28,17 @@ To make the process less burdensome, we've created two tools for the Transloco l
 
 ## 📖 Table of Contents
 
-- [Installation](#installation)
-- [Keys Extractor](#keys-extractor)
-  - [CLI](#cli)
+- [Installation](#-installation)
+- [Keys Extractor](#-keys-extractor)
+  - [CLI](#cli-usage)
   - [Scopes Support](#scopes-support)
   - [Webpack Plugin](#webpack-plugin)
   - [Dynamic Keys](#dynamic-keys)
   - [Marker Function](#marker-function)
   - [Extra Support](#extra-support)
-- [Options](#options)
+- [Keys Detective](#-keys-detective)
+- [Options](#-options)
 - [Transloco Config File](#transloco-config-file)
-- [Keys Detective](#keys-detective)
 
 ## 🌩 Installation
 
@@ -298,7 +298,7 @@ The extracted keys for the code above will be:
 </comp>
 ```
 
-## 🕵️‍ Keys Detective
+## 🕵 Keys Detective
 
 This tool detects two things: First, it detects any key that exists in one of your translation files but is missing in any of the others. Secondly, it detects any key that exists in the translation files but is missing from any of the templates or typescript files.
 After installing the library, you should see the following script in your project's `package.json` file:
