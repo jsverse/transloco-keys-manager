@@ -1,6 +1,6 @@
 import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
 import { applyChange, DeepDiff } from 'deep-diff';
-import {flatten} from 'flat';
+import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';

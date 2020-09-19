@@ -15,7 +15,7 @@ type Params = {
 };
 
 function filterLangs(config: Params['config']) {
-  return function(path: string) {
+  return function (path: string) {
     return config.langs.find(lang => lang === nodePath.basename(path).replace('.json', ''));
   };
 }
