@@ -1,6 +1,6 @@
 import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
 import { applyChange, DeepDiff } from 'deep-diff';
-import * as flat from 'flat';
+import {flatten} from 'flat';
 import * as glob from 'glob';
 
 import { getScopeAndLangFromFullPath } from '../helpers/getScopeAndLangFromFullPath';
@@ -67,10 +67,10 @@ export function compareKeysToFiles({ scopeToKeys, translationPath, addMissingKey
     for (const filePath of files) {
       const { lang } = getScopeAndLangFromFullPath(filePath, translationPath);
       const translation = readFile(filePath, { parse: true });
-      // We always build the keys flatten, so we need to make sure we compare to a flatten file
-      const flatten = flat(translation, { safe: true });
+      // We always build the keys flatten, so we need to make sure we compare to a flat file
+      const flat = flatten(translation, { safe: true });
       // Compare the current file with the extracted keys
-      const differences = DeepDiff(flatten, keys);
+      const differences = DeepDiff(flat, keys);
 
       if (differences) {
         const langPath = `${scope !== '__global' ? scope + '/' : ''}${lang}`;

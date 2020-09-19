@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import * as Table from 'cli-table3';
+import Table from 'cli-table3';
 
 import { getLogger } from '../helpers/logger';
 import { messages } from '../messages';

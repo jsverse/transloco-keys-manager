@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // import-conductor-skip
-import * as commandLineArgs from 'command-line-args';
-import * as commandLineUsage from 'command-line-usage';
+import commandLineArgs from 'command-line-args';
+import commandLineUsage from 'command-line-usage';
 
 import { optionDefinitions, sections } from './cliOptions';
 import { buildTranslationFiles } from './keysBuilder';
