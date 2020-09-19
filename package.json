@@ -97,7 +97,7 @@
     "@types/cheerio": "^0.22.16",
     "@types/cosmiconfig": "6.0.0",
     "@types/jest": "26.0.10",
-    "all-contributors-cli": "6.17.1",
+    "all-contributors-cli": "6.17.3",
     "git-cz": "4.7.0",
     "husky": "^4.2.5",
     "import-conductor": "^2.0.3",
