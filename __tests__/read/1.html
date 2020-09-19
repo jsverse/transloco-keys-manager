@@ -1,3 +1,14 @@
+<ng-container *transloco="let t; read: 'ternary.nested'">
+  <p>{{t('1')}}</p>
+  <p>{{t(condition ? '2' : '3')}}</p>
+  <p>{{t(condition ? '4' : "5")}}</p>
+  <p>{{t(condition ? "6" : '7')}}</p>
+  <p>{{t(condition ? "8" : "9")}}</p>
+  <p>{{t(condition ? condition2 ? "10" : "11" : "12")}}</p>
+  <p>{{ should ? not : extract }}</p>
+  <p>{{ also ? 'th' : 'is' }}</p>
+</ng-container>
+
 <ng-container *transloco="let t; read: 'site-header.navigation.route'">
   <dato-dialog-header class="py-22">
     <div class="d-flex-row">
@@ -10,6 +21,7 @@
       <div class="left py-15 px-10">
         <div class="ml-5 d-flex-row align-space-between-center">
           <div>{{ t('d' + 4)}}</div>
+          <p>{{ t(condition ? "22" : "23" )}}</p>
           <div datoColor="primary-400" datoFont="note-bold">{{ t('1') }}</div>
           <div *ngIf="isGroupMode" class="d-flex">
             <dato-icon-button datoType="secondary" datoSize="md" datoIcon="x"
@@ -41,6 +53,12 @@
         </mat-menu>
         <div *ngIf="!hasFilter; else filtersView" class="mt-15" datoFont="note" datoColor="primary-400">
           {{t("5", {name: "avo"})}}
+        </div>
+        <div *transloco="let p; read: 'nested'">
+          <p>{{ p(condition ? '1' : "2") }}</p>
+        </div>
+        <div *transloco="let k; read: 'site-header.navigation.route.nested'">
+          <p>{{ k(condition ? '1' : "2") }}</p>
         </div>
         <ng-template #filtersView>
           <div>

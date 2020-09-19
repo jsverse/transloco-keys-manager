@@ -10,6 +10,8 @@ export const regexs = {
   templateKey: varName => new RegExp(`\\b${varName}\\((?![^,)+]*\\+)('|")(?<key>[^)"']*?)\\1`, 'g'),
   directive: () => new RegExp(`\\stransloco\\s*=\\s*("|')(?<key>[^]+?)\\1`, 'g'),
   directiveTernary: () => new RegExp(`\\s\\[transloco\\]\\s*=\\s*("|')[^"'?]*\\?(?<key>[^]+?)\\1`, 'g'),
+  structuralDirectiveTernary: varName =>
+    new RegExp(`\\b${varName}\\([^?}]+\\?\\s*("|')(?<keyA>[^'":]+)\\1\\s*:\\s*("|')(?<keyB>[^'"]*)\\3\\s*\\)`, 'g'),
   pipe: () =>
     /(?:(?:\{\{(?![^^}\|+]*\+)[^}\|'"]*)|(?:\[[^\]]*\]=(?:"|')(?![^'"+]*\+)[^'"]*))('|")(?<key>[^'"\[>=]*?)\1[^'"\|\[}]*(?:('|")(?<key2>[^"'\[>]*?)\3)?[^\|}>\[]*?\|[^}>\[]*?transloco/g,
   tsCommentsSection: () => /\/\*\*[^]+?\*\//g,
