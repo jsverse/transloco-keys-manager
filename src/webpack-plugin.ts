@@ -16,7 +16,7 @@ export class TranslocoExtractKeysWebpackPlugin {
   config: Config;
   inlineConfig: Config;
 
-  constructor(inlineConfig: Config) {
+  constructor(inlineConfig: Config = {}) {
     this.config = resolveConfig(inlineConfig);
     this.inlineConfig = inlineConfig;
   }

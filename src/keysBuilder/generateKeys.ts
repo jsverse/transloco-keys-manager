@@ -50,10 +50,10 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
   }
 
   for (let { files, keys } of result) {
+    if (config.unflat) {
+      keys = flat.unflatten(keys);
+    }
     for (const filePath of files) {
-      if (config.unflat) {
-        keys = flat.unflatten(keys);
-      }
       const translation = readFile(filePath, { parse: true });
       writeFile(filePath, mergeDeep({}, keys, translation));
     }
