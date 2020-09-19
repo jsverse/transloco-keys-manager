@@ -118,13 +118,13 @@ export class AdminPageComponent {}
 It'll extract the scope (`admin` in our case) keys into the relevant folder:
 
 ```
-📦assets
- ┗ 📂i18n
- ┃ ┣ 📂admin
- ┃ ┃ ┣ 📜en.json
- ┃ ┃ ┗ 📜es.json
- ┃ ┣ 📜en.json
- ┃ ┗ 📜es.json
+📦 assets
+ ┗ 📂 i18n
+ ┃ ┣ 📂 admin
+ ┃ ┃ ┣ 📜 en.json
+ ┃ ┃ ┗ 📜 es.json
+ ┃ ┣ 📜 en.json
+ ┃ ┗ 📜 es.json
 ```
 
 ### Inline Loaders
