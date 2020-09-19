@@ -28,3 +28,9 @@
 <a [routerLink]="'admin' | lowercase"
    [title]="'admin.2' | transloco">
 </a>
+<span class="my-span-class another-class also-span-class"
+      [inlineSVG]="'some/path/to/image.svg'"
+      data-e2e="DataAttributeValue"
+      matTooltipClass="my-tooltip-class"
+      matTooltip="{{ 'admin.3' | transloco }}">
+</span>

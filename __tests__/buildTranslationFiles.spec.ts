@@ -1,9 +1,9 @@
-jest.mock('../src/helpers/resolveProjectBasePath');
-import equal from 'lodash.isequal';
-import * as fs from 'fs-extra';
 import diff from 'deep-diff';
-import { buildTranslationFiles } from '../src/keysBuilder';
+import * as fs from 'fs-extra';
+import equal from 'lodash.isequal';
+
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
+import { buildTranslationFiles } from '../src/keysBuilder';
 import { messages } from '../src/messages';
 
 const sourceRoot = '__tests__';
@@ -55,7 +55,7 @@ describe('buildTranslationFiles', () => {
       for (let i = 53; i <= 62; i++) {
         expected[`${i}`] = m;
       }
-      ['Restore Options', 'Processing archive...', 'admin.1', 'admin.2'].forEach(nonNumericKey => {
+      ['Restore Options', 'Processing archive...', 'admin.1', 'admin.2', 'admin.3'].forEach(nonNumericKey => {
         expected[nonNumericKey] = m;
       });
 
