@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.0...v2.4.1) (2020-09-19)
+
+
+### Bug Fixes
+
+* 🐛 fix pipe regex ([8efc008](https://github.com/ngneat/transloco-keys-manager/commit/8efc0087e74a77637da6f3c4070639aaabca5c67)), closes [#43](https://github.com/ngneat/transloco-keys-manager/issues/43)
+
 ## [2.4.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.3.2...v2.4.0) (2020-09-19)
 
 
