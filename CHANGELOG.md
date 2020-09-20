@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.2...v2.5.0) (2020-09-20)
+
+
+### Features
+
+* 🎸 exclude comments as extra keys in detective ([6bef047](https://github.com/ngneat/transloco-keys-manager/commit/6bef047683f437c2de0a1f710f7e3d1fc105ecb0)), closes [#56](https://github.com/ngneat/transloco-keys-manager/issues/56)
+
 ### [2.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.1...v2.4.2) (2020-09-19)
 
 
