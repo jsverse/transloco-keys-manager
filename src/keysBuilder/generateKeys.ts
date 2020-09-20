@@ -1,5 +1,5 @@
 import { TranslocoConfig } from '@ngneat/transloco-utils';
-import * as flat from 'flat';
+import { unflatten } from 'flat';
 import * as glob from 'glob';
 import * as nodePath from 'path';
 
@@ -51,7 +51,7 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
 
   for (let { files, keys } of result) {
     if (config.unflat) {
-      keys = flat.unflatten(keys);
+      keys = unflatten(keys);
     }
     for (const filePath of files) {
       const translation = readFile(filePath, { parse: true });

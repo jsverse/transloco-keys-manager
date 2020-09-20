@@ -1,4 +1,4 @@
-import * as flat from 'flat';
+import { unflatten } from 'flat';
 import * as fsExtra from 'fs-extra';
 
 import { getConfig } from '../config';
@@ -16,7 +16,7 @@ export function buildTranslationFile(path: string, translation = {}, replace = f
 
   let newTranslation;
   if (getConfig().unflat) {
-    translation = flat.unflatten(translation, { object: true });
+    translation = unflatten(translation, { object: true });
   }
 
   if (replace) {

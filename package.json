@@ -96,6 +96,8 @@
     "@commitlint/config-conventional": "8.1.0",
     "@types/cheerio": "^0.22.16",
     "@types/cosmiconfig": "6.0.0",
+    "@types/deep-diff": "^1.0.0",
+    "@types/flat": "^5.0.1",
     "@types/jest": "26.0.10",
     "all-contributors-cli": "6.17.3",
     "git-cz": "4.7.0",
