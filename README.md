@@ -328,7 +328,7 @@ transloco-keys-manager extract --config src/my/path
 transloco-keys-manager extract -c src/my/path
 ```
 
-- `input`: The source directory for all files using the translation keys: (defaults to `app`)
+- `input`: The source directory for all files using the translation keys: (defaults to `['app']`)
 
 ```
 transloco-keys-manager extract --input src/my/path
