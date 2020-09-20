@@ -56,3 +56,6 @@ For Tooling issues:
 Others:
 <!-- Anything else relevant?  Operating system version, IDE, package manager, HTTP server, ... -->
 </code></pre>
+
+## Keys manager config
+<!-- Provide the keys manager configuration if relevant to the issue -->
