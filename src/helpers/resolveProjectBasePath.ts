@@ -1,12 +1,22 @@
 import { cosmiconfigSync } from 'cosmiconfig';
 
-export function resolveProjectBasePath(projectName?: string): string {
+import { ProjectType } from '../defaultConfig';
+
+type ProjectBasePath = { projectBasePath: string; projectType: ProjectType };
+
+export function resolveProjectBasePath(projectName?: string): ProjectBasePath {
   const result = cosmiconfigSync('angular', { searchPlaces: ['angular.json', '.angular.json'] }).search();
-  let sourceRoot;
+  let sourceRoot = 'src';
+  let projectType;
   const config = result?.config;
   if (config) {
     projectName = projectName || config.defaultProject;
-    sourceRoot = config.projects[projectName]?.sourceRoot;
+    const project = config.projects[projectName];
+    if (project) {
+      sourceRoot = project.sourceRoot;
+      projectType = project.projectType;
+    }
   }
-  return sourceRoot || 'src';
+
+  return { projectBasePath: sourceRoot, projectType };
 }

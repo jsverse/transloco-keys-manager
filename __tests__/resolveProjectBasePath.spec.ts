@@ -1,4 +1,5 @@
 import * as fs from 'fs-extra';
+
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
 
 describe('resolveProjectBasePath', () => {
@@ -6,8 +7,8 @@ describe('resolveProjectBasePath', () => {
     fs.writeJsonSync('angular.json', {
       defaultProject: 'defaultProject',
       projects: {
-        defaultProject: { sourceRoot: 'testDir' },
-        myProject: { sourceRoot: 'myRoot' }
+        defaultProject: { projectType: 'application', sourceRoot: 'testDir' },
+        myProject: { projectType: 'library', sourceRoot: 'myRoot' }
       }
     });
   }
@@ -17,7 +18,7 @@ describe('resolveProjectBasePath', () => {
   }
 
   it('should return the default "src"', () => {
-    expect(resolveProjectBasePath()).toBe('src');
+    expect(resolveProjectBasePath().projectBasePath).toBe('src');
   });
 
   describe('with angular config', () => {
@@ -29,11 +30,15 @@ describe('resolveProjectBasePath', () => {
     });
 
     it('should return the source root of the default project', () => {
-      expect(resolveProjectBasePath()).toBe('testDir');
+      const { projectBasePath, projectType } = resolveProjectBasePath();
+      expect(projectBasePath).toBe('testDir');
+      expect(projectType).toBe('application');
     });
 
     it('should return the source root of the given project', () => {
-      expect(resolveProjectBasePath('myProject')).toBe('myRoot');
+      const { projectBasePath, projectType } = resolveProjectBasePath('myProject');
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('library');
     });
   });
 });

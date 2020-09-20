@@ -42,7 +42,9 @@ function removeI18nFolder(type: string) {
 
 describe('buildTranslationFiles', () => {
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => sourceRoot);
+    (resolveProjectBasePath as any).mockImplementation(() => {
+      return { projectBasePath: sourceRoot };
+    });
   });
 
   describe('Pipe', () => {

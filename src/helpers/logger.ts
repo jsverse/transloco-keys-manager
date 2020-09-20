@@ -1,3 +1,4 @@
+import debug from 'debug';
 import ora from 'ora';
 
 let spinner;
@@ -15,8 +16,17 @@ export function getLogger() {
   return defaultLogger;
 }
 
-export function devlog(tag: string, variable: any) {
-  console.log(`\n------------------Log ${tag}------------------\n`);
-  console.log(variable);
-  console.log(`\n------------------End log ${tag} ------------------\n`);
+type DebugNamespaces = 'config' | 'paths' | 'scopes';
+
+export function devlog(namespace: DebugNamespaces, tag: string, values: Record<string, any>) {
+  if (!debug.enabled(namespace)) return;
+
+  console.log(`\n\x1b[4m🐞 DEBUG - ${tag}:\x1b[0m`);
+  // To prevent from logging the namespace twice, we set an empty namespace and enable it
+  const log = debug('');
+  log.enabled = true;
+
+  for (const [variable, value] of Object.entries(values)) {
+    log(`${variable}: %O`, value);
+  }
 }

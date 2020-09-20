@@ -5,7 +5,7 @@ import { getConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
 import * as path from 'path';
 
-import { defaultConfig } from '../src/defaultConfig';
+import { defaultConfig as _defaultConfig } from '../src/defaultConfig';
 import { resolveConfig } from '../src/helpers/resolveConfig';
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
 import { messages } from '../src/messages';
@@ -14,8 +14,11 @@ describe('resolveConfig', () => {
   const sourceRoot = '__tests__';
   const inlineConfig = { defaultValue: 'test2', input: ['somePath'] };
   let spies;
+  let defaultConfig = _defaultConfig();
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => sourceRoot);
+    (resolveProjectBasePath as any).mockImplementation(() => {
+      return { projectBasePath: sourceRoot };
+    });
     (getConfig as any).mockImplementation(() => ({}));
     spies = [spyOn(process, 'exit'), spyOn(console, 'log')];
   });

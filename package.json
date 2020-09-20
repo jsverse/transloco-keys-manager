@@ -96,6 +96,7 @@
     "@commitlint/config-conventional": "8.1.0",
     "@types/cheerio": "^0.22.16",
     "@types/cosmiconfig": "6.0.0",
+    "@types/debug": "^4.1.5",
     "@types/deep-diff": "^1.0.0",
     "@types/flat": "^5.0.1",
     "@types/jest": "26.0.10",

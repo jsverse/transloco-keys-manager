@@ -37,6 +37,7 @@ To make the process less burdensome, we've created two tools for the Transloco l
 - [Keys Detective](#-keys-detective)
 - [Options](#-options)
 - [Transloco Config File](#transloco-config-file)
+- [Debugging](#-debugging)
 
 ## 🌩 Installation
 
@@ -434,6 +435,24 @@ module.exports = {
     defaultValue?: string | undefined;
     unflat?: boolean;
   };
+}
+```
+
+### 🐞 Debugging
+
+You can extend the keys manager default logs by setting the `DEBUG` environment variable:
+```json
+{
+  "i18n:extract": "DEBUG=* transloco-keys-manager extract",
+  "i18n:find": "DEBUG=* transloco-keys-manager find"
+}
+```
+Currently, there are 4 supported namespaces: `*|config|paths|scopes`, setting `*` will print all the debugger logs.   
+
+You can also chain several namespaces:
+```json
+{
+  "i18n:extract": "DEBUG=config,paths transloco-keys-manager extract"
 }
 ```
 

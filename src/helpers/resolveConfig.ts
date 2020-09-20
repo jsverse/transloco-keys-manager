@@ -1,6 +1,5 @@
 import { getConfig, TranslocoConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
-import * as debug from 'debug';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -9,42 +8,39 @@ import { getScopes } from '../keysBuilder/scopes';
 import { messages } from '../messages';
 import { Config } from '../types';
 
+import { devlog } from './logger';
 import { isDirectory } from './isDirectory';
 import { resolveProjectBasePath } from './resolveProjectBasePath';
 import { updateScopesMap } from './updateScopesMap';
 
 export function resolveConfig(inlineConfig: Config): Config {
-  const defaults = defaultConfig;
-  const projectBasePath = resolveProjectBasePath(inlineConfig.project);
+  const { projectBasePath, projectType } = resolveProjectBasePath(inlineConfig.project);
+  const defaults = defaultConfig(projectType);
   const fileConfig = getConfig(inlineConfig.config || projectBasePath);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
   const config = { ...defaults, ...userConfig };
 
-  if (debug.enabled('config')) {
-    const log = debug('config');
-    log(`Default: %o`, defaults);
-    log(`Transloco file: %o`, flatFileConfig(fileConfig));
-    log(`Inline: %o`, inlineConfig);
-    log(`Merged: %o`, config);
-  }
+  devlog('config', 'Config', {
+    Default: defaults,
+    'Transloco file': flatFileConfig(fileConfig),
+    Inline: inlineConfig,
+    Merged: config
+  });
 
   resolveConfigPaths(config, projectBasePath);
   validateDirectories(config);
 
-  if (debug.enabled('paths')) {
-    const log = debug('paths');
-    log(`Input: %o`, config.input);
-    log(`Output: %o`, config.output);
-    log(`Translations: %o`, config.translationsPath);
-  }
+  devlog('paths', 'Configuration Paths', {
+    Input: config.input,
+    Output: config.output,
+    Translations: config.translationsPath
+  });
 
   updateScopesMap({ input: config.input });
 
-  if (debug.enabled('scopes')) {
-    const log = debug('scopes');
-    const { scopeToAlias } = getScopes();
-    log(`Scopes map: %o`, scopeToAlias);
-  }
+  devlog('scopes', 'Scopes', {
+    'Scopes map': getScopes().scopeToAlias
+  });
 
   return { ...config, scopes: getScopes() };
 }
