@@ -336,6 +336,8 @@ transloco-keys-manager extract --input src/my/path,project/another/path
 transloco-keys-manager extract -i src/my/path
 ```
 
+\* **Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
+
 - `output`: The target directory for all generated translation files: (defaults to `assets/i18n`)
 
 ```
