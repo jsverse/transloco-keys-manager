@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.5.0...v2.6.0) (2020-09-20)
+
+
+### Features
+
+* 🎸 support library extraction ([3d6c287](https://github.com/ngneat/transloco-keys-manager/commit/3d6c287c0e6ce81f4379be5b727d55b8c2b90508)), closes [#54](https://github.com/ngneat/transloco-keys-manager/issues/54)
+
 ## [2.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.2...v2.5.0) (2020-09-20)
 
 
