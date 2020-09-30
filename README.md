@@ -41,7 +41,9 @@ To make the process less burdensome, we've created two tools for the Transloco l
 
 ## 🌩 Installation
 
-Assuming that you've already added Transloco to your project, run the following schematics command:
+### Schematics
+
+Assuming you've already added Transloco to your project, run the following schematics command:
 
 ```
 ng g @ngneat/transloco:keys-manager
@@ -49,19 +51,37 @@ ng g @ngneat/transloco:keys-manager
 
 At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. The project will be updated according to your choice.
 
-Note that if you're going to use the Webpack plugin and you've already defined other Webpack plugins in your project, you should add the Keys Manager plugin to the list, rather than using the schematics command.
+**Note:** if you're going to use the Webpack plugin, and you've already defined other Webpack plugins in your project, you should manually add the Keys Manager plugin to the list, rather than using the schematics command.
+
+### Manual 
+
+Install the Transloco keys manager package via `yarn` or `npm` by running:
+```shell script
+npm i -D @ngneat/transloco-keys-manager
+yarn add -D @ngneat/transloco-keys-manager
+```
+
+Add the following scripts to your `package.json` file:
+```json
+{
+  "i18n:extract": "transloco-keys-manager extract",
+  "i18n:find": "transloco-keys-manager find"
+}
+``` 
+
+##
 
 The following functionality is available once the installation is complete:
 
 ## 🔑 Keys Extractor
 
-This tool extracts translatable keys from template and typescript files. Transloco Keys Manager provides two ways of using it:
+This tool extracts translatable keys from templates and typescript files. Transloco Keys Manager provides two ways of using it:
 
 ### CLI Usage
 
 If you chose the CLI option, you should see the following script in your project's `package.json` file:
 
-```bash
+```json
 {
   "i18n:extract": "transloco-keys-manager extract"
 }
@@ -73,7 +93,11 @@ Run `npm run i18n:extract`, and it'll extract translatable keys from your projec
 
 The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys during development, while you're working on the project.
 
-The angular-cli doesn't support adding a custom Webpack config out of the box. To make it easier for you, when you choose the Webpack Plugin option, it'll do the work for you.
+The angular-cli doesn't support adding a custom Webpack config out of the box.  
+
+In case you already have support for a custom Webpack config just add the `TranslocoExtractKeysWebpackPlugin` in your plugin list.  
+
+In case you need to add the support, you can use the keys manager [schematics command](#schematics), and it will do the work for you. (choose the Webpack Plugin option)
 
 You should see a new file named `webpack-dev.config.js` configured with `TranslocoExtractKeysWebpackPlugin`:
 
@@ -302,7 +326,7 @@ The extracted keys for the code above will be:
 This tool detects two things: First, it detects any key that exists in one of your translation files but is missing in any of the others. Secondly, it detects any key that exists in the translation files but is missing from any of the templates or typescript files.
 After installing the library, you should see the following script in your project's `package.json` file:
 
-```
+```json
 {
   "i18n:find": "transloco-keys-manager find"
 }
