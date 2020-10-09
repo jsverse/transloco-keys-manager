@@ -406,6 +406,7 @@ transloco-keys-manager extract -u
 transloco-keys-manager extract --default-value missingValue
 transloco-keys-manager extract -d "{{key}} translation is missing"
 ```
+There are couple of placeholders what are replaced during extraction - {{key}} is replaced with scope.key, {{keyWithoutScope}} is only for key and {{scopeAlias}} for scope. 
 
 - `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)
 
