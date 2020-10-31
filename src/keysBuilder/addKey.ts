@@ -12,7 +12,10 @@ export function addKey({ defaultValue, scopeToKeys, scopeAlias, keyWithoutScope,
   const keyWithScope = scopeAlias ? `${scopeAlias}.${keyWithoutScope}` : keyWithoutScope;
   const keyValue = isNil(defaultValue)
     ? `${messages.missingValue} '${keyWithScope}'`
-    : defaultValue.replace('{{key}}', keyWithScope).replace('{{keyWithoutScope}}', keyWithoutScope).replace('{{scopeAlias}}', scopeAlias);
+    : defaultValue
+        .replace('{{key}}', keyWithScope)
+        .replace('{{keyWithoutScope}}', keyWithoutScope)
+        .replace('{{scope}}', scopeAlias);
 
   if (scopePath) {
     if (!scopeToKeys[scopePath]) {
