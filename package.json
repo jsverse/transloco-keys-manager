@@ -19,6 +19,7 @@
     "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
     "conduct": "import-conductor"
   },
+  "license": "MIT",
   "bin": {
     "transloco-keys-manager": "index.js"
   },
