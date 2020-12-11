@@ -20,6 +20,6 @@ A clear and concise description of any alternative solutions or features you've 
 Add any other context or screenshots about the feature request here.
 
 ### Contribution
-I would like to make a PR for this feature:
+I would like to make a pull request for this feature:
 [ ] Yes! 🚀
 [ ] Maybe next time
