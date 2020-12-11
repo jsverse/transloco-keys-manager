@@ -19,18 +19,19 @@ To make the process less burdensome, we've created two tools for the Transloco l
 
 ## 🍻Features
 
-- ✅ Extract Translate Keys
-- ✅ Scopes Support
-- ✅ Webpack Plugin
-- ✅ Find Missing and Extra Keys
+- ✅ &nbsp;Extract Translate Keys
+- ✅ &nbsp;Scopes Support
+- ✅ &nbsp;Webpack Plugin
+- ✅ &nbsp;Find Missing and Extra Keys
 
 ## 📖 Table of Contents
 
 - [Installation](#-installation)
 - [Keys Extractor](#-keys-extractor)
   - [CLI](#cli-usage)
-  - [Scopes Support](#scopes-support)
   - [Webpack Plugin](#webpack-plugin)
+  - [Scopes Support](#scopes-support)
+  - [Inline loaders](#inline-loaders)
   - [Dynamic Keys](#dynamic-keys)
   - [Marker Function](#marker-function)
   - [Extra Support](#extra-support)
