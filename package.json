@@ -92,9 +92,9 @@
   "devDependencies": {
     "@babel/preset-env": "7.11.0",
     "@babel/preset-typescript": "7.10.4",
-    "@commitlint/cli": "8.1.0",
-    "@commitlint/config-angular": "8.1.0",
-    "@commitlint/config-conventional": "8.1.0",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-angular": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/cheerio": "^0.22.16",
     "@types/cosmiconfig": "6.0.0",
     "@types/debug": "^4.1.5",
