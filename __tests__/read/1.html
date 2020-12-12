@@ -1,5 +1,9 @@
 <ng-container *transloco="let t; read: 'ternary.nested'">
-  <p>{{t('1')}}</p>
+  <p>{{
+      t(
+          '1'
+    )
+    }}</p>
   <p>{{t(condition ? '2' : '3')}}</p>
   <p>{{t(condition ? '4' : "5")}}</p>
   <p>{{t(condition ? "6" : '7')}}</p>
