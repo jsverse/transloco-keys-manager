@@ -16,10 +16,16 @@ A clear and concise description of what you want to happen.
 ### Describe alternatives you've considered
 A clear and concise description of any alternative solutions or features you've considered.
 
+### Current behavior
+A clear and concise description of the current behavior. It's best to provide an example.
+
+### Expected behavior
+A clear and concise description of the expected behavior. It's best to provide an example.
+
 ### Additional context
 Add any other context or screenshots about the feature request here.
 
 ### Contribution
-I would like to make a pull request for this feature:
+I want to make a pull request for this feature:
 [ ] Yes! 🚀
 [ ] Maybe next time
