@@ -18,6 +18,7 @@ export type Config = {
   sort?: boolean;
   unflat?: boolean;
   command?: 'extract' | 'find';
+  workspaceConfigPath?: string;
 };
 
 export type ExtractionResult = {

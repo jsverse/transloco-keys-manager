@@ -8,13 +8,16 @@ import { getScopes } from '../keysBuilder/scopes';
 import { messages } from '../messages';
 import { Config } from '../types';
 
-import { devlog } from './logger';
 import { isDirectory } from './isDirectory';
+import { devlog } from './logger';
 import { resolveProjectBasePath } from './resolveProjectBasePath';
 import { updateScopesMap } from './updateScopesMap';
 
 export function resolveConfig(inlineConfig: Config): Config {
-  const { projectBasePath, projectType } = resolveProjectBasePath(inlineConfig.project);
+  const { projectBasePath, projectType } = resolveProjectBasePath(
+    inlineConfig.project,
+    inlineConfig.workspaceConfigPath
+  );
   const defaults = defaultConfig(projectType);
   const fileConfig = getConfig(inlineConfig.config || projectBasePath);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
