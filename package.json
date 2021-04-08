@@ -13,7 +13,7 @@
     "prebuild": "npm run clean:dist",
     "build": "tsc && npm run uglify",
     "postbuild": "node ./scripts/post-build.js",
-    "build:dev": "tsc && npm run post-build",
+    "build:dev": "tsc && npm run postbuild",
     "uglify": "terser-folder dist -e -o dist -x .js",
     "clean:dist": "rm -rf dist",
     "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
