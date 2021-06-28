@@ -30,7 +30,7 @@ export class TranslocoExtractKeysWebpackPlugin {
       }
 
       const keysExtractions = { html: [], ts: [] };
-      const files = Object.keys(comp.watchFileSystem.watcher.mtimes);
+      const files = comp.modifiedFiles || Object.keys(comp.watchFileSystem.watcher.mtimes);
 
       for (const file of files) {
         let fileType;
