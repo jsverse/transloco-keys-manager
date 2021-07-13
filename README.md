@@ -514,6 +514,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://gitlab.com/MikeDabrowski"><img src="https://avatars0.githubusercontent.com/u/17836911?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MikeDabrowski</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Documentation">📖</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/maleet"><img src="https://avatars1.githubusercontent.com/u/3947730?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mart Leet</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=maleet" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=maleet" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/JustinPierce"><img src="https://avatars.githubusercontent.com/u/447286?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Justin Pierce</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/issues?q=author%3AJustinPierce" title="Bug reports">🐛</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=JustinPierce" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
