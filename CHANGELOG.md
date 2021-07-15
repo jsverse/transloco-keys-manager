@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.4](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.3...v2.7.4) (2021-07-15)
+
+
+### Bug Fixes
+
+* 🐛 cli messages ([2997755](https://github.com/ngneat/transloco-keys-manager/commit/2997755b3a6b93ed2d4a21d14853a87a3b8a7f56)), closes [#95](https://github.com/ngneat/transloco-keys-manager/issues/95)
+
 ### [2.7.3](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.2...v2.7.3) (2021-07-13)
 
 
