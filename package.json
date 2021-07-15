@@ -86,8 +86,7 @@
     "flat": "5.0.2",
     "fs-extra": "9.0.1",
     "glob": "7.1.6",
-    "ora": "5.0.0",
-    "os-locale": "5.0.0"
+    "ora": "5.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "7.11.0",
