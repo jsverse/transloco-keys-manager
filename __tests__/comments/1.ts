@@ -31,4 +31,8 @@ class a {
   /** t(11, 11.1, 11.2.3) */
   method() {
   }
+
+  /**
+   * noextract(banana)
+   */
 }
