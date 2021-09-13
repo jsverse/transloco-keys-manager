@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.5](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.4...v2.7.5) (2021-09-13)
+
+
+### Bug Fixes
+
+* 🐛 false positive of prefix+marker(keys) inside comments ([#104](https://github.com/ngneat/transloco-keys-manager/issues/104)) ([eb71f58](https://github.com/ngneat/transloco-keys-manager/commit/eb71f58d53d0719a5f27e2c95d41feae68df748f))
+
 ### [2.7.4](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.3...v2.7.4) (2021-07-15)
 
 
