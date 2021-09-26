@@ -1,13 +1,14 @@
 // import-conductor-skip
-jest.mock('../src/helpers/resolveProjectBasePath');
+
+jest.mock('../src/utils/resolve-project-base-path');
 jest.mock('@ngneat/transloco-utils');
 import { getConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
 import * as path from 'path';
 
-import { defaultConfig as _defaultConfig } from '../src/defaultConfig';
-import { resolveConfig } from '../src/helpers/resolveConfig';
-import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
+import { defaultConfig as _defaultConfig } from '../src/config';
+import { resolveConfig } from '../src/utils/resolve-config';
+import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 import { messages } from '../src/messages';
 
 function noop() {}
@@ -24,12 +25,12 @@ describe('resolveConfig', () => {
     (getConfig as any).mockImplementation(() => ({}));
     spies = [
       jest.spyOn(process, 'exit').mockImplementation(noop as any),
-      jest.spyOn(console, 'log').mockImplementation(noop as any)
+      jest.spyOn(console, 'log').mockImplementation(noop as any),
     ];
   });
 
   function resolvePath(configPath: string | string[], asArray = false) {
-    const resolve = p => path.resolve(process.cwd(), sourceRoot, p);
+    const resolve = (p) => path.resolve(process.cwd(), sourceRoot, p);
     if (Array.isArray(configPath)) {
       return configPath.map(resolve);
     }
@@ -48,7 +49,7 @@ describe('resolveConfig', () => {
       ...defaultConfig,
       input: resolvePath(defaultConfig.input),
       output: resolvePath(defaultConfig.output),
-      translationsPath: resolvePath(defaultConfig.translationsPath)
+      translationsPath: resolvePath(defaultConfig.translationsPath),
     };
     assertConfig(expected);
   });
@@ -59,7 +60,7 @@ describe('resolveConfig', () => {
       defaultValue: inlineConfig.defaultValue,
       input: resolvePath(inlineConfig.input),
       output: resolvePath(defaultConfig.output),
-      translationsPath: resolvePath(defaultConfig.translationsPath)
+      translationsPath: resolvePath(defaultConfig.translationsPath),
     };
     assertConfig(expected, inlineConfig);
   });
@@ -71,11 +72,13 @@ describe('resolveConfig', () => {
       keysManager: {
         defaultValue: 'test',
         input: 'test',
-        output: 'assets/override'
-      }
+        output: 'assets/override',
+      },
     };
 
-    beforeAll(() => (getConfig as any).mockImplementation(() => translocoConfig));
+    beforeAll(() =>
+      (getConfig as any).mockImplementation(() => translocoConfig)
+    );
     afterAll(() => (getConfig as any).mockImplementation(() => ({})));
 
     it('should merge the default and the transloco config', () => {
@@ -85,7 +88,7 @@ describe('resolveConfig', () => {
         input: resolvePath(translocoConfig.keysManager.input, true),
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
-        langs: translocoConfig.langs
+        langs: translocoConfig.langs,
       };
       assertConfig(expected);
     });
@@ -97,26 +100,33 @@ describe('resolveConfig', () => {
         input: resolvePath(inlineConfig.input),
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
-        langs: translocoConfig.langs
+        langs: translocoConfig.langs,
       };
       assertConfig(expected, inlineConfig);
     });
   });
 
   describe('validate directories', () => {
-    function shouldFail(prop: string, msg: 'pathDoesntExists' | 'pathIsNotDir') {
+    function shouldFail(
+      prop: string,
+      msg: 'pathDoesntExists' | 'pathIsNotDir'
+    ) {
       expect(process.exit).toHaveBeenCalled();
-      expect(console.log).toHaveBeenCalledWith(chalk.bgRed.black(`${prop} ${messages[msg]}`));
+      expect(console.log).toHaveBeenCalledWith(
+        chalk.bgRed.black(`${prop} ${messages[msg]}`)
+      );
       resetSpies();
     }
 
     function shouldPass() {
-      [process.exit, console.log].forEach(s => expect(s).not.toHaveBeenCalled());
+      [process.exit, console.log].forEach((s) =>
+        expect(s).not.toHaveBeenCalled()
+      );
       resetSpies();
     }
 
     function resetSpies() {
-      spies.forEach(s => s.mockReset());
+      spies.forEach((s) => s.mockReset());
     }
 
     it('should fail on invalid input path', () => {
@@ -132,11 +142,23 @@ describe('resolveConfig', () => {
       /* should only fail translation path when in find mode */
       resolveConfig({ input: ['comments'], translationsPath: 'noFolder' });
       shouldPass();
-      resolveConfig({ input: ['comments'], translationsPath: 'noFolder', command: 'extract' });
+      resolveConfig({
+        input: ['comments'],
+        translationsPath: 'noFolder',
+        command: 'extract',
+      });
       shouldPass();
-      resolveConfig({ input: ['comments'], translationsPath: 'noFolder', command: 'find' });
+      resolveConfig({
+        input: ['comments'],
+        translationsPath: 'noFolder',
+        command: 'find',
+      });
       shouldFail('Translations path', 'pathDoesntExists');
-      resolveConfig({ input: ['comments'], translationsPath: 'comments/1.html', command: 'find' });
+      resolveConfig({
+        input: ['comments'],
+        translationsPath: 'comments/1.html',
+        command: 'find',
+      });
       shouldFail('Translations path', 'pathIsNotDir');
     });
   });
@@ -144,9 +166,14 @@ describe('resolveConfig', () => {
   describe('resolveConfigPaths', () => {
     it('should prefix all the paths in the config with the process cwd', () => {
       const config = resolveConfig({ input: ['comments'] });
-      const assertPath = p => expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(true);
+      const assertPath = (p) =>
+        expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
+          true
+        );
       config.input.forEach(assertPath);
-      ['output', 'translationsPath'].forEach(prop => assertPath(config[prop]));
+      ['output', 'translationsPath'].forEach((prop) =>
+        assertPath(config[prop])
+      );
     });
   });
 });

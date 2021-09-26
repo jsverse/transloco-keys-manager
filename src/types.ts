@@ -50,7 +50,7 @@ export type ScopeMap = {
 
 export enum TEMPLATE_TYPE {
   STRUCTURAL,
-  NG_TEMPLATE
+  NG_TEMPLATE,
 }
 
 export type BaseParams = {

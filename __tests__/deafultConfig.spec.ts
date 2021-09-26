@@ -1,4 +1,4 @@
-import { defaultConfig } from '../src/defaultConfig';
+import { defaultConfig } from '../src/config';
 
 describe('defaultConfig', () => {
   it('should set the input path to "app"', () => {

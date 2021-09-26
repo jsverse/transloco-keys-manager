@@ -6,24 +6,21 @@
         (onChange)="onNameChange($event)"></da-editable-input-text>
     </div>
 
-    <edge-wizard-step [label]="'Restore Options' | transloco" [validatingMessage]="'Processing archive...'|transloco"
+    <edge-wizard-step transloco="Restore Options"
       [validate]="simulateRestore" [useFormCtrlValidation]="profile">
-      <ui-view></ui-view>
+      <ui-view [transloco]="'Processing archive...'"></ui-view>
 
       <!-- Footer error message -->
-      <div class="footer-error-message d-flex" *ngIf="errorCounter > 0">
-        {{"1" | transloco}} {{errorCounter}} {{"2" | transloco}}{{errorCounter > 1 ? 's'
-      : ''}}
+      <div class="footer-error-message d-flex" *ngIf="errorCounter > 0" [transloco]="dontTake">
+        asasd
       </div>
       <div class="allow-full-line footer-buttons d-flex align-end-center">
         <div class="setup-buttons d-flex">
-          <button class="da-btn secondary link footer cancel-button" type="button" (click)="backToPrevPage(false)">
-            {{"3" | transloco}}
+          <button class="da-btn secondary link footer cancel-button" type="button" [transloco]="'1'" (click)="backToPrevPage(false)">
           </button>
-          <button class="da-btn secondary save-button" *ngIf="isEditState && !isDuplicate" (click)="onSubmit(false)">
-            {{"4" | transloco}}
+          <button transloco="2" class="da-btn secondary save-button" *ngIf="isEditState && !isDuplicate as bla" (click)="onSubmit(false)">
           </button>
-          <button class="da-btn primary save-run-button" (click)="onSubmit(true)">{{"5" | transloco}}
+          <button class="da-btn primary save-run-button" (click)="onSubmit(true)" transloco="3">
           </button>
         </div>
       </div>

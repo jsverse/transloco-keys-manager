@@ -3,19 +3,21 @@
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 
-import { optionDefinitions, sections } from './cliOptions';
-import { buildTranslationFiles } from './keysBuilder';
-import { findMissingKeys } from './keysDetective';
+import { optionDefinitions, sections } from './cli-options';
+import { buildTranslationFiles } from './keys-builder';
+import { findMissingKeys } from './keys-detective';
 import './polyfills';
 
 const mainDefinitions = [{ name: 'command', defaultOption: true }];
 
-const mainOptions = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true });
+const mainOptions = commandLineArgs(mainDefinitions, {
+  stopAtFirstUnknown: true,
+});
 const argv = mainOptions._unknown || [];
 
 const config = commandLineArgs(optionDefinitions, {
   camelCase: true,
-  argv
+  argv,
 });
 const { help } = config;
 

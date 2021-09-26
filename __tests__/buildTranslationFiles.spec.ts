@@ -1,25 +1,24 @@
 // import-conductor-skip
-jest.mock('../src/helpers/resolveProjectBasePath');
-import diff from 'deep-diff';
-import * as fs from 'fs-extra';
-import equal from 'lodash.isequal';
 
-import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
-import { buildTranslationFiles } from '../src/keysBuilder';
+jest.mock('../src/utils/resolve-project-base-path');
+import * as fs from 'fs-extra';
+
+import { buildTranslationFiles } from '../src/keys-builder';
 import { messages } from '../src/messages';
+import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
 const sourceRoot = '__tests__';
+
+const m = 'missing';
 
 function gKeys(len: number, prefix?: string) {
   let expected = {};
   for (let i = 1; i <= len; i++) {
-    expected[prefix ? `${prefix}.${i}` : i] = 'missing';
+    expected[prefix ? `${prefix}.${i}` : i] = m;
   }
 
   return expected;
 }
-
-const m = 'missing';
 
 function gConfig(type, config = {}) {
   return {
@@ -27,13 +26,15 @@ function gConfig(type, config = {}) {
     output: `${type}/i18n`,
     langs: ['en', 'es', 'it'],
     defaultValue: 'missing',
-    ...config
+    ...config,
   };
 }
 
 function assertResult(type: string, expected: object, path?: string) {
-  const translation = fs.readJsonSync(`./${sourceRoot}/${type}/i18n/${path || ''}en.json`);
-  expect(equal(translation, expected)).toBe(true);
+  const translation = fs.readJsonSync(
+    `./${sourceRoot}/${type}/i18n/${path || ''}en.json`
+  );
+  expect(translation).toEqual(expected);
 }
 
 function removeI18nFolder(type: string) {
@@ -47,151 +48,326 @@ describe('buildTranslationFiles', () => {
     });
   });
 
-  describe('Pipe', () => {
-    const type = 'pipe',
-      config = gConfig(type);
+  describe('Template Extraction', () => {
+    describe('Pipe', () => {
+      const type = 'pipe';
+      const config = gConfig(type);
 
-    beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => removeI18nFolder(type));
 
-    it('should work with pipe', () => {
-      let expected = gKeys(48);
-      expected['63.64.65'] = expected['49.50.51.52'] = m;
-      for (let i = 53; i <= 62; i++) {
-        expected[`${i}`] = m;
-      }
-      ['Restore Options', 'Processing archive...', 'admin.1', 'admin.2', 'admin.3'].forEach(nonNumericKey => {
-        expected[nonNumericKey] = m;
+      it('should work with pipe', () => {
+        let expected = gKeys(48);
+        expected['49.50.51.52'] = m;
+        for (let i = 53; i <= 62; i++) {
+          expected[i] = m;
+        }
+        expected['63.64.65'] = m;
+        for (let i = 66; i < 68; i++) {
+          expected[i] = m;
+        }
+        [
+          'Restore Options',
+          'Processing archive...',
+          'admin.1',
+          'admin.2',
+          'admin.3',
+        ].forEach((nonNumericKey) => {
+          expected[nonNumericKey] = m;
+        });
+
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+    });
+
+    describe('Directive', () => {
+      const type = 'directive';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with directive', () => {
+        const expected = gKeys(23);
+        ['Processing archive...', 'Restore Options'].forEach(
+          (nonNumericKey) => {
+            expected[nonNumericKey] = m;
+          }
+        );
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+    });
+
+    describe('ngContainer', () => {
+      const type = 'ngContainer';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with ngContainer', () => {
+        let expected = gKeys(39);
+        buildTranslationFiles(config);
+        assertResult(type, expected);
       });
 
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-  });
-
-  describe('ngContainer', () => {
-    const type = 'ngContainer',
-      config = gConfig(type);
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('should work with ngContainer', () => {
-      let expected = gKeys(39);
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with scopes', () => {
-      let expected = {
-        '1': 'missing',
-        '2.1': 'missing',
-        '3.1': 'missing',
-        '4': 'missing',
-        '5': 'missing'
-      };
-
-      buildTranslationFiles(config);
-      assertResult(type, expected, 'admin-page/');
-    });
-  });
-
-  describe('ngTemplate', () => {
-    const type = 'ngTemplate',
-      config = gConfig(type);
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('should work with ngTemplate', () => {
-      let expected = gKeys(36);
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with scopes', () => {
-      let expected = {
-        '1': 'missing',
-        '2.1': 'missing',
-        '3.1': 'missing',
-        '4': 'missing',
-        '5': 'missing'
-      };
-
-      buildTranslationFiles(config);
-      assertResult(type, expected, 'todos-page/');
-    });
-  });
-
-  describe('service', () => {
-    const type = 'service',
-      config = gConfig(type);
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('should work with service', () => {
-      let expected = gKeys(19);
-      expected['20.21.22.23'] = 'missing';
-      expected['24'] = 'missing';
-      expected['25'] = 'missing';
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with scopes', () => {
-      const expected = {
-        todos: {
+      it('should work with scopes', () => {
+        let expected = {
           '1': 'missing',
-          '2.1': 'missing'
-        },
-        admin: {
+          '2.1': 'missing',
           '3.1': 'missing',
-          '4': 'missing'
-        },
-        nested: {
+          '4': 'missing',
           '5': 'missing',
-          '6.1': 'missing'
-        }
-      };
+        };
 
-      buildTranslationFiles(config);
-      assertResult(type, expected.todos, 'todos-page/');
-      assertResult(type, expected.admin, 'admin-page/');
-      assertResult(type, expected.nested, 'nested/scope/');
+        buildTranslationFiles(config);
+        assertResult(type, expected, 'admin-page/');
+      });
+    });
+
+    describe('ngTemplate', () => {
+      const type = 'ngTemplate';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with ngTemplate', () => {
+        let expected = gKeys(35);
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+
+      it('should work with scopes', () => {
+        let expected = {
+          '1': 'missing',
+          '2.1': 'missing',
+          '3.1': 'missing',
+          '4': 'missing',
+          '5': 'missing',
+        };
+
+        buildTranslationFiles(config);
+        assertResult(type, expected, 'todos-page/');
+      });
+    });
+
+    describe('read', () => {
+      const type = 'read';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with read', () => {
+        const expected = {
+          global: {
+            ...gKeys(3),
+            ...gKeys(23, 'site-header.navigation.route'),
+            ...gKeys(5, 'site-header.navigation'),
+            ...gKeys(10, 'right-pane.actions'),
+            ...gKeys(1, 'templates.translations'),
+            ...gKeys(3, 'nested.translation'),
+            ...gKeys(3, 'some.other.nested.that-is-tested'),
+            ...gKeys(12, 'ternary.nested'),
+            ...gKeys(2, 'nested'),
+            ...gKeys(2, 'site-header.navigation.route.nested'),
+          },
+          todos: {
+            ...gKeys(2, 'numbers'),
+          },
+        };
+
+        buildTranslationFiles(config);
+        assertResult(type, expected.global);
+        assertResult(type, expected.todos, 'todos-page/');
+      });
     });
   });
 
-  describe('read', () => {
-    const type = 'read',
-      config = gConfig(type);
+  describe('Typescript Extraction', () => {
+    describe('service', () => {
+      const type = 'service';
+      const config = gConfig(type);
 
-    beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => removeI18nFolder(type));
 
-    it('should work with read', () => {
-      const expected = {
-        global: {
-          ...gKeys(3),
-          ...gKeys(23, 'site-header.navigation.route'),
-          ...gKeys(5, 'site-header.navigation'),
-          ...gKeys(10, 'right-pane.actions'),
-          ...gKeys(1, 'templates.translations'),
-          ...gKeys(3, 'nested.translation'),
-          ...gKeys(3, 'some.other.nested.that-is-tested'),
-          ...gKeys(9, 'ternary.nested'),
-          ...gKeys(2, 'nested'),
-          ...gKeys(2, 'site-header.navigation.route.nested')
-        },
-        todos: {
-          ...gKeys(2, 'numbers')
-        }
-      };
+      it('should work with service', () => {
+        let expected = gKeys(19);
+        expected['20.21.22.23'] = 'missing';
+        expected['24'] = 'missing';
+        expected['25'] = 'missing';
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
 
-      buildTranslationFiles(config);
-      assertResult(type, expected.global);
-      assertResult(type, expected.todos, 'todos-page/');
+      it('should work with scopes', () => {
+        const expected = {
+          todos: {
+            '1': 'missing',
+            '2.1': 'missing',
+          },
+          admin: {
+            '3.1': 'missing',
+            '4': 'missing',
+          },
+          nested: {
+            '5': 'missing',
+            '6.1': 'missing',
+          },
+        };
+
+        buildTranslationFiles(config);
+        assertResult(type, expected.todos, 'todos-page/');
+        assertResult(type, expected.admin, 'admin-page/');
+        assertResult(type, expected.nested, 'nested/scope/');
+      });
+    });
+
+    describe('marker', () => {
+      const type = 'marker';
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with marker', () => {
+        const config = gConfig(type);
+
+        let expected = {};
+        expected['username4'] = 'missing';
+        expected['password4'] = 'missing';
+        expected['username'] = 'missing';
+        expected['password'] = 'missing';
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+    });
+  });
+
+  describe('Config', () => {
+    describe('unflat', () => {
+      const type = 'unflat';
+      const config = gConfig(type, { unflat: true });
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('show work with unflat true', () => {
+        const expected = {
+          global: {
+            a: {
+              '1': m,
+            },
+          },
+        };
+        buildTranslationFiles(config);
+
+        assertResult(type, expected.global);
+      });
+    });
+
+    describe('unflat-sort', () => {
+      const type = 'unflat-sort';
+      const config = gConfig(type, { unflat: true, sort: true });
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('show work with unflat and sort true', () => {
+        const expected = {
+          global: {
+            b: {
+              b: {
+                a: m,
+                b: m,
+              },
+              c: {
+                a: m,
+                p: m,
+                x: m,
+              },
+            },
+          },
+        };
+        buildTranslationFiles(config);
+
+        assertResult(type, expected.global);
+      });
+    });
+
+    describe('Unflat problematic keys', () => {
+      const type = 'unflat-problematic-keys';
+      const config = gConfig(type, { unflat: true });
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('show work with unflat true and problematic keys', () => {
+        const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
+
+        const expected = {
+          global: {
+            a: m,
+            b: m,
+            c: m,
+            d: {
+              '1': m,
+              '2': m,
+            },
+            e: {
+              a: m,
+              aa: m,
+            },
+            f: m,
+          },
+        };
+        const expectedProblematicKeys = [
+          'a',
+          'a.b',
+          'a.c',
+          'b',
+          'b.a',
+          'b.b',
+          'f',
+          'f.a',
+          'f.a.a',
+          'f.a.b',
+          'f.b',
+          'f.b.a.a',
+        ];
+        buildTranslationFiles(config);
+
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
+        assertResult(type, expected.global);
+      });
+    });
+
+    describe('Multi Inputs', () => {
+      const type = 'multi-input';
+      const config = gConfig(type, {
+        input: [`${type}/folder-1`, `${type}/folder-2`],
+      });
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('show work with multiple inputs', () => {
+        let expected = gKeys(39);
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+
+      it('should work with scopes', () => {
+        let expected = {
+          '1': 'missing',
+          '2.1': 'missing',
+          '3.1': 'missing',
+          '4': 'missing',
+          '5': 'missing',
+        };
+
+        buildTranslationFiles(config);
+        assertResult(type, expected, 'admin-page/');
+      });
     });
   });
 
   describe('comments', () => {
-    const type = 'comments',
-      config = gConfig(type);
+    const type = 'comments';
+    const config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
 
@@ -203,14 +379,7 @@ describe('buildTranslationFiles', () => {
           'c.some.key': m,
           'need.transloco': m,
           '1.some': m,
-          '1': m,
-          '2': m,
-          '3': m,
-          '4': m,
-          '5': m,
-          '6': m,
-          '7': m,
-          '8': m,
+          ...gKeys(8),
           '10': m,
           '13': m,
           '11.12': m,
@@ -223,11 +392,7 @@ describe('buildTranslationFiles', () => {
           'whats1.app': m,
           hello1: m,
           '131': m,
-          '10.1': m,
-          '10.2': m,
-          '10.3': m,
-          '10.4': m,
-          '10.5': m,
+          ...gKeys(5, '10'),
           '10.6.7': m,
           '11': m,
           '11.1': m,
@@ -249,175 +414,22 @@ describe('buildTranslationFiles', () => {
           '217.218': m,
           'from.comment': m,
           'pretty.cool.da': m,
-          'global.1': m,
-          'global.2': m,
-          'global.3': m,
-          'global.4': m,
-          'outer.read.1': m,
-          'outer.read.2': m,
-          'outer.read.3': m,
-          'outer.read.4': m,
-          'outer.read.5': m,
-          'outer.read.6': m,
-          'outer.read.7': m,
-          'outer.read.8': m,
-          'inner.read.1': m,
-          'inner.read.2': m,
-          'inner.read.3': m,
-          'inner.read.4': m,
-          'another.container.1': m,
-          'another.container.2': m
+          ...gKeys(4, 'global'),
+          ...gKeys(8, 'outer.read'),
+          ...gKeys(4, 'inner.read'),
+          ...gKeys(2, 'another.container'),
         },
         admin: {
           '1': m,
           '2.3': m,
           '4': m,
-          '5555': m
-        }
+          '5555': m,
+        },
       };
       buildTranslationFiles(config);
 
       assertResult(type, expected.global);
       assertResult(type, expected.admin, 'admin/');
-    });
-  });
-
-  describe('unflat', () => {
-    const type = 'unflat',
-      config = gConfig(type, { unflat: true });
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('show work with unflat true', () => {
-      const expected = {
-        global: {
-          a: {
-            '1': m
-          }
-        }
-      };
-      buildTranslationFiles(config);
-
-      assertResult(type, expected.global);
-    });
-  });
-
-  describe('unflat-sort', () => {
-    const type = 'unflat-sort',
-      config = gConfig(type, { unflat: true, sort: true });
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('show work with unflat and sort true', () => {
-      const expected = {
-        global: {
-          b: {
-            b: {
-              a: m,
-              b: m
-            },
-            c: {
-              a: m,
-              p: m,
-              x: m
-            }
-          }
-        }
-      };
-      buildTranslationFiles(config);
-
-      assertResult(type, expected.global);
-    });
-  });
-
-  describe('Unflat problematic keys', () => {
-    const type = 'unflat-problematic-keys',
-      config = gConfig(type, { unflat: true });
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('show work with unflat true and problematic keys', () => {
-      const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
-
-      const expected = {
-        global: {
-          a: m,
-          b: m,
-          c: m,
-          d: {
-            '1': m,
-            '2': m
-          },
-          e: {
-            a: m,
-            aa: m
-          },
-          f: m
-        }
-      };
-      const expectedProblematicKeys = [
-        'a',
-        'a.b',
-        'a.c',
-        'b',
-        'b.a',
-        'b.b',
-        'f',
-        'f.a',
-        'f.a.a',
-        'f.a.b',
-        'f.b',
-        'f.b.a.a'
-      ];
-      buildTranslationFiles(config);
-
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
-      assertResult(type, expected.global);
-    });
-  });
-
-  describe('Multi Inputs', () => {
-    const type = 'multi-input',
-      config = gConfig(type, { input: [`${type}/folder-1`, `${type}/folder-2`] });
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('show work with multiple inputs', () => {
-      let expected = gKeys(39);
-      buildTranslationFiles(config);
-      assertResult(type, expected);
-    });
-
-    it('should work with scopes', () => {
-      let expected = {
-        '1': 'missing',
-        '2.1': 'missing',
-        '3.1': 'missing',
-        '4': 'missing',
-        '5': 'missing'
-      };
-
-      buildTranslationFiles(config);
-      assertResult(type, expected, 'admin-page/');
-    });
-  });
-
-  describe('marker', () => {
-    const type = 'marker';
-
-    beforeEach(() => removeI18nFolder(type));
-
-    it('should work with marker', () => {
-      const config = gConfig(type);
-
-      let expected = {};
-      expected['username4'] = 'missing';
-      expected['password4'] = 'missing';
-      expected['username'] = 'missing';
-      expected['password'] = 'missing';
-      buildTranslationFiles(config);
-      assertResult(type, expected);
     });
   });
 });

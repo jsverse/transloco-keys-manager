@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 
-import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
+import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
 describe('resolveProjectBasePath', () => {
   function addAngularConfig() {
@@ -8,8 +8,8 @@ describe('resolveProjectBasePath', () => {
       defaultProject: 'defaultProject',
       projects: {
         defaultProject: { projectType: 'application', sourceRoot: 'testDir' },
-        myProject: { projectType: 'library', sourceRoot: 'myRoot' }
-      }
+        myProject: { projectType: 'library', sourceRoot: 'myRoot' },
+      },
     });
   }
 
@@ -36,7 +36,8 @@ describe('resolveProjectBasePath', () => {
     });
 
     it('should return the source root of the given project', () => {
-      const { projectBasePath, projectType } = resolveProjectBasePath('myProject');
+      const { projectBasePath, projectType } =
+        resolveProjectBasePath('myProject');
       expect(projectBasePath).toBe('myRoot');
       expect(projectType).toBe('library');
     });

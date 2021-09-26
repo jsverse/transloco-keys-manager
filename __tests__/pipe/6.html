@@ -1,15 +1,15 @@
 <div class="d-flex-column align-center-start name-input-wrapper mb-25">
     <div class="mb-7" datoFont="note" datoColor="primary-300"></div>
     <dato-input datoSize="lg" [formControlName]="name" [data-auto-id]="'53' | transloco | another"
-                [placeholder]="condition ? '54' : '55' | transloco | another : { name: 'ccc'}" ngDefaultControl></dato-input>
+                [placeholder]="(condition ? '54' : '55') | transloco | another : { name: 'ccc'}" ngDefaultControl></dato-input>
     <dato-input datoSize="lg" [formControlName]="name" [data-auto-id]="'56' | another | transloco | other "
                 [placeholder]="condition ? dontTake : '57' | another | transloco: { name: 'ccc'}" ngDefaultControl></dato-input>
     <!-- Validation Message-->
     <div [class.invisible]="'58' | transloco"
          class="mt-8" datoFont="note" datoColor="red-400">
         {{ '59' | transloco | another }}
-        {{ '60' another | transloco | other }}
-        {{ '61' another | other | transloco }}
+        {{ '60' | another | transloco | other }}
+        {{ '61' | another | other | transloco }}
     </div>
     <span>{{ var + 'not'  | transloco }}</span>
 
@@ -20,7 +20,7 @@
           placeholder="{{'62' | transloco }}" readonly>
                 </textarea>
 
-<div>{{ '63.64.65' another | other | transloco }}</div>
+<div>{{ '63.64.65' | another | other | transloco }}</div>
 <a [title]="'admin.1' | lowercase
     | transloco"
       [routerLink]="'admin' | lowercase">
@@ -34,3 +34,6 @@
       matTooltipClass="my-tooltip-class"
       matTooltip="{{ 'admin.3' | transloco }}">
 </span>
+
+{{ '66' | transloco }}
+{{ condition ? '67' | transloco : 'dont take' }}

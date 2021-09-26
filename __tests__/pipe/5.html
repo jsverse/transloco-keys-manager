@@ -40,7 +40,7 @@
       </dato-link>
       <dato-button datoType="secondary" *ngIf="editSetupMode" (click)="executeRule()" class="mr-10">
         <dato-icon datoIcon="run-once"></dato-icon>
-        {{ condition ? '35' : '36' | transloco: { name: 'ccc'}}
+        {{ (condition ? '35' : '36') | transloco: { name: 'ccc'} }}
       </dato-button>
       <dato-button (click)="save()" width="156px" class="pr-30" data-auto-id="action_rule_setup_step_3_save"
                    [disabled]="disableSaveButton">{{saveButtonKey | transloco}}
@@ -51,26 +51,26 @@
 
 <ng-template #successToast>
   <dato-link datoSize='sm' (click)='goToList()'>{{'37' | transloco}}</dato-link>
-  {{ condition ? "38" : '39' | transloco: { name: "ccc"}}
+  {{ (condition ? "38" : '39') | transloco: { name: "ccc"} }}
 
 </ng-template>
 
 <div>
-  {{ condition ? '40' :
+  {{ (condition ? '40' :
 
-  '41' | transloco: { name: "ccc"}}
+  '41') | transloco: { name: "ccc"} }}
 </div>
 
 <div>
   {{ (condition ? '42' :
 
-  '43') | transloco: { name: "ccc"}}
+  '43') | transloco: { name: "ccc"} }}
 </div>
 
 <div class="d-flex-column align-center-start name-input-wrapper mb-25">
   <div class="mb-7" datoFont="note" datoColor="primary-300"></div>
   <dato-input datoSize="lg" [formControlName]="name" [data-auto-id]="'44' | transloco"
-              [placeholder]="condition ? '45' : '46' | transloco: { name: 'ccc'}" ngDefaultControl></dato-input>
+              [placeholder]="(condition ? '45' : '46') | transloco: { name: 'ccc'}" ngDefaultControl></dato-input>
   <!-- Validation Message-->
   <div [class.invisible]="'47' | transloco"
        class="mt-8" datoFont="note" datoColor="red-400">
