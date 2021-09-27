@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.5...v3.0.0) (2021-09-27)
+
+
+### Features
+
+* 🎸 run prettier on generated files ([6386b09](https://github.com/ngneat/transloco-keys-manager/commit/6386b092fb833752ffe1a898424290f2fe4c0f4f)), closes [#79](https://github.com/ngneat/transloco-keys-manager/issues/79)
+* 🎸 support inline templates ([a0b9eaa](https://github.com/ngneat/transloco-keys-manager/commit/a0b9eaa55bb0de94c587d6b0689fb2bd3e203d1a)), closes [#83](https://github.com/ngneat/transloco-keys-manager/issues/83)
+
 ### [2.7.5](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.4...v2.7.5) (2021-09-13)
 
 
