@@ -4,6 +4,7 @@ import { getLogger } from '../utils/logger';
 import { buildScopeFilePaths } from '../utils/path.utils';
 
 import { buildTranslationFile, FileAction } from './build-translation-file';
+import { runPrettier } from './utils/run-prettier';
 
 export function createTranslationFiles({
   scopeToKeys,
@@ -29,6 +30,8 @@ export function createTranslationFiles({
   for (const { path, scope } of scopeFiles) {
     actions.push(buildTranslationFile(path, scopeToKeys[scope], replace));
   }
+
+  runPrettier(actions.map(({ path }) => path));
 
   const newFiles = actions.filter((action) => action.type === 'new');
 
