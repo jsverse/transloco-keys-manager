@@ -29,7 +29,7 @@ export function buildTranslationFile(
   if (replace) {
     newTranslation = mergeDeep({}, translation);
   } else {
-    newTranslation = mergeDeep(translation, currentTranslation);
+    newTranslation = mergeDeep({}, translation, currentTranslation);
   }
 
   fsExtra.outputFileSync(path, stringify(newTranslation));
