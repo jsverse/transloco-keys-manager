@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "types": [
-      "node", "jest"
-    ]
   },
   "include": [
     "__tests__/**/*.spec.ts"

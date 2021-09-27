@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.5](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.4...v2.7.5) (2021-09-13)
+
+
+### Bug Fixes
+
+* 🐛 false positive of prefix+marker(keys) inside comments ([#104](https://github.com/ngneat/transloco-keys-manager/issues/104)) ([eb71f58](https://github.com/ngneat/transloco-keys-manager/commit/eb71f58d53d0719a5f27e2c95d41feae68df748f))
+
+### [2.7.4](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.3...v2.7.4) (2021-07-15)
+
+
+### Bug Fixes
+
+* 🐛 cli messages ([2997755](https://github.com/ngneat/transloco-keys-manager/commit/2997755b3a6b93ed2d4a21d14853a87a3b8a7f56)), closes [#95](https://github.com/ngneat/transloco-keys-manager/issues/95)
+
+### [2.7.3](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.2...v2.7.3) (2021-07-13)
+
+
+### Bug Fixes
+
+* 🐛 use webpack 5's modified file list when available ([#99](https://github.com/ngneat/transloco-keys-manager/issues/99)) ([6466972](https://github.com/ngneat/transloco-keys-manager/commit/6466972a30724d942745547c6e61b9de679de2eb)), closes [#98](https://github.com/ngneat/transloco-keys-manager/issues/98)
+
+### [2.7.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.1...v2.7.2) (2021-04-17)
+
 ### [2.7.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.0...v2.7.1) (2020-12-12)
 
 

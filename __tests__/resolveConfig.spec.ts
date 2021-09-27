@@ -10,6 +10,8 @@ import { resolveConfig } from '../src/helpers/resolveConfig';
 import { resolveProjectBasePath } from '../src/helpers/resolveProjectBasePath';
 import { messages } from '../src/messages';
 
+function noop() {}
+
 describe('resolveConfig', () => {
   const sourceRoot = '__tests__';
   const inlineConfig = { defaultValue: 'test2', input: ['somePath'] };
@@ -20,7 +22,10 @@ describe('resolveConfig', () => {
       return { projectBasePath: sourceRoot };
     });
     (getConfig as any).mockImplementation(() => ({}));
-    spies = [spyOn(process, 'exit'), spyOn(console, 'log')];
+    spies = [
+      jest.spyOn(process, 'exit').mockImplementation(noop as any),
+      jest.spyOn(console, 'log').mockImplementation(noop as any)
+    ];
   });
 
   function resolvePath(configPath: string | string[], asArray = false) {
@@ -111,7 +116,7 @@ describe('resolveConfig', () => {
     }
 
     function resetSpies() {
-      spies.forEach(s => s.calls.reset());
+      spies.forEach(s => s.mockReset());
     }
 
     it('should fail on invalid input path', () => {

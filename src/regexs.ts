@@ -1,9 +1,3 @@
-/**
- *  All Rights Reserved.
- *
- *  COPYING THIS CODE IS PROHIBITED
- *
- */
 import { sanitizeForRegex } from './helpers/sanitizeForRegex';
 
 export const regexs = {
@@ -17,7 +11,7 @@ export const regexs = {
   tsCommentsSection: () => /\/\*\*[^]+?\*\//g,
   templateCommentsSection: () => /<!--[^]+?-->/g,
   templateValidComment: marker => new RegExp(`<!--(\\s*${sanitizeForRegex(marker)}\\(([^)]+)\\)\\s*)+\\s*-->`),
-  markerValues: marker => new RegExp(`${sanitizeForRegex(marker)}\\(([^)]+)\\)`, 'g'),
+  markerValues: marker => new RegExp(`\\b${sanitizeForRegex(marker)}\\(([^)]+)\\)`, 'g'),
   /** use the translate function directly */
   directImport: /import\s*{\s*[^}]*translate[^}]*}\s*from\s*("|')@ngneat\/transloco\1/
 };
