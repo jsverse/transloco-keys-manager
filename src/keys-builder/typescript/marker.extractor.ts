@@ -1,10 +1,11 @@
+import { SourceFile } from 'typescript';
 import { tsquery } from '@phenomnomnominal/tsquery';
 import * as ts from 'typescript';
 
 import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
 
-export function markerExtractor(ast): TSExtractorResult {
+export function markerExtractor(ast: SourceFile): TSExtractorResult {
   // workaround from https://github.com/estools/esquery/issues/68
   const [importNode] = tsquery(
     ast,

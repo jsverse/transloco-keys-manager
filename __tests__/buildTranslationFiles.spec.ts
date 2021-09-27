@@ -243,6 +243,24 @@ describe('buildTranslationFiles', () => {
         assertResult(type, expected);
       });
     });
+
+    describe('inline template', () => {
+      const type = 'inline-template';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with inline templates', () => {
+        const expected = gKeys(23);
+        ['Processing archive...', 'Restore Options'].forEach(
+          (nonNumericKey) => {
+            expected[nonNumericKey] = m;
+          }
+        );
+        buildTranslationFiles(config);
+        assertResult(type, expected);
+      });
+    });
   });
 
   describe('Config', () => {

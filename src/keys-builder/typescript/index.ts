@@ -14,6 +14,7 @@ import { addKey } from '../add-key';
 import { extractKeys } from '../utils/extract-keys';
 import { resolveScopeAlias } from '../utils/resolvers.utils';
 
+import { inlineTemplateExtractor } from './inline-template';
 import { markerExtractor } from './marker.extractor';
 import { pureFunctionExtractor } from './pure-function.extractor';
 import { serviceExtractor } from './service.extractor';
@@ -22,12 +23,8 @@ export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
 }
 
-function TSExtractor({
-  file,
-  scopes,
-  defaultValue,
-  scopeToKeys,
-}: ExtractorConfig): ScopeMap {
+function TSExtractor(config: ExtractorConfig): ScopeMap {
+  const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
   const extractors = [];
 
@@ -39,16 +36,13 @@ function TSExtractor({
     extractors.push(markerExtractor);
   }
 
-  if (extractors.length === 0) {
-    return scopeToKeys;
-  }
-
   const ast = tsquery.ast(content);
   const baseParams = {
     scopeToKeys,
     scopes,
     defaultValue,
   };
+
   extractors
     .map((ex) => ex(ast))
     .flat()
@@ -71,6 +65,8 @@ function TSExtractor({
     regexFactory: regexFactoryMap.ts.comments,
     ...baseParams,
   });
+
+  inlineTemplateExtractor(ast, config);
 
   return scopeToKeys;
 }
