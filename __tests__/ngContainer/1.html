@@ -115,7 +115,9 @@
       </p>
     </div>
 
-    <div class="d-flex" *daPermission="'ACCOUNT_ADMIN'" [a.b]='t("21", {value: "dsds"})'></div>
+    <div class="d-flex" *daPermission="'ACCOUNT_ADMIN'" [a.b]='t("21", {value: "dsds"})'>
+      {{t('Bob\'s Burgers')}} {{t('another(test)')}} {{t('last "one"')}}
+    </div>
 
   </div>
 </ng-container>

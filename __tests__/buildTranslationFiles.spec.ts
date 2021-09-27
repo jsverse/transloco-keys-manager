@@ -106,6 +106,11 @@ describe('buildTranslationFiles', () => {
 
       it('should work with ngContainer', () => {
         let expected = gKeys(39);
+        // See https://github.com/ngneat/transloco-keys-manager/issues/87
+        expected["Bob's Burgers"] =
+          expected['another(test)'] =
+          expected['last "one"'] =
+            m;
         buildTranslationFiles(config);
         assertResult(type, expected);
       });
