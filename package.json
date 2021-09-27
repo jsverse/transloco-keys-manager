@@ -4,8 +4,6 @@
   "description": "Extract translatable keys from projects that uses Transloco",
   "main": "public_api.js",
   "scripts": {
-    "contributors:add": "all-contributors add",
-    "contributors:generate": "all-contributors init",
     "release": "standard-version --infile ./CHANGELOG.md",
     "commit": "git-cz",
     "test": "PRODUCTION=true jest",
@@ -41,6 +39,7 @@
     "cli",
     "webpack"
   ],
+  "author": "Shahar Kazaz",
   "maintainers": [
     {
       "name": "Shahar Kazaz"
@@ -100,7 +99,6 @@
     "@types/deep-diff": "1.0.1",
     "@types/flat": "5.0.2",
     "@types/jest": "27.0.1",
-    "all-contributors-cli": "6.17.3",
     "git-cz": "4.7.0",
     "husky": "4.3.0",
     "import-conductor": "2.2.5",

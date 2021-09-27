@@ -496,32 +496,3 @@ You can also chain several namespaces:
     <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt="Netanel Basal"/><br /><sub><b>Netanel Basal</b></sub></a><br /></td>
   </tr>
 </table>
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/itayod"><img src="https://avatars2.githubusercontent.com/u/6719615?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Itay Oded</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=itayod" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/darkv"><img src="https://avatars3.githubusercontent.com/u/582546?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Johann Werner</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=darkv" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=darkv" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/adgoncal"><img src="https://avatars1.githubusercontent.com/u/10856791?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Allan G</b></sub></a><br /><a href="#ideas-adgoncal" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/JerryDoubleU"><img src="https://avatars0.githubusercontent.com/u/16196252?v=4?s=100" width="100px;" alt=""/><br /><sub><b>JerryDoubleU</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=JerryDoubleU" title="Code">💻</a></td>
-    <td align="center"><a href="http://site15.ru"><img src="https://avatars1.githubusercontent.com/u/4127109?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ILshat Khamitov</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=EndyKaufman" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=EndyKaufman" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://gitlab.com/MikeDabrowski"><img src="https://avatars0.githubusercontent.com/u/17836911?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MikeDabrowski</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Documentation">📖</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=MikeDabrowski" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/maleet"><img src="https://avatars1.githubusercontent.com/u/3947730?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mart Leet</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/commits?author=maleet" title="Code">💻</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=maleet" title="Documentation">📖</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/JustinPierce"><img src="https://avatars.githubusercontent.com/u/447286?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Justin Pierce</b></sub></a><br /><a href="https://github.com/ngneat/transloco-keys-manager/issues?q=author%3AJustinPierce" title="Bug reports">🐛</a> <a href="https://github.com/ngneat/transloco-keys-manager/commits?author=JustinPierce" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
