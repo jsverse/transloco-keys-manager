@@ -14,6 +14,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  isBindingPipe,
   isBoundText,
   isConditionalExpression,
   isElement,
@@ -73,8 +74,19 @@ export function traverse(
   }
 }
 
+function unwrapExpression(exp: AST): AST {
+  /*
+   * Handle pipes in interpolation
+   *
+   * @example
+   * {{ t('another(test)') | pipe1 | pipe2 }} will return the `t('another(test)')` node
+   * */
+  return isBindingPipe(exp) ? unwrapExpression(exp.exp) : exp;
+}
+
 function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
   return expressions
+    .map((exp) => unwrapExpression(exp))
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
