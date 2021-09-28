@@ -14,6 +14,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  isBindingPipe,
   isBoundText,
   isConditionalExpression,
   isElement,
@@ -75,6 +76,7 @@ export function traverse(
 
 function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
   return expressions
+    .map((exp) => (isBindingPipe(exp) ? exp.exp : exp))
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
