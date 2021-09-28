@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.0...v3.0.1) (2021-09-28)
+
+
+### Bug Fixes
+
+* 🐛 handle pipes in interpolation ([#111](https://github.com/ngneat/transloco-keys-manager/issues/111)) ([bfbfec3](https://github.com/ngneat/transloco-keys-manager/commit/bfbfec376f8f4dbff707ae0164bbf5d5e28648e8)), closes [#109](https://github.com/ngneat/transloco-keys-manager/issues/109) [#109](https://github.com/ngneat/transloco-keys-manager/issues/109)
+
 ## [3.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.5...v3.0.0) (2021-09-27)
 
 
