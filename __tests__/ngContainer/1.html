@@ -116,7 +116,7 @@
     </div>
 
     <div class="d-flex" *daPermission="'ACCOUNT_ADMIN'" [a.b]='t("21", {value: "dsds"})'>
-      {{t('Bob\'s Burgers')}} {{t('another(test)') | json}} {{t('last "one"')}}
+      {{t('Bob\'s Burgers')}} {{t('another(test)') | json}} {{t('last "one"') | json | lowercase }}
     </div>
 
   </div>

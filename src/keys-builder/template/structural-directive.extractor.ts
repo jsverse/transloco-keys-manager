@@ -74,9 +74,13 @@ export function traverse(
   }
 }
 
+function unwrapExpression(exp: AST): AST {
+  return isBindingPipe(exp) ? unwrapExpression(exp.exp) : exp;
+}
+
 function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
   return expressions
-    .map((exp) => (isBindingPipe(exp) ? exp.exp : exp))
+    .map((exp) => unwrapExpression(exp))
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
