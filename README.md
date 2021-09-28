@@ -496,3 +496,7 @@ You can also chain several namespaces:
     <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt="Netanel Basal"/><br /><sub><b>Netanel Basal</b></sub></a><br /></td>
   </tr>
 </table>
+
+## Contributors ✨
+
+Thank goes to all these wonderful [people who contributed](https://github.com/ngneat/transloco-keys-manager/graphs/contributors) ❤️
