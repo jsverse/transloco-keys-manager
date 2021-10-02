@@ -153,13 +153,13 @@ describe('resolveConfig', () => {
         translationsPath: 'noFolder',
         command: 'find',
       });
-      shouldFail('Translations path', 'pathDoesntExists');
+      shouldFail('Translations', 'pathDoesntExists');
       resolveConfig({
         input: ['comments'],
         translationsPath: 'comments/1.html',
         command: 'find',
       });
-      shouldFail('Translations path', 'pathIsNotDir');
+      shouldFail('Translations', 'pathIsNotDir');
     });
   });
 

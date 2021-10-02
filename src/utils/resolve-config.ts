@@ -96,7 +96,7 @@ function validateDirectories({ input, translationsPath, command }: Config) {
 
   if (command === 'find' && !isDirectory(translationsPath)) {
     invalidPath = true;
-    log(translationsPath, 'Translations path');
+    log(translationsPath, 'Translations');
   }
 
   invalidPath && process.exit();
