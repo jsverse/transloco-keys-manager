@@ -11,8 +11,10 @@
     "prebuild": "npm run clean:dist",
     "build": "tsc",
     "postbuild": "node ./scripts/post-build.js",
-    "build:dev": "tsc && npm run postbuild",
-    "clean:dist": "rm -rf dist",
+    "prebuild:dev": "npm run clean:dist",
+    "build:dev": "tsc",
+    "postbuild:dev": "node ./scripts/post-build.js dev",
+    "clean:dist": "rimraf dist",
     "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
     "conduct": "import-conductor"
   },
@@ -106,7 +108,8 @@
     "lint-staged": "10.2.11",
     "lodash.isequal": "4.5.0",
     "prettier": "2.4.1",
-    "standard-version": "9.0.0",
+    "rimraf": "3.0.2",
+    "standard-version": "9.3.1",
     "terser": "5.8.0",
     "typescript": "4.4.3"
   }

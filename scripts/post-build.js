@@ -2,8 +2,11 @@ const fs = require('fs');
 const glob = require("glob");
 const terser = require("terser");
 
+const [,,mode] = process.argv;
 copyAssets();
-minify();
+if (mode !== 'dev') {
+    minify();
+}
 
 function copyAssets() {
     const {scripts, devDependencies, ['lint-staged']: _, config, husky, ...cleanPackage} = JSON.parse(fs.readFileSync('package.json').toString());
