@@ -1,5 +1,4 @@
 // import-conductor-skip
-
 jest.mock('../src/utils/resolve-project-base-path');
 import * as fs from 'fs-extra';
 
@@ -9,35 +8,72 @@ import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
 const sourceRoot = '__tests__';
 
-const m = 'missing';
+const defaultValue = 'missing';
 
-function gKeys(len: number, prefix?: string) {
-  let expected = {};
-  for (let i = 1; i <= len; i++) {
-    expected[prefix ? `${prefix}.${i}` : i] = m;
+function getRangeKeys({
+  start = 1,
+  end,
+  prefix,
+}: {
+  start?: number;
+  end: number;
+  prefix?: string;
+}): { [index: string]: string } {
+  const keys = {};
+  for (let i = start; i <= end; i++) {
+    keys[prefix ? `${prefix}.${i}` : i] = defaultValue;
   }
-
-  return expected;
+  return keys;
 }
 
-function gConfig(type, config = {}) {
+function gConfig(type: TranslationCategory, config = {}) {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
     langs: ['en', 'es', 'it'],
-    defaultValue: 'missing',
+    defaultValue: defaultValue,
     ...config,
   };
 }
 
-function assertResult(type: string, expected: object, path?: string) {
-  const translation = fs.readJsonSync(
-    `./${sourceRoot}/${type}/i18n/${path || ''}en.json`
-  );
-  expect(translation).toEqual(expected);
+type TranslationCategory =
+  | 'pipe'
+  | 'directive'
+  | 'ngContainer'
+  | 'ngTemplate'
+  | 'read'
+  | 'service'
+  | 'marker'
+  | 'inline-template'
+  | 'unflat'
+  | 'unflat-sort'
+  | 'unflat-problematic-keys'
+  | 'multi-input'
+  | 'comments';
+
+type assertTranslationParams = {
+  type: TranslationCategory;
+  expected: object;
+  path?: string;
+};
+
+function assertTranslation({ type, expected, path }: assertTranslationParams) {
+  expect(loadTranslationFile(type, path)).toEqual(expected);
 }
 
-function removeI18nFolder(type: string) {
+function assertPartialTranslation({
+  type,
+  expected,
+  path,
+}: assertTranslationParams) {
+  expect(loadTranslationFile(type, path)).toMatchObject(expected);
+}
+
+function loadTranslationFile(type: TranslationCategory, path?: string) {
+  return fs.readJsonSync(`./${sourceRoot}/${type}/i18n/${path || ''}en.json`);
+}
+
+function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
@@ -50,21 +86,19 @@ describe('buildTranslationFiles', () => {
 
   describe('Template Extraction', () => {
     describe('Pipe', () => {
-      const type = 'pipe';
+      const type: TranslationCategory = 'pipe';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with pipe', () => {
-        let expected = gKeys(48);
-        expected['49.50.51.52'] = m;
-        for (let i = 53; i <= 62; i++) {
-          expected[i] = m;
-        }
-        expected['63.64.65'] = m;
-        for (let i = 66; i < 68; i++) {
-          expected[i] = m;
-        }
+        const expected = {
+          ...getRangeKeys({ end: 48 }),
+          '49.50.51.52': defaultValue,
+          '63.64.65': defaultValue,
+          ...getRangeKeys({ start: 53, end: 62 }),
+          ...getRangeKeys({ start: 66, end: 67 }),
+        };
         [
           'Restore Options',
           'Processing archive...',
@@ -72,91 +106,91 @@ describe('buildTranslationFiles', () => {
           'admin.2',
           'admin.3',
         ].forEach((nonNumericKey) => {
-          expected[nonNumericKey] = m;
+          expected[nonNumericKey] = defaultValue;
         });
 
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
     });
 
     describe('Directive', () => {
-      const type = 'directive';
+      const type: TranslationCategory = 'directive';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with directive', () => {
-        const expected = gKeys(23);
+        const expected = getRangeKeys({ end: 23 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
-            expected[nonNumericKey] = m;
+            expected[nonNumericKey] = defaultValue;
           }
         );
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
     });
 
     describe('ngContainer', () => {
-      const type = 'ngContainer';
+      const type: TranslationCategory = 'ngContainer';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngContainer', () => {
-        let expected = gKeys(39);
+        let expected = getRangeKeys({ end: 39 });
         // See https://github.com/ngneat/transloco-keys-manager/issues/87
         expected["Bob's Burgers"] =
           expected['another(test)'] =
           expected['last "one"'] =
-            m;
+            defaultValue;
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
 
       it('should work with scopes', () => {
         let expected = {
-          '1': 'missing',
-          '2.1': 'missing',
-          '3.1': 'missing',
-          '4': 'missing',
-          '5': 'missing',
+          '1': defaultValue,
+          '2.1': defaultValue,
+          '3.1': defaultValue,
+          '4': defaultValue,
+          '5': defaultValue,
         };
 
         buildTranslationFiles(config);
-        assertResult(type, expected, 'admin-page/');
+        assertTranslation({ type, expected, path: 'admin-page/' });
       });
     });
 
     describe('ngTemplate', () => {
-      const type = 'ngTemplate';
+      const type: TranslationCategory = 'ngTemplate';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = gKeys(35);
+        let expected = getRangeKeys({ end: 35 });
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
 
       it('should work with scopes', () => {
         let expected = {
-          '1': 'missing',
-          '2.1': 'missing',
-          '3.1': 'missing',
-          '4': 'missing',
-          '5': 'missing',
+          '1': defaultValue,
+          '2.1': defaultValue,
+          '3.1': defaultValue,
+          '4': defaultValue,
+          '5': defaultValue,
         };
 
         buildTranslationFiles(config);
-        assertResult(type, expected, 'todos-page/');
+        assertTranslation({ type, expected, path: 'todos-page/' });
       });
     });
 
     describe('read', () => {
-      const type = 'read';
+      const type: TranslationCategory = 'read';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
@@ -164,70 +198,104 @@ describe('buildTranslationFiles', () => {
       it('should work with read', () => {
         const expected = {
           global: {
-            ...gKeys(3),
-            ...gKeys(23, 'site-header.navigation.route'),
-            ...gKeys(5, 'site-header.navigation'),
-            ...gKeys(10, 'right-pane.actions'),
-            ...gKeys(1, 'templates.translations'),
-            ...gKeys(3, 'nested.translation'),
-            ...gKeys(3, 'some.other.nested.that-is-tested'),
-            ...gKeys(12, 'ternary.nested'),
-            ...gKeys(2, 'nested'),
-            ...gKeys(2, 'site-header.navigation.route.nested'),
+            ...getRangeKeys({ end: 3 }),
+            ...getRangeKeys({
+              end: 23,
+              prefix: 'site-header.navigation.route',
+            }),
+            ...getRangeKeys({ end: 5, prefix: 'site-header.navigation' }),
+            ...getRangeKeys({ end: 10, prefix: 'right-pane.actions' }),
+            ...getRangeKeys({ end: 1, prefix: 'templates.translations' }),
+            ...getRangeKeys({ end: 3, prefix: 'nested.translation' }),
+            ...getRangeKeys({
+              end: 3,
+              prefix: 'some.other.nested.that-is-tested',
+            }),
+            ...getRangeKeys({ end: 12, prefix: 'ternary.nested' }),
+            ...getRangeKeys({ end: 2, prefix: 'nested' }),
+            ...getRangeKeys({
+              end: 2,
+              prefix: 'site-header.navigation.route.nested',
+            }),
           },
           todos: {
-            ...gKeys(2, 'numbers'),
+            ...getRangeKeys({ end: 2, prefix: 'numbers' }),
           },
         };
 
         buildTranslationFiles(config);
-        assertResult(type, expected.global);
-        assertResult(type, expected.todos, 'todos-page/');
+        assertTranslation({ type, expected: expected.global });
+        assertTranslation({
+          type,
+          expected: expected.todos,
+          path: 'todos-page/',
+        });
       });
     });
   });
 
   describe('Typescript Extraction', () => {
     describe('service', () => {
-      const type = 'service';
+      const type: TranslationCategory = 'service';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with service', () => {
-        let expected = gKeys(19);
-        expected['20.21.22.23'] = 'missing';
-        expected['24'] = 'missing';
-        expected['25'] = 'missing';
+        const expected = {
+          ...getRangeKeys({ end: 19 }),
+          ...{ '20.21.22.23': defaultValue },
+          ...getRangeKeys({ start: 24, end: 33 }),
+        };
+
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
 
       it('should work with scopes', () => {
         const expected = {
           todos: {
-            '1': 'missing',
-            '2.1': 'missing',
+            '1': defaultValue,
+            '2.1': defaultValue,
           },
           admin: {
-            '3.1': 'missing',
-            '4': 'missing',
+            '3.1': defaultValue,
+            '4': defaultValue,
           },
           nested: {
-            '5': 'missing',
-            '6.1': 'missing',
+            '5': defaultValue,
+            '6.1': defaultValue,
           },
         };
 
         buildTranslationFiles(config);
-        assertResult(type, expected.todos, 'todos-page/');
-        assertResult(type, expected.admin, 'admin-page/');
-        assertResult(type, expected.nested, 'nested/scope/');
+        assertTranslation({
+          type,
+          expected: expected.todos,
+          path: 'todos-page/',
+        });
+        assertTranslation({
+          type,
+          expected: expected.admin,
+          path: 'admin-page/',
+        });
+        assertTranslation({
+          type,
+          expected: expected.nested,
+          path: 'nested/scope/',
+        });
+      });
+
+      it('should work when passing an array of keys', () => {
+        const expected = getRangeKeys({ start: 26, end: 33 });
+
+        buildTranslationFiles(config);
+        assertPartialTranslation({ type, expected });
       });
     });
 
     describe('marker', () => {
-      const type = 'marker';
+      const type: TranslationCategory = 'marker';
 
       beforeEach(() => removeI18nFolder(type));
 
@@ -235,37 +303,37 @@ describe('buildTranslationFiles', () => {
         const config = gConfig(type);
 
         let expected = {};
-        expected['username4'] = 'missing';
-        expected['password4'] = 'missing';
-        expected['username'] = 'missing';
-        expected['password'] = 'missing';
+        expected['username4'] = defaultValue;
+        expected['password4'] = defaultValue;
+        expected['username'] = defaultValue;
+        expected['password'] = defaultValue;
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
     });
 
     describe('inline template', () => {
-      const type = 'inline-template';
+      const type: TranslationCategory = 'inline-template';
       const config = gConfig(type);
 
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with inline templates', () => {
-        const expected = gKeys(23);
+        const expected = getRangeKeys({ end: 23 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
-            expected[nonNumericKey] = m;
+            expected[nonNumericKey] = defaultValue;
           }
         );
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
     });
   });
 
   describe('Config', () => {
     describe('unflat', () => {
-      const type = 'unflat';
+      const type: TranslationCategory = 'unflat';
       const config = gConfig(type, { unflat: true });
 
       beforeEach(() => removeI18nFolder(type));
@@ -274,18 +342,18 @@ describe('buildTranslationFiles', () => {
         const expected = {
           global: {
             a: {
-              '1': m,
+              '1': defaultValue,
             },
           },
         };
         buildTranslationFiles(config);
 
-        assertResult(type, expected.global);
+        assertTranslation({ type, expected: expected.global });
       });
     });
 
     describe('unflat-sort', () => {
-      const type = 'unflat-sort';
+      const type: TranslationCategory = 'unflat-sort';
       const config = gConfig(type, { unflat: true, sort: true });
 
       beforeEach(() => removeI18nFolder(type));
@@ -295,25 +363,25 @@ describe('buildTranslationFiles', () => {
           global: {
             b: {
               b: {
-                a: m,
-                b: m,
+                a: defaultValue,
+                b: defaultValue,
               },
               c: {
-                a: m,
-                p: m,
-                x: m,
+                a: defaultValue,
+                p: defaultValue,
+                x: defaultValue,
               },
             },
           },
         };
         buildTranslationFiles(config);
 
-        assertResult(type, expected.global);
+        assertTranslation({ type, expected: expected.global });
       });
     });
 
     describe('Unflat problematic keys', () => {
-      const type = 'unflat-problematic-keys';
+      const type: TranslationCategory = 'unflat-problematic-keys';
       const config = gConfig(type, { unflat: true });
 
       beforeEach(() => removeI18nFolder(type));
@@ -323,18 +391,18 @@ describe('buildTranslationFiles', () => {
 
         const expected = {
           global: {
-            a: m,
-            b: m,
-            c: m,
+            a: defaultValue,
+            b: defaultValue,
+            c: defaultValue,
             d: {
-              '1': m,
-              '2': m,
+              '1': defaultValue,
+              '2': defaultValue,
             },
             e: {
-              a: m,
-              aa: m,
+              a: defaultValue,
+              aa: defaultValue,
             },
-            f: m,
+            f: defaultValue,
           },
         };
         const expectedProblematicKeys = [
@@ -355,12 +423,12 @@ describe('buildTranslationFiles', () => {
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
-        assertResult(type, expected.global);
+        assertTranslation({ type, expected: expected.global });
       });
     });
 
     describe('Multi Inputs', () => {
-      const type = 'multi-input';
+      const type: TranslationCategory = 'multi-input';
       const config = gConfig(type, {
         input: [`${type}/folder-1`, `${type}/folder-2`],
       });
@@ -368,28 +436,28 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('show work with multiple inputs', () => {
-        let expected = gKeys(39);
+        let expected = getRangeKeys({ end: 39 });
         buildTranslationFiles(config);
-        assertResult(type, expected);
+        assertTranslation({ type, expected });
       });
 
       it('should work with scopes', () => {
         let expected = {
-          '1': 'missing',
-          '2.1': 'missing',
-          '3.1': 'missing',
-          '4': 'missing',
-          '5': 'missing',
+          '1': defaultValue,
+          '2.1': defaultValue,
+          '3.1': defaultValue,
+          '4': defaultValue,
+          '5': defaultValue,
         };
 
         buildTranslationFiles(config);
-        assertResult(type, expected, 'admin-page/');
+        assertTranslation({ type, expected, path: 'admin-page/' });
       });
     });
   });
 
   describe('comments', () => {
-    const type = 'comments';
+    const type: TranslationCategory = 'comments';
     const config = gConfig(type);
 
     beforeEach(() => removeI18nFolder(type));
@@ -397,62 +465,62 @@ describe('buildTranslationFiles', () => {
     it('show work with comments', () => {
       const expected = {
         global: {
-          'a.some.key': m,
-          'b.some.key': m,
-          'c.some.key': m,
-          'need.transloco': m,
-          '1.some': m,
-          ...gKeys(8),
-          '10': m,
-          '13': m,
-          '11.12': m,
-          'hey.man': m,
-          'whats.app': m,
-          '101': m,
-          '111.12': m,
-          hello: m,
-          'hey1.man': m,
-          'whats1.app': m,
-          hello1: m,
-          '131': m,
-          ...gKeys(5, '10'),
-          '10.6.7': m,
-          '11': m,
-          '11.1': m,
-          '11.2.3': m,
-          '200': m,
-          '201': m,
-          '202': m,
-          '203.204': m,
-          '205': m,
-          '206': m,
-          '207.208': m,
-          '209': m,
-          '210': m,
-          '211': m,
-          '212': m,
-          '213.214': m,
-          '215': m,
-          '216': m,
-          '217.218': m,
-          'from.comment': m,
-          'pretty.cool.da': m,
-          ...gKeys(4, 'global'),
-          ...gKeys(8, 'outer.read'),
-          ...gKeys(4, 'inner.read'),
-          ...gKeys(2, 'another.container'),
+          'a.some.key': defaultValue,
+          'b.some.key': defaultValue,
+          'c.some.key': defaultValue,
+          'need.transloco': defaultValue,
+          '1.some': defaultValue,
+          ...getRangeKeys({ end: 8 }),
+          '10': defaultValue,
+          '13': defaultValue,
+          '11.12': defaultValue,
+          'hey.man': defaultValue,
+          'whats.app': defaultValue,
+          '101': defaultValue,
+          '111.12': defaultValue,
+          hello: defaultValue,
+          'hey1.man': defaultValue,
+          'whats1.app': defaultValue,
+          hello1: defaultValue,
+          '131': defaultValue,
+          ...getRangeKeys({ end: 5, prefix: '10' }),
+          '10.6.7': defaultValue,
+          '11': defaultValue,
+          '11.1': defaultValue,
+          '11.2.3': defaultValue,
+          '200': defaultValue,
+          '201': defaultValue,
+          '202': defaultValue,
+          '203.204': defaultValue,
+          '205': defaultValue,
+          '206': defaultValue,
+          '207.208': defaultValue,
+          '209': defaultValue,
+          '210': defaultValue,
+          '211': defaultValue,
+          '212': defaultValue,
+          '213.214': defaultValue,
+          '215': defaultValue,
+          '216': defaultValue,
+          '217.218': defaultValue,
+          'from.comment': defaultValue,
+          'pretty.cool.da': defaultValue,
+          ...getRangeKeys({ end: 4, prefix: 'global' }),
+          ...getRangeKeys({ end: 8, prefix: 'outer.read' }),
+          ...getRangeKeys({ end: 4, prefix: 'inner.read' }),
+          ...getRangeKeys({ end: 2, prefix: 'another.container' }),
         },
         admin: {
-          '1': m,
-          '2.3': m,
-          '4': m,
-          '5555': m,
+          '1': defaultValue,
+          '2.3': defaultValue,
+          '4': defaultValue,
+          '5555': defaultValue,
         },
       };
       buildTranslationFiles(config);
 
-      assertResult(type, expected.global);
-      assertResult(type, expected.admin, 'admin/');
+      assertTranslation({ type, expected: expected.global });
+      assertTranslation({ type, expected: expected.admin, path: 'admin/' });
     });
   });
 });

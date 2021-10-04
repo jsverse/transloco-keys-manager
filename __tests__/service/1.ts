@@ -1,15 +1,33 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatExpansionPanel } from '@angular/material';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatExpansionPanel } from '@angular/material';
 import { ID } from '@datorama/akita';
+import {
+  TranslocoService,
+  translate,
+  TRANSLOCO_SCOPE,
+} from '@ngneat/transloco';
 import { untilDestroyed } from 'ngx-take-until-destroy';
-import { TranslocoService, translate, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 /** t(18) * */
 @Component({
   selector: 'nav-partitions',
   templateUrl: './partitions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{provide: TRANSLOCO_SCOPE, useValue: {scope: 'admin-page', alias: "adminPage" }}]
+  providers: [
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: { scope: 'admin-page', alias: 'adminPage' },
+    },
+  ],
 })
 export class NavPartitionsComponent implements OnInit, OnDestroy {
   brandDataSourceId: ID;
@@ -19,6 +37,8 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
     label2: this.transloco.translate(`1`),
     id: DataSegmentation[key],
   }));
+  arrayResult: string[];
+  arrayResult2: string[];
   /** me no */
   private dispose: any[] = [];
   /**
@@ -28,23 +48,39 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private formBuilder: FormBuilder,
 
-    public transloco: TranslocoService,
+    public transloco: TranslocoService
   ) {
-    this.transloco.setActive(`1`)
+    this.transloco.setActive(`1`);
     this.fff = translate('15');
-    this.aacc = this.transloco
-      .translate('16');
-    this.aaccd = transloco.translate('17')
+    this.aacc = this.transloco.translate('16');
+    this.aaccd = transloco.translate('17');
+    const a = 'asdf';
+    const b = 'asdf';
+    const c = 'asdf';
+    transloco
+      .selectTranslate([a, b, c])
+      .subscribe((t) => (this.arrayResult = t));
+    transloco
+      .selectTranslate(['26', '27', '28'])
+      .subscribe((t) => (this.arrayResult = t));
+    this.arrayResult2 = transloco.translate(['29', '30', '31']);
+    this.arrayResult2 = this.transloco.translate([
+      `32`,
+      nope,
+      '33',
+      `dontTake${nope}`,
+    ]);
   }
 
-  ngOnInit(): void {   /**
-   * t(20.21.22.23, 24, 25)
-   * */
+  ngOnInit(): void {
+    /**
+     * t(20.21.22.23, 24, 25)
+     * */
     this.form = this.formBuilder.group({
       segmentationBucketsNum: [metadata.segmentationBucketsNum || 0],
       segmentationFields: [metadata.segmentationFields || []],
-      dd: translate('13', { id: 'fdfd'}, 'ess'),
-      dfjdlfd: this.transloco.translate("14")
+      dd: translate('13', { id: 'fdfd' }, 'ess'),
+      dfjdlfd: this.transloco.translate('14'),
     });
 
     this.form
@@ -52,7 +88,7 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((res: number) => {
         this.cdr.detectChanges();
-        this.transloco = this.transloco.translate(`2`),
+        this.transloco = this.transloco.translate(`2`);
       });
 
     this.form
@@ -62,16 +98,21 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
 
-    this.transloco.translate("")
+    this.transloco.translate('');
     this.form
       .get('shouldUsePartitions')
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((res: boolean) => {
         if (res) {
-          this.transloco.translate("5")
-          this.form.patchValue({ segmentationBucketsNum: this.transloco.translate(`3`) });
+          this.transloco.translate('5');
+          this.form.patchValue({
+            segmentationBucketsNum: this.transloco.translate(`3`),
+          });
         } else {
-          this.form.patchValue({ segmentationFields: [this.transloco.translate(`4`)], segmentationBucketsNum: 0 });
+          this.form.patchValue({
+            segmentationFields: [this.transloco.translate(`4`)],
+            segmentationBucketsNum: 0,
+          });
           this.activeIds = [];
         }
 
@@ -80,17 +121,14 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
 
     this.dispose.push(
       autorun(() => {
-          translate('11');
-        }
+        translate('11');
       }),
       autorun(() => {
-          const fields = toJS(this.lightConnectStore.segmentationFields);
-            segmentationFields.patchValue(fields);
-            this.a =           translate('12');
-            this.form.get('shouldUsePartitions').patchValue(true);
-            this.cdr.detectChanges();
-          }
-        }
+        const fields = toJS(this.lightConnectStore.segmentationFields);
+        segmentationFields.patchValue(fields);
+        this.a = translate('12');
+        this.form.get('shouldUsePartitions').patchValue(true);
+        this.cdr.detectChanges();
       }),
       autorun(() => {
         this.isDimensionOnly = this.lightConnectStore.isDimensionOnly;
@@ -100,37 +138,43 @@ export class NavPartitionsComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.brandDataSourceId = this.$state.params['bdsi'] || this.transloco.translate('6', {}, 'en');
-    this.dataSegmentation.valueChanges.pipe(untilDestroyed(this)).subscribe((res: string) => {
-      this.lightConnectStore.setDataSegmentation(res);
-      this.transloco.translate('7', {hey: 'dsds'}, 'es');
-    });
+    this.brandDataSourceId =
+      this.$state.params['bdsi'] || this.transloco.translate('6', {}, 'en');
+    this.dataSegmentation.valueChanges
+      .pipe(untilDestroyed(this))
+      .subscribe((res: string) => {
+        this.lightConnectStore.setDataSegmentation(res);
+        this.transloco.translate('7', { hey: 'dsds' }, 'es');
+      });
 
-    const dataSegmentation = this.lightConnectStore.dataPreview.metadata.dataSegmentation;
+    const dataSegmentation =
+      this.lightConnectStore.dataPreview.metadata.dataSegmentation;
     if (!isNil(dataSegmentation)) {
       this.dataSegmentation.patchValue(dataSegmentation);
     }
   }
 
   ngOnDestroy(): void {
-    const f = this.transloco.translate('8', {id: 1});
+    const f = this.transloco.translate('8', { id: 1 });
     if (this.dispose) {
       this.dispose.forEach((i) => i());
     }
   }
 
   get iconDisabledColor() {
-    return this.transloco.translate("9", {id: 1});
-
+    return this.transloco.translate('9', { id: 1 });
   }
 
   get textDisabledColor() {
-    return this.form.get('shouldUsePartitions').value ? 'primary-400' : 'primary-200';
+    return this.form.get('shouldUsePartitions').value
+      ? 'primary-400'
+      : 'primary-200';
   }
 
   get shouldDisableAccordion() {
-    const shouldUsePartitions = this.form && this.form.get('shouldUsePartitions');
-    this.cc = this.transloco.translate("10", {id: 1, d: 'dsds'});
+    const shouldUsePartitions =
+      this.form && this.form.get('shouldUsePartitions');
+    this.cc = this.transloco.translate('10', { id: 1, d: 'dsds' });
 
     return !shouldUsePartitions || !shouldUsePartitions.value;
   }
