@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.1...v3.0.2) (2021-10-07)
+
+
+### Bug Fixes
+
+* 🐛 Keys Extractor does not extract key arrays ([#112](https://github.com/ngneat/transloco-keys-manager/issues/112)) ([852ccee](https://github.com/ngneat/transloco-keys-manager/commit/852ccee9a8ffda5dd71657649c9a93be79b9facf))
+
 ### [3.0.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.0...v3.0.1) (2021-09-28)
 
 
