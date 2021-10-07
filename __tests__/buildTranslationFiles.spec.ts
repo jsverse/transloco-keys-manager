@@ -10,7 +10,7 @@ const sourceRoot = '__tests__';
 
 const defaultValue = 'missing';
 
-function getRangeKeys({
+function generateKeys({
   start = 1,
   end,
   prefix,
@@ -51,11 +51,11 @@ type TranslationCategory =
   | 'multi-input'
   | 'comments';
 
-type assertTranslationParams = {
+interface assertTranslationParams {
   type: TranslationCategory;
   expected: object;
   path?: string;
-};
+}
 
 function assertTranslation({ type, expected, path }: assertTranslationParams) {
   expect(loadTranslationFile(type, path)).toEqual(expected);
@@ -93,11 +93,11 @@ describe('buildTranslationFiles', () => {
 
       it('should work with pipe', () => {
         const expected = {
-          ...getRangeKeys({ end: 48 }),
+          ...generateKeys({ end: 48 }),
           '49.50.51.52': defaultValue,
+          ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...getRangeKeys({ start: 53, end: 62 }),
-          ...getRangeKeys({ start: 66, end: 67 }),
+          ...generateKeys({ start: 66, end: 67 }),
         };
         [
           'Restore Options',
@@ -121,7 +121,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with directive', () => {
-        const expected = getRangeKeys({ end: 23 });
+        const expected = generateKeys({ end: 23 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
@@ -139,7 +139,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngContainer', () => {
-        let expected = getRangeKeys({ end: 39 });
+        let expected = generateKeys({ end: 39 });
         // See https://github.com/ngneat/transloco-keys-manager/issues/87
         expected["Bob's Burgers"] =
           expected['another(test)'] =
@@ -170,7 +170,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = getRangeKeys({ end: 35 });
+        let expected = generateKeys({ end: 35 });
         buildTranslationFiles(config);
         assertTranslation({ type, expected });
       });
@@ -198,28 +198,28 @@ describe('buildTranslationFiles', () => {
       it('should work with read', () => {
         const expected = {
           global: {
-            ...getRangeKeys({ end: 3 }),
-            ...getRangeKeys({
+            ...generateKeys({ end: 3 }),
+            ...generateKeys({
               end: 23,
               prefix: 'site-header.navigation.route',
             }),
-            ...getRangeKeys({ end: 5, prefix: 'site-header.navigation' }),
-            ...getRangeKeys({ end: 10, prefix: 'right-pane.actions' }),
-            ...getRangeKeys({ end: 1, prefix: 'templates.translations' }),
-            ...getRangeKeys({ end: 3, prefix: 'nested.translation' }),
-            ...getRangeKeys({
+            ...generateKeys({ end: 5, prefix: 'site-header.navigation' }),
+            ...generateKeys({ end: 10, prefix: 'right-pane.actions' }),
+            ...generateKeys({ end: 1, prefix: 'templates.translations' }),
+            ...generateKeys({ end: 3, prefix: 'nested.translation' }),
+            ...generateKeys({
               end: 3,
               prefix: 'some.other.nested.that-is-tested',
             }),
-            ...getRangeKeys({ end: 12, prefix: 'ternary.nested' }),
-            ...getRangeKeys({ end: 2, prefix: 'nested' }),
-            ...getRangeKeys({
+            ...generateKeys({ end: 12, prefix: 'ternary.nested' }),
+            ...generateKeys({ end: 2, prefix: 'nested' }),
+            ...generateKeys({
               end: 2,
               prefix: 'site-header.navigation.route.nested',
             }),
           },
           todos: {
-            ...getRangeKeys({ end: 2, prefix: 'numbers' }),
+            ...generateKeys({ end: 2, prefix: 'numbers' }),
           },
         };
 
@@ -243,9 +243,9 @@ describe('buildTranslationFiles', () => {
 
       it('should work with service', () => {
         const expected = {
-          ...getRangeKeys({ end: 19 }),
+          ...generateKeys({ end: 19 }),
           ...{ '20.21.22.23': defaultValue },
-          ...getRangeKeys({ start: 24, end: 33 }),
+          ...generateKeys({ start: 24, end: 33 }),
         };
 
         buildTranslationFiles(config);
@@ -287,7 +287,7 @@ describe('buildTranslationFiles', () => {
       });
 
       it('should work when passing an array of keys', () => {
-        const expected = getRangeKeys({ start: 26, end: 33 });
+        const expected = generateKeys({ start: 26, end: 33 });
 
         buildTranslationFiles(config);
         assertPartialTranslation({ type, expected });
@@ -319,7 +319,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with inline templates', () => {
-        const expected = getRangeKeys({ end: 23 });
+        const expected = generateKeys({ end: 23 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
@@ -436,7 +436,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('show work with multiple inputs', () => {
-        let expected = getRangeKeys({ end: 39 });
+        let expected = generateKeys({ end: 39 });
         buildTranslationFiles(config);
         assertTranslation({ type, expected });
       });
@@ -470,7 +470,7 @@ describe('buildTranslationFiles', () => {
           'c.some.key': defaultValue,
           'need.transloco': defaultValue,
           '1.some': defaultValue,
-          ...getRangeKeys({ end: 8 }),
+          ...generateKeys({ end: 8 }),
           '10': defaultValue,
           '13': defaultValue,
           '11.12': defaultValue,
@@ -483,7 +483,7 @@ describe('buildTranslationFiles', () => {
           'whats1.app': defaultValue,
           hello1: defaultValue,
           '131': defaultValue,
-          ...getRangeKeys({ end: 5, prefix: '10' }),
+          ...generateKeys({ end: 5, prefix: '10' }),
           '10.6.7': defaultValue,
           '11': defaultValue,
           '11.1': defaultValue,
@@ -505,10 +505,10 @@ describe('buildTranslationFiles', () => {
           '217.218': defaultValue,
           'from.comment': defaultValue,
           'pretty.cool.da': defaultValue,
-          ...getRangeKeys({ end: 4, prefix: 'global' }),
-          ...getRangeKeys({ end: 8, prefix: 'outer.read' }),
-          ...getRangeKeys({ end: 4, prefix: 'inner.read' }),
-          ...getRangeKeys({ end: 2, prefix: 'another.container' }),
+          ...generateKeys({ end: 4, prefix: 'global' }),
+          ...generateKeys({ end: 8, prefix: 'outer.read' }),
+          ...generateKeys({ end: 4, prefix: 'inner.read' }),
+          ...generateKeys({ end: 2, prefix: 'another.container' }),
         },
         admin: {
           '1': defaultValue,
