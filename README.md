@@ -2,8 +2,7 @@
  <img width="50%" height="50%" src="./logo.png">
 </p>
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
-[![Build Status](https://travis-ci.org/ngneat/transloco-keys-manager.svg?branch=master)](https://travis-ci.org/ngneat/transloco-keys-manager)
+[![Build Status](https://github.com/ngneat/transloco-keys-manager/actions/workflows/ci.yml/badge.svg)]()
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
 [![coc-badge](https://img.shields.io/badge/codeof-conduct-ff69b4.svg?style=flat-square)]()
