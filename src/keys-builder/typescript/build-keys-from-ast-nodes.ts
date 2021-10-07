@@ -1,10 +1,13 @@
 import {
+  isArrayLiteralExpression,
   isCallExpression,
-  isNoSubstitutionTemplateLiteral,
-  isStringLiteral,
   isIdentifier,
+  isNoSubstitutionTemplateLiteral,
   isPropertyAccessExpression,
+  isStringLiteral,
   Node,
+  NoSubstitutionTemplateLiteral,
+  StringLiteral,
 } from 'typescript';
 
 import { TSExtractorResult } from './types';
@@ -27,25 +30,35 @@ export function buildKeysFromASTNodes(
       if (allowedMethods.includes(methodName) === false) {
         continue;
       }
-      const data = {};
 
-      const [key, _, lang] = node.parent.arguments;
-      if (isStringLiteral(key) || isNoSubstitutionTemplateLiteral(key)) {
-        data['key'] = key.text;
+      const [keyNode, _, langNode] = node.parent.arguments;
+      let lang: string;
+      let keys: string[] = [];
+
+      if (isStringNode(langNode)) {
+        lang = langNode.text;
       }
 
-      if (!data['key']) continue;
-
-      if (
-        lang &&
-        (isStringLiteral(lang) || isNoSubstitutionTemplateLiteral(lang))
-      ) {
-        data['lang'] = lang.text;
+      if (isStringNode(keyNode)) {
+        keys = [keyNode.text];
+      } else if (isArrayLiteralExpression(keyNode)) {
+        keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
       }
 
-      result.push(data);
+      for (const key of keys) {
+        const data = lang ? { lang, key } : { key };
+        result.push(data);
+      }
     }
   }
 
   return result;
+}
+
+function isStringNode(
+  node: Node
+): node is StringLiteral | NoSubstitutionTemplateLiteral {
+  return (
+    node && (isStringLiteral(node) || isNoSubstitutionTemplateLiteral(node))
+  );
 }
