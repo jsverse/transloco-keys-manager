@@ -2,7 +2,7 @@
 
 jest.mock('../src/utils/resolve-project-base-path');
 jest.mock('@ngneat/transloco-utils');
-import { getConfig } from '@ngneat/transloco-utils';
+import { getGlobalConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
 import * as path from 'path';
 
@@ -22,7 +22,7 @@ describe('resolveConfig', () => {
     (resolveProjectBasePath as any).mockImplementation(() => {
       return { projectBasePath: sourceRoot };
     });
-    (getConfig as any).mockImplementation(() => ({}));
+    (getGlobalConfig as any).mockImplementation(() => ({}));
     spies = [
       jest.spyOn(process, 'exit').mockImplementation(noop as any),
       jest.spyOn(console, 'log').mockImplementation(noop as any),
@@ -77,9 +77,9 @@ describe('resolveConfig', () => {
     };
 
     beforeAll(() =>
-      (getConfig as any).mockImplementation(() => translocoConfig)
+      (getGlobalConfig as any).mockImplementation(() => translocoConfig)
     );
-    afterAll(() => (getConfig as any).mockImplementation(() => ({})));
+    afterAll(() => (getGlobalConfig as any).mockImplementation(() => ({})));
 
     it('should merge the default and the transloco config', () => {
       const expected = {

@@ -1,6 +1,6 @@
 import {
-  getConfig as getGlobalConfig,
-  TranslocoConfig as TranslocoGlobalConfig,
+  getGlobalConfig,
+  TranslocoGlobalConfig,
 } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
