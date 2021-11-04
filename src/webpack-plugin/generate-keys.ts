@@ -1,4 +1,4 @@
-import { TranslocoConfig } from '@ngneat/transloco-utils';
+import { TranslocoGlobalConfig } from '@ngneat/transloco-utils';
 import { unflatten } from 'flat';
 import * as glob from 'glob';
 import * as nodePath from 'path';
@@ -10,7 +10,7 @@ import { mergeDeep } from '../utils/object.utils';
 type Params = {
   translationPath: string;
   scopeToKeys: ScopeMap;
-  config: Config & TranslocoConfig;
+  config: Config & TranslocoGlobalConfig;
 };
 
 function filterLangs(config: Params['config']) {
