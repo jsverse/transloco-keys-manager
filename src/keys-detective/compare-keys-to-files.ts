@@ -1,4 +1,4 @@
-import { getConfig as translocoConfig } from '@ngneat/transloco-utils';
+import { getGlobalConfig } from '@ngneat/transloco-utils';
 import { applyChange, diff } from 'deep-diff';
 import { flatten } from 'flat';
 import * as glob from 'glob';
@@ -33,7 +33,7 @@ export function compareKeysToFiles({
   const translationFiles = getTranslationFilesPath(translationPath);
 
   let result = [];
-  const scopePaths = translocoConfig().scopePathMap || {};
+  const scopePaths = getGlobalConfig().scopePathMap || {};
   for (const [scope, path] of Object.entries(scopePaths)) {
     const keys = scopeToKeys[scope];
     if (keys) {
