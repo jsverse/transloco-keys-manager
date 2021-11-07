@@ -97,7 +97,7 @@ describe('buildTranslationFiles', () => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 67 }),
+          ...generateKeys({ start: 66, end: 70 }),
         };
         [
           'Restore Options',
