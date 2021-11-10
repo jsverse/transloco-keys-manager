@@ -5,9 +5,10 @@ import { ProjectType } from '../config';
 
 const angularConfig = ['angular.json', '.angular.json'];
 const workspaceConfig = ['workspace.json'];
+const projectConfig = ['project.json'];
 
-function searchConfig(searchPlaces: string[]) {
-  return cosmiconfigSync('', { searchPlaces }).search()?.config;
+function searchConfig(searchPlaces: string[], searchFrom: string = '') {
+  return cosmiconfigSync('', { searchPlaces }).search(searchFrom)?.config;
 }
 
 export function resolveProjectBasePath(projectName?: string): {
@@ -24,9 +25,19 @@ export function resolveProjectBasePath(projectName?: string): {
       projectName = projectName || config.defaultProject;
       const project = config.projects?.[projectName];
       if (project) {
-        sourceRoot = project.sourceRoot;
-        projectType = project.projectType;
-        break;
+        if (typeof project === 'object') {
+          sourceRoot = project.sourceRoot;
+          projectType = project.projectType;
+          break;
+        }
+        if (typeof project === 'string') {
+          const pConfig = searchConfig(projectConfig, project);
+          if (pConfig) {
+            sourceRoot = pConfig.sourceRoot;
+            projectType = pConfig.projectType;
+            break;
+          }
+        }
       }
     }
   }
