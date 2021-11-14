@@ -22,6 +22,13 @@
       </my-comp>
       <p ds="{{ '39' | transloco}}">dskdsds</p>
 
+      <ul>
+        <li>{{ variable | another : t('40') }}</li>
+        <li>{{ variable | another : t('41') | lowercase }}</li>
+        <li>{{ variable | another : {a: t('42')} | lowercase }}</li>
+        <li>{{ t('43') | another: t('44') }}</li>
+        <li>{{ t('45') | another: ('46' | transloco) }}</li>
+      </ul>
     </ng-container>
   </ng-container>
 </ng-container>

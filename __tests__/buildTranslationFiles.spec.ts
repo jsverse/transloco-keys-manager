@@ -139,7 +139,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngContainer', () => {
-        let expected = generateKeys({ end: 39 });
+        let expected = generateKeys({ end: 46 });
         // See https://github.com/ngneat/transloco-keys-manager/issues/87
         expected["Bob's Burgers"] =
           expected['another(test)'] =

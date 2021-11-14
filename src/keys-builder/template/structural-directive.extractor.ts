@@ -20,6 +20,7 @@ import {
   isElement,
   isInterpolation,
   isLiteralExpression,
+  isLiteralMap,
   isMethodCall,
   isNgTemplateTag,
   isSupportedNode,
@@ -75,14 +76,26 @@ export function traverse(
   }
 }
 
-function unwrapExpression(exp: AST): AST {
-  /*
-   * Handle pipes in interpolation
-   *
-   * @example
-   * {{ t('another(test)') | pipe1 | pipe2 }} will return the `t('another(test)')` node
-   * */
-  return isBindingPipe(exp) ? unwrapExpression(exp.exp) : exp;
+/**
+ * extract method calls from an AST.
+ *
+ * @example
+ * {{ t('another(test)') | pipe1 | pipe2 }} will return the `t('another(test)')` node.
+ *
+ * @example
+ * {{ data | pipe: t('key') }} will return the `t('key')` node.
+ */
+function unwrapExpression(exp: AST): AST[] {
+  if (isBindingPipe(exp)) {
+    return [
+      ...unwrapExpression(exp.exp),
+      ...exp.args.map((arg) => unwrapExpression(arg)).flat(),
+    ];
+  } else if (isLiteralMap(exp)) {
+    return exp.values.map((value) => unwrapExpression(value)).flat();
+  }
+
+  return [exp];
 }
 
 function getMethodUsages(
@@ -91,6 +104,7 @@ function getMethodUsages(
 ): ContainerMetaData[] {
   return expressions
     .map((exp) => unwrapExpression(exp))
+    .flat()
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
