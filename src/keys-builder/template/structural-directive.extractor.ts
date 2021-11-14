@@ -28,6 +28,7 @@ import {
 } from './utils';
 
 interface ContainerMetaData {
+  exp?: any;
   name: string;
   read?: string;
   /* We need to keep the element's span since we might have several method declarations with the same name */
@@ -45,7 +46,7 @@ export function traverse(
   config: TemplateExtractorConfig
 ) {
   for (const node of nodes) {
-    let methodUsages = [];
+    let methodUsages = [] as ContainerMetaData[];
 
     if (isBoundText(node)) {
       const { expressions } = (node.value as ASTWithSource)
@@ -84,7 +85,10 @@ function unwrapExpression(exp: AST): AST {
   return isBindingPipe(exp) ? unwrapExpression(exp.exp) : exp;
 }
 
-function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
+function getMethodUsages(
+  expressions: AST[],
+  containers: ContainerMetaData[]
+): ContainerMetaData[] {
   return expressions
     .map((exp) => unwrapExpression(exp))
     .filter((exp) => isTranslocoMethod(exp, containers))
@@ -128,7 +132,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
   /*
    * An ngTemplate element might have more then once implicit variables, we need to capture all of them.
    * */
-  let metadata: Omit<ContainerMetaData, 'spanOffset'>[];
+  let metadata: Omit<ContainerMetaData, 'spanOffset' | 'exp'>[];
   if (isNgTemplateTag(node)) {
     const implicitVars = node.variables.filter((attr) => !attr.value);
     let read = node.attributes.find(isReadAttr)?.value;
@@ -164,7 +168,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
 }
 
 function addKeysFromAst(
-  expressions: Array<{ exp: AST } & Pick<ContainerMetaData, 'read'>>,
+  expressions: Array<Pick<ContainerMetaData, 'exp' | 'read'>>,
   config: ExtractorConfig
 ): void {
   for (const { exp, read } of expressions) {
