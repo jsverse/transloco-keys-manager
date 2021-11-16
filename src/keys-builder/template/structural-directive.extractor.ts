@@ -48,7 +48,7 @@ export function traverse(
   config: TemplateExtractorConfig
 ) {
   for (const node of nodes) {
-    let methodUsages = [] as ContainerMetaData[];
+    let methodUsages: ContainerMetaData[] = [];
 
     if (isBoundText(node)) {
       const { expressions } = (node.value as ASTWithSource)
