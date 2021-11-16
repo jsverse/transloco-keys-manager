@@ -3,6 +3,7 @@ import {
   ASTWithSource,
   Interpolation,
   MethodCall,
+  RecursiveAstVisitor,
   TmplAstNode,
   TmplAstTemplate,
   TmplAstTextAttribute,
@@ -76,26 +77,22 @@ export function traverse(
   }
 }
 
-/**
- * extract method calls from an AST.
- *
- * @example
- * {{ t('another(test)') | pipe1 | pipe2 }} will return the `t('another(test)')` node.
- *
- * @example
- * {{ data | pipe: t('key') }} will return the `t('key')` node.
- */
-function unwrapExpression(exp: AST): AST[] {
-  if (isBindingPipe(exp)) {
-    return [
-      ...unwrapExpression(exp.exp),
-      ...exp.args.map((arg) => unwrapExpression(arg)).flat(),
-    ];
-  } else if (isLiteralMap(exp)) {
-    return exp.values.map((value) => unwrapExpression(value)).flat();
-  }
+class MethodCallUnwrapper extends RecursiveAstVisitor {
+  public expressions: MethodCall[] = [];
 
-  return [exp];
+  override visitMethodCall(method: MethodCall, context: any) {
+    this.expressions.push(method);
+    super.visitMethodCall(method, context);
+  }
+}
+
+/**
+ * Extract method calls from an AST.
+ */
+function unwrapMethodCalls(exp: AST): MethodCall[] {
+  const unwrapper = new MethodCallUnwrapper();
+  unwrapper.visit(exp);
+  return unwrapper.expressions;
 }
 
 function getMethodUsages(
@@ -103,7 +100,7 @@ function getMethodUsages(
   containers: ContainerMetaData[]
 ): ContainerMetaData[] {
   return expressions
-    .map((exp) => unwrapExpression(exp))
+    .map(unwrapMethodCalls)
     .flat()
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
