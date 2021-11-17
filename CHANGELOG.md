@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.1.1...v3.2.0) (2021-11-17)
+
+
+### Features
+
+* 🎸 detect keys in pipes args ([#115](https://github.com/ngneat/transloco-keys-manager/issues/115)) ([063c39f](https://github.com/ngneat/transloco-keys-manager/commit/063c39fd06586b29afe85664efb1f3859065e399)), closes [#114](https://github.com/ngneat/transloco-keys-manager/issues/114)
+
 ### [3.1.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.1.0...v3.1.1) (2021-11-04)
 
 
