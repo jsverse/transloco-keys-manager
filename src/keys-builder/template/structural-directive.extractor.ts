@@ -30,7 +30,7 @@ import {
 } from './utils';
 
 interface ContainerMetaData {
-  exp?: any;
+  exp?: AST;
   name: string;
   read?: string;
   /* We need to keep the element's span since we might have several method declarations with the same name */
