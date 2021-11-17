@@ -12,6 +12,7 @@ import {
   isElement,
   isInterpolation,
   isLiteralExpression,
+  isLiteralMap,
   isTemplate,
   parseTemplate,
 } from './utils';
@@ -64,6 +65,10 @@ function getPipeValuesFromAst(ast: AST): AST[] {
 
       return [pipe.exp];
     }
+  } else if (isBindingPipe(ast)) {
+    exp = [...ast.args, ast.exp];
+  } else if (isLiteralMap(ast)) {
+    exp = ast.values;
   } else if (isInterpolation(ast)) {
     exp = ast.expressions;
   } else if (isConditionalExpression(ast)) {

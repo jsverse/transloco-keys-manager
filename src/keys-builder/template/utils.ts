@@ -2,6 +2,7 @@ import {
   BindingPipe,
   Conditional,
   Interpolation,
+  LiteralMap,
   LiteralPrimitive,
   MethodCall,
   parseTemplate as ngParseTemplate,
@@ -58,6 +59,10 @@ export function isLiteralExpression(
   expression: unknown
 ): expression is LiteralPrimitive {
   return expression instanceof LiteralPrimitive;
+}
+
+export function isLiteralMap(expression: unknown): expression is LiteralMap {
+  return expression instanceof LiteralMap;
 }
 
 export function isConditionalExpression(

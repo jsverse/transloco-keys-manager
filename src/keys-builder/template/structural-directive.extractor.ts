@@ -3,6 +3,7 @@ import {
   ASTWithSource,
   Interpolation,
   MethodCall,
+  RecursiveAstVisitor,
   TmplAstNode,
   TmplAstTemplate,
   TmplAstTextAttribute,
@@ -20,6 +21,7 @@ import {
   isElement,
   isInterpolation,
   isLiteralExpression,
+  isLiteralMap,
   isMethodCall,
   isNgTemplateTag,
   isSupportedNode,
@@ -28,6 +30,7 @@ import {
 } from './utils';
 
 interface ContainerMetaData {
+  exp?: AST;
   name: string;
   read?: string;
   /* We need to keep the element's span since we might have several method declarations with the same name */
@@ -45,7 +48,7 @@ export function traverse(
   config: TemplateExtractorConfig
 ) {
   for (const node of nodes) {
-    let methodUsages = [];
+    let methodUsages: ContainerMetaData[] = [];
 
     if (isBoundText(node)) {
       const { expressions } = (node.value as ASTWithSource)
@@ -74,19 +77,30 @@ export function traverse(
   }
 }
 
-function unwrapExpression(exp: AST): AST {
-  /*
-   * Handle pipes in interpolation
-   *
-   * @example
-   * {{ t('another(test)') | pipe1 | pipe2 }} will return the `t('another(test)')` node
-   * */
-  return isBindingPipe(exp) ? unwrapExpression(exp.exp) : exp;
+class MethodCallUnwrapper extends RecursiveAstVisitor {
+  expressions: MethodCall[] = [];
+
+  override visitMethodCall(method: MethodCall, context: any) {
+    this.expressions.push(method);
+    super.visitMethodCall(method, context);
+  }
 }
 
-function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
+/**
+ * Extract method calls from an AST.
+ */
+function unwrapMethodCalls(exp: AST): MethodCall[] {
+  const unwrapper = new MethodCallUnwrapper();
+  unwrapper.visit(exp);
+  return unwrapper.expressions;
+}
+
+function getMethodUsages(
+  expressions: AST[],
+  containers: ContainerMetaData[]
+): ContainerMetaData[] {
   return expressions
-    .map((exp) => unwrapExpression(exp))
+    .flatMap(unwrapMethodCalls)
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
@@ -128,7 +142,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
   /*
    * An ngTemplate element might have more then once implicit variables, we need to capture all of them.
    * */
-  let metadata: Omit<ContainerMetaData, 'spanOffset'>[];
+  let metadata: Omit<ContainerMetaData, 'spanOffset' | 'exp'>[];
   if (isNgTemplateTag(node)) {
     const implicitVars = node.variables.filter((attr) => !attr.value);
     let read = node.attributes.find(isReadAttr)?.value;
@@ -164,7 +178,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
 }
 
 function addKeysFromAst(
-  expressions: Array<{ exp: AST } & Pick<ContainerMetaData, 'read'>>,
+  expressions: Array<Pick<ContainerMetaData, 'exp' | 'read'>>,
   config: ExtractorConfig
 ): void {
   for (const { exp, read } of expressions) {

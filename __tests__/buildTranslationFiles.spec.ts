@@ -97,7 +97,7 @@ describe('buildTranslationFiles', () => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 67 }),
+          ...generateKeys({ start: 66, end: 70 }),
         };
         [
           'Restore Options',
@@ -139,7 +139,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngContainer', () => {
-        let expected = generateKeys({ end: 39 });
+        let expected = generateKeys({ end: 46 });
         // See https://github.com/ngneat/transloco-keys-manager/issues/87
         expected["Bob's Burgers"] =
           expected['another(test)'] =
