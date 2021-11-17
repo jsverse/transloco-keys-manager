@@ -78,7 +78,7 @@ export function traverse(
 }
 
 class MethodCallUnwrapper extends RecursiveAstVisitor {
-  public expressions: MethodCall[] = [];
+  expressions: MethodCall[] = [];
 
   override visitMethodCall(method: MethodCall, context: any) {
     this.expressions.push(method);
