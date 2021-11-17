@@ -100,8 +100,7 @@ function getMethodUsages(
   containers: ContainerMetaData[]
 ): ContainerMetaData[] {
   return expressions
-    .map(unwrapMethodCalls)
-    .flat()
+    .flatMap(unwrapMethodCalls)
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp: MethodCall) => {
       return {
