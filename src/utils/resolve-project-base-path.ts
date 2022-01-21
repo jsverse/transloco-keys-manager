@@ -47,9 +47,10 @@ export function resolveProjectBasePath(projectName?: string): {
   let projectType: ProjectType;
 
   for (const config of [angular, workspace]) {
-    if (config) {
-      projectName = projectName || config.defaultProject;
-      const project = config.projects?.[projectName];
+    if (config?.projects) {
+      projectName =
+        projectName || config.defaultProject || Object.keys(config.projects)[0];
+      const project = config.projects[projectName];
       const projectConfig = isString(project)
         ? searchConfig(projectConfigFile, project)
         : project;

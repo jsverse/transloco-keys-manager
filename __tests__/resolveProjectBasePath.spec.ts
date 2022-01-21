@@ -29,16 +29,34 @@ describe('resolveProjectBasePath', () => {
     removeRootConfigs();
   });
 
-  it('should project configs', () => {
+  describe('Project level config', () => {
     const projectPath = 'packages/myProject';
-    addRootConfig({
-      configType: 'angular',
-      config: { projects: { myProject: projectPath } },
+
+    beforeAll(() => {
+      addRootConfig({
+        configType: 'angular',
+        config: { projects: { myProject: projectPath } },
+      });
+      addProjectConfig({ path: projectPath });
     });
-    addProjectConfig({ path: projectPath });
-    assertMyProject();
-    removeRootConfigs();
-    removeProjectConfig(projectPath);
+
+    afterAll(() => {
+      removeRootConfigs();
+      removeProjectConfig(projectPath);
+    });
+
+    it('should take the first project if no default project', () => {
+      const { projectBasePath, projectType } = resolveProjectBasePath();
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('library');
+    });
+
+    it('should resolve my project paths', () => {
+      const { projectBasePath, projectType } =
+        resolveProjectBasePath('myProject');
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('library');
+    });
   });
 
   supportedConfigs.forEach((configType) => {
@@ -56,7 +74,10 @@ describe('resolveProjectBasePath', () => {
       });
 
       it('should return the source root of the given project', () => {
-        assertMyProject();
+        const { projectBasePath, projectType } =
+          resolveProjectBasePath('myProject');
+        expect(projectBasePath).toBe('myRoot');
+        expect(projectType).toBe('library');
       });
     });
   });
@@ -112,10 +133,4 @@ function removeRootConfigs() {
 
 function resolvePath(rest: string) {
   return path.resolve(process.cwd(), rest);
-}
-
-function assertMyProject() {
-  const { projectBasePath, projectType } = resolveProjectBasePath('myProject');
-  expect(projectBasePath).toBe('myRoot');
-  expect(projectType).toBe('library');
 }
