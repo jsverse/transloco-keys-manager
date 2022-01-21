@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.0...v3.3.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* 🐛 take first project from config if no default ([0c8f1bb](https://github.com/ngneat/transloco-keys-manager/commit/0c8f1bbcfeca3ca5a8a9133d2f82042316eb0637))
+
 ## [3.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.2.1...v3.3.0) (2022-01-21)
 
 
