@@ -11,3 +11,11 @@ export function isNil(value: unknown): value is undefined | null {
 export function isDirectory(path): boolean {
   return existsSync(path) && lstatSync(path).isDirectory();
 }
+
+export function isString(value: any): value is string {
+  return value && typeof value === 'string';
+}
+
+export function isUndefined(value: any): value is undefined {
+  return value === undefined;
+}
