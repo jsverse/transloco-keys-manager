@@ -10,7 +10,6 @@ import {
   TmplAstBoundAttribute,
   TmplAstBoundText,
   TmplAstElement,
-  TmplAstNode,
   TmplAstTemplate,
   TmplAstTextAttribute,
 } from '@angular/compiler';

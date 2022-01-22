@@ -15,13 +15,12 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
-  isBindingPipe,
+  isBoundAttribute,
   isBoundText,
   isConditionalExpression,
   isElement,
   isInterpolation,
   isLiteralExpression,
-  isLiteralMap,
   isMethodCall,
   isNgTemplateTag,
   isSupportedNode,
@@ -61,7 +60,14 @@ export function traverse(
         }
       }
 
-      const boundAttrs = node.inputs
+      let attrsSource = node.inputs;
+      if (isTemplate(node)) {
+        attrsSource = node.inputs.concat(
+          node.templateAttrs.filter(isBoundAttribute)
+        );
+      }
+
+      const boundAttrs = attrsSource
         .map((input) => {
           const { ast } = input.value as ASTWithSource;
 

@@ -170,7 +170,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = generateKeys({ end: 35 });
+        let expected = generateKeys({ end: 38 });
         buildTranslationFiles(config);
         assertTranslation({ type, expected });
       });
