@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.1...v3.3.2) (2022-01-22)
+
+
+### Bug Fixes
+
+* 🐛 extract keys from template attrs ([e27d750](https://github.com/ngneat/transloco-keys-manager/commit/e27d75096303bc5fc7fc787566fd591ed58b5e0d)), closes [#119](https://github.com/ngneat/transloco-keys-manager/issues/119)
+
 ### [3.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.0...v3.3.1) (2022-01-21)
 
 
