@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import cheerio, { Element } from 'cheerio';
 
 import { getConfig } from '../../config';
 import { TEMPLATE_TYPE } from '../../types';
@@ -31,7 +31,7 @@ export function templateCommentsExtractor({
     const $ = loadCheerio(fileTemplate);
 
     for (const query of containers) {
-      ($(query) as Cheerio).each((_, element) => {
+      $<Element, string>(query).each((_, element) => {
         const containerType = !!element.attribs.__transloco
           ? TEMPLATE_TYPE.STRUCTURAL
           : TEMPLATE_TYPE.NG_TEMPLATE;
@@ -62,7 +62,7 @@ function getNgTemplateContainers(content: string) {
   const hasNgTemplate = content.match(/<ng-template[^>]*transloco[^>]*>/);
   const hasStructural = content.includes('*transloco');
 
-  const containers = [];
+  const containers: string[] = [];
   if (hasNgTemplate) containers.push('ng-template[transloco]');
   if (hasStructural) containers.push('[__transloco]');
 
@@ -113,7 +113,7 @@ function loadCheerio(content: string) {
 
 /** Get the read value from an ngTemplate/ngContainer element */
 function extractReadValue(
-  element: CheerioElement,
+  element: Element,
   templateType: TEMPLATE_TYPE
 ): string {
   let read: string;

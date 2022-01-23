@@ -89,7 +89,6 @@
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-angular": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
-    "@types/cheerio": "0.22.16",
     "@types/cosmiconfig": "6.0.0",
     "@types/debug": "4.1.7",
     "@types/deep-diff": "1.0.1",
