@@ -10,12 +10,17 @@ import { defaultConfig as _defaultConfig } from '../src/config';
 import { resolveConfig } from '../src/utils/resolve-config';
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 import { messages } from '../src/messages';
+import { Format } from '../src/types';
 
 function noop() {}
 
 describe('resolveConfig', () => {
   const sourceRoot = '__tests__';
-  const inlineConfig = { defaultValue: 'test2', input: ['somePath'] };
+  const inlineConfig = {
+    defaultValue: 'test2',
+    input: ['somePath'],
+    format: Format.Pot,
+  };
   let spies;
   let defaultConfig = _defaultConfig();
   beforeAll(() => {
@@ -50,6 +55,7 @@ describe('resolveConfig', () => {
       input: resolvePath(defaultConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
+      format: Format.Json,
     };
     assertConfig(expected);
   });
@@ -58,6 +64,7 @@ describe('resolveConfig', () => {
     const expected = {
       ...defaultConfig,
       defaultValue: inlineConfig.defaultValue,
+      format: inlineConfig.format,
       input: resolvePath(inlineConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
@@ -97,6 +104,7 @@ describe('resolveConfig', () => {
       const expected = {
         ...defaultConfig,
         defaultValue: inlineConfig.defaultValue,
+        format: inlineConfig.format,
         input: resolvePath(inlineConfig.input),
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),

@@ -1,3 +1,8 @@
+export enum Format {
+  Json = 'json',
+  Pot = 'pot',
+}
+
 export type Config = {
   input?: string[];
   config?: string;
@@ -18,6 +23,7 @@ export type Config = {
   sort?: boolean;
   unflat?: boolean;
   command?: 'extract' | 'find';
+  format?: Format;
 };
 
 export type ExtractionResult = {

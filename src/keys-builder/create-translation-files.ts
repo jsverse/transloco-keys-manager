@@ -1,5 +1,5 @@
 import { messages } from '../messages';
-import { Config, ScopeMap } from '../types';
+import { Config, Format, ScopeMap } from '../types';
 import { getLogger } from '../utils/logger';
 import { buildScopeFilePaths } from '../utils/path.utils';
 
@@ -12,6 +12,7 @@ export function createTranslationFiles({
   output,
   replace,
   scopes,
+  format,
 }: Config & { scopeToKeys: ScopeMap }) {
   const logger = getLogger();
 
@@ -19,19 +20,28 @@ export function createTranslationFiles({
     aliasToScope: scopes.aliasToScope,
     langs,
     output,
+    format,
   });
-  const globalFiles = langs.map((lang) => ({ path: `${output}/${lang}.json` }));
+  const globalFiles = langs.map((lang) => ({
+    path: `${output}/${lang}.${format}`,
+  }));
   const actions: FileAction[] = [];
 
   for (const { path } of globalFiles) {
-    actions.push(buildTranslationFile(path, scopeToKeys.__global, replace));
+    actions.push(
+      buildTranslationFile(path, scopeToKeys.__global, replace, format)
+    );
   }
 
   for (const { path, scope } of scopeFiles) {
-    actions.push(buildTranslationFile(path, scopeToKeys[scope], replace));
+    actions.push(
+      buildTranslationFile(path, scopeToKeys[scope], replace, format)
+    );
   }
 
-  runPrettier(actions.map(({ path }) => path));
+  if (format === Format.Json) {
+    runPrettier(actions.map(({ path }) => path));
+  }
 
   const newFiles = actions.filter((action) => action.type === 'new');
 

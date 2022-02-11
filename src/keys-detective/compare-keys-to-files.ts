@@ -4,7 +4,7 @@ import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { messages } from '../messages';
-import { ScopeMap } from '../types';
+import { Format, ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
 import { getScopeAndLangFromPath } from '../utils/path.utils';
@@ -16,6 +16,7 @@ type Params = {
   translationPath: string;
   addMissingKeys: boolean;
   emitErrorOnExtraKeys: boolean;
+  format: Format;
 };
 
 export function compareKeysToFiles({
@@ -23,6 +24,7 @@ export function compareKeysToFiles({
   translationPath,
   addMissingKeys,
   emitErrorOnExtraKeys,
+  format,
 }: Params) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
@@ -30,7 +32,7 @@ export function compareKeysToFiles({
   const diffsPerLang = {};
 
   /** An array of the existing translation files paths */
-  const translationFiles = getTranslationFilesPath(translationPath);
+  const translationFiles = getTranslationFilesPath(translationPath, format);
 
   let result = [];
   const scopePaths = getGlobalConfig().scopePathMap || {};
@@ -41,7 +43,7 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationPath: path,
-        files: glob.sync(`${path}/*.json`),
+        files: glob.sync(`${path}/*.${format}`),
       });
     }
   }
@@ -50,7 +52,8 @@ export function compareKeysToFiles({
   for (const file of translationFiles) {
     const { scope = '__global' } = getScopeAndLangFromPath(
       file,
-      translationPath
+      translationPath,
+      format
     );
     if (cache[scope]) {
       continue;
@@ -65,14 +68,20 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationPath,
-        files: glob.sync(`${translationPath}/${isGlobal ? '' : scope}/*.json`),
+        files: glob.sync(
+          `${translationPath}/${isGlobal ? '' : scope}/*.${format}`
+        ),
       });
     }
   }
 
   for (const { files, keys, scope, translationPath } of result) {
     for (const filePath of files) {
-      const { lang } = getScopeAndLangFromPath(filePath, translationPath);
+      const { lang } = getScopeAndLangFromPath(
+        filePath,
+        translationPath,
+        format
+      );
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flat file
       const flat = flatten<object, Record<string, string>>(translation, {

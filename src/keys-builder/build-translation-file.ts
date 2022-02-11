@@ -1,8 +1,8 @@
-import { unflatten } from 'flat';
 import * as fsExtra from 'fs-extra';
 
-import { getConfig } from '../config';
-import { mergeDeep, stringify } from '../utils/object.utils';
+import { Format } from '../types';
+import { createTranslation } from './utils/create-translation';
+import { getCurrentTranslation } from './utils/get-current-translation';
 
 export interface FileAction {
   path: string;
@@ -12,27 +12,15 @@ export interface FileAction {
 export function buildTranslationFile(
   path: string,
   translation = {},
-  replace = false
+  replace = false,
+  format: Format
 ): FileAction {
-  const currentTranslation =
-    fsExtra.readJsonSync(path, { throws: false }) || {};
-  const action: FileAction = {
-    type: currentTranslation ? 'modified' : 'new',
+  const currentTranslation = getCurrentTranslation(path, format);
+
+  fsExtra.outputFileSync(
     path,
-  };
+    createTranslation(currentTranslation, translation, replace, format)
+  );
 
-  let newTranslation;
-  if (getConfig().unflat) {
-    translation = unflatten(translation, { object: true });
-  }
-
-  if (replace) {
-    newTranslation = mergeDeep({}, translation);
-  } else {
-    newTranslation = mergeDeep({}, translation, currentTranslation);
-  }
-
-  fsExtra.outputFileSync(path, stringify(newTranslation));
-
-  return action;
+  return { type: currentTranslation ? 'modified' : 'new', path };
 }
