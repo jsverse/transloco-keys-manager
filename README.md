@@ -369,10 +369,10 @@ transloco-keys-manager extract --output my/path
 transloco-keys-manager extract -o my/path
 ```
 
-- `format`: The output format (`json`, `pot`) of the translation files (defaults to `json`)
+- `outputFormat`: The output format (`json`, `pot`) of the translation files (defaults to `json`)
 
 ```
-transloco-keys-manager extract --format pot
+transloco-keys-manager extract --output-format pot
 transloco-keys-manager extract -f pot
 ```
 
@@ -466,7 +466,7 @@ module.exports = {
   keysManager: {
     input?: string | string[];
     output?: string;
-    format?: 'json' | 'pot';
+    outputFormat?: 'json' | 'pot';
     marker?: string;
     addMissingKeys?: boolean;
     emitErrorOnExtraKeys?: boolean;

@@ -31,7 +31,7 @@ export const optionDefinitions = [
     description: 'The languages files to generate',
   },
   {
-    name: 'format',
+    name: 'output-format',
     alias: 'f',
     type: String,
     description:

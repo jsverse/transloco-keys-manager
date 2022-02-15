@@ -1,5 +1,4 @@
 import { defaultConfig } from '../src/config';
-import { Format } from '../src/types';
 
 describe('defaultConfig', () => {
   it('should set the input path to "app"', () => {
@@ -14,8 +13,8 @@ describe('defaultConfig', () => {
     expect(input).toEqual(['lib']);
   });
 
-  it('should set the format to "json"', () => {
-    let { format } = defaultConfig();
-    expect(format).toEqual(Format.Json);
+  it('should set the output format to "json"', () => {
+    let { outputFormat } = defaultConfig();
+    expect(outputFormat).toEqual('json');
   });
 });

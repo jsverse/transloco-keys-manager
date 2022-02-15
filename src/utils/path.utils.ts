@@ -1,7 +1,7 @@
 import path, { sep } from 'path';
 
 import { getConfig } from '../config';
-import { Config, Format, Scopes } from '../types';
+import { Config, Scopes } from '../types';
 
 import { isObject } from './validators.utils';
 
@@ -27,7 +27,7 @@ export function buildPath(obj: object) {
 export function getScopeAndLangFromPath(
   filePath: string,
   translationPath: string,
-  format: Format
+  outputFormat: 'json' | 'pot'
 ) {
   filePath = pathUnixFormat(filePath);
   translationPath = pathUnixFormat(translationPath);
@@ -41,10 +41,10 @@ export function getScopeAndLangFromPath(
 
   let scope, lang;
   if (scopePath.length > 1) {
-    lang = scopePath.pop().replace(`.${format}`, '');
+    lang = scopePath.pop().replace(`.${outputFormat}`, '');
     scope = scopePath.join('/');
   } else {
-    lang = scopePath[0].replace(`.${format}`, '');
+    lang = scopePath[0].replace(`.${outputFormat}`, '');
   }
 
   return { scope, lang };
@@ -65,8 +65,8 @@ export function buildScopeFilePaths({
   aliasToScope,
   output,
   langs,
-  format,
-}: Pick<Config, 'output' | 'langs' | 'format'> & {
+  outputFormat,
+}: Pick<Config, 'output' | 'langs' | 'outputFormat'> & {
   aliasToScope: Scopes['aliasToScope'];
 }) {
   const { scopePathMap = {} } = getConfig();
@@ -78,7 +78,7 @@ export function buildScopeFilePaths({
           : `${output}/${scope}`;
 
         files.push({
-          path: `${bastPath}/${lang}.${format}`,
+          path: `${bastPath}/${lang}.${outputFormat}`,
           scope,
         });
       });

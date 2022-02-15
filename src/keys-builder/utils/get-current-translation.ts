@@ -3,13 +3,12 @@ import { po } from 'gettext-parser';
 import { unflatten } from 'flat';
 
 import { getConfig } from '../../config';
-import { Format } from '../../types';
 
-function getJson(path: string) {
+function getJson(path) {
   return fsExtra.readJsonSync(path, { throws: false }) || {};
 }
 
-function getPot(path: string) {
+function getPot(path) {
   try {
     const file = fsExtra.readFileSync(path, 'utf8');
     const parsed = po.parse(file, 'utf8');
@@ -34,11 +33,11 @@ function getPot(path: string) {
   }
 }
 
-export function getCurrentTranslation(path: string, format: Format) {
+export function getCurrentTranslation(path, outputFormat) {
   const parsers = {
-    [Format.Json]: getJson,
-    [Format.Pot]: getPot,
+    json: getJson,
+    pot: getPot,
   };
 
-  return parsers[format](path);
+  return parsers[outputFormat](path);
 }

@@ -1,9 +1,8 @@
 import * as glob from 'glob';
-import { Format } from '../types';
 
 export function getTranslationFilesPath(
   path: string,
-  format: Format
+  outputFormat: 'json' | 'pot'
 ): string[] {
-  return glob.sync(`${path}/**/*.${format}`);
+  return glob.sync(`${path}/**/*.${outputFormat}`);
 }

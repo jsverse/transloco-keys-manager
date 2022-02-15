@@ -1,8 +1,7 @@
 import { messages } from '../messages';
-import { Config, Format, ScopeMap } from '../types';
+import { Config, ScopeMap } from '../types';
 import { getLogger } from '../utils/logger';
 import { buildScopeFilePaths } from '../utils/path.utils';
-
 import { buildTranslationFile, FileAction } from './build-translation-file';
 import { runPrettier } from './utils/run-prettier';
 
@@ -12,7 +11,7 @@ export function createTranslationFiles({
   output,
   replace,
   scopes,
-  format,
+  outputFormat,
 }: Config & { scopeToKeys: ScopeMap }) {
   const logger = getLogger();
 
@@ -20,26 +19,26 @@ export function createTranslationFiles({
     aliasToScope: scopes.aliasToScope,
     langs,
     output,
-    format,
+    outputFormat,
   });
   const globalFiles = langs.map((lang) => ({
-    path: `${output}/${lang}.${format}`,
+    path: `${output}/${lang}.${outputFormat}`,
   }));
   const actions: FileAction[] = [];
 
   for (const { path } of globalFiles) {
     actions.push(
-      buildTranslationFile(path, scopeToKeys.__global, replace, format)
+      buildTranslationFile(path, scopeToKeys.__global, replace, outputFormat)
     );
   }
 
   for (const { path, scope } of scopeFiles) {
     actions.push(
-      buildTranslationFile(path, scopeToKeys[scope], replace, format)
+      buildTranslationFile(path, scopeToKeys[scope], replace, outputFormat)
     );
   }
 
-  if (format === Format.Json) {
+  if (outputFormat === 'json') {
     runPrettier(actions.map(({ path }) => path));
   }
 

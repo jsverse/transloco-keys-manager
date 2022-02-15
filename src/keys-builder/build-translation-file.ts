@@ -1,6 +1,5 @@
 import * as fsExtra from 'fs-extra';
 
-import { Format } from '../types';
 import { createTranslation } from './utils/create-translation';
 import { getCurrentTranslation } from './utils/get-current-translation';
 
@@ -13,13 +12,13 @@ export function buildTranslationFile(
   path: string,
   translation = {},
   replace = false,
-  format: Format
+  outputFormat
 ): FileAction {
-  const currentTranslation = getCurrentTranslation(path, format);
+  const currentTranslation = getCurrentTranslation(path, outputFormat);
 
   fsExtra.outputFileSync(
     path,
-    createTranslation(currentTranslation, translation, replace, format)
+    createTranslation(currentTranslation, translation, replace, outputFormat)
   );
 
   return { type: currentTranslation ? 'modified' : 'new', path };

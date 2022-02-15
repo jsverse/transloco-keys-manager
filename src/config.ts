@@ -1,4 +1,4 @@
-import { Config, Format } from './types';
+import { Config } from './types';
 
 let config: Config = {};
 
@@ -57,6 +57,6 @@ export function defaultConfig(
     translationsPath: 'assets/i18n',
 
     // The output format (`json`, `pot`) of the translation files (defaults to `json`)
-    format: Format.Json,
+    outputFormat: 'json',
   };
 }

@@ -4,8 +4,8 @@ import * as fs from 'fs-extra';
 
 import { buildTranslationFiles } from '../src/keys-builder';
 import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
+import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
-import { Format } from '../src/types';
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
 const sourceRoot = '__tests__';
@@ -56,7 +56,7 @@ type TranslationCategory =
 interface assertTranslationParams {
   type: TranslationCategory;
   expected: object;
-  format: Format;
+  outputFormat: 'json' | 'pot';
   path?: string;
 }
 
@@ -64,28 +64,28 @@ function assertTranslation({
   type,
   expected,
   path,
-  format,
+  outputFormat,
 }: assertTranslationParams) {
-  expect(loadTranslationFile(type, path, format)).toEqual(expected);
+  expect(loadTranslationFile(type, path, outputFormat)).toEqual(expected);
 }
 
 function assertPartialTranslation({
   type,
   expected,
   path,
-  format,
+  outputFormat,
 }: assertTranslationParams) {
-  expect(loadTranslationFile(type, path, format)).toMatchObject(expected);
+  expect(loadTranslationFile(type, path, outputFormat)).toMatchObject(expected);
 }
 
 function loadTranslationFile(
   type: TranslationCategory,
   path: string,
-  format: Format
+  outputFormat: 'json' | 'pot'
 ) {
   return getCurrentTranslation(
-    `./${sourceRoot}/${type}/i18n/${path || ''}en.${format}`,
-    format
+    `./${sourceRoot}/${type}/i18n/${path || ''}en.${outputFormat}`,
+    outputFormat
   );
 }
 
@@ -93,14 +93,17 @@ function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-describe('buildTranslationFiles', () => {
-  const formats = [[Format.Json], [Format.Pot]];
+const formats: ['json' | 'pot'][] = [['json'], ['pot']];
 
+describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
   beforeAll(() => {
     (resolveProjectBasePath as any).mockImplementation(() => {
       return { projectBasePath: sourceRoot };
     });
   });
+
+  // Reset to ensure the scopes are not being shared among the tests.
+  afterEach(() => resetScopes());
 
   describe('Template Extraction', () => {
     describe('Pipe', () => {
@@ -109,7 +112,7 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)('should work with pipe in %s format', (format) => {
+      it('should work with pipe', () => {
         const expected = {
           ...generateKeys({ end: 48 }),
           '49.50.51.52': defaultValue,
@@ -127,8 +130,8 @@ describe('buildTranslationFiles', () => {
           expected[nonNumericKey] = defaultValue;
         });
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -138,19 +141,16 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'should work with directive in %s format',
-        (format) => {
-          const expected = generateKeys({ end: 23 });
-          ['Processing archive...', 'Restore Options'].forEach(
-            (nonNumericKey) => {
-              expected[nonNumericKey] = defaultValue;
-            }
-          );
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected, format });
-        }
-      );
+      it('should work with directive', () => {
+        const expected = generateKeys({ end: 23 });
+        ['Processing archive...', 'Restore Options'].forEach(
+          (nonNumericKey) => {
+            expected[nonNumericKey] = defaultValue;
+          }
+        );
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
+      });
     });
 
     describe('ngContainer', () => {
@@ -159,21 +159,18 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'should work with ngContainer in %s format',
-        (format) => {
-          let expected = generateKeys({ end: 46 });
-          // See https://github.com/ngneat/transloco-keys-manager/issues/87
-          expected["Bob's Burgers"] =
-            expected['another(test)'] =
-            expected['last "one"'] =
-              defaultValue;
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected, format });
-        }
-      );
+      it('should work with ngContainer', () => {
+        let expected = generateKeys({ end: 46 });
+        // See https://github.com/ngneat/transloco-keys-manager/issues/87
+        expected["Bob's Burgers"] =
+          expected['another(test)'] =
+          expected['last "one"'] =
+            defaultValue;
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
+      });
 
-      test.each(formats)('should work with scopes in %s format', (format) => {
+      it('should work with scopes', () => {
         let expected = {
           '1': defaultValue,
           '2.1': defaultValue,
@@ -182,8 +179,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, path: 'admin-page/', format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({
+          type,
+          expected,
+          path: 'admin-page/',
+          outputFormat,
+        });
       });
     });
 
@@ -193,16 +195,13 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'should work with ngTemplate in %s format',
-        (format) => {
-          let expected = generateKeys({ end: 41 });
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected, format });
-        }
-      );
+      it('should work with ngTemplate', () => {
+        let expected = generateKeys({ end: 41 });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
+      });
 
-      test.each(formats)('should work with scopes in %s format', (format) => {
+      it('should work with scopes', () => {
         let expected = {
           '1': defaultValue,
           '2.1': defaultValue,
@@ -211,8 +210,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, path: 'todos-page/', format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({
+          type,
+          expected,
+          path: 'todos-page/',
+          outputFormat,
+        });
       });
     });
 
@@ -222,7 +226,7 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)('should work with read in %s format', (format) => {
+      it('should work with read', () => {
         const expected = {
           global: {
             ...generateKeys({ end: 3 }),
@@ -250,13 +254,13 @@ describe('buildTranslationFiles', () => {
           },
         };
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected: expected.global, format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected: expected.global, outputFormat });
         assertTranslation({
           type,
           expected: expected.todos,
           path: 'todos-page/',
-          format,
+          outputFormat,
         });
       });
     });
@@ -269,18 +273,18 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)('should work with service in %s format', (format) => {
+      it('should work with service', () => {
         const expected = {
           ...generateKeys({ end: 19 }),
           ...{ '20.21.22.23': defaultValue },
           ...generateKeys({ start: 24, end: 33 }),
         };
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
       });
 
-      test.each(formats)('should work with scopes in %s format', (format) => {
+      it('should work with scopes', () => {
         const expected = {
           todos: {
             '1': defaultValue,
@@ -296,36 +300,33 @@ describe('buildTranslationFiles', () => {
           },
         };
 
-        buildTranslationFiles({ ...config, format });
+        buildTranslationFiles({ ...config, outputFormat });
         assertTranslation({
           type,
           expected: expected.todos,
           path: 'todos-page/',
-          format,
+          outputFormat,
         });
         assertTranslation({
           type,
           expected: expected.admin,
           path: 'admin-page/',
-          format,
+          outputFormat,
         });
         assertTranslation({
           type,
           expected: expected.nested,
           path: 'nested/scope/',
-          format,
+          outputFormat,
         });
       });
 
-      test.each(formats)(
-        'should work when passing an array of keys in %s format',
-        (format) => {
-          const expected = generateKeys({ start: 26, end: 33 });
+      it('should work when passing an array of keys', () => {
+        const expected = generateKeys({ start: 26, end: 33 });
 
-          buildTranslationFiles({ ...config, format });
-          assertPartialTranslation({ type, expected, format });
-        }
-      );
+        buildTranslationFiles({ ...config, outputFormat });
+        assertPartialTranslation({ type, expected, outputFormat });
+      });
     });
 
     describe('marker', () => {
@@ -333,7 +334,7 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)('should work with marker in %s format', (format) => {
+      it('should work with marker', () => {
         const config = gConfig(type);
 
         let expected = {};
@@ -341,8 +342,8 @@ describe('buildTranslationFiles', () => {
         expected['password4'] = defaultValue;
         expected['username'] = defaultValue;
         expected['password'] = defaultValue;
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -352,19 +353,16 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'should work with inline templates in %s format',
-        (format) => {
-          const expected = generateKeys({ end: 23 });
-          ['Processing archive...', 'Restore Options'].forEach(
-            (nonNumericKey) => {
-              expected[nonNumericKey] = defaultValue;
-            }
-          );
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected, format });
-        }
-      );
+      it('should work with inline templates', () => {
+        const expected = generateKeys({ end: 23 });
+        ['Processing archive...', 'Restore Options'].forEach(
+          (nonNumericKey) => {
+            expected[nonNumericKey] = defaultValue;
+          }
+        );
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
+      });
     });
   });
 
@@ -375,20 +373,17 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'show work with unflat true in %s format',
-        (format) => {
-          const expected = {
-            global: {
-              a: {
-                '1': defaultValue,
-              },
+      it('should work with unflat true', () => {
+        const expected = {
+          global: {
+            a: {
+              '1': defaultValue,
             },
-          };
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected: expected.global, format });
-        }
-      );
+          },
+        };
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected: expected.global, outputFormat });
+      });
     });
 
     describe('unflat-sort', () => {
@@ -397,28 +392,25 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'show work with unflat and sort true in %s format',
-        (format) => {
-          const expected = {
-            global: {
+      it('should work with unflat and sort true', () => {
+        const expected = {
+          global: {
+            b: {
               b: {
-                b: {
-                  a: defaultValue,
-                  b: defaultValue,
-                },
-                c: {
-                  a: defaultValue,
-                  p: defaultValue,
-                  x: defaultValue,
-                },
+                a: defaultValue,
+                b: defaultValue,
+              },
+              c: {
+                a: defaultValue,
+                p: defaultValue,
+                x: defaultValue,
               },
             },
-          };
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected: expected.global, format });
-        }
-      );
+          },
+        };
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected: expected.global, outputFormat });
+      });
     });
 
     describe('Unflat problematic keys', () => {
@@ -428,31 +420,23 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'show work with unflat true and problematic keys in %s format',
-        (format) => {
-          const expected = {
-            global: {
-              a: defaultValue,
-              b: defaultValue,
-              c: defaultValue,
-              d: {
-                '1': defaultValue,
-                '2': defaultValue,
-              },
-              e: {
-                a: defaultValue,
-                aa: defaultValue,
-              },
-              f: defaultValue,
+      it('should work with unflat true and problematic keys', () => {
+        const expected = {
+          global: {
+            a: defaultValue,
+            b: defaultValue,
+            c: defaultValue,
+            d: {
+              '1': defaultValue,
+              '2': defaultValue,
             },
-          };
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected: expected.global, format });
-        }
-      );
-
-      afterAll(() => {
+            e: {
+              a: defaultValue,
+              aa: defaultValue,
+            },
+            f: defaultValue,
+          },
+        };
         const expectedProblematicKeys = [
           'a',
           'a.b',
@@ -467,9 +451,15 @@ describe('buildTranslationFiles', () => {
           'f.b',
           'f.b.a.a',
         ];
+        buildTranslationFiles({ ...config, outputFormat });
 
-        expect(spy).toHaveBeenCalledTimes(2);
+        expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
+        assertTranslation({ type, expected: expected.global, outputFormat });
+      });
+
+      afterEach(() => {
+        spy.mockReset();
       });
     });
 
@@ -481,16 +471,13 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      test.each(formats)(
-        'show work with multiple inputs in %s format',
-        (format) => {
-          let expected = generateKeys({ end: 39 });
-          buildTranslationFiles({ ...config, format });
-          assertTranslation({ type, expected, format });
-        }
-      );
+      it('should work with multiple inputs', () => {
+        let expected = generateKeys({ end: 39 });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({ type, expected, outputFormat });
+      });
 
-      test.each(formats)('should work with scopes in %s format', (format) => {
+      it('should work with scopes', () => {
         let expected = {
           '1': defaultValue,
           '2.1': defaultValue,
@@ -499,8 +486,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, format });
-        assertTranslation({ type, expected, path: 'admin-page/', format });
+        buildTranslationFiles({ ...config, outputFormat });
+        assertTranslation({
+          type,
+          expected,
+          path: 'admin-page/',
+          outputFormat,
+        });
       });
     });
   });
@@ -511,7 +503,7 @@ describe('buildTranslationFiles', () => {
 
     beforeEach(() => removeI18nFolder(type));
 
-    test.each(formats)('show work with comments in %s format', (format) => {
+    it('should work with comments', () => {
       const expected = {
         global: {
           'a.some.key': defaultValue,
@@ -566,14 +558,14 @@ describe('buildTranslationFiles', () => {
           '5555': defaultValue,
         },
       };
-      buildTranslationFiles({ ...config, format });
+      buildTranslationFiles({ ...config, outputFormat });
 
-      assertTranslation({ type, expected: expected.global, format });
+      assertTranslation({ type, expected: expected.global, outputFormat });
       assertTranslation({
         type,
         expected: expected.admin,
         path: 'admin/',
-        format,
+        outputFormat,
       });
     });
   });

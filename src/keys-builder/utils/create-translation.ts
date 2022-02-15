@@ -1,34 +1,27 @@
 import { unflatten } from 'flat';
 import { po } from 'gettext-parser';
 
-import { Format } from '../../types';
-import { mergeDeep, stringify } from '../../utils/object.utils';
 import { getConfig } from '../../config';
+import { mergeDeep, stringify } from '../../utils/object.utils';
+
+function handleReplace(currentTranslation, translation, replace) {
+  return replace
+    ? mergeDeep({}, translation)
+    : mergeDeep({}, translation, currentTranslation);
+}
 
 function createJson(currentTranslation, translation, replace) {
-  let value;
-
   if (getConfig().unflat) {
     translation = unflatten(translation, { object: true });
   }
 
-  if (replace) {
-    value = mergeDeep({}, translation);
-  } else {
-    value = mergeDeep({}, translation, currentTranslation);
-  }
+  const value = handleReplace(currentTranslation, translation, replace);
 
   return stringify(value);
 }
 
 function createPot(currentTranslation, translation, replace) {
-  let value;
-
-  if (replace) {
-    value = mergeDeep({}, translation);
-  } else {
-    value = mergeDeep({}, translation, currentTranslation);
-  }
+  const value = handleReplace(currentTranslation, translation, replace);
 
   return po
     .compile({
@@ -40,9 +33,9 @@ function createPot(currentTranslation, translation, replace) {
       },
       translations: {
         '': Object.entries(value).reduce(
-          (acc, [k, v]) => ({
+          (acc, [msgid, msgstr]) => ({
             ...acc,
-            [k]: { msgid: k, msgstr: v },
+            [msgid]: { msgid, msgstr },
           }),
           {} as any
         ),
@@ -54,13 +47,13 @@ function createPot(currentTranslation, translation, replace) {
 export function createTranslation(
   currentTranslation,
   translation,
-  replace: boolean,
-  format: Format
+  replace,
+  outputFormat
 ) {
   const compilers = {
-    [Format.Json]: createJson,
-    [Format.Pot]: createPot,
+    json: createJson,
+    pot: createPot,
   };
 
-  return compilers[format](currentTranslation, translation, replace);
+  return compilers[outputFormat](currentTranslation, translation, replace);
 }

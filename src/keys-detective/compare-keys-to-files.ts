@@ -4,7 +4,7 @@ import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { messages } from '../messages';
-import { Format, ScopeMap } from '../types';
+import { ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
 import { getScopeAndLangFromPath } from '../utils/path.utils';
@@ -16,7 +16,7 @@ type Params = {
   translationPath: string;
   addMissingKeys: boolean;
   emitErrorOnExtraKeys: boolean;
-  format: Format;
+  outputFormat: 'json' | 'pot';
 };
 
 export function compareKeysToFiles({
@@ -24,7 +24,7 @@ export function compareKeysToFiles({
   translationPath,
   addMissingKeys,
   emitErrorOnExtraKeys,
-  format,
+  outputFormat,
 }: Params) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
@@ -32,7 +32,10 @@ export function compareKeysToFiles({
   const diffsPerLang = {};
 
   /** An array of the existing translation files paths */
-  const translationFiles = getTranslationFilesPath(translationPath, format);
+  const translationFiles = getTranslationFilesPath(
+    translationPath,
+    outputFormat
+  );
 
   let result = [];
   const scopePaths = getGlobalConfig().scopePathMap || {};
@@ -43,7 +46,7 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationPath: path,
-        files: glob.sync(`${path}/*.${format}`),
+        files: glob.sync(`${path}/*.${outputFormat}`),
       });
     }
   }
@@ -53,7 +56,7 @@ export function compareKeysToFiles({
     const { scope = '__global' } = getScopeAndLangFromPath(
       file,
       translationPath,
-      format
+      outputFormat
     );
     if (cache[scope]) {
       continue;
@@ -69,7 +72,7 @@ export function compareKeysToFiles({
         scope,
         translationPath,
         files: glob.sync(
-          `${translationPath}/${isGlobal ? '' : scope}/*.${format}`
+          `${translationPath}/${isGlobal ? '' : scope}/*.${outputFormat}`
         ),
       });
     }
@@ -80,7 +83,7 @@ export function compareKeysToFiles({
       const { lang } = getScopeAndLangFromPath(
         filePath,
         translationPath,
-        format
+        outputFormat
       );
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flat file
