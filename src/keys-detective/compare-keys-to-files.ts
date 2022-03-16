@@ -52,12 +52,12 @@ export function compareKeysToFiles({
   }
   const cache = {};
 
-  for (const file of translationFiles) {
-    const { scope = '__global' } = getScopeAndLangFromPath(
-      file,
+  for (const filePath of translationFiles) {
+    const { scope = '__global' } = getScopeAndLangFromPath({
+      filePath,
       translationPath,
-      outputFormat
-    );
+      outputFormat,
+    });
     if (cache[scope]) {
       continue;
     }
@@ -80,11 +80,11 @@ export function compareKeysToFiles({
 
   for (const { files, keys, scope, translationPath } of result) {
     for (const filePath of files) {
-      const { lang } = getScopeAndLangFromPath(
+      const { lang } = getScopeAndLangFromPath({
         filePath,
         translationPath,
-        outputFormat
-      );
+        outputFormat,
+      });
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flat file
       const flat = flatten<object, Record<string, string>>(translation, {

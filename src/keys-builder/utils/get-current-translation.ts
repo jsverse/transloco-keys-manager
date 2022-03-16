@@ -4,11 +4,11 @@ import { unflatten } from 'flat';
 
 import { getConfig } from '../../config';
 
-function getJson(path) {
+function parseJson(path) {
   return fsExtra.readJsonSync(path, { throws: false }) || {};
 }
 
-function getPot(path) {
+function parsePot(path) {
   try {
     const file = fsExtra.readFileSync(path, 'utf8');
     const parsed = po.parse(file, 'utf8');
@@ -33,11 +33,11 @@ function getPot(path) {
   }
 }
 
-export function getCurrentTranslation(path, outputFormat) {
-  const parsers = {
-    json: getJson,
-    pot: getPot,
-  };
+const parsers = {
+  json: parseJson,
+  pot: parsePot,
+};
 
+export function getCurrentTranslation({ path, outputFormat }) {
   return parsers[outputFormat](path);
 }

@@ -8,17 +8,22 @@ export interface FileAction {
   type: 'new' | 'modified';
 }
 
-export function buildTranslationFile(
-  path: string,
+export function buildTranslationFile({
+  path,
   translation = {},
   replace = false,
-  outputFormat
-): FileAction {
-  const currentTranslation = getCurrentTranslation(path, outputFormat);
+  outputFormat,
+}): FileAction {
+  const currentTranslation = getCurrentTranslation({ path, outputFormat });
 
   fsExtra.outputFileSync(
     path,
-    createTranslation(currentTranslation, translation, replace, outputFormat)
+    createTranslation({
+      currentTranslation,
+      translation,
+      replace,
+      outputFormat,
+    })
   );
 
   return { type: currentTranslation ? 'modified' : 'new', path };

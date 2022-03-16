@@ -28,13 +28,23 @@ export function createTranslationFiles({
 
   for (const { path } of globalFiles) {
     actions.push(
-      buildTranslationFile(path, scopeToKeys.__global, replace, outputFormat)
+      buildTranslationFile({
+        path,
+        translation: scopeToKeys.__global,
+        replace,
+        outputFormat,
+      })
     );
   }
 
   for (const { path, scope } of scopeFiles) {
     actions.push(
-      buildTranslationFile(path, scopeToKeys[scope], replace, outputFormat)
+      buildTranslationFile({
+        path,
+        translation: scopeToKeys[scope],
+        replace,
+        outputFormat,
+      })
     );
   }
 

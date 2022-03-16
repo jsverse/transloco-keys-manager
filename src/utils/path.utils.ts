@@ -20,15 +20,21 @@ export function buildPath(obj: object) {
   }, []);
 }
 
+type Params = {
+  filePath: string;
+  translationPath: string;
+  outputFormat: 'json' | 'pot';
+};
+
 /**
  * /Users/username/www/folderName/src/assets/i18n/admin/es.json => { scope: admin, lang: es }
  * /Users/username/www/folderName/src/assets/i18n/es.json => { scope: undefined, lang: es }
  */
-export function getScopeAndLangFromPath(
-  filePath: string,
-  translationPath: string,
-  outputFormat: 'json' | 'pot'
-) {
+export function getScopeAndLangFromPath({
+  filePath,
+  translationPath,
+  outputFormat,
+}: Params) {
   filePath = pathUnixFormat(filePath);
   translationPath = pathUnixFormat(translationPath);
 

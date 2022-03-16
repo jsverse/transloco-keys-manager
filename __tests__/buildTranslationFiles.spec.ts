@@ -83,19 +83,23 @@ function loadTranslationFile(
   path: string,
   outputFormat: 'json' | 'pot'
 ) {
-  return getCurrentTranslation(
-    `./${sourceRoot}/${type}/i18n/${path || ''}en.${outputFormat}`,
-    outputFormat
-  );
+  return getCurrentTranslation({
+    path: `./${sourceRoot}/${type}/i18n/${path || ''}en.${outputFormat}`,
+    outputFormat,
+  });
 }
 
 function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-const formats: ['json' | 'pot'][] = [['json'], ['pot']];
+const formats: ('json' | 'pot')[] = ['json', 'pot'];
 
 describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
+  function createTranslations(config) {
+    buildTranslationFiles({ ...config, outputFormat });
+  }
+
   beforeAll(() => {
     (resolveProjectBasePath as any).mockImplementation(() => {
       return { projectBasePath: sourceRoot };
@@ -130,7 +134,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           expected[nonNumericKey] = defaultValue;
         });
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
     });
@@ -148,7 +152,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
             expected[nonNumericKey] = defaultValue;
           }
         );
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
     });
@@ -166,7 +170,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           expected['another(test)'] =
           expected['last "one"'] =
             defaultValue;
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
 
@@ -179,7 +183,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({
           type,
           expected,
@@ -197,7 +201,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
 
       it('should work with ngTemplate', () => {
         let expected = generateKeys({ end: 41 });
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
 
@@ -210,7 +214,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({
           type,
           expected,
@@ -254,7 +258,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           },
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected: expected.global, outputFormat });
         assertTranslation({
           type,
@@ -280,7 +284,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           ...generateKeys({ start: 24, end: 33 }),
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
 
@@ -300,7 +304,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           },
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({
           type,
           expected: expected.todos,
@@ -324,7 +328,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
       it('should work when passing an array of keys', () => {
         const expected = generateKeys({ start: 26, end: 33 });
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertPartialTranslation({ type, expected, outputFormat });
       });
     });
@@ -342,7 +346,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
         expected['password4'] = defaultValue;
         expected['username'] = defaultValue;
         expected['password'] = defaultValue;
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
     });
@@ -360,7 +364,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
             expected[nonNumericKey] = defaultValue;
           }
         );
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
     });
@@ -381,7 +385,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
             },
           },
         };
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected: expected.global, outputFormat });
       });
     });
@@ -408,7 +412,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
             },
           },
         };
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected: expected.global, outputFormat });
       });
     });
@@ -451,7 +455,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           'f.b',
           'f.b.a.a',
         ];
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
@@ -473,7 +477,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
 
       it('should work with multiple inputs', () => {
         let expected = generateKeys({ end: 39 });
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({ type, expected, outputFormat });
       });
 
@@ -486,7 +490,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles({ ...config, outputFormat });
+        createTranslations(config);
         assertTranslation({
           type,
           expected,
@@ -558,7 +562,7 @@ describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
           '5555': defaultValue,
         },
       };
-      buildTranslationFiles({ ...config, outputFormat });
+      createTranslations(config);
 
       assertTranslation({ type, expected: expected.global, outputFormat });
       assertTranslation({
