@@ -16,7 +16,7 @@ export function getLogger() {
   return defaultLogger;
 }
 
-type DebugNamespaces = 'config' | 'paths' | 'scopes';
+type DebugNamespaces = 'config' | 'paths' | 'scopes' | 'extraction';
 
 export function devlog(
   namespace: DebugNamespaces,

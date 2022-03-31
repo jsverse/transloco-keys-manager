@@ -1,5 +1,6 @@
 import * as glob from 'glob';
 
+import { devlog } from '../../utils/logger';
 import {
   Config,
   ExtractionResult,
@@ -19,6 +20,7 @@ export function extractKeys(
     files || input.map((path) => glob.sync(`${path}/**/*.${fileType}`)).flat();
 
   for (const file of fileList) {
+    devlog('extraction', 'Extracting keys', { file, fileType });
     scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });
   }
 
