@@ -11,4 +11,7 @@ test('39.1')
 <ng-container *transloco="let t">
   <ng-container *ngTemplateOutlet="test; context: { text: t('36'), some: { nested: t('37') } }"></ng-container>
   <ng-template [someAttr]="t('38')"></ng-template>
+  <my-comp [aa]="t('39') + 'a'">
+    <comp a="{{t('40') + 'a'}}">{{t('41') + 'a'}}</comp>
+  </my-comp>
 </ng-container>
