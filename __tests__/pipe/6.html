@@ -42,5 +42,7 @@
 {{ var | another : ('70' | transloco) | lowercase }}
 
 <my-comp [aa]="('71' | transloco) + 'a'">
-    <comp a="{{('72' | transloco) + 'a'}}">{{('73' | transloco) + 'a'}}</comp>
+    <comp a="{{('72' | transloco) + 'a'}}">
+        {{ (('73' | transloco) + 'a').split(('74' | transloco) || ',') }}
+    </comp>
 </my-comp>

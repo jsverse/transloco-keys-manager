@@ -14,6 +14,7 @@ import {
   isInterpolation,
   isLiteralExpression,
   isLiteralMap,
+  isMethodCall,
   isTemplate,
   parseTemplate,
 } from './utils';
@@ -76,7 +77,9 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [ast.trueExp, ast.falseExp];
   } else if (isBinaryExpression(ast)) {
     exp = [ast.left, ast.right];
-  } 
+  } else if (isMethodCall(ast)) {
+    exp = [...ast.args, ast.receiver];
+  }
 
   return exp.map(getPipeValuesFromAst).flat();
 }
