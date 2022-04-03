@@ -6,6 +6,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  isBinaryExpression,
   isBindingPipe,
   isBoundText,
   isConditionalExpression,
@@ -73,7 +74,9 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = ast.expressions;
   } else if (isConditionalExpression(ast)) {
     exp = [ast.trueExp, ast.falseExp];
-  }
+  } else if (isBinaryExpression(ast)) {
+    exp = [ast.left, ast.right];
+  } 
 
   return exp.map(getPipeValuesFromAst).flat();
 }

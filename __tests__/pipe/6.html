@@ -40,3 +40,7 @@
 
 {{ var | another : {foo: '68' | transloco} | other : ('69' | transloco) }}
 {{ var | another : ('70' | transloco) | lowercase }}
+
+<my-comp [aa]="('71' | transloco) + 'a'">
+    <comp a="{{('72' | transloco) + 'a'}}">{{('73' | transloco) + 'a'}}</comp>
+</my-comp>
