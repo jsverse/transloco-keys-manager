@@ -28,8 +28,12 @@ function parsePot(path) {
       );
 
     return getConfig().unflat ? unflatten(value, { object: true }) : value;
-  } catch {
-    return {};
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      return {};
+    }
+
+    console.warn('Something is wrong with the provided file', e.message);
   }
 }
 
