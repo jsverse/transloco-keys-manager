@@ -97,7 +97,7 @@ describe('buildTranslationFiles', () => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 70 }),
+          ...generateKeys({ start: 66, end: 78 }),
         };
         [
           'Restore Options',
@@ -170,7 +170,7 @@ describe('buildTranslationFiles', () => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = generateKeys({ end: 38 });
+        let expected = generateKeys({ end: 41 });
         buildTranslationFiles(config);
         assertTranslation({ type, expected });
       });

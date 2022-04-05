@@ -1,4 +1,5 @@
 import {
+  Binary,
   BindingPipe,
   Conditional,
   Interpolation,
@@ -68,6 +69,10 @@ export function isConditionalExpression(
   expression: unknown
 ): expression is Conditional {
   return expression instanceof Conditional;
+}
+
+export function isBinaryExpression(expression: unknown): expression is Binary {
+  return expression instanceof Binary;
 }
 
 export function parseTemplate(

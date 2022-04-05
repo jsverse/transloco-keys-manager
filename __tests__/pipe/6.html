@@ -40,3 +40,12 @@
 
 {{ var | another : {foo: '68' | transloco} | other : ('69' | transloco) }}
 {{ var | another : ('70' | transloco) | lowercase }}
+
+<my-comp [aa]="('71' | transloco) + 'a'"
+         [bb]="1 + 2"
+         [cc]="('72' | transloco) || var1 ? ('73' | transloco) + 1 : func(1 - ('74' | transloco))">
+    <comp a="{{('75' | transloco) + 'a'}}"
+          b="{{1 + ('76' | transloco)}}">
+        {{ (('77' | transloco) + 'a').split(('78' | transloco) || ',') }}
+    </comp>
+</my-comp>
