@@ -55,5 +55,8 @@ export function defaultConfig(
 
     // The path for the root translation files (for example: assets/i18n)
     translationsPath: 'assets/i18n',
+
+    // The output format of the translation files (`json`, `pot`)
+    outputFormat: 'json',
   };
 }

@@ -16,7 +16,8 @@ type Params = {
 function filterLangs(config: Params['config']) {
   return function (path: string) {
     return config.langs.find(
-      (lang) => lang === nodePath.basename(path).replace('.json', '')
+      (lang) =>
+        lang === nodePath.basename(path).replace(`.${config.outputFormat}`, '')
     );
   };
 }
@@ -34,7 +35,9 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
     if (keys) {
       result.push({
         keys,
-        files: glob.sync(`${path}/*.json`).filter(filterLangs(config)),
+        files: glob
+          .sync(`${path}/*.${config.outputFormat}`)
+          .filter(filterLangs(config)),
       });
     }
   }
@@ -46,7 +49,11 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
       result.push({
         keys,
         files: glob
-          .sync(`${translationPath}/${isGlobal ? '' : scope}*.json`)
+          .sync(
+            `${translationPath}/${isGlobal ? '' : scope}*.${
+              config.outputFormat
+            }`
+          )
           .filter(filterLangs(config)),
       });
     }

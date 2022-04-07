@@ -57,9 +57,15 @@ export class TranslocoExtractKeysWebpackPlugin {
             aliasToScope: newScopes,
             langs: this.config.langs,
             output: this.config.output,
+            outputFormat: this.config.outputFormat,
           });
 
-          paths.forEach(({ path }) => buildTranslationFile(path, {}));
+          paths.forEach(({ path }) =>
+            buildTranslationFile({
+              path,
+              outputFormat: this.config.outputFormat,
+            })
+          );
           tsResult = extractTSKeys({
             ...this.config,
             files: keysExtractions.ts,

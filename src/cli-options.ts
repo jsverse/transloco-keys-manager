@@ -31,6 +31,13 @@ export const optionDefinitions = [
     description: 'The languages files to generate',
   },
   {
+    name: 'output-format',
+    alias: 'f',
+    type: String,
+    description:
+      'The output format (`json`, `pot`) of the translation files (defaults to `json`)',
+  },
+  {
     name: 'marker',
     alias: 'm',
     type: String,

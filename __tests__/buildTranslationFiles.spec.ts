@@ -3,6 +3,8 @@ jest.mock('../src/utils/resolve-project-base-path');
 import * as fs from 'fs-extra';
 
 import { buildTranslationFiles } from '../src/keys-builder';
+import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
+import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
@@ -54,35 +56,58 @@ type TranslationCategory =
 interface assertTranslationParams {
   type: TranslationCategory;
   expected: object;
+  outputFormat: 'json' | 'pot';
   path?: string;
 }
 
-function assertTranslation({ type, expected, path }: assertTranslationParams) {
-  expect(loadTranslationFile(type, path)).toEqual(expected);
+function assertTranslation({
+  type,
+  expected,
+  path,
+  outputFormat,
+}: assertTranslationParams) {
+  expect(loadTranslationFile(type, path, outputFormat)).toEqual(expected);
 }
 
 function assertPartialTranslation({
   type,
   expected,
   path,
+  outputFormat,
 }: assertTranslationParams) {
-  expect(loadTranslationFile(type, path)).toMatchObject(expected);
+  expect(loadTranslationFile(type, path, outputFormat)).toMatchObject(expected);
 }
 
-function loadTranslationFile(type: TranslationCategory, path?: string) {
-  return fs.readJsonSync(`./${sourceRoot}/${type}/i18n/${path || ''}en.json`);
+function loadTranslationFile(
+  type: TranslationCategory,
+  path: string,
+  outputFormat: 'json' | 'pot'
+) {
+  return getCurrentTranslation({
+    path: `./${sourceRoot}/${type}/i18n/${path || ''}en.${outputFormat}`,
+    outputFormat,
+  });
 }
 
 function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-describe('buildTranslationFiles', () => {
+const formats: ('json' | 'pot')[] = ['json', 'pot'];
+
+describe.each(formats)('buildTranslationFiles in %s', (outputFormat) => {
+  function createTranslations(config) {
+    buildTranslationFiles({ ...config, outputFormat });
+  }
+
   beforeAll(() => {
     (resolveProjectBasePath as any).mockImplementation(() => {
       return { projectBasePath: sourceRoot };
     });
   });
+
+  // Reset to ensure the scopes are not being shared among the tests.
+  afterEach(() => resetScopes());
 
   describe('Template Extraction', () => {
     describe('Pipe', () => {
@@ -109,8 +134,8 @@ describe('buildTranslationFiles', () => {
           expected[nonNumericKey] = defaultValue;
         });
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -127,8 +152,8 @@ describe('buildTranslationFiles', () => {
             expected[nonNumericKey] = defaultValue;
           }
         );
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -145,8 +170,8 @@ describe('buildTranslationFiles', () => {
           expected['another(test)'] =
           expected['last "one"'] =
             defaultValue;
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
 
       it('should work with scopes', () => {
@@ -158,8 +183,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected, path: 'admin-page/' });
+        createTranslations(config);
+        assertTranslation({
+          type,
+          expected,
+          path: 'admin-page/',
+          outputFormat,
+        });
       });
     });
 
@@ -171,8 +201,8 @@ describe('buildTranslationFiles', () => {
 
       it('should work with ngTemplate', () => {
         let expected = generateKeys({ end: 41 });
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
 
       it('should work with scopes', () => {
@@ -184,8 +214,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected, path: 'todos-page/' });
+        createTranslations(config);
+        assertTranslation({
+          type,
+          expected,
+          path: 'todos-page/',
+          outputFormat,
+        });
       });
     });
 
@@ -223,12 +258,13 @@ describe('buildTranslationFiles', () => {
           },
         };
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected: expected.global });
+        createTranslations(config);
+        assertTranslation({ type, expected: expected.global, outputFormat });
         assertTranslation({
           type,
           expected: expected.todos,
           path: 'todos-page/',
+          outputFormat,
         });
       });
     });
@@ -248,8 +284,8 @@ describe('buildTranslationFiles', () => {
           ...generateKeys({ start: 24, end: 33 }),
         };
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
 
       it('should work with scopes', () => {
@@ -268,29 +304,32 @@ describe('buildTranslationFiles', () => {
           },
         };
 
-        buildTranslationFiles(config);
+        createTranslations(config);
         assertTranslation({
           type,
           expected: expected.todos,
           path: 'todos-page/',
+          outputFormat,
         });
         assertTranslation({
           type,
           expected: expected.admin,
           path: 'admin-page/',
+          outputFormat,
         });
         assertTranslation({
           type,
           expected: expected.nested,
           path: 'nested/scope/',
+          outputFormat,
         });
       });
 
       it('should work when passing an array of keys', () => {
         const expected = generateKeys({ start: 26, end: 33 });
 
-        buildTranslationFiles(config);
-        assertPartialTranslation({ type, expected });
+        createTranslations(config);
+        assertPartialTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -307,8 +346,8 @@ describe('buildTranslationFiles', () => {
         expected['password4'] = defaultValue;
         expected['username'] = defaultValue;
         expected['password'] = defaultValue;
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
     });
 
@@ -325,8 +364,8 @@ describe('buildTranslationFiles', () => {
             expected[nonNumericKey] = defaultValue;
           }
         );
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
     });
   });
@@ -338,7 +377,7 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      it('show work with unflat true', () => {
+      it('should work with unflat true', () => {
         const expected = {
           global: {
             a: {
@@ -346,9 +385,8 @@ describe('buildTranslationFiles', () => {
             },
           },
         };
-        buildTranslationFiles(config);
-
-        assertTranslation({ type, expected: expected.global });
+        createTranslations(config);
+        assertTranslation({ type, expected: expected.global, outputFormat });
       });
     });
 
@@ -358,7 +396,7 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      it('show work with unflat and sort true', () => {
+      it('should work with unflat and sort true', () => {
         const expected = {
           global: {
             b: {
@@ -374,21 +412,19 @@ describe('buildTranslationFiles', () => {
             },
           },
         };
-        buildTranslationFiles(config);
-
-        assertTranslation({ type, expected: expected.global });
+        createTranslations(config);
+        assertTranslation({ type, expected: expected.global, outputFormat });
       });
     });
 
     describe('Unflat problematic keys', () => {
       const type: TranslationCategory = 'unflat-problematic-keys';
       const config = gConfig(type, { unflat: true });
+      const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
 
       beforeEach(() => removeI18nFolder(type));
 
-      it('show work with unflat true and problematic keys', () => {
-        const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
-
+      it('should work with unflat true and problematic keys', () => {
         const expected = {
           global: {
             a: defaultValue,
@@ -419,11 +455,15 @@ describe('buildTranslationFiles', () => {
           'f.b',
           'f.b.a.a',
         ];
-        buildTranslationFiles(config);
+        createTranslations(config);
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith(expectedProblematicKeys);
-        assertTranslation({ type, expected: expected.global });
+        assertTranslation({ type, expected: expected.global, outputFormat });
+      });
+
+      afterEach(() => {
+        spy.mockReset();
       });
     });
 
@@ -435,10 +475,10 @@ describe('buildTranslationFiles', () => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      it('show work with multiple inputs', () => {
+      it('should work with multiple inputs', () => {
         let expected = generateKeys({ end: 39 });
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected });
+        createTranslations(config);
+        assertTranslation({ type, expected, outputFormat });
       });
 
       it('should work with scopes', () => {
@@ -450,8 +490,13 @@ describe('buildTranslationFiles', () => {
           '5': defaultValue,
         };
 
-        buildTranslationFiles(config);
-        assertTranslation({ type, expected, path: 'admin-page/' });
+        createTranslations(config);
+        assertTranslation({
+          type,
+          expected,
+          path: 'admin-page/',
+          outputFormat,
+        });
       });
     });
   });
@@ -462,7 +507,7 @@ describe('buildTranslationFiles', () => {
 
     beforeEach(() => removeI18nFolder(type));
 
-    it('show work with comments', () => {
+    it('should work with comments', () => {
       const expected = {
         global: {
           'a.some.key': defaultValue,
@@ -517,10 +562,15 @@ describe('buildTranslationFiles', () => {
           '5555': defaultValue,
         },
       };
-      buildTranslationFiles(config);
+      createTranslations(config);
 
-      assertTranslation({ type, expected: expected.global });
-      assertTranslation({ type, expected: expected.admin, path: 'admin/' });
+      assertTranslation({ type, expected: expected.global, outputFormat });
+      assertTranslation({
+        type,
+        expected: expected.admin,
+        path: 'admin/',
+        outputFormat,
+      });
     });
   });
 });

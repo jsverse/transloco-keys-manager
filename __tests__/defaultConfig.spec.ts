@@ -12,4 +12,9 @@ describe('defaultConfig', () => {
     let { input } = defaultConfig('library');
     expect(input).toEqual(['lib']);
   });
+
+  it('should set the output format to "json"', () => {
+    let { outputFormat } = defaultConfig();
+    expect(outputFormat).toEqual('json');
+  });
 });

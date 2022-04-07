@@ -20,14 +20,21 @@ export function buildPath(obj: object) {
   }, []);
 }
 
+type Params = {
+  filePath: string;
+  translationPath: string;
+  outputFormat: 'json' | 'pot';
+};
+
 /**
  * /Users/username/www/folderName/src/assets/i18n/admin/es.json => { scope: admin, lang: es }
  * /Users/username/www/folderName/src/assets/i18n/es.json => { scope: undefined, lang: es }
  */
-export function getScopeAndLangFromPath(
-  filePath: string,
-  translationPath: string
-) {
+export function getScopeAndLangFromPath({
+  filePath,
+  translationPath,
+  outputFormat,
+}: Params) {
   filePath = pathUnixFormat(filePath);
   translationPath = pathUnixFormat(translationPath);
 
@@ -40,10 +47,10 @@ export function getScopeAndLangFromPath(
 
   let scope, lang;
   if (scopePath.length > 1) {
-    lang = scopePath.pop().replace('.json', '');
+    lang = scopePath.pop().replace(`.${outputFormat}`, '');
     scope = scopePath.join('/');
   } else {
-    lang = scopePath[0].replace('.json', '');
+    lang = scopePath[0].replace(`.${outputFormat}`, '');
   }
 
   return { scope, lang };
@@ -64,7 +71,8 @@ export function buildScopeFilePaths({
   aliasToScope,
   output,
   langs,
-}: Pick<Config, 'output' | 'langs'> & {
+  outputFormat,
+}: Pick<Config, 'output' | 'langs' | 'outputFormat'> & {
   aliasToScope: Scopes['aliasToScope'];
 }) {
   const { scopePathMap = {} } = getConfig();
@@ -76,7 +84,7 @@ export function buildScopeFilePaths({
           : `${output}/${scope}`;
 
         files.push({
-          path: `${bastPath}/${lang}.json`,
+          path: `${bastPath}/${lang}.${outputFormat}`,
           scope,
         });
       });

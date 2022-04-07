@@ -15,7 +15,11 @@ function noop() {}
 
 describe('resolveConfig', () => {
   const sourceRoot = '__tests__';
-  const inlineConfig = { defaultValue: 'test2', input: ['somePath'] };
+  const inlineConfig = {
+    defaultValue: 'test2',
+    input: ['somePath'],
+    outputFormat: 'pot',
+  };
   let spies;
   let defaultConfig = _defaultConfig();
   beforeAll(() => {
@@ -50,6 +54,7 @@ describe('resolveConfig', () => {
       input: resolvePath(defaultConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
+      outputFormat: 'json',
     };
     assertConfig(expected);
   });
@@ -58,6 +63,7 @@ describe('resolveConfig', () => {
     const expected = {
       ...defaultConfig,
       defaultValue: inlineConfig.defaultValue,
+      outputFormat: inlineConfig.outputFormat,
       input: resolvePath(inlineConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
@@ -97,6 +103,7 @@ describe('resolveConfig', () => {
       const expected = {
         ...defaultConfig,
         defaultValue: inlineConfig.defaultValue,
+        outputFormat: inlineConfig.outputFormat,
         input: resolvePath(inlineConfig.input),
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),

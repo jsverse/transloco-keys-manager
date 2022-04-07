@@ -53,7 +53,7 @@ At this point, you'll have to choose whether you want to use the CLI, Webpack Pl
 
 **Note:** if you're going to use the Webpack plugin, and you've already defined other Webpack plugins in your project, you should manually add the Keys Manager plugin to the list, rather than using the schematics command.
 
-### Manual 
+### Manual
 
 Install the Transloco keys manager package via `yarn` or `npm` by running:
 ```shell script
@@ -67,7 +67,7 @@ Add the following scripts to your `package.json` file:
   "i18n:extract": "transloco-keys-manager extract",
   "i18n:find": "transloco-keys-manager find"
 }
-``` 
+```
 
 ##
 
@@ -93,9 +93,9 @@ Run `npm run i18n:extract`, and it'll extract translatable keys from your projec
 
 The `TranslocoExtractKeysWebpackPlugin` provides you with the ability to extract the keys during development, while you're working on the project.
 
-The angular-cli doesn't support adding a custom Webpack config out of the box.  
+The angular-cli doesn't support adding a custom Webpack config out of the box.
 
-In case you already have support for a custom Webpack config just add the `TranslocoExtractKeysWebpackPlugin` in your plugin list.  
+In case you already have support for a custom Webpack config just add the `TranslocoExtractKeysWebpackPlugin` in your plugin list.
 
 In case you need to add the support, you can use the keys manager [schematics command](#schematics), and it will do the work for you. (choose the Webpack Plugin option)
 
@@ -253,19 +253,19 @@ The extracted keys for the code above will be:
 }
 ```
 
-*Notes:* 
+*Notes:*
 1. When using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
-2. When using comments in your HTML files, they *must* contain only the markers without additional text.  
-Here's an example for invalid comment:  
+2. When using comments in your HTML files, they *must* contain only the markers without additional text.
+Here's an example for invalid comment:
 `<!-- For dropdown t(dynamic.1, dynamic.2) -->`
 
 ### Marker function
 
-If you want to extract some standalone strings that are not part of any translation call (via the template or service) 
+If you want to extract some standalone strings that are not part of any translation call (via the template or service)
 you can wrap them with the marker function to tell the keys manager to extract them:
 ```ts
 import { marker } from '@ngneat/transloco-keys-manager/marker';
- 
+
 class MyClass {
     static titles = {
         username: marker('auth.username'), // ==> 'auth.username'
@@ -274,11 +274,11 @@ class MyClass {
     ...
 }
 ```
-The marker function will return the string which was passed to it.  
+The marker function will return the string which was passed to it.
 You can alias the marker function if needed:
 ```ts
 import { marker as _ } from '@ngneat/transloco-keys-manager/marker';
- 
+
 class MyClass {
     static titles = {
         username: _('auth.username'),
@@ -295,7 +295,7 @@ class MyClass {
 ```html
 <ng-container *transloco="let t; read: 'dashboard'">
   <h1>{{ t('title') }}</h1>
-  
+
   <p>{{ t('desc') }}</p>
 </ng-container>
 ```
@@ -336,8 +336,8 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `project`*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.  
-In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):  
+- `project`*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
+In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
 ```
 transloco-keys-manager extract --project first-app
@@ -367,6 +367,13 @@ transloco-keys-manager extract -i src/my/path
 ```
 transloco-keys-manager extract --output my/path
 transloco-keys-manager extract -o my/path
+```
+
+- `outputFormat`: The output format (`json`, `pot`) of the translation files (defaults to `json`)
+
+```
+transloco-keys-manager extract --output-format pot
+transloco-keys-manager extract -f pot
 ```
 
 - `langs`: The languages files to generate: (defaults to `[en]`)
@@ -406,10 +413,10 @@ transloco-keys-manager extract -u
 transloco-keys-manager extract --default-value missingValue
 transloco-keys-manager extract -d "{{key}} translation is missing"
 ```
-There are several placeholders that are replaced during extraction:   
-1. `{{key}}` - complete key including the scope.  
-2. `{{keyWithoutScope}}` - key value without the scope.  
-3. `{{scope}}` - the key's scope.  
+There are several placeholders that are replaced during extraction:
+1. `{{key}}` - complete key including the scope.
+2. `{{keyWithoutScope}}` - key value without the scope.
+3. `{{scope}}` - the key's scope.
 
 
 - `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)
@@ -459,6 +466,7 @@ module.exports = {
   keysManager: {
     input?: string | string[];
     output?: string;
+    outputFormat?: 'json' | 'pot';
     marker?: string;
     addMissingKeys?: boolean;
     emitErrorOnExtraKeys?: boolean;
@@ -478,7 +486,7 @@ You can extend the keys manager default logs by setting the `DEBUG` environment 
   "i18n:find": "DEBUG=* transloco-keys-manager find"
 }
 ```
-Currently, there are 4 supported namespaces: `*|config|paths|scopes`, setting `*` will print all the debugger logs.   
+Currently, there are 4 supported namespaces: `*|config|paths|scopes`, setting `*` will print all the debugger logs.
 
 You can also chain several namespaces:
 ```json
