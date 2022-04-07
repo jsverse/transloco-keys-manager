@@ -59,3 +59,6 @@ export type BaseParams = {
   scopeToKeys: ScopeMap;
   scopes: Scopes;
 };
+
+type ValueOrRecord<T> = T | Record<string, T>;
+export type NestedRecord = ValueOrRecord<string>;

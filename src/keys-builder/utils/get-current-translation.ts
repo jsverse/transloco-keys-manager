@@ -3,12 +3,13 @@ import { po } from 'gettext-parser';
 import { unflatten } from 'flat';
 
 import { getConfig } from '../../config';
+import { NestedRecord } from '../../types';
 
-function parseJson(path) {
+function parseJson(path: string): NestedRecord {
   return fsExtra.readJsonSync(path, { throws: false }) || {};
 }
 
-function parsePot(path) {
+function parsePot(path: string) {
   try {
     const file = fsExtra.readFileSync(path, 'utf8');
     const parsed = po.parse(file, 'utf8');
@@ -19,7 +20,7 @@ function parsePot(path) {
 
     const value = Object.keys(parsed.translations[''])
       .filter((key) => key.length > 0)
-      .reduce(
+      .reduce<Record<string, string>>(
         (acc, key) => ({
           ...acc,
           [key]: parsed.translations[''][key].msgstr.pop(),
@@ -27,13 +28,21 @@ function parsePot(path) {
         {}
       );
 
-    return getConfig().unflat ? unflatten(value, { object: true }) : value;
+    return getConfig().unflat
+      ? unflatten<Record<string, string>, NestedRecord>(value, {
+          object: true,
+        })
+      : value;
   } catch (e) {
     if (e.code === 'ENOENT') {
       return {};
     }
 
-    console.warn('Something is wrong with the provided file', e.message);
+    console.warn(
+      'Something is wrong with the provided file at "%s":',
+      path,
+      e.message
+    );
   }
 }
 
@@ -42,6 +51,12 @@ const parsers = {
   pot: parsePot,
 };
 
-export function getCurrentTranslation({ path, outputFormat }) {
+export function getCurrentTranslation({
+  path,
+  outputFormat,
+}: {
+  path: string;
+  outputFormat: 'json' | 'pot';
+}): NestedRecord {
   return parsers[outputFormat](path);
 }

@@ -2,15 +2,26 @@ import { unflatten } from 'flat';
 import { po } from 'gettext-parser';
 
 import { getConfig } from '../../config';
+import { NestedRecord } from '../../types';
 import { mergeDeep, stringify } from '../../utils/object.utils';
 
-function resolveTranslation({ currentTranslation, translation, replace }) {
+type Params = {
+  currentTranslation: NestedRecord;
+  translation: NestedRecord;
+  replace: boolean;
+};
+
+function resolveTranslation({
+  currentTranslation,
+  translation,
+  replace,
+}: Params): NestedRecord {
   return replace
     ? mergeDeep({}, translation)
     : mergeDeep({}, translation, currentTranslation);
 }
 
-function createJson({ currentTranslation, translation, replace }) {
+function createJson({ currentTranslation, translation, replace }: Params) {
   if (getConfig().unflat) {
     translation = unflatten(translation, { object: true });
   }
@@ -19,12 +30,12 @@ function createJson({ currentTranslation, translation, replace }) {
     currentTranslation,
     translation,
     replace,
-  });
+  }) as object;
 
   return stringify(resolved);
 }
 
-function createPot({ currentTranslation, translation, replace }) {
+function createPot({ currentTranslation, translation, replace }: Params) {
   const resolved = resolveTranslation({
     currentTranslation,
     translation,
@@ -45,7 +56,7 @@ function createPot({ currentTranslation, translation, replace }) {
             ...acc,
             [msgid]: { msgid, msgstr },
           }),
-          {} as any
+          {}
         ),
       },
     })
@@ -62,6 +73,8 @@ export function createTranslation({
   translation,
   replace,
   outputFormat,
-}) {
+}: Params & {
+  outputFormat: 'json' | 'pot';
+}): string {
   return compilers[outputFormat]({ currentTranslation, translation, replace });
 }
