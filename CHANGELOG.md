@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.6...v3.4.0) (2022-04-08)
+
+
+### Features
+
+* support pot format for the translation files ([#124](https://github.com/ngneat/transloco-keys-manager/issues/124)) ([658c4b0](https://github.com/ngneat/transloco-keys-manager/commit/658c4b005eaf5b5d8212844ac5abe111e7b09123)), closes [#45](https://github.com/ngneat/transloco-keys-manager/issues/45)
+
 ### [3.3.6](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.5...v3.3.6) (2022-04-05)
 
 ### [3.3.5](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.4...v3.3.5) (2022-03-31)
