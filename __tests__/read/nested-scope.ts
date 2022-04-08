@@ -1,4 +1,4 @@
 export const v = {
   provide: TRANSLOCO_SCOPE,
-  useValue: 'nested/scope'
+  useValue: ['nested/scope', 'todos-page'],
 };
