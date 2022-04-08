@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.0...v3.4.1) (2022-04-08)
+
+
+### Bug Fixes
+
+* 🐛 support scopes with array as value ([425f34c](https://github.com/ngneat/transloco-keys-manager/commit/425f34c9b08ac50d1c493ab83ebec8b9de773a98)), closes [#128](https://github.com/ngneat/transloco-keys-manager/issues/128)
+
 ## [3.4.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.6...v3.4.0) (2022-04-08)
 
 
