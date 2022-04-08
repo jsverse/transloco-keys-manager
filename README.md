@@ -369,7 +369,7 @@ transloco-keys-manager extract --output my/path
 transloco-keys-manager extract -o my/path
 ```
 
-- `outputFormat`: The translation file format `'json' | 'pot'`: (default is `json`)
+- `fileFormat`: The translation file format `'json' | 'pot'`: (default is `json`)
 
 ```
 transloco-keys-manager extract --file-format pot
