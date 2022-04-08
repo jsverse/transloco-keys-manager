@@ -13,9 +13,10 @@ export function findMissingKeys(inlineConfig: Config) {
   const config = resolveConfig(inlineConfig);
   setConfig(config);
 
+  const { translationsPath, fileFormat } = config;
   const translationFiles = getTranslationFilesPath(
-    config.translationsPath,
-    config.outputFormat
+    translationsPath,
+    fileFormat
   );
 
   if (translationFiles.length === 0) {
@@ -29,11 +30,12 @@ export function findMissingKeys(inlineConfig: Config) {
   const result = buildKeys(config);
   logger.success(`${messages.extract} 🗝`);
 
+  const { addMissingKeys, emitErrorOnExtraKeys } = config;
   compareKeysToFiles({
     scopeToKeys: result.scopeToKeys,
-    translationPath: config.translationsPath,
-    addMissingKeys: config.addMissingKeys,
-    emitErrorOnExtraKeys: config.emitErrorOnExtraKeys,
-    outputFormat: config.outputFormat,
+    translationsPath,
+    addMissingKeys,
+    emitErrorOnExtraKeys,
+    fileFormat,
   });
 }

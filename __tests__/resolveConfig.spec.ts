@@ -1,11 +1,11 @@
 // import-conductor-skip
-
 jest.mock('../src/utils/resolve-project-base-path');
 jest.mock('@ngneat/transloco-utils');
 import { getGlobalConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
 import * as path from 'path';
 
+import { Config } from '../src/types';
 import { defaultConfig as _defaultConfig } from '../src/config';
 import { resolveConfig } from '../src/utils/resolve-config';
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
@@ -33,6 +33,9 @@ describe('resolveConfig', () => {
     ];
   });
 
+  function resolvePath(configPath: string[]): string[];
+  function resolvePath(configPath: string): string;
+  function resolvePath(configPath: string, asArray: true): string[];
   function resolvePath(configPath: string | string[], asArray = false) {
     const resolve = (p) => path.resolve(process.cwd(), sourceRoot, p);
     if (Array.isArray(configPath)) {
@@ -54,8 +57,8 @@ describe('resolveConfig', () => {
       input: resolvePath(defaultConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
-      outputFormat: 'json',
-    };
+      fileFormat: 'json',
+    } as Config;
     assertConfig(expected);
   });
 
@@ -67,7 +70,7 @@ describe('resolveConfig', () => {
       input: resolvePath(inlineConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
-    };
+    } as Config;
     assertConfig(expected, inlineConfig);
   });
 
@@ -95,7 +98,7 @@ describe('resolveConfig', () => {
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
         langs: translocoConfig.langs,
-      };
+      } as Config;
       assertConfig(expected);
     });
 
@@ -108,7 +111,7 @@ describe('resolveConfig', () => {
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
         langs: translocoConfig.langs,
-      };
+      } as Config;
       assertConfig(expected, inlineConfig);
     });
   });

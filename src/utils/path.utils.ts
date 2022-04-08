@@ -20,11 +20,9 @@ export function buildPath(obj: object) {
   }, []);
 }
 
-type Params = {
+interface Options extends Pick<Config, 'fileFormat' | 'translationsPath'> {
   filePath: string;
-  translationPath: string;
-  outputFormat: 'json' | 'pot';
-};
+}
 
 /**
  * /Users/username/www/folderName/src/assets/i18n/admin/es.json => { scope: admin, lang: es }
@@ -32,25 +30,26 @@ type Params = {
  */
 export function getScopeAndLangFromPath({
   filePath,
-  translationPath,
-  outputFormat,
-}: Params) {
+  translationsPath,
+  fileFormat,
+}: Options) {
   filePath = pathUnixFormat(filePath);
-  translationPath = pathUnixFormat(translationPath);
+  translationsPath = pathUnixFormat(translationsPath);
 
-  if (translationPath.endsWith('/') === false) {
-    translationPath = `${translationPath}/`;
+  if (translationsPath.endsWith('/') === false) {
+    translationsPath = `${translationsPath}/`;
   }
 
-  const [_, pathwithScope] = filePath.split(translationPath);
-  const scopePath = pathwithScope.split('/');
+  const [_, pathWithScope] = filePath.split(translationsPath);
+  const scopePath = pathWithScope.split('/');
+  const removeExtension = (str: string) => str.replace(`.${fileFormat}`, '');
 
   let scope, lang;
   if (scopePath.length > 1) {
-    lang = scopePath.pop().replace(`.${outputFormat}`, '');
+    lang = removeExtension(scopePath.pop());
     scope = scopePath.join('/');
   } else {
-    lang = scopePath[0].replace(`.${outputFormat}`, '');
+    lang = removeExtension(scopePath[0]);
   }
 
   return { scope, lang };
@@ -71,8 +70,8 @@ export function buildScopeFilePaths({
   aliasToScope,
   output,
   langs,
-  outputFormat,
-}: Pick<Config, 'output' | 'langs' | 'outputFormat'> & {
+  fileFormat,
+}: Pick<Config, 'output' | 'langs' | 'fileFormat'> & {
   aliasToScope: Scopes['aliasToScope'];
 }) {
   const { scopePathMap = {} } = getConfig();
@@ -84,7 +83,7 @@ export function buildScopeFilePaths({
           : `${output}/${scope}`;
 
         files.push({
-          path: `${bastPath}/${lang}.${outputFormat}`,
+          path: `${bastPath}/${lang}.${fileFormat}`,
           scope,
         });
       });

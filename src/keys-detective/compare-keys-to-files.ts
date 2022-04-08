@@ -4,28 +4,32 @@ import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { messages } from '../messages';
-import { ScopeMap } from '../types';
+import { Config, FileFormats, ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
 import { getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
-type Params = {
+
+interface CompareKeysOptions
+  extends Pick<
+    Config,
+    | 'fileFormat'
+    | 'addMissingKeys'
+    | 'emitErrorOnExtraKeys'
+    | 'translationsPath'
+  > {
   scopeToKeys: ScopeMap;
-  translationPath: string;
-  addMissingKeys: boolean;
-  emitErrorOnExtraKeys: boolean;
-  outputFormat: 'json' | 'pot';
-};
+}
 
 export function compareKeysToFiles({
   scopeToKeys,
-  translationPath,
+  translationsPath,
   addMissingKeys,
   emitErrorOnExtraKeys,
-  outputFormat,
-}: Params) {
+  fileFormat,
+}: CompareKeysOptions) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
 
@@ -33,8 +37,8 @@ export function compareKeysToFiles({
 
   /** An array of the existing translation files paths */
   const translationFiles = getTranslationFilesPath(
-    translationPath,
-    outputFormat
+    translationsPath,
+    fileFormat
   );
 
   let result = [];
@@ -46,7 +50,7 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationPath: path,
-        files: glob.sync(`${path}/*.${outputFormat}`),
+        files: glob.sync(`${path}/*.${fileFormat}`),
       });
     }
   }
@@ -55,8 +59,8 @@ export function compareKeysToFiles({
   for (const filePath of translationFiles) {
     const { scope = '__global' } = getScopeAndLangFromPath({
       filePath,
-      translationPath,
-      outputFormat,
+      translationsPath,
+      fileFormat,
     });
     if (cache[scope]) {
       continue;
@@ -70,9 +74,9 @@ export function compareKeysToFiles({
       result.push({
         keys,
         scope,
-        translationPath,
+        translationsPath,
         files: glob.sync(
-          `${translationPath}/${isGlobal ? '' : scope}/*.${outputFormat}`
+          `${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
         ),
       });
     }
@@ -82,8 +86,8 @@ export function compareKeysToFiles({
     for (const filePath of files) {
       const { lang } = getScopeAndLangFromPath({
         filePath,
-        translationPath,
-        outputFormat,
+        translationsPath,
+        fileFormat,
       });
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flat file

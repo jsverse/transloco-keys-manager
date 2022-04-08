@@ -14,7 +14,6 @@ describe('defaultConfig', () => {
   });
 
   it('should set the output format to "json"', () => {
-    let { outputFormat } = defaultConfig();
-    expect(outputFormat).toEqual('json');
+    expect(defaultConfig().fileFormat).toEqual('json');
   });
 });

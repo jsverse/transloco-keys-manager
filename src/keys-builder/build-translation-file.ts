@@ -1,5 +1,7 @@
 import * as fsExtra from 'fs-extra';
 
+import { Config, Translation } from '../types';
+
 import { createTranslation } from './utils/create-translation';
 import { getCurrentTranslation } from './utils/get-current-translation';
 
@@ -8,13 +10,20 @@ export interface FileAction {
   type: 'new' | 'modified';
 }
 
+interface BuildTranslationOptions
+  extends Pick<Config, 'fileFormat'>,
+    Partial<Pick<Config, 'replace'>> {
+  path: string;
+  translation?: Translation;
+}
+
 export function buildTranslationFile({
   path,
   translation = {},
   replace = false,
-  outputFormat,
-}): FileAction {
-  const currentTranslation = getCurrentTranslation({ path, outputFormat });
+  fileFormat,
+}: BuildTranslationOptions): FileAction {
+  const currentTranslation = getCurrentTranslation({ path, fileFormat });
 
   fsExtra.outputFileSync(
     path,
@@ -22,7 +31,7 @@ export function buildTranslationFile({
       currentTranslation,
       translation,
       replace,
-      outputFormat,
+      fileFormat,
     })
   );
 

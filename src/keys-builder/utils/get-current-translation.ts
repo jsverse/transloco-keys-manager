@@ -1,11 +1,11 @@
+import { unflatten } from 'flat';
 import * as fsExtra from 'fs-extra';
 import { po } from 'gettext-parser';
-import { unflatten } from 'flat';
 
 import { getConfig } from '../../config';
-import { NestedRecord } from '../../types';
+import { FileFormats, Translation } from '../../types';
 
-function parseJson(path: string): NestedRecord {
+function parseJson(path: string): Translation {
   return fsExtra.readJsonSync(path, { throws: false }) || {};
 }
 
@@ -29,7 +29,7 @@ function parsePot(path: string) {
       );
 
     return getConfig().unflat
-      ? unflatten<Record<string, string>, NestedRecord>(value, {
+      ? unflatten<Record<string, string>, Translation>(value, {
           object: true,
         })
       : value;
@@ -46,17 +46,19 @@ function parsePot(path: string) {
   }
 }
 
-const parsers = {
+const parsers: Record<FileFormats, (path: string) => Translation> = {
   json: parseJson,
   pot: parsePot,
 };
 
+interface GetTranslationsOptions {
+  path: string;
+  fileFormat: FileFormats;
+}
+
 export function getCurrentTranslation({
   path,
-  outputFormat,
-}: {
-  path: string;
-  outputFormat: 'json' | 'pot';
-}): NestedRecord {
-  return parsers[outputFormat](path);
+  fileFormat,
+}: GetTranslationsOptions): Translation {
+  return parsers[fileFormat](path);
 }

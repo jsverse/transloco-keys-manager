@@ -18,8 +18,10 @@ export type Config = {
   sort?: boolean;
   unflat?: boolean;
   command?: 'extract' | 'find';
-  outputFormat?: 'json' | 'pot';
+  fileFormat?: FileFormats;
 };
+
+export type FileFormats = 'json' | 'pot';
 
 export type ExtractionResult = {
   scopeToKeys: ScopeMap;
@@ -60,5 +62,4 @@ export type BaseParams = {
   scopes: Scopes;
 };
 
-type ValueOrRecord<T> = T | Record<string, T>;
-export type NestedRecord = ValueOrRecord<string>;
+export type Translation = Record<string, any>;

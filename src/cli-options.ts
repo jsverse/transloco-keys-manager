@@ -31,11 +31,11 @@ export const optionDefinitions = [
     description: 'The languages files to generate',
   },
   {
-    name: 'output-format',
+    name: 'file-format',
     alias: 'f',
     type: String,
     description:
-      'The output format (`json`, `pot`) of the translation files (defaults to `json`)',
+      'The translation file format (`json`, `pot`) default is `json`',
   },
   {
     name: 'marker',

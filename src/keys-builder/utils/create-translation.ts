@@ -2,45 +2,41 @@ import { unflatten } from 'flat';
 import { po } from 'gettext-parser';
 
 import { getConfig } from '../../config';
-import { NestedRecord } from '../../types';
+import { FileFormats, Translation } from '../../types';
 import { mergeDeep, stringify } from '../../utils/object.utils';
 
-type Params = {
-  currentTranslation: NestedRecord;
-  translation: NestedRecord;
+interface CreateTranslationOptions {
+  currentTranslation: Translation;
+  translation: Translation;
   replace: boolean;
-};
+  fileFormat: FileFormats;
+}
 
 function resolveTranslation({
   currentTranslation,
   translation,
   replace,
-}: Params): NestedRecord {
+}: CreateTranslationOptions): Translation {
   return replace
     ? mergeDeep({}, translation)
     : mergeDeep({}, translation, currentTranslation);
 }
 
-function createJson({ currentTranslation, translation, replace }: Params) {
-  if (getConfig().unflat) {
-    translation = unflatten(translation, { object: true });
-  }
+function createJson(config: CreateTranslationOptions) {
+  const { translation } = config;
 
-  const resolved = resolveTranslation({
-    currentTranslation,
-    translation,
-    replace,
-  }) as object;
-
-  return stringify(resolved);
+  return stringify(
+    resolveTranslation({
+      ...config,
+      translation: getConfig().unflat
+        ? unflatten(translation, { object: true })
+        : translation,
+    })
+  );
 }
 
-function createPot({ currentTranslation, translation, replace }: Params) {
-  const resolved = resolveTranslation({
-    currentTranslation,
-    translation,
-    replace,
-  });
+function createPot(config: CreateTranslationOptions) {
+  const resolved = resolveTranslation(config);
 
   return po
     .compile({
@@ -63,18 +59,14 @@ function createPot({ currentTranslation, translation, replace }: Params) {
     .toString('utf8');
 }
 
-const compilers = {
+const compilers: Record<
+  FileFormats,
+  (config: CreateTranslationOptions) => string
+> = {
   json: createJson,
   pot: createPot,
 };
 
-export function createTranslation({
-  currentTranslation,
-  translation,
-  replace,
-  outputFormat,
-}: Params & {
-  outputFormat: 'json' | 'pot';
-}): string {
-  return compilers[outputFormat]({ currentTranslation, translation, replace });
+export function createTranslation(config: CreateTranslationOptions): string {
+  return compilers[config.fileFormat](config);
 }

@@ -336,7 +336,7 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `project`*: The targeted project (defaults to `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
+- `project`*: The targeted project (default is `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
 In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
 ```
@@ -345,14 +345,14 @@ transloco-keys-manager extract --project first-app
 
 \* **Note:** If no `angular.json` file is present, `sourceRoot` will be `src`.
 
-- `config`: The root search directory for the transloco config file: (defaults to `process.cwd()`)
+- `config`: The root search directory for the transloco config file: (default is `process.cwd()`)
 
 ```
 transloco-keys-manager extract --config src/my/path
 transloco-keys-manager extract -c src/my/path
 ```
 
-- `input`: The source directory for all files using the translation keys: (defaults to `['app']`)
+- `input`: The source directory for all files using the translation keys: (default is `['app']`)
 
 ```
 transloco-keys-manager extract --input src/my/path
@@ -362,41 +362,41 @@ transloco-keys-manager extract -i src/my/path
 
 \* **Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
 
-- `output`: The target directory for all generated translation files: (defaults to `assets/i18n`)
+- `output`: The target directory for all generated translation files: (default is `assets/i18n`)
 
 ```
 transloco-keys-manager extract --output my/path
 transloco-keys-manager extract -o my/path
 ```
 
-- `outputFormat`: The output format (`json`, `pot`) of the translation files (defaults to `json`)
+- `outputFormat`: The translation file format `'json' | 'pot'`: (default is `json`)
 
 ```
-transloco-keys-manager extract --output-format pot
+transloco-keys-manager extract --file-format pot
 transloco-keys-manager extract -f pot
 ```
 
-- `langs`: The languages files to generate: (defaults to `[en]`)
+- `langs`: The languages files to generate: (default is `[en]`)
 
 ```
 transloco-keys-manager extract --langs en es it
 transloco-keys-manager extract -l en es it
 ```
 
-- `marker`: The marker sign for dynamic values: (defaults to `t`)
+- `marker`: The marker sign for dynamic values: (default is `t`)
 
 ```
 transloco-keys-manager extract --marker _
 transloco-keys-manager extract -m  _
 ```
 
-- `sort`: Whether to sort the keys using JS `sort()` method: (defaults to `false`)
+- `sort`: Whether to sort the keys using JS `sort()` method: (default is `false`)
 
 ```
 transloco-keys-manager extract --sort
 ```
 
-- `unflat`: Whether to `unflat` instead of `flat`: (defaults to `flat`)
+- `unflat`: Whether to `unflat` instead of `flat`: (default is `flat`)
 
 ```
 transloco-keys-manager extract --unflat
@@ -407,7 +407,7 @@ transloco-keys-manager extract -u
 
   During key extraction you will get a warning with a list of concerned keys you have to check for.
 
-- `defaultValue`: The default value of a generated key: (defaults to `Missing value for {{key}}`)
+- `defaultValue`: The default value of a generated key: (default is `Missing value for {{key}}`)
 
 ```
 transloco-keys-manager extract --default-value missingValue
@@ -426,21 +426,21 @@ transloco-keys-manager extract --replace
 transloco-keys-manager extract -r
 ```
 
-- `addMissingKeys`: Add missing keys that were found by the detective (defaults to `false`)
+- `addMissingKeys`: Add missing keys that were found by the detective (default is `false`)
 
 ```
 transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (defaults to `false`)
+- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (default is `false`)
 
 ```
 transloco-keys-manager find --emit-error-on-extra-keys
 transloco-keys-manager find -e
 ```
 
-- `translationsPath`: The path for the root directory of the translation files (defaults to `assets/i18n`)
+- `translationsPath`: The path for the root directory of the translation files (default is `assets/i18n`)
 
 ```
 transloco-keys-manager find --translations-path my/path
@@ -466,7 +466,7 @@ module.exports = {
   keysManager: {
     input?: string | string[];
     output?: string;
-    outputFormat?: 'json' | 'pot';
+    fileFormat?: 'json' | 'pot';
     marker?: string;
     addMissingKeys?: boolean;
     emitErrorOnExtraKeys?: boolean;
@@ -486,7 +486,7 @@ You can extend the keys manager default logs by setting the `DEBUG` environment 
   "i18n:find": "DEBUG=* transloco-keys-manager find"
 }
 ```
-Currently, there are 4 supported namespaces: `*|config|paths|scopes`, setting `*` will print all the debugger logs.
+Supported namespaces: `*|config|paths|scopes|extraction`, setting `*` will print all the debugger logs.
 
 You can also chain several namespaces:
 ```json
