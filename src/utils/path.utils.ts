@@ -56,6 +56,11 @@ export function getScopeAndLangFromPath({
 }
 
 export function resolveConfigPaths(config: Config, sourceRoot: string) {
+  
+  if(!sourceRoot) {
+    sourceRoot = '';
+  }
+  
   const resolvePath = (configPath) =>
     path.resolve(process.cwd(), sourceRoot, configPath);
   config.input = config.input.map(resolvePath);
