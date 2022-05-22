@@ -55,11 +55,7 @@ export function getScopeAndLangFromPath({
   return { scope, lang };
 }
 
-export function resolveConfigPaths(config: Config, sourceRoot: string) {
-  
-  if(!sourceRoot) {
-    sourceRoot = '';
-  }
+export function resolveConfigPaths(config: Config, sourceRoot = '') {
   
   const resolvePath = (configPath) =>
     path.resolve(process.cwd(), sourceRoot, configPath);
