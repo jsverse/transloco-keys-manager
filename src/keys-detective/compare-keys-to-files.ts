@@ -74,7 +74,7 @@ export function compareKeysToFiles({
       result.push({
         keys,
         scope,
-        translationsPath,
+        translationPath: translationsPath,
         files: glob.sync(
           `${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
         ),
@@ -86,7 +86,7 @@ export function compareKeysToFiles({
     for (const filePath of files) {
       const { lang } = getScopeAndLangFromPath({
         filePath,
-        translationsPath,
+        translationsPath: translationPath,
         fileFormat,
       });
       const translation = readFile(filePath, { parse: true });
