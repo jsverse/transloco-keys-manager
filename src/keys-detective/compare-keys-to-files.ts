@@ -4,10 +4,10 @@ import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { messages } from '../messages';
-import { Config, FileFormats, ScopeMap } from '../types';
+import { Config, ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
-import { getScopeAndLangFromPath } from '../utils/path.utils';
+import { filterPathByLang, getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
@@ -21,6 +21,7 @@ interface CompareKeysOptions
     | 'translationsPath'
   > {
   scopeToKeys: ScopeMap;
+  langs?: ReadonlyArray<string>;
 }
 
 export function compareKeysToFiles({
@@ -29,9 +30,15 @@ export function compareKeysToFiles({
   addMissingKeys,
   emitErrorOnExtraKeys,
   fileFormat,
+  langs: langsToProcess = [],
 }: CompareKeysOptions) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
+
+  const scopeAndLangFromPathOption = {
+    translationsPath,
+    fileFormat,
+  };
 
   const diffsPerLang = {};
 
@@ -50,7 +57,9 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationPath: path,
-        files: glob.sync(`${path}/*.${fileFormat}`),
+        files: glob
+          .sync(`${path}/*.${fileFormat}`)
+          .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
   }
@@ -58,9 +67,8 @@ export function compareKeysToFiles({
 
   for (const filePath of translationFiles) {
     const { scope = '__global' } = getScopeAndLangFromPath({
+      ...scopeAndLangFromPathOption,
       filePath,
-      translationsPath,
-      fileFormat,
     });
     if (cache[scope]) {
       continue;
@@ -75,9 +83,9 @@ export function compareKeysToFiles({
         keys,
         scope,
         translationsPath,
-        files: glob.sync(
-          `${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
-        ),
+        files: glob
+          .sync(`${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`)
+          .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
   }

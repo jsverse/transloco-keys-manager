@@ -3,6 +3,7 @@ import { buildKeys } from '../keys-builder/build-keys';
 import { messages } from '../messages';
 import { Config } from '../types';
 import { getLogger } from '../utils/logger';
+import { filterPathByLang } from '../utils/path.utils';
 import { resolveConfig } from '../utils/resolve-config';
 
 import { compareKeysToFiles } from './compare-keys-to-files';
@@ -10,14 +11,14 @@ import { getTranslationFilesPath } from './get-translation-files-path';
 
 export function findMissingKeys(inlineConfig: Config) {
   const logger = getLogger();
-  const config = resolveConfig(inlineConfig);
+  const config = resolveConfig({ langs:[], ...inlineConfig });
   setConfig(config);
 
-  const { translationsPath, fileFormat } = config;
+  const { translationsPath, fileFormat, langs = [] } = config;
   const translationFiles = getTranslationFilesPath(
     translationsPath,
     fileFormat
-  );
+  ).filter(filterPathByLang(langs, config));
 
   if (translationFiles.length === 0) {
     console.log('No translation files found.');
@@ -37,5 +38,6 @@ export function findMissingKeys(inlineConfig: Config) {
     addMissingKeys,
     emitErrorOnExtraKeys,
     fileFormat,
+    langs,
   });
 }

@@ -24,6 +24,22 @@ interface Options extends Pick<Config, 'fileFormat' | 'translationsPath'> {
   filePath: string;
 }
 
+export function filterPathByLang(
+  langs: ReadonlyArray<string>,
+  options: Pick<Config, 'fileFormat' | 'translationsPath'>
+) {
+  const langsAsSet = new Set(langs);
+
+  return (filePath: string) => {
+    if (langsAsSet.size > 0) {
+      const { lang } = getScopeAndLangFromPath({ filePath, ...options });
+      return langsAsSet.has(lang);
+    } else {
+      return true;
+    }
+  };
+}
+
 /**
  * /Users/username/www/folderName/src/assets/i18n/admin/es.json => { scope: admin, lang: es }
  * /Users/username/www/folderName/src/assets/i18n/es.json => { scope: undefined, lang: es }
