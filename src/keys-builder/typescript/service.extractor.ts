@@ -7,7 +7,7 @@ import { TSExtractorResult } from './types';
 export function serviceExtractor(ast: SourceFile): TSExtractorResult {
   const serviceNameNodes = tsquery(
     ast,
-    `Constructor Parameter:has(TypeReference Identifier[name=TranslocoService])`
+    `Constructor Parameter:has(TypeReference Identifier[name=TranslocoService]),PropertyDeclaration:has(CallExpression:has(Identifier[name=TranslocoService],Identifier[name=inject]))`
   );
 
   let result = [];
