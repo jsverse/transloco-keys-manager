@@ -11,9 +11,6 @@
     "prebuild": "npm run clean:dist",
     "build": "tsc",
     "postbuild": "node ./scripts/post-build.js",
-    "prebuild:dev": "npm run clean:dist",
-    "build:dev": "tsc",
-    "postbuild:dev": "node ./scripts/post-build.js dev",
     "clean:dist": "rimraf dist",
     "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
     "conduct": "import-conductor",
@@ -68,7 +65,7 @@
   },
   "dependencies": {
     "@angular/compiler": "12.2.6",
-    "@ngneat/transloco-utils": "^3.0.2",
+    "@ngneat/transloco-utils": "3.0.4",
     "@phenomnomnominal/tsquery": "4.1.1",
     "chalk": "4.1.2",
     "cheerio": "1.0.0-rc.10",

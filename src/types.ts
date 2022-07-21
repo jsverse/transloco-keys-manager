@@ -47,8 +47,8 @@ export type Scopes = {
 };
 
 export type ScopeMap = {
-  __global: object;
-  [scopePath: string]: object;
+  __global: Record<string, string>;
+  [scopePath: string]: Record<string, string>;
 };
 
 export enum TEMPLATE_TYPE {

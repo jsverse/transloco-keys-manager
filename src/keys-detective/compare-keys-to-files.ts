@@ -4,13 +4,20 @@ import { flatten } from 'flat';
 import * as glob from 'glob';
 
 import { messages } from '../messages';
-import { Config, FileFormats, ScopeMap } from '../types';
+import { Config, ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
 import { getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
+
+interface Result {
+  keys: Record<string, string>;
+  files: string[];
+  scope: string;
+  baseFilesPath: string;
+}
 
 interface CompareKeysOptions
   extends Pick<
@@ -41,16 +48,19 @@ export function compareKeysToFiles({
     fileFormat
   );
 
-  let result = [];
+  let result: Result[] = [];
   const scopePaths = getGlobalConfig().scopePathMap || {};
   for (const [scope, path] of Object.entries(scopePaths)) {
     const keys = scopeToKeys[scope];
     if (keys) {
-      result.push({
+      const res: Omit<Result, 'files'> = {
         keys,
         scope,
-        translationPath: path,
-        files: glob.sync(`${path}/*.${fileFormat}`),
+        baseFilesPath: path,
+      };
+      result.push({
+        ...res,
+        files: glob.sync(`${res.baseFilesPath}/*.${fileFormat}`),
       });
     }
   }
@@ -70,23 +80,25 @@ export function compareKeysToFiles({
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
     if (keys) {
       const isGlobal = scope === '__global';
-
-      result.push({
+      const res: Omit<Result, 'files'> = {
         keys,
         scope,
-        translationsPath,
+        baseFilesPath: translationsPath,
+      };
+      result.push({
+        ...res,
         files: glob.sync(
-          `${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
+          `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
         ),
       });
     }
   }
 
-  for (const { files, keys, scope, translationPath } of result) {
+  for (const { files, keys, scope, baseFilesPath } of result) {
     for (const filePath of files) {
       const { lang } = getScopeAndLangFromPath({
         filePath,
-        translationsPath,
+        translationsPath: baseFilesPath,
         fileFormat,
       });
       const translation = readFile(filePath, { parse: true });
