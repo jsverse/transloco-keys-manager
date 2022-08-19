@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/transloco-keys-manager",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "Extract translatable keys from projects that uses Transloco",
   "main": "public_api.js",
   "scripts": {

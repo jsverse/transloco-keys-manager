@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.1...v3.4.2) (2022-08-19)
+
+
+### Bug Fixes
+
+* 🐛 scope mapping throws an error ([c696694](https://github.com/ngneat/transloco-keys-manager/commit/c69669416574bc35db8f3935261846a87f1577f1)), closes [#136](https://github.com/ngneat/transloco-keys-manager/issues/136)
+
 ### [3.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.0...v3.4.1) (2022-04-08)
 
 
