@@ -278,13 +278,12 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
       beforeEach(() => removeI18nFolder(type));
 
-      it('should work with service (using constructor property and inject)', () => {
+      it('should work with service', () => {
         const expected = {
           ...generateKeys({ end: 19 }),
           ...{ '20.21.22.23': defaultValue },
           ...generateKeys({ start: 24, end: 33 }),
-          // inject.test is a test value created with angular 14 inject(TranslocoService), see service/3.ts
-          'inject.test': defaultValue,
+          'inject.test': defaultValue
         };
 
         createTranslations(config);
@@ -330,6 +329,14 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
       it('should work when passing an array of keys', () => {
         const expected = generateKeys({ start: 26, end: 33 });
+
+        createTranslations(config);
+        assertPartialTranslation({ type, expected, fileFormat });
+      });
+
+      it('should work with angular 14 inject', () => {
+        // inject.test is a test value created with angular 14 inject(TranslocoService), see service/3.ts
+        const expected = { 'inject.test': defaultValue };
 
         createTranslations(config);
         assertPartialTranslation({ type, expected, fileFormat });

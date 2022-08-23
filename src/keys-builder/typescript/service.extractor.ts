@@ -5,9 +5,11 @@ import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
 
 export function serviceExtractor(ast: SourceFile): TSExtractorResult {
+  const constrcutorParameterQuery = 'Constructor Parameter:has(TypeReference Identifier[name=TranslocoService])'
+  const injectPropertyQuery = 'PropertyDeclaration:has(CallExpression:has(Identifier[name=TranslocoService],Identifier[name=inject]))'
   const serviceNameNodes = tsquery(
     ast,
-    `Constructor Parameter:has(TypeReference Identifier[name=TranslocoService]),PropertyDeclaration:has(CallExpression:has(Identifier[name=TranslocoService],Identifier[name=inject]))`
+    `${constrcutorParameterQuery},${injectPropertyQuery}`
   );
 
   let result = [];
