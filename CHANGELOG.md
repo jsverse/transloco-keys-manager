@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.2...v3.5.0) (2022-12-16)
+
+
+### Features
+
+* 🎸 use jsonc-parser to parse configs ([#147](https://github.com/ngneat/transloco-keys-manager/issues/147)) ([66a5cde](https://github.com/ngneat/transloco-keys-manager/commit/66a5cde716139f01ce38ab7dd88a26ba68aa3e14))
+
 ### [3.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.1...v3.4.2) (2022-08-19)
 
 
