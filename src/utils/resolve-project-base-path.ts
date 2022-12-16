@@ -5,6 +5,7 @@ import path from 'path';
 import { ProjectType } from '../config';
 
 import { coerceArray } from './collection.utils';
+import { jsoncParser } from "./json.utils";
 import { isString } from './validators.utils';
 
 const angularConfigFile = ['angular.json', '.angular.json'];
@@ -16,6 +17,9 @@ function searchConfig(searchPlaces: string[] | string, searchFrom = '') {
   const resolvePath = path.resolve(process.cwd(), searchFrom);
 
   return cosmiconfigSync('', {
+    loaders: {
+      '.json': jsoncParser,
+    },
     searchPlaces: coerceArray(searchPlaces),
   }).search(resolvePath)?.config;
 }

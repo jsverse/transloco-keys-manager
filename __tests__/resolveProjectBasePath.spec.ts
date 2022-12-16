@@ -29,6 +29,12 @@ describe('resolveProjectBasePath', () => {
     removeRootConfigs();
   });
 
+  it('should throw when having config in invalid JSON format', () => {
+    addInvalidRootAngularConfig();
+    expect(() => resolveProjectBasePath()).toThrow('Failed to parse');
+    removeRootConfigs();
+  });
+
   describe('Project level config', () => {
     const projectPath = 'packages/myProject';
 
@@ -97,7 +103,7 @@ function addProjectConfig({
   config?: any;
 }) {
   fs.mkdirsSync(resolvePath(path));
-  fs.writeJsonSync(jsonFile('project', path), config);
+  fs.writeFileSync(jsonFile('project', path),  '// comment\n' + JSON.stringify(config));
 }
 
 function removeProjectConfig(path: string) {
@@ -114,7 +120,11 @@ function addRootConfig({
   configType: 'angular' | 'workspace';
   config?: any;
 }) {
-  fs.writeJsonSync(jsonFile(configType, path), config);
+  fs.writeFileSync(jsonFile(configType, path), '// comment\n' + JSON.stringify(config));
+}
+
+function addInvalidRootAngularConfig() {
+  fs.writeFileSync(jsonFile('angular'), '{ defaultProject: "defaultProject" }');
 }
 
 function removeConfigFile(configType: string, path?: string) {
