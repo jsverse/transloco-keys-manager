@@ -1,4 +1,4 @@
-import { unflatten } from 'flat';
+import { flatten, unflatten } from 'flat';
 import { po } from 'gettext-parser';
 
 import { getConfig } from '../../config';
@@ -45,7 +45,9 @@ function createJson(config: CreateTranslationOptions) {
 }
 
 function createPot(config: CreateTranslationOptions) {
-  const resolved = resolveTranslation(config);
+  const resolved = getConfig().unflat
+    ? flatten(resolveTranslation(config))
+    : resolveTranslation(config);
 
   return po
     .compile({
