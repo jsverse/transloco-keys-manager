@@ -57,7 +57,8 @@ type TranslationCategory =
   | 'unflat-problematic-keys'
   | 'multi-input'
   | 'scope-mapping'
-  | 'comments';
+  | 'comments'
+  | 'remove-extra-keys';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
   type: TranslationCategory;
@@ -598,6 +599,53 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         path: 'admin/',
         fileFormat,
       });
+    });
+  });
+
+  describe('remove-extra-keys', () => {
+    const type = 'remove-extra-keys';
+    const testHtmlFileWithKey = `./${sourceRoot}/${type}/1-before.html.in`;
+    const testHtmlFileWithoutKey = `./${sourceRoot}/${type}/1-after.html.in`;
+    const testHtmlFile = `./${sourceRoot}/${type}/1.html`;
+    const expectedBefore = {
+      '1': 'missing',
+      '2': 'missing',
+      group1: { '1': 'missing', '2': 'missing' },
+      group2: { '1': 'missing', '2': 'missing' },
+    };
+    const exectedAfterWithDel = {
+      '2': 'missing',
+      group1: { '2': 'missing' },
+      group3: { '2': 'missing' },
+    };
+    const exectedAfterWithoutDel = {
+      ...expectedBefore,
+      group3: { '2': 'missing' },
+    };
+
+    // Run with unflat = true to ensure we also test the nested JSON structure.
+    const config = gConfig(type, { unflat: true });
+
+    beforeEach(() => removeI18nFolder(type));
+
+    it('should remove unused keys when remove-extra-keys is true', () => {
+      fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+      createTranslations({ ...config, removeExtraKeys: false });
+      assertTranslation({ type, expected: expectedBefore, fileFormat });
+
+      fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+      createTranslations({ ...config, removeExtraKeys: true });
+      assertTranslation({ type, expected: exectedAfterWithDel, fileFormat });
+    });
+
+    it('should keep unused keys when remove-extra-keys is false', () => {
+      fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+      createTranslations({ ...config, removeExtraKeys: false });
+      assertTranslation({ type, expected: expectedBefore, fileFormat });
+
+      fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+      createTranslations({ ...config, removeExtraKeys: false });
+      assertTranslation({ type, expected: exectedAfterWithoutDel, fileFormat });
     });
   });
 });

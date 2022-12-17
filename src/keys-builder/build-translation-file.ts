@@ -12,7 +12,7 @@ export interface FileAction {
 
 interface BuildTranslationOptions
   extends Pick<Config, 'fileFormat'>,
-    Partial<Pick<Config, 'replace'>> {
+    Partial<Pick<Config, 'replace' | 'removeExtraKeys'>> {
   path: string;
   translation?: Translation;
 }
@@ -21,6 +21,7 @@ export function buildTranslationFile({
   path,
   translation = {},
   replace = false,
+  removeExtraKeys = false,
   fileFormat,
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
@@ -31,6 +32,7 @@ export function buildTranslationFile({
       currentTranslation,
       translation,
       replace,
+      removeExtraKeys,
       fileFormat,
     })
   );

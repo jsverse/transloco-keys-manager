@@ -426,6 +426,13 @@ transloco-keys-manager extract --replace
 transloco-keys-manager extract -r
 ```
 
+- `removeExtraKeys`: Remove extra keys from existing translation files (defaults to `false`)
+
+```
+transloco-keys-manager extract --remove-extra-keys
+transloco-keys-manager extract -R
+```
+
 - `addMissingKeys`: Add missing keys that were found by the detective (default is `false`)
 
 ```
