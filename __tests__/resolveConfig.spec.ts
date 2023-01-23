@@ -117,10 +117,7 @@ describe('resolveConfig', () => {
   });
 
   describe('validate directories', () => {
-    function shouldFail(
-      prop: string,
-      msg: 'pathDoesntExists' | 'pathIsNotDir'
-    ) {
+    function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
       expect(process.exit).toHaveBeenCalled();
       expect(console.log).toHaveBeenCalledWith(
         chalk.bgRed.black(`${prop} ${messages[msg]}`)
@@ -141,9 +138,9 @@ describe('resolveConfig', () => {
 
     it('should fail on invalid input path', () => {
       resolveConfig({ input: ['noFolder'] });
-      shouldFail('Input', 'pathDoesntExists');
+      shouldFail('Input', 'pathDoesntExist');
       resolveConfig({ input: ['comments', 'anotherMissingFolder'] });
-      shouldFail('Input', 'pathDoesntExists');
+      shouldFail('Input', 'pathDoesntExist');
       resolveConfig({ input: ['comments/1.html'] });
       shouldFail('Input', 'pathIsNotDir');
     });
@@ -163,7 +160,7 @@ describe('resolveConfig', () => {
         translationsPath: 'noFolder',
         command: 'find',
       });
-      shouldFail('Translations', 'pathDoesntExists');
+      shouldFail('Translations', 'pathDoesntExist');
       resolveConfig({
         input: ['comments'],
         translationsPath: 'comments/1.html',

@@ -12,7 +12,7 @@ export const messages = {
   merged: (len) =>
     `Existing translation file${len > 1 ? 's were' : ' was'} found and merged`,
   checkMissing: 'Checking for missing keys',
-  pathDoesntExists: `path provided doesn't exists!`,
+  pathDoesntExist: `path provided doesn't exist!`,
   pathIsNotDir: `requires a directory.`,
   summary: 'Summary',
   noMissing: 'No missing keys were found',
