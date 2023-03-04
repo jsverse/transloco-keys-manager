@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.5.0...v3.6.0) (2023-03-04)
+
+
+### Features
+
+* 🎸 support workspaces without root configs ([2a8bbe8](https://github.com/ngneat/transloco-keys-manager/commit/2a8bbe8ee98b1492a189858838abcef897571194)), closes [#149](https://github.com/ngneat/transloco-keys-manager/issues/149)
+
 ## [3.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.2...v3.5.0) (2022-12-16)
 
 
