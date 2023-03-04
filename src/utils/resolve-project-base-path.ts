@@ -45,7 +45,9 @@ export function resolveProjectBasePath(projectName?: string): {
   let projectPath = '';
 
   if (projectName) {
-    projectPath = glob.sync(`**/${projectName}`)[0];
+    projectPath = glob.sync(`**/${projectName}`, {
+			ignore: ['node_modules/**', 'tmp/**', 'coverage/**', 'dist/**']
+		})[0];
   }
 
   const angularConfig = searchConfig(angularConfigFile, projectPath);
