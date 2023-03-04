@@ -1,13 +1,12 @@
+import { tsquery } from '@phenomnomnominal/tsquery';
+import glob from 'glob';
 import {
   StringLiteral,
   ObjectLiteralExpression,
   PropertyAssignment,
   NodeArray,
-  ArrayLiteralExpression,
   Node,
 } from 'typescript';
-import { tsquery } from '@phenomnomnominal/tsquery';
-import * as glob from 'glob';
 
 import { addScope, hasScope } from '../keys-builder/utils/scope.utils';
 import { Scopes } from '../types';

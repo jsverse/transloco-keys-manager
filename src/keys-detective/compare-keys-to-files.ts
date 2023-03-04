@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
 import { applyChange, diff } from 'deep-diff';
 import { flatten } from 'flat';
-import * as glob from 'glob';
+import glob from 'glob';
 
 import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';

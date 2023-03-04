@@ -1,11 +1,12 @@
 import chalk from 'chalk';
 import { cosmiconfigSync } from 'cosmiconfig';
+import glob from 'glob';
 import path from 'path';
 
 import { ProjectType } from '../config';
 
+import { jsoncParser } from './json.utils';
 import { coerceArray } from './collection.utils';
-import { jsoncParser } from "./json.utils";
 import { isString } from './validators.utils';
 
 const angularConfigFile = ['angular.json', '.angular.json'];
@@ -14,9 +15,12 @@ const projectConfigFile = 'project.json';
 const defaultSourceRoot = 'src';
 
 function searchConfig(searchPlaces: string[] | string, searchFrom = '') {
-  const resolvePath = path.resolve(process.cwd(), searchFrom);
+  const cwd = process.cwd();
+  const resolvePath = path.resolve(cwd, searchFrom);
+  const stopDir = path.resolve(cwd, '../');
 
   return cosmiconfigSync('', {
+    stopDir,
     loaders: {
       '.json': jsoncParser,
     },
@@ -38,34 +42,59 @@ export function resolveProjectBasePath(projectName?: string): {
   projectBasePath: string;
   projectType?: ProjectType;
 } {
-  const angular = searchConfig(angularConfigFile);
-  const workspace = searchConfig(workspaceConfigFile);
+  let projectPath = '';
 
-  if (!angular && !workspace) {
-    logNotFound([...angularConfigFile, workspaceConfigFile]);
+  if (projectName) {
+    const test = glob.sync(`**/${projectName}`);
+    projectPath = test[0];
+  }
+
+  const angularConfig = searchConfig(angularConfigFile, projectPath);
+  const workspaceConfig = searchConfig(workspaceConfigFile, projectPath);
+  const projectConfig = searchConfig(projectConfigFile, projectPath);
+
+  if (!angularConfig && !workspaceConfig && !projectConfig) {
+    logNotFound([...angularConfigFile, workspaceConfigFile, projectConfigFile]);
 
     return { projectBasePath: defaultSourceRoot };
   }
 
-  let sourceRoot: string;
-  let projectType: ProjectType;
+  let resolved: ReturnType<typeof resolveProject>;
 
-  for (const config of [angular, workspace]) {
-    if (config?.projects) {
-      projectName =
-        projectName || config.defaultProject || Object.keys(config.projects)[0];
-      const project = config.projects[projectName];
-      const projectConfig = isString(project)
-        ? searchConfig(projectConfigFile, project)
-        : project;
-
-      if (projectConfig) {
-        sourceRoot = projectConfig.sourceRoot;
-        projectType = projectConfig.projectType;
-        break;
-      }
+  for (const config of [angularConfig, workspaceConfig, projectConfig]) {
+    resolved = resolveProject(config, projectName);
+    if (resolved) {
+      break;
     }
   }
 
-  return { projectBasePath: sourceRoot, projectType };
+  return {
+    projectBasePath: resolved.sourceRoot,
+    projectType: resolved.projectType,
+  };
+}
+
+function resolveProject(
+  config,
+  projectName
+): { sourceRoot: string; projectType: ProjectType } | null {
+  let projectConfig = config;
+
+  if (config?.projects) {
+    projectName =
+      projectName || config.defaultProject || Object.keys(config.projects)[0];
+    const project = config.projects[projectName];
+    projectConfig = isString(project)
+      ? searchConfig(projectConfigFile, project)
+      : project;
+  }
+
+  if (projectConfig?.sourceRoot) {
+    return {
+      sourceRoot: projectConfig.sourceRoot,
+      projectType: projectConfig.projectType,
+    };
+  }
+
+  return null;
 }

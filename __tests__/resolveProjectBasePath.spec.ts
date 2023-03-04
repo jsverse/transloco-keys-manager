@@ -3,7 +3,7 @@ import path from 'path';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
-const supportedConfigs = ['angular', 'workspace'] as const;
+const supportedConfigs = ['angular', 'workspace', 'project'] as const;
 const myProjectConfig = { projectType: 'library', sourceRoot: 'myRoot' };
 const defaultConfig = {
   defaultProject: 'defaultProject',
@@ -35,7 +35,7 @@ describe('resolveProjectBasePath', () => {
     removeRootConfigs();
   });
 
-  describe('Project level config', () => {
+  describe('Root and Project level config', () => {
     const projectPath = 'packages/myProject';
 
     beforeAll(() => {
@@ -62,6 +62,31 @@ describe('resolveProjectBasePath', () => {
         resolveProjectBasePath('myProject');
       expect(projectBasePath).toBe('myRoot');
       expect(projectType).toBe('library');
+    });
+  });
+
+  describe('Project level config', () => {
+    const projectPath = 'apps/myProject';
+
+    beforeEach(() => {
+      addProjectConfig({
+        path: projectPath,
+        config: {
+          ...myProjectConfig,
+          projectType: 'application',
+        },
+      });
+    });
+
+    afterEach(() => {
+      removeProjectConfig(projectPath);
+    });
+
+    it('should resolve a project level config without a root config', () => {
+      const { projectBasePath, projectType } =
+        resolveProjectBasePath('myProject');
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('application');
     });
   });
 
@@ -103,7 +128,10 @@ function addProjectConfig({
   config?: any;
 }) {
   fs.mkdirsSync(resolvePath(path));
-  fs.writeFileSync(jsonFile('project', path),  '// comment\n' + JSON.stringify(config));
+  fs.writeFileSync(
+    jsonFile('project', path),
+    '// comment\n' + JSON.stringify(config)
+  );
 }
 
 function removeProjectConfig(path: string) {
@@ -117,10 +145,13 @@ function addRootConfig({
   config = defaultConfig,
 }: {
   path?: string;
-  configType: 'angular' | 'workspace';
+  configType: 'angular' | 'workspace' | 'project';
   config?: any;
 }) {
-  fs.writeFileSync(jsonFile(configType, path), '// comment\n' + JSON.stringify(config));
+  fs.writeFileSync(
+    jsonFile(configType, path),
+    '// comment\n' + JSON.stringify(config)
+  );
 }
 
 function addInvalidRootAngularConfig() {
