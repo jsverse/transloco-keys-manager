@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.1...v3.6.2) (2023-03-05)
+
+
+### Bug Fixes
+
+* 🐛 normalized glob.sync calls ([#152](https://github.com/ngneat/transloco-keys-manager/issues/152)) ([1ec3d1b](https://github.com/ngneat/transloco-keys-manager/commit/1ec3d1b99dac584fa2cdc96637a57295d87c7e99))
+
 ### [3.6.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.0...v3.6.1) (2023-03-04)
 
 
