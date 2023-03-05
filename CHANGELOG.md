@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.0...v3.6.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* added a glob ignore to the `resolveProjectBasePath` ([#150](https://github.com/ngneat/transloco-keys-manager/issues/150)) ([111bc3f](https://github.com/ngneat/transloco-keys-manager/commit/111bc3f991f998f0b99c464778c61a1235fdbc5c))
+
 ## [3.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.5.0...v3.6.0) (2023-03-04)
 
 
