@@ -1,5 +1,3 @@
-import glob from 'glob';
-
 import {
   Config,
   ExtractionResult,
@@ -8,6 +6,7 @@ import {
 } from '../../types';
 import { initExtraction } from '../../utils/init-extraction';
 import { devlog } from '../../utils/logger';
+import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
   { input, scopes, defaultValue, files }: Config,
@@ -16,8 +15,9 @@ export function extractKeys(
 ): ExtractionResult {
   let { scopeToKeys } = initExtraction();
 
+
   const fileList =
-    files || input.map((path) => glob.sync(`${path}/**/*.${fileType}`)).flat();
+    files || input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
 
   for (const file of fileList) {
     devlog('extraction', 'Extracting keys', { file, fileType });

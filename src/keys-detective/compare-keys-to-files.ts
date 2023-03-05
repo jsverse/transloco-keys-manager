@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
 import { applyChange, diff } from 'deep-diff';
 import { flatten } from 'flat';
-import glob from 'glob';
 
 import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';
@@ -11,6 +10,7 @@ import { getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
+import { normalizedGlob } from '../utils/normalize-glob-path';
 
 interface Result {
   keys: Record<string, string>;
@@ -60,7 +60,7 @@ export function compareKeysToFiles({
       };
       result.push({
         ...res,
-        files: glob.sync(`${res.baseFilesPath}/*.${fileFormat}`),
+        files: normalizedGlob(`${res.baseFilesPath}/*.${fileFormat}`),
       });
     }
   }
@@ -87,7 +87,7 @@ export function compareKeysToFiles({
       };
       result.push({
         ...res,
-        files: glob.sync(
+        files: normalizedGlob(
           `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
         ),
       });

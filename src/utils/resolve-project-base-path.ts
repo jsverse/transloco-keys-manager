@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { cosmiconfigSync } from 'cosmiconfig';
-import glob from 'glob';
 import path from 'path';
 
 import { ProjectType } from '../config';
@@ -8,6 +7,7 @@ import { ProjectType } from '../config';
 import { coerceArray } from './collection.utils';
 import { jsoncParser } from './json.utils';
 import { isString } from './validators.utils';
+import { normalizedGlob } from './normalize-glob-path';
 
 const angularConfigFile = ['angular.json', '.angular.json'];
 const workspaceConfigFile = 'workspace.json';
@@ -45,7 +45,7 @@ export function resolveProjectBasePath(projectName?: string): {
   let projectPath = '';
 
   if (projectName) {
-    projectPath = glob.sync(`**/${projectName}`)[0];
+    projectPath = normalizedGlob(`**/${projectName}`)[0];
   }
 
   const angularConfig = searchConfig(angularConfigFile, projectPath);
