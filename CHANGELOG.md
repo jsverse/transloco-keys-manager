@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.1...v3.6.2) (2023-03-05)
+
+
+### Bug Fixes
+
+* 🐛 normalized glob.sync calls ([#152](https://github.com/ngneat/transloco-keys-manager/issues/152)) ([1ec3d1b](https://github.com/ngneat/transloco-keys-manager/commit/1ec3d1b99dac584fa2cdc96637a57295d87c7e99))
+
+### [3.6.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.0...v3.6.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* added a glob ignore to the `resolveProjectBasePath` ([#150](https://github.com/ngneat/transloco-keys-manager/issues/150)) ([111bc3f](https://github.com/ngneat/transloco-keys-manager/commit/111bc3f991f998f0b99c464778c61a1235fdbc5c))
+
+## [3.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.5.0...v3.6.0) (2023-03-04)
+
+
+### Features
+
+* 🎸 support workspaces without root configs ([2a8bbe8](https://github.com/ngneat/transloco-keys-manager/commit/2a8bbe8ee98b1492a189858838abcef897571194)), closes [#149](https://github.com/ngneat/transloco-keys-manager/issues/149)
+
+## [3.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.2...v3.5.0) (2022-12-16)
+
+
+### Features
+
+* 🎸 use jsonc-parser to parse configs ([#147](https://github.com/ngneat/transloco-keys-manager/issues/147)) ([66a5cde](https://github.com/ngneat/transloco-keys-manager/commit/66a5cde716139f01ce38ab7dd88a26ba68aa3e14))
+
+### [3.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.1...v3.4.2) (2022-08-19)
+
+
+### Bug Fixes
+
+* 🐛 scope mapping throws an error ([c696694](https://github.com/ngneat/transloco-keys-manager/commit/c69669416574bc35db8f3935261846a87f1577f1)), closes [#136](https://github.com/ngneat/transloco-keys-manager/issues/136)
+
 ### [3.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.0...v3.4.1) (2022-04-08)
 
 

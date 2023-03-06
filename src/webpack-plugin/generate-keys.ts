@@ -1,6 +1,6 @@
 import { TranslocoGlobalConfig } from '@ngneat/transloco-utils';
 import { unflatten } from 'flat';
-import * as glob from 'glob';
+import glob from 'glob';
 import * as nodePath from 'path';
 
 import { ScopeMap, Config } from '../types';

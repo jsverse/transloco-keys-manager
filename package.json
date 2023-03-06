@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/transloco-keys-manager",
-  "version": "3.4.1",
+  "version": "3.6.2",
   "description": "Extract translatable keys from projects that uses Transloco",
   "main": "public_api.js",
   "scripts": {
@@ -11,9 +11,6 @@
     "prebuild": "npm run clean:dist",
     "build": "tsc",
     "postbuild": "node ./scripts/post-build.js",
-    "prebuild:dev": "npm run clean:dist",
-    "build:dev": "tsc",
-    "postbuild:dev": "node ./scripts/post-build.js dev",
     "clean:dist": "rimraf dist",
     "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
     "conduct": "import-conductor",
@@ -68,7 +65,7 @@
   },
   "dependencies": {
     "@angular/compiler": "12.2.6",
-    "@ngneat/transloco-utils": "^3.0.2",
+    "@ngneat/transloco-utils": "3.0.4",
     "@phenomnomnominal/tsquery": "4.1.1",
     "chalk": "4.1.2",
     "cheerio": "1.0.0-rc.10",
@@ -76,12 +73,13 @@
     "command-line-args": "5.2.0",
     "command-line-usage": "6.1.1",
     "cosmiconfig": "7.0.1",
-    "debug": "4.3.2",
+    "debug": "4.3.4",
     "deep-diff": "1.0.2",
     "flat": "5.0.2",
     "fs-extra": "10.0.0",
     "gettext-parser": "5.1.2",
-    "glob": "7.1.7",
+    "glob": "8.1.0",
+    "jsonc-parser": "3.2.0",
     "ora": "5.4.1"
   },
   "devDependencies": {
@@ -96,6 +94,7 @@
     "@types/flat": "5.0.2",
     "@types/gettext-parser": "4.0.1",
     "@types/jest": "27.0.1",
+    "@types/glob": "^8.1.0",
     "cross-env": "7.0.3",
     "git-cz": "4.7.0",
     "husky": "7.0.4",
@@ -106,7 +105,7 @@
     "prettier": "2.4.1",
     "rimraf": "3.0.2",
     "standard-version": "9.3.1",
-    "terser": "5.8.0",
-    "typescript": "4.4.3"
+    "terser": "5.16.5",
+    "typescript": "4.9.5"
   }
 }

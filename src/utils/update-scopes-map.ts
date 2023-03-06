@@ -1,13 +1,11 @@
+import { tsquery } from '@phenomnomnominal/tsquery';
 import {
   StringLiteral,
   ObjectLiteralExpression,
   PropertyAssignment,
   NodeArray,
-  ArrayLiteralExpression,
   Node,
 } from 'typescript';
-import { tsquery } from '@phenomnomnominal/tsquery';
-import * as glob from 'glob';
 
 import { addScope, hasScope } from '../keys-builder/utils/scope.utils';
 import { Scopes } from '../types';
@@ -15,6 +13,7 @@ import { Scopes } from '../types';
 import { coerceArray } from './collection.utils';
 import { readFile } from './file.utils';
 import { toCamelCase } from './string.utils';
+import { normalizedGlob } from './normalize-glob-path';
 
 interface ScopeDef {
   scope?: string;
@@ -66,7 +65,7 @@ export function updateScopesMap({
   files?: string[];
 }): Scopes['aliasToScope'] {
   const tsFiles =
-    files || input.map((path) => glob.sync(`${path}/**/*.ts`)).flat();
+    files || input.map((path) => normalizedGlob(`${path}/**/*.ts`)).flat();
   // Return only the new scopes (for the plugin)
   const aliasToScope = {};
 

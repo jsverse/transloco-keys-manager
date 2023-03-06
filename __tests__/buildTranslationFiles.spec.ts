@@ -30,7 +30,10 @@ function generateKeys({
   return keys;
 }
 
-function gConfig(type: TranslationCategory, config = {}) {
+function gConfig(
+  type: TranslationCategory,
+  config: Partial<Config> = {}
+): Config {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
@@ -53,6 +56,7 @@ type TranslationCategory =
   | 'unflat-sort'
   | 'unflat-problematic-keys'
   | 'multi-input'
+  | 'scope-mapping'
   | 'comments';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
@@ -94,7 +98,7 @@ function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-const formats: FileFormats[] = ['json', 'pot'];
+const formats: FileFormats[] = ['pot', 'json'];
 
 describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   function createTranslations(config) {
@@ -496,6 +500,28 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           type,
           expected,
           path: 'admin-page/',
+          fileFormat,
+        });
+      });
+    });
+
+    describe('Scope mapping', () => {
+      const type: TranslationCategory = 'scope-mapping';
+      const config = gConfig(type, {
+        scopePathMap: {
+          scope1: `./${sourceRoot}/${type}/i18n/scopes/mapped`,
+        },
+      });
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with scope mapping', () => {
+        let expected = generateKeys({ end: 3 });
+        createTranslations(config);
+        assertTranslation({
+          type,
+          path: 'scopes/mapped/',
+          expected,
           fileFormat,
         });
       });

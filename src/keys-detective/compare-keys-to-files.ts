@@ -1,7 +1,6 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
 import { applyChange, diff } from 'deep-diff';
 import { flatten } from 'flat';
-import * as glob from 'glob';
 
 import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';
@@ -11,6 +10,14 @@ import { filterPathByLang, getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
+import { normalizedGlob } from '../utils/normalize-glob-path';
+
+interface Result {
+  keys: Record<string, string>;
+  files: string[];
+  scope: string;
+  baseFilesPath: string;
+}
 
 interface CompareKeysOptions
   extends Pick<
@@ -48,17 +55,19 @@ export function compareKeysToFiles({
     fileFormat
   );
 
-  let result = [];
+  let result: Result[] = [];
   const scopePaths = getGlobalConfig().scopePathMap || {};
   for (const [scope, path] of Object.entries(scopePaths)) {
     const keys = scopeToKeys[scope];
-    if (keys) {
-      result.push({
+    if (keys && typeof path === 'string') {
+      const res: Omit<Result, 'files'> = {
         keys,
         scope,
-        translationPath: path,
-        files: glob
-          .sync(`${path}/*.${fileFormat}`)
+        baseFilesPath: path,
+      };
+      result.push({
+        ...res,
+        files: normalizedGlob(`${res.baseFilesPath}/*.${fileFormat}`)
           .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
@@ -78,23 +87,26 @@ export function compareKeysToFiles({
     const keys = scope ? scopeToKeys[scope] : scopeToKeys.__global;
     if (keys) {
       const isGlobal = scope === '__global';
-
-      result.push({
+      const res: Omit<Result, 'files'> = {
         keys,
         scope,
-        translationsPath,
-        files: glob
-          .sync(`${translationsPath}/${isGlobal ? '' : scope}/*.${fileFormat}`)
-          .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
+        baseFilesPath: translationsPath,
+      };
+      result.push({
+        ...res,
+        files: normalizedGlob(
+          `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
+        )
+        .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
   }
 
-  for (const { files, keys, scope, translationPath } of result) {
+  for (const { files, keys, scope, baseFilesPath } of result) {
     for (const filePath of files) {
       const { lang } = getScopeAndLangFromPath({
         filePath,
-        translationsPath,
+        translationsPath: baseFilesPath,
         fileFormat,
       });
       const translation = readFile(filePath, { parse: true });
