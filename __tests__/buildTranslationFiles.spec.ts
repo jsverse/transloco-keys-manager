@@ -602,50 +602,99 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
     });
   });
 
-  describe('remove-extra-keys', () => {
+  describe('Remove extra keys', () => {
     const type = 'remove-extra-keys';
     const testHtmlFileWithKey = `./${sourceRoot}/${type}/1-before.html.in`;
     const testHtmlFileWithoutKey = `./${sourceRoot}/${type}/1-after.html.in`;
     const testHtmlFile = `./${sourceRoot}/${type}/1.html`;
-    const expectedBefore = {
-      '1': 'missing',
-      '2': 'missing',
-      group1: { '1': 'missing', '2': 'missing' },
-      group2: { '1': 'missing', '2': 'missing' },
-    };
-    const exectedAfterWithDel = {
-      '2': 'missing',
-      group1: { '2': 'missing' },
-      group3: { '2': 'missing' },
-    };
-    const exectedAfterWithoutDel = {
-      ...expectedBefore,
-      group3: { '2': 'missing' },
-    };
-
-    // Run with unflat = true to ensure we also test the nested JSON structure.
-    const config = gConfig(type, { unflat: true });
 
     beforeEach(() => removeI18nFolder(type));
 
-    it('should remove unused keys when remove-extra-keys is true', () => {
-      fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
-      createTranslations({ ...config, removeExtraKeys: false });
-      assertTranslation({ type, expected: expectedBefore, fileFormat });
+    function testRemoveExtraKeys(
+      baseConfig,
+      expectedBefore,
+      expectedAfterWithDel,
+      expectedAfterWithoutDel
+    ) {
+      it('should remove unused keys when remove-extra-keys is true', () => {
+        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({ type, expected: expectedBefore, fileFormat });
 
-      fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
-      createTranslations({ ...config, removeExtraKeys: true });
-      assertTranslation({ type, expected: exectedAfterWithDel, fileFormat });
+        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: true });
+        assertTranslation({ type, expected: expectedAfterWithDel, fileFormat });
+      });
+
+      it('should keep unused keys when remove-extra-keys is false', () => {
+        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({ type, expected: expectedBefore, fileFormat });
+
+        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({
+          type,
+          expected: expectedAfterWithoutDel,
+          fileFormat,
+        });
+      });
+    }
+
+    // Run with unflat = true to test the nested JSON structure.
+    describe('with unflat = true', () => {
+      const expectedBefore = {
+        '1': 'missing',
+        '2': 'missing',
+        group1: { '1': 'missing', '2': 'missing' },
+        group2: { '1': 'missing', '2': 'missing' },
+      };
+      const expectedAfterWithDel = {
+        '2': 'missing',
+        group1: { '2': 'missing' },
+        group3: { '2': 'missing' },
+      };
+      const expectedAfterWithoutDel = {
+        ...expectedBefore,
+        group3: { '2': 'missing' },
+      };
+
+      const baseConfig = gConfig(type, { unflat: true });
+      testRemoveExtraKeys(
+        baseConfig,
+        expectedBefore,
+        expectedAfterWithDel,
+        expectedAfterWithoutDel
+      );
     });
 
-    it('should keep unused keys when remove-extra-keys is false', () => {
-      fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
-      createTranslations({ ...config, removeExtraKeys: false });
-      assertTranslation({ type, expected: expectedBefore, fileFormat });
+    // Run with unflat = false to test the flattened JSON structure.
+    describe('with unflat = false', () => {
+      const expectedBefore = {
+        '1': 'missing',
+        '2': 'missing',
+        'group1.1': 'missing',
+        'group1.2': 'missing',
+        'group2.1': 'missing',
+        'group2.2': 'missing',
+      };
+      const expectedAfterWithDel = {
+        '2': 'missing',
+        'group1.2': 'missing',
+        'group3.2': 'missing',
+      };
+      const expectedAfterWithoutDel = {
+        ...expectedBefore,
+        'group3.2': 'missing',
+      };
 
-      fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
-      createTranslations({ ...config, removeExtraKeys: false });
-      assertTranslation({ type, expected: exectedAfterWithoutDel, fileFormat });
+      const baseConfig = gConfig(type, { unflat: false });
+      testRemoveExtraKeys(
+        baseConfig,
+        expectedBefore,
+        expectedAfterWithDel,
+        expectedAfterWithoutDel
+      );
     });
   });
 });
