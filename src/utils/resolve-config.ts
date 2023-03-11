@@ -83,7 +83,7 @@ function validateDirectories({ input, translationsPath, command }: Config) {
   const log = (path, prop) => {
     const msg = existsSync(path)
       ? messages.pathIsNotDir
-      : messages.pathDoesntExists;
+      : messages.pathDoesntExist;
     console.log(chalk.bgRed.black(`${prop} ${msg}`));
   };
 

@@ -43,6 +43,9 @@ export function defaultConfig(
     // Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)
     replace: false,
 
+    // Remove missing keys from existing translation files
+    removeExtraKeys: false,
+
     /**
      *   Relevant only for the Detective
      */

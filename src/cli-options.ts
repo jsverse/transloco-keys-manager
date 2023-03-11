@@ -51,6 +51,12 @@ export const optionDefinitions = [
       'Replace the contents of a translation file (if it exists) with the generated one (default value is false, in which case files are merged)',
   },
   {
+    name: 'remove-extra-keys',
+    alias: 'R',
+    type: Boolean,
+    description: 'Remove extra keys from existing translation files',
+  },
+  {
     name: 'sort',
     alias: 's',
     type: Boolean,

@@ -11,6 +11,7 @@ export function createTranslationFiles({
   langs,
   output,
   replace,
+  removeExtraKeys,
   scopes,
   fileFormat,
 }: Config & { scopeToKeys: ScopeMap }) {
@@ -33,6 +34,7 @@ export function createTranslationFiles({
         path,
         translation: scopeToKeys.__global,
         replace,
+        removeExtraKeys,
         fileFormat,
       })
     );
@@ -44,6 +46,7 @@ export function createTranslationFiles({
         path,
         translation: scopeToKeys[scope],
         replace,
+        removeExtraKeys,
         fileFormat,
       })
     );

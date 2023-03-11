@@ -1,14 +1,16 @@
-import { unflatten } from 'flat';
+import { flatten, unflatten } from 'flat';
 import { po } from 'gettext-parser';
 
 import { getConfig } from '../../config';
 import { FileFormats, Translation } from '../../types';
 import { mergeDeep, stringify } from '../../utils/object.utils';
+import { removeExtraKeys } from './remove-extra-keys';
 
 interface CreateTranslationOptions {
   currentTranslation: Translation;
   translation: Translation;
   replace: boolean;
+  removeExtraKeys: boolean;
   fileFormat: FileFormats;
 }
 
@@ -16,10 +18,17 @@ function resolveTranslation({
   currentTranslation,
   translation,
   replace,
+  removeExtraKeys: removeExtraKeysParam,
 }: CreateTranslationOptions): Translation {
-  return replace
-    ? mergeDeep({}, translation)
-    : mergeDeep({}, translation, currentTranslation);
+  if (replace) {
+    return mergeDeep({}, translation);
+  }
+
+  if (removeExtraKeysParam) {
+    currentTranslation = removeExtraKeys(currentTranslation, translation);
+  }
+
+  return mergeDeep({}, translation, currentTranslation);
 }
 
 function createJson(config: CreateTranslationOptions) {
@@ -36,7 +45,9 @@ function createJson(config: CreateTranslationOptions) {
 }
 
 function createPot(config: CreateTranslationOptions) {
-  const resolved = resolveTranslation(config);
+  const resolved = getConfig().unflat
+    ? flatten(resolveTranslation(config))
+    : resolveTranslation(config);
 
   return po
     .compile({

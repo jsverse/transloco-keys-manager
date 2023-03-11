@@ -57,7 +57,8 @@ type TranslationCategory =
   | 'unflat-problematic-keys'
   | 'multi-input'
   | 'scope-mapping'
-  | 'comments';
+  | 'comments'
+  | 'remove-extra-keys';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
   type: TranslationCategory;
@@ -598,6 +599,102 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         path: 'admin/',
         fileFormat,
       });
+    });
+  });
+
+  describe('Remove extra keys', () => {
+    const type = 'remove-extra-keys';
+    const testHtmlFileWithKey = `./${sourceRoot}/${type}/1-before.html.in`;
+    const testHtmlFileWithoutKey = `./${sourceRoot}/${type}/1-after.html.in`;
+    const testHtmlFile = `./${sourceRoot}/${type}/1.html`;
+
+    beforeEach(() => removeI18nFolder(type));
+
+    function testRemoveExtraKeys(
+      baseConfig,
+      expectedBefore,
+      expectedAfterWithDel,
+      expectedAfterWithoutDel
+    ) {
+      it('should remove unused keys when remove-extra-keys is true', () => {
+        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({ type, expected: expectedBefore, fileFormat });
+
+        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: true });
+        assertTranslation({ type, expected: expectedAfterWithDel, fileFormat });
+      });
+
+      it('should keep unused keys when remove-extra-keys is false', () => {
+        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({ type, expected: expectedBefore, fileFormat });
+
+        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({
+          type,
+          expected: expectedAfterWithoutDel,
+          fileFormat,
+        });
+      });
+    }
+
+    // Run with unflat = true to test the nested JSON structure.
+    describe('with unflat = true', () => {
+      const expectedBefore = {
+        '1': 'missing',
+        '2': 'missing',
+        group1: { '1': 'missing', '2': 'missing' },
+        group2: { '1': 'missing', '2': 'missing' },
+      };
+      const expectedAfterWithDel = {
+        '2': 'missing',
+        group1: { '2': 'missing' },
+        group3: { '2': 'missing' },
+      };
+      const expectedAfterWithoutDel = {
+        ...expectedBefore,
+        group3: { '2': 'missing' },
+      };
+
+      const baseConfig = gConfig(type, { unflat: true });
+      testRemoveExtraKeys(
+        baseConfig,
+        expectedBefore,
+        expectedAfterWithDel,
+        expectedAfterWithoutDel
+      );
+    });
+
+    // Run with unflat = false to test the flattened JSON structure.
+    describe('with unflat = false', () => {
+      const expectedBefore = {
+        '1': 'missing',
+        '2': 'missing',
+        'group1.1': 'missing',
+        'group1.2': 'missing',
+        'group2.1': 'missing',
+        'group2.2': 'missing',
+      };
+      const expectedAfterWithDel = {
+        '2': 'missing',
+        'group1.2': 'missing',
+        'group3.2': 'missing',
+      };
+      const expectedAfterWithoutDel = {
+        ...expectedBefore,
+        'group3.2': 'missing',
+      };
+
+      const baseConfig = gConfig(type, { unflat: false });
+      testRemoveExtraKeys(
+        baseConfig,
+        expectedBefore,
+        expectedAfterWithDel,
+        expectedAfterWithoutDel
+      );
     });
   });
 });
