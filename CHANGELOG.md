@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.2...v3.7.0) (2023-03-25)
+
+
+### Features
+
+* 🎸 add option to delete missing keys ([e19baa9](https://github.com/ngneat/transloco-keys-manager/commit/e19baa95baf66674cb6a993913766f5230106f55))
+
 ### [3.6.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.1...v3.6.2) (2023-03-05)
 
 
