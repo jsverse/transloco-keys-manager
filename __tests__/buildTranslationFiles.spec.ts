@@ -1,5 +1,5 @@
 // import-conductor-skip
-import { Config, FileFormats } from '../src/types';
+import { Config, FileFormats, Translation } from '../src/types';
 
 jest.mock('../src/utils/resolve-project-base-path');
 import * as fs from 'fs-extra';
@@ -604,38 +604,44 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
   describe('Remove extra keys', () => {
     const type = 'remove-extra-keys';
-    const testHtmlFileWithKey = `./${sourceRoot}/${type}/1-before.html.in`;
-    const testHtmlFileWithoutKey = `./${sourceRoot}/${type}/1-after.html.in`;
-    const testHtmlFile = `./${sourceRoot}/${type}/1.html`;
+    const basePath = `./${sourceRoot}/${type}`;
+    const withKeyTpl = `${basePath}/1-before.html.in`;
+    const missingKeyTpl = `./${basePath}/1-after.html.in`;
+    const testHtmlFile = `./${basePath}/1.html`;
 
     beforeEach(() => removeI18nFolder(type));
 
-    function testRemoveExtraKeys(
-      baseConfig,
-      expectedBefore,
-      expectedAfterWithDel,
-      expectedAfterWithoutDel
-    ) {
-      it('should remove unused keys when remove-extra-keys is true', () => {
-        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
-        createTranslations({ ...baseConfig, removeExtraKeys: false });
-        assertTranslation({ type, expected: expectedBefore, fileFormat });
+    afterEach(() => fs.unlinkSync(testHtmlFile));
 
-        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+    interface RemoveKeysOptions {
+      baseConfig: Config;
+      expected: {
+        before: Translation;
+        deleted: Translation;
+        skipDeletion: Translation;
+      };
+    }
+    function testRemoveExtraKeys({ baseConfig, expected }: RemoveKeysOptions) {
+      it('should remove unused keys when remove-extra-keys is true', () => {
+        fs.copyFileSync(withKeyTpl, testHtmlFile);
+        createTranslations({ ...baseConfig, removeExtraKeys: false });
+        assertTranslation({ type, expected: expected.before, fileFormat });
+
+        fs.copyFileSync(missingKeyTpl, testHtmlFile);
         createTranslations({ ...baseConfig, removeExtraKeys: true });
-        assertTranslation({ type, expected: expectedAfterWithDel, fileFormat });
+        assertTranslation({ type, expected: expected.deleted, fileFormat });
       });
 
       it('should keep unused keys when remove-extra-keys is false', () => {
-        fs.copyFileSync(testHtmlFileWithKey, testHtmlFile);
+        fs.copyFileSync(withKeyTpl, testHtmlFile);
         createTranslations({ ...baseConfig, removeExtraKeys: false });
-        assertTranslation({ type, expected: expectedBefore, fileFormat });
+        assertTranslation({ type, expected: expected.before, fileFormat });
 
-        fs.copyFileSync(testHtmlFileWithoutKey, testHtmlFile);
+        fs.copyFileSync(missingKeyTpl, testHtmlFile);
         createTranslations({ ...baseConfig, removeExtraKeys: false });
         assertTranslation({
           type,
-          expected: expectedAfterWithoutDel,
+          expected: expected.skipDeletion,
           fileFormat,
         });
       });
@@ -649,23 +655,25 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         group1: { '1': 'missing', '2': 'missing' },
         group2: { '1': 'missing', '2': 'missing' },
       };
-      const expectedAfterWithDel = {
+      const expectedDeleted = {
         '2': 'missing',
         group1: { '2': 'missing' },
         group3: { '2': 'missing' },
       };
-      const expectedAfterWithoutDel = {
+      const expectedNoDeletion = {
         ...expectedBefore,
         group3: { '2': 'missing' },
       };
 
       const baseConfig = gConfig(type, { unflat: true });
-      testRemoveExtraKeys(
+      testRemoveExtraKeys({
         baseConfig,
-        expectedBefore,
-        expectedAfterWithDel,
-        expectedAfterWithoutDel
-      );
+        expected: {
+          before: expectedBefore,
+          deleted: expectedDeleted,
+          skipDeletion: expectedNoDeletion,
+        },
+      });
     });
 
     // Run with unflat = false to test the flattened JSON structure.
@@ -678,23 +686,25 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         'group2.1': 'missing',
         'group2.2': 'missing',
       };
-      const expectedAfterWithDel = {
+      const expectedDeleted = {
         '2': 'missing',
         'group1.2': 'missing',
         'group3.2': 'missing',
       };
-      const expectedAfterWithoutDel = {
+      const expectedNoDeletion = {
         ...expectedBefore,
         'group3.2': 'missing',
       };
 
       const baseConfig = gConfig(type, { unflat: false });
-      testRemoveExtraKeys(
+      testRemoveExtraKeys({
         baseConfig,
-        expectedBefore,
-        expectedAfterWithDel,
-        expectedAfterWithoutDel
-      );
+        expected: {
+          before: expectedBefore,
+          deleted: expectedDeleted,
+          skipDeletion: expectedNoDeletion,
+        },
+      });
     });
   });
 });
