@@ -1,5 +1,6 @@
 import {
   isArrayLiteralExpression,
+  isBinaryExpression,
   isCallExpression,
   isIdentifier,
   isNoSubstitutionTemplateLiteral,
@@ -43,6 +44,8 @@ export function buildKeysFromASTNodes(
         keys = [keyNode.text];
       } else if (isArrayLiteralExpression(keyNode)) {
         keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
+      } else if (isBinaryExpression(keyNode)) {
+        keys = [eval(keyNode.getText())];
       }
 
       for (const key of keys) {

@@ -26,6 +26,7 @@ import {
   isSupportedNode,
   isTemplate,
   parseTemplate,
+  isBinaryExpression,
 } from './utils';
 
 interface ContainerMetaData {
@@ -200,6 +201,35 @@ function addKeysFromAst(
         keyWithoutScope: key,
         scopeAlias,
       });
+    } else if (isBinaryExpression(exp)) {
+      const evaluatedBinaryExpResult = evaluateASTBinaryNode(exp);
+      let value = read
+        ? `${read}.${evaluatedBinaryExpResult}`
+        : evaluatedBinaryExpResult;
+      const [key, scopeAlias] = resolveAliasAndKey(value, config.scopes);
+      addKey({
+        ...config,
+        keyWithoutScope: key,
+        scopeAlias,
+      });
     }
   }
+}
+
+function evaluateASTBinaryNode(node) {
+  if (isBinaryExpression(node)) {
+    const left = evaluateASTBinaryNode(node.left);
+    const right = evaluateASTBinaryNode(node.right);
+    const operator = node.operation;
+    const getStringsWithQuotes = (value) =>
+      typeof value === 'string' ? JSON.stringify(value) : value;
+
+    return eval(
+      getStringsWithQuotes(left) + operator + getStringsWithQuotes(right)
+    );
+  } else if (isLiteralExpression(node)) {
+    return node.value;
+  }
+
+  return '';
 }
