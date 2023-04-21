@@ -175,6 +175,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         expected["Bob's Burgers"] =
           expected['another(test)'] =
           expected['last "one"'] =
+          expected['d' + 4] =
             defaultValue;
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
@@ -244,6 +245,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
               end: 23,
               prefix: 'site-header.navigation.route',
             }),
+            ['site-header.navigation.route.' + 'd' + 4]: defaultValue,
             ...generateKeys({ end: 5, prefix: 'site-header.navigation' }),
             ...generateKeys({ end: 10, prefix: 'right-pane.actions' }),
             ...generateKeys({ end: 1, prefix: 'templates.translations' }),
@@ -483,6 +485,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
       it('should work with multiple inputs', () => {
         let expected = generateKeys({ end: 39 });
+        expected['d' + 4] = defaultValue;
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
