@@ -19,5 +19,5 @@ export function readFile(
 }
 
 export function writeFile(fileName: string, content: object) {
-  writeFileSync(fileName, stringify(content), { encoding: 'UTF-8' });
+  writeFileSync(fileName, stringify(content), { encoding: 'utf-8' });
 }
