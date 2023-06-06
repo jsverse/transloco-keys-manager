@@ -13,7 +13,7 @@ export function mapDiffToKeys(
       ? [`'${base}'`]
       : buildPath(diff[side]).map((inner) => `'${base}.${inner}'`);
 
-    return acc.push(...keys) && acc;
+    return acc.concat(keys);
   }, []);
 
   return keys.join('\n');
