@@ -4,6 +4,7 @@
   "description": "Extract translatable keys from projects that uses Transloco",
   "main": "public_api.js",
   "scripts": {
+    "postinstall": "npx husky install",
     "release": "standard-version --infile ./CHANGELOG.md",
     "commit": "git-cz",
     "test": "cross-env PRODUCTION=true jest",

@@ -1,19 +1,24 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { isParameter, SourceFile } from 'typescript';
+import { isParameter, isPropertyDeclaration, SourceFile } from 'typescript';
 
 import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
 
 export function serviceExtractor(ast: SourceFile): TSExtractorResult {
+  const constructorInjection =
+    'Constructor Parameter:has(TypeReference Identifier[name=TranslocoService])';
+  const injectFunction =
+    'PropertyDeclaration:has(CallExpression:has(Identifier[name=TranslocoService],Identifier[name=inject]))';
+
   const serviceNameNodes = tsquery(
     ast,
-    `Constructor Parameter:has(TypeReference Identifier[name=TranslocoService])`
+    `${constructorInjection},${injectFunction}`
   );
 
   let result = [];
 
   for (const serviceName of serviceNameNodes) {
-    if (isParameter(serviceName)) {
+    if (isParameter(serviceName) || isPropertyDeclaration(serviceName)) {
       const propName = serviceName.name.getText();
       const methodNodes = tsquery(
         ast,

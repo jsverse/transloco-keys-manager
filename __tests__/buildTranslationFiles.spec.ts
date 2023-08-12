@@ -288,6 +288,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           ...generateKeys({ end: 19 }),
           ...{ '20.21.22.23': defaultValue },
           ...generateKeys({ start: 24, end: 33 }),
+          'inject.test': defaultValue,
         };
 
         createTranslations(config);
