@@ -51,7 +51,7 @@ export class TranslocoExtractKeysWebpackPlugin {
       if (keysExtractions.html.length || keysExtractions.ts.length) {
         if (keysExtractions.ts.length) {
           // Maybe someone added a TRANSLOCO_SCOPE
-          const newScopes = updateScopesMap({ files });
+          const newScopes = updateScopesMap({ files: keysExtractions.ts });
 
           const paths = buildScopeFilePaths({
             aliasToScope: newScopes,
