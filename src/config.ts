@@ -24,7 +24,7 @@ export function defaultConfig(
     // The target directory for all generated translation files
     output: 'assets/i18n',
 
-    // The languages files to generate
+    // The language files to generate
     langs: ['en'],
 
     // The marker sign for dynamic values
