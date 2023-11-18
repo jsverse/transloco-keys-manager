@@ -15,7 +15,7 @@ export function serviceExtractor(ast: SourceFile): TSExtractorResult {
     `${constructorInjection},${injectFunction}`
   );
 
-  let result = [];
+  let result: TSExtractorResult = [];
 
   for (const serviceName of serviceNameNodes) {
     if (isParameter(serviceName) || isPropertyDeclaration(serviceName)) {

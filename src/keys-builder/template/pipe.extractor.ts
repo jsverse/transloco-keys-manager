@@ -14,7 +14,7 @@ import {
   isInterpolation,
   isLiteralExpression,
   isLiteralMap,
-  isMethodCall,
+  isCall,
   isTemplate,
   parseTemplate,
 } from './utils';
@@ -41,7 +41,7 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   }
 }
 
-function isTranslocoPipe(ast: any) {
+function isTranslocoPipe(ast: any): boolean {
   const isPipeChaining = isBindingPipe(ast.exp);
   const isTransloco =
     ast.name === 'transloco' &&
@@ -77,7 +77,7 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [ast.condition, ast.trueExp, ast.falseExp];
   } else if (isBinaryExpression(ast)) {
     exp = [ast.left, ast.right];
-  } else if (isMethodCall(ast)) {
+  } else if (isCall(ast)) {
     exp = [...ast.args, ast.receiver];
   }
 

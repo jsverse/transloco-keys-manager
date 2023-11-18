@@ -1,7 +1,7 @@
 import { TranslocoGlobalConfig } from '@ngneat/transloco-utils';
 import { unflatten } from 'flat';
-import glob from 'glob';
-import * as nodePath from 'path';
+import {sync as globSync} from 'glob';
+import {basename} from 'node:path';
 
 import { ScopeMap, Config } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
@@ -17,7 +17,7 @@ function filterLangs(config: Params['config']) {
   return function (path: string) {
     return config.langs.find(
       (lang) =>
-        lang === nodePath.basename(path).replace(`.${config.fileFormat}`, '')
+        lang === basename(path).replace(`.${config.fileFormat}`, '')
     );
   };
 }
@@ -35,8 +35,7 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
     if (keys) {
       result.push({
         keys,
-        files: glob
-          .sync(`${path}/*.${config.fileFormat}`)
+        files: globSync(`${path}/*.${config.fileFormat}`)
           .filter(filterLangs(config)),
       });
     }
@@ -48,8 +47,7 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
 
       result.push({
         keys,
-        files: glob
-          .sync(
+        files: globSync(
             `${translationPath}/${isGlobal ? '' : scope}*.${config.fileFormat}`
           )
           .filter(filterLangs(config)),

@@ -5,7 +5,7 @@ import {
   Interpolation,
   LiteralMap,
   LiteralPrimitive,
-  MethodCall,
+  Call,
   parseTemplate as ngParseTemplate,
   ParseTemplateOptions,
   TmplAstBoundAttribute,
@@ -47,8 +47,8 @@ export function isInterpolation(ast: unknown): ast is Interpolation {
   return ast instanceof Interpolation;
 }
 
-export function isMethodCall(ast: unknown): ast is MethodCall {
-  return ast instanceof MethodCall;
+export function isCall(ast: unknown): ast is Call {
+  return ast instanceof Call;
 }
 
 export function isNgTemplateTag(node: TmplAstTemplate) {

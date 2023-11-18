@@ -1,6 +1,6 @@
 import { Config } from './types';
 
-let config: Config = {};
+let config: Config;
 
 export function setConfig(_config: Config) {
   config = _config;
@@ -14,7 +14,7 @@ export type ProjectType = 'application' | 'library';
 
 export function defaultConfig(
   projectType: ProjectType = 'application'
-): Config {
+): Omit<Config, 'config' | 'project' | 'scopes' | 'scopePathMap' | 'unflat' | 'command' | 'files'> {
   const isApp = projectType === 'application';
 
   return {

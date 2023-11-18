@@ -1,7 +1,7 @@
 import {
   Config,
   ExtractionResult,
-  ExtractorConfig,
+  ExtractorConfig, FileType,
   ScopeMap,
 } from '../../types';
 import { initExtraction } from '../../utils/init-extraction';
@@ -10,7 +10,7 @@ import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
   { input, scopes, defaultValue, files }: Config,
-  fileType: 'ts' | 'html',
+  fileType: FileType,
   extractor: (config: ExtractorConfig) => ScopeMap
 ): ExtractionResult {
   let { scopeToKeys } = initExtraction();

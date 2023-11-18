@@ -16,7 +16,7 @@ export function buildKeysFromASTNodes(
   nodes: Node[],
   allowedMethods = ['translate', 'selectTranslate']
 ): TSExtractorResult {
-  const result = [];
+  const result: TSExtractorResult = [];
 
   for (let node of nodes) {
     if (isCallExpression(node.parent)) {
@@ -27,17 +27,13 @@ export function buildKeysFromASTNodes(
       } else if (isPropertyAccessExpression(method)) {
         methodName = method.name.text;
       }
-      if (allowedMethods.includes(methodName) === false) {
+      if (!allowedMethods.includes(methodName)) {
         continue;
       }
 
       const [keyNode, _, langNode] = node.parent.arguments;
-      let lang: string;
+      let lang = isStringNode(langNode) ? langNode.text : '';
       let keys: string[] = [];
-
-      if (isStringNode(langNode)) {
-        lang = langNode.text;
-      }
 
       if (isStringNode(keyNode)) {
         keys = [keyNode.text];
@@ -46,8 +42,7 @@ export function buildKeysFromASTNodes(
       }
 
       for (const key of keys) {
-        const data = lang ? { lang, key } : { key };
-        result.push(data);
+        result.push({ key, lang });
       }
     }
   }

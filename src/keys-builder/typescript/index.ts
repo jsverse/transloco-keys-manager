@@ -84,7 +84,7 @@ function resolveAliasAndKeyFromService(
   key: string,
   scopePath: string,
   scopes: Scopes
-): [string, string] {
+): [string, string | null] {
   // It means that it's the global
   if (!scopePath) {
     return [key, null];

@@ -2,7 +2,7 @@ import { buildTranslationFiles } from '../keys-builder';
 import { buildTranslationFile } from '../keys-builder/build-translation-file';
 import { extractTemplateKeys } from '../keys-builder/template';
 import { extractTSKeys } from '../keys-builder/typescript';
-import { Config } from '../types';
+import {Config, ScopeMap, FileType} from '../types';
 import { initExtraction } from '../utils/init-extraction';
 import { mergeDeep } from '../utils/object.utils';
 import { buildScopeFilePaths } from '../utils/path.utils';
@@ -15,40 +15,34 @@ let init = true;
 
 export class TranslocoExtractKeysWebpackPlugin {
   config: Config;
-  inlineConfig: Config;
 
-  constructor(inlineConfig: Config = {}) {
+  constructor(inlineConfig: Partial<Config> = {}) {
     this.config = resolveConfig(inlineConfig);
-    this.inlineConfig = inlineConfig;
   }
 
-  apply(compiler) {
-    compiler.hooks.watchRun.tap('TranslocoExtractKeysPlugin', (comp) => {
+  apply(compiler: any) {
+    compiler.hooks.watchRun.tapPromise('TranslocoExtractKeysPlugin', async (comp: any) => {
       if (init) {
-        buildTranslationFiles(this.config);
         init = false;
-        return;
+        return buildTranslationFiles(this.config);
       }
 
-      const keysExtractions = { html: [], ts: [] };
+      const keysExtractions: Record<FileType, string[]> = { html: [], ts: [] };
       const files =
         comp.modifiedFiles || Object.keys(comp.watchFileSystem.watcher.mtimes);
 
       for (const file of files) {
-        let fileType;
-        if (file.endsWith('.html')) {
-          fileType = 'html';
-        } else if (!file.endsWith('spec.ts') && file.endsWith('.ts')) {
-          fileType = 'ts';
-        }
+        const fileType = resolveFileType(file);
 
-        fileType && keysExtractions[fileType].push(file);
+        if (fileType) {
+          keysExtractions[fileType].push(file)
+        }
       }
 
-      let htmlResult = initExtraction();
-      let tsResult = initExtraction();
-
       if (keysExtractions.html.length || keysExtractions.ts.length) {
+
+        let htmlResult = initExtraction();
+        let tsResult = initExtraction();
         if (keysExtractions.ts.length) {
           // Maybe someone added a TRANSLOCO_SCOPE
           const newScopes = updateScopesMap({ files: keysExtractions.ts });
@@ -83,7 +77,7 @@ export class TranslocoExtractKeysWebpackPlugin {
           {},
           htmlResult.scopeToKeys,
           tsResult.scopeToKeys
-        );
+        ) as ScopeMap;
         const hasTranslateKeys = Object.keys(scopeToKeys).some(
           (key) => Object.keys(scopeToKeys[key]).length > 0
         );
@@ -96,6 +90,20 @@ export class TranslocoExtractKeysWebpackPlugin {
           });
         }
       }
+
+      return Promise.resolve();
     });
   }
+}
+
+function resolveFileType(file: string): FileType | null {
+  return isHtml(file) ? 'html' : isTs(file) ? 'ts' : null;
+}
+
+function isHtml(file: string) {
+  return file.endsWith('.html');
+}
+
+function isTs(file: string) {
+  return file.endsWith('.ts') && !file.endsWith('.spec.ts');
 }

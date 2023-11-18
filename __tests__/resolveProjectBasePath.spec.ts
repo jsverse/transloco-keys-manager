@@ -1,7 +1,9 @@
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import path from 'path';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
+
+import { spyOnLog } from './utils';
 
 const supportedConfigs = ['angular', 'workspace', 'project'] as const;
 const myProjectConfig = { projectType: 'library', sourceRoot: 'myRoot' };
@@ -15,7 +17,9 @@ const defaultConfig = {
 
 describe('resolveProjectBasePath', () => {
   it('should return the default "src"', () => {
+    const spy = spyOnLog();
     expect(resolveProjectBasePath().projectBasePath).toBe('src');
+    spy.mockRestore();
   });
 
   it('should work when having both Angular and Workspace config', () => {

@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-// import-conductor-skip
 import commandLineArgs from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 
 import { optionDefinitions, sections } from './cli-options';
 import { buildTranslationFiles } from './keys-builder';
 import { findMissingKeys } from './keys-detective';
-import './polyfills';
+import {Config} from "./types";
 
 const mainDefinitions = [{ name: 'command', defaultOption: true }];
 
@@ -27,14 +26,17 @@ if (help) {
   console.log(usage);
   process.exit();
 }
-config.command = mainOptions.command;
-if (config.input) {
-  config.input = config.input.split(',');
-}
-if (mainOptions.command === 'extract') {
-  buildTranslationFiles(config);
-} else if (mainOptions.command === 'find') {
-  findMissingKeys(config);
+
+const resolvedConfig = {
+  ...config,
+  command: mainOptions.command,
+  input: config.input.split(',')
+} as Config;
+
+if (resolvedConfig.command === 'extract') {
+  buildTranslationFiles(resolvedConfig);
+} else if (resolvedConfig.command === 'find') {
+  findMissingKeys(resolvedConfig);
 } else {
   console.log(`Please provide an action...`);
 }

@@ -36,7 +36,7 @@ export function templateCommentsExtractor({
           ? TEMPLATE_TYPE.STRUCTURAL
           : TEMPLATE_TYPE.NG_TEMPLATE;
         templateContainers.push({
-          containerContent: $(element).html(),
+          containerContent: $(element).html()!,
           read: extractReadValue(element, containerType),
         });
       });
@@ -115,13 +115,13 @@ function loadCheerio(content: string) {
 function extractReadValue(
   element: Element,
   templateType: TEMPLATE_TYPE
-): string {
-  let read: string;
+): string | undefined {
+  let read: string | undefined;
 
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
     const readSearch = data.match(/read:\s*(['"])(?<read>[^"']*)\1/);
-    read = readSearch?.groups.read;
+    read = readSearch?.groups?.read;
   }
 
   if (templateType === TEMPLATE_TYPE.NG_TEMPLATE) {

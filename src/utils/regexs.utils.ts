@@ -6,11 +6,11 @@ export const regexFactoryMap = {
   },
   template: {
     comments: () => /<!--[^]+?-->/g,
-    validateComment: (marker) =>
+    validateComment: (marker: string) =>
       new RegExp(
         `<!--(\\s*${sanitizeForRegex(marker)}\\(([^)]+)\\)\\s*)+\\s*-->`
       ),
   },
-  markerValues: (marker) =>
+  markerValues: (marker: string) =>
     new RegExp(`\\b${sanitizeForRegex(marker)}\\(([^)]+)\\)`, 'g'),
 };

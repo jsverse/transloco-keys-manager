@@ -15,27 +15,33 @@ import { readFile } from './file.utils';
 import { toCamelCase } from './string.utils';
 import { normalizedGlob } from './normalize-glob-path';
 
+type Alias = string;
+type Scope = string;
+
 interface ScopeDef {
-  scope?: string;
-  alias?: string;
+  scope?: Alias;
+  alias?: Scope;
 }
 
-interface QueryDef<TSNode extends Node = Node> {
+interface QueryDef {
   query: string;
-  resolver: (node: TSNode[]) => ScopeDef | ScopeDef[];
+  resolver: (node: Node[]) => ScopeDef | ScopeDef[];
 }
 
+// TODO add provideScope
 const baseQuery = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) PropertyAssignment:has(Identifier[name=/useValue|useFactory/])`;
-const stringQueryDef: QueryDef<StringLiteral> = {
+
+const stringQueryDef: QueryDef = {
   query: `StringLiteral`,
-  resolver: ([node]) => ({ scope: node.text }),
+  resolver: ([node]) => ({ scope: (node as StringLiteral).text }),
 };
-const objectQueryDef: QueryDef<ObjectLiteralExpression> = {
+
+const objectQueryDef: QueryDef = {
   query: 'ObjectLiteralExpression',
   resolver: ([node]) => {
     let result: ScopeDef = {};
 
-    for (const prop of node.properties as NodeArray<PropertyAssignment>) {
+    for (const prop of (node as ObjectLiteralExpression).properties as NodeArray<PropertyAssignment>) {
       if (prop.initializer) {
         const key = prop.name.getText();
         if (key === 'scope' || key === 'alias') {
@@ -47,34 +53,34 @@ const objectQueryDef: QueryDef<ObjectLiteralExpression> = {
     return result;
   },
 };
-const arrayQueryDef: QueryDef<StringLiteral> = {
+
+const arrayQueryDef: QueryDef = {
   query: 'ArrayLiteralExpression > StringLiteral',
-  resolver: (nodes) => nodes.map((node) => ({ scope: node.text })),
+  resolver: (nodes) => (nodes as StringLiteral[]).map((node) => ({ scope: node.text })),
 };
+
 const scopeValueQueries: QueryDef[] = [
   stringQueryDef,
   objectQueryDef,
   arrayQueryDef,
 ];
 
-export function updateScopesMap({
-  input,
-  files,
-}: {
-  input?: string[];
-  files?: string[];
-}): Scopes['aliasToScope'] {
+type Options = { input?: string[]; files?: string[]; };
+
+export function updateScopesMap(options: Omit<Options, 'input'>): Scopes['aliasToScope'];
+export function updateScopesMap(options: Omit<Options, 'files'>): Scopes['aliasToScope'];
+export function updateScopesMap({ input, files }: Options): Scopes['aliasToScope'] {
   const tsFiles =
-    files || input.map((path) => normalizedGlob(`${path}/**/*.ts`)).flat();
+    files || input!.map((path) => normalizedGlob(`${path}/**/*.ts`)).flat();
   // Return only the new scopes (for the plugin)
-  const aliasToScope = {};
+  const aliasToScope: Record<Alias, Scope> = {};
 
   for (const file of tsFiles) {
     const content = readFile(file);
 
     if (!content.includes('TRANSLOCO_SCOPE')) continue;
 
-    let result: ScopeDef | ScopeDef[];
+    let result: ScopeDef | ScopeDef[] | undefined;
 
     const ast = tsquery.ast(content);
 
@@ -86,15 +92,13 @@ export function updateScopesMap({
       }
     }
 
-    for (let { scope, alias } of coerceArray(result)) {
-      if (scope && hasScope(scope) === false) {
-        if (!alias) {
-          alias = toCamelCase(scope);
+      for (let { scope, alias } of coerceArray(result)) {
+        if (scope && !hasScope(scope)) {
+          alias ??= toCamelCase(scope);
+          addScope(scope, alias);
+          aliasToScope[alias] = scope;
         }
-        addScope(scope, alias);
-        aliasToScope[alias] = scope;
       }
-    }
   }
 
   return aliasToScope;

@@ -20,12 +20,14 @@ function parsePot(path: string) {
 
     const value = Object.keys(parsed.translations[''])
       .filter((key) => key.length > 0)
-      .reduce<Record<string, string>>(
-        (acc, key) => ({
-          ...acc,
-          [key]: parsed.translations[''][key].msgstr.pop(),
-        }),
-        {}
+      .reduce(
+        (acc, key) => {
+         return {
+           ...acc,
+           [key]: parsed.translations[''][key].msgstr.pop()!,
+         }
+        },
+        {} as Record<string, string>
       );
 
     return getConfig().unflat
@@ -33,7 +35,7 @@ function parsePot(path: string) {
           object: true,
         })
       : value;
-  } catch (e) {
+  } catch (e: any) {
     if (e.code === 'ENOENT') {
       return {};
     }
@@ -43,6 +45,8 @@ function parsePot(path: string) {
       path,
       e.message
     );
+
+    return {};
   }
 }
 

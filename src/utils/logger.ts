@@ -1,15 +1,15 @@
 import debug from 'debug';
-import ora from 'ora';
+import ora, {Ora} from 'ora';
 
-let spinner;
+let spinner: Ora;
 
 function noop() {}
 
 const isProd = process.env.PRODUCTION;
 const defaultLogger = {
-  log: (...msg) => (isProd ? noop : console.log(...msg)),
-  success: (msg) => (isProd ? noop : spinner.succeed(msg)),
-  startSpinner: (msg) => (isProd ? noop : (spinner = ora().start(msg))),
+  log: (...msg: string[]) => (isProd ? noop : console.log(...msg)),
+  success: (msg: string) => (isProd ? noop : spinner.succeed(msg)),
+  startSpinner: (msg: string) => (isProd ? noop : (spinner = ora().start(msg))),
 };
 
 export function getLogger() {

@@ -6,7 +6,7 @@ import { buildScopeFilePaths } from '../utils/path.utils';
 import { buildTranslationFile, FileAction } from './build-translation-file';
 import { runPrettier } from './utils/run-prettier';
 
-export function createTranslationFiles({
+export async function createTranslationFiles({
   scopeToKeys,
   langs,
   output,
@@ -53,7 +53,7 @@ export function createTranslationFiles({
   }
 
   if (fileFormat === 'json') {
-    runPrettier(actions.map(({ path }) => path));
+    await runPrettier(actions.map(({ path }) => path));
   }
 
   const newFiles = actions.filter((action) => action.type === 'new');

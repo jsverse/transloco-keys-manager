@@ -1,4 +1,4 @@
-import * as fsExtra from 'fs-extra';
+import {outputFileSync} from 'fs-extra';
 
 import { Config, Translation } from '../types';
 
@@ -11,7 +11,7 @@ export interface FileAction {
 }
 
 interface BuildTranslationOptions
-  extends Pick<Config, 'fileFormat'>,
+  extends Required<Pick<Config, 'fileFormat'>>,
     Partial<Pick<Config, 'replace' | 'removeExtraKeys'>> {
   path: string;
   translation?: Translation;
@@ -26,7 +26,7 @@ export function buildTranslationFile({
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
 
-  fsExtra.outputFileSync(
+  outputFileSync(
     path,
     createTranslation({
       currentTranslation,

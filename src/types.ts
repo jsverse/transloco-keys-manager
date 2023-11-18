@@ -1,38 +1,39 @@
 export type Config = {
-  input?: string[];
-  config?: string;
-  project?: string;
-  translationsPath?: string;
-  langs?: string[];
-  defaultValue?: undefined | string;
-  replace?: boolean;
-  addMissingKeys?: boolean;
-  removeExtraKeys?: boolean;
-  emitErrorOnExtraKeys?: boolean;
-  scopes?: Scopes;
+  input: string[];
+  config: string;
+  project: string;
+  translationsPath: string;
+  langs: string[];
+  defaultValue: undefined | string;
+  replace: boolean;
+  addMissingKeys: boolean;
+  removeExtraKeys: boolean;
+  emitErrorOnExtraKeys: boolean;
+  scopes: Scopes;
   scopePathMap?: {
     [scopeAlias: string]: string;
   };
-  files?: string[];
-  output?: string;
-  marker?: string;
-  sort?: boolean;
-  unflat?: boolean;
-  command?: 'extract' | 'find';
-  fileFormat?: FileFormats;
+  files: string[];
+  output: string;
+  marker: string;
+  sort: boolean;
+  unflat: boolean;
+  command: 'extract' | 'find';
+  fileFormat: FileFormats;
 };
 
 export type FileFormats = 'json' | 'pot';
+export type FileType = 'ts' | 'html';
 
 export type ExtractionResult = {
   scopeToKeys: ScopeMap;
-  fileCount?: number;
+  fileCount: number;
 };
 
 export type ExtractorConfig = {
   file: string;
   scopes: Scopes;
-  defaultValue: string;
+  defaultValue?: string;
   scopeToKeys: ScopeMap;
 };
 
@@ -58,7 +59,7 @@ export enum TEMPLATE_TYPE {
 }
 
 export type BaseParams = {
-  defaultValue: string;
+  defaultValue?: string;
   scopeToKeys: ScopeMap;
   scopes: Scopes;
 };

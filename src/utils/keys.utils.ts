@@ -3,7 +3,7 @@ import { messages } from '../messages';
 import { getLogger } from './logger';
 import { isObject } from './validators.utils';
 
-export function countKeys(obj: object) {
+export function countKeys(obj: Record<string, any>): number {
   return Object.keys(obj).reduce(
     (acc, curr) => (isObject(obj[curr]) ? acc + countKeys(obj[curr]) : ++acc),
     0

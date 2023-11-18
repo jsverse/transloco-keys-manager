@@ -1,15 +1,15 @@
 export const messages = {
   keepFlat: 'Keep certain keys flat?',
-  keysFound: (keysCount, filesCount) =>
+  keysFound: (keysCount: number, filesCount: number) =>
     `${keysCount} keys were found in ${filesCount} ${
       filesCount > 1 ? 'files' : 'file'
     }.`,
-  startBuild: (langsCount) =>
+  startBuild: (langsCount: number) =>
     `Starting Translation ${langsCount > 1 ? 'Files' : 'File'} Build`,
   startSearch: 'Starting Search For Missing Keys',
   extract: 'Extracting Template and Component Keys',
   creatingFiles: 'Created the following translation files:',
-  merged: (len) =>
+  merged: (len: number) =>
     `Existing translation file${len > 1 ? 's were' : ' was'} found and merged`,
   checkMissing: 'Checking for missing keys',
   pathDoesntExist: `path provided doesn't exist!`,

@@ -48,4 +48,6 @@
           b="{{1 + ('76' | transloco)}}">
         {{ (('77' | transloco) + 'a').split(('78' | transloco) || ',') }}
     </comp>
+
+    {{ '{{count}} items' | transloco:{ count: item.usageCount } }}
 </my-comp>

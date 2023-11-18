@@ -9,7 +9,7 @@ import { buildKeys } from './build-keys';
 import { createTranslationFiles } from './create-translation-files';
 
 /** The main function, collects the settings and starts the files build. */
-export function buildTranslationFiles(inlineConfig: Config) {
+export async function buildTranslationFiles(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
 
@@ -36,7 +36,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
     messages.keysFound(keysFound, fileCount)
   );
 
-  createTranslationFiles({
+  await createTranslationFiles({
     scopeToKeys,
     ...config,
   });

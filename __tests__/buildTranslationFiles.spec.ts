@@ -1,14 +1,14 @@
-// import-conductor-skip
-import { Config, FileFormats, Translation } from '../src/types';
-
-jest.mock('../src/utils/resolve-project-base-path');
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
+import {jest} from '@jest/globals';
 
 import { buildTranslationFiles } from '../src/keys-builder';
 import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
 import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
+import { Config, FileFormats, Translation } from '../src/types';
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
+
+jest.mock('../src/utils/resolve-project-base-path');
 
 const sourceRoot = '__tests__';
 
@@ -33,14 +33,14 @@ function generateKeys({
 function gConfig(
   type: TranslationCategory,
   config: Partial<Config> = {}
-): Config {
+) {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
     langs: ['en', 'es', 'it'],
     defaultValue: defaultValue,
     ...config,
-  };
+  } as Config;
 }
 
 type TranslationCategory =
@@ -129,6 +129,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
           ...generateKeys({ start: 66, end: 78 }),
+          '{{count}} items': defaultValue,
         };
         [
           'Restore Options',
