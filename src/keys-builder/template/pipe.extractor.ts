@@ -14,9 +14,11 @@ import {
   isInterpolation,
   isLiteralExpression,
   isLiteralMap,
-  isMethodCall,
+  isCall,
   isTemplate,
   parseTemplate,
+  getChildrendNodesIfBlock,
+  isPropertyRead,
 } from './utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
@@ -26,6 +28,12 @@ export function pipeExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
+    const childrendNodes = getChildrendNodesIfBlock(node);
+    if (childrendNodes.length) {
+      traverse(childrendNodes, config);
+      continue;
+    }
+
     let astTrees: AST[] = [];
 
     if (isElement(node) || isTemplate(node)) {
@@ -77,8 +85,10 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [ast.condition, ast.trueExp, ast.falseExp];
   } else if (isBinaryExpression(ast)) {
     exp = [ast.left, ast.right];
-  } else if (isMethodCall(ast)) {
+  } else if (isCall(ast)) {
     exp = [...ast.args, ast.receiver];
+  } else if (isPropertyRead(ast)) {
+    exp = [ast.receiver];
   }
 
   return exp.map(getPipeValuesFromAst).flat();

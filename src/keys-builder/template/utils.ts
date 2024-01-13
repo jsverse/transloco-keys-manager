@@ -5,7 +5,7 @@ import {
   Interpolation,
   LiteralMap,
   LiteralPrimitive,
-  MethodCall,
+  Call,
   parseTemplate as ngParseTemplate,
   ParseTemplateOptions,
   TmplAstBoundAttribute,
@@ -13,11 +13,24 @@ import {
   TmplAstElement,
   TmplAstTemplate,
   TmplAstTextAttribute,
+  TmplAstNode,
+  TmplAstDeferredBlock,
+  TmplAstDeferredBlockError,
+  TmplAstDeferredBlockLoading,
+  TmplAstDeferredBlockPlaceholder,
+  TmplAstForLoopBlock,
+  TmplAstForLoopBlockEmpty,
+  TmplAstIfBlockBranch,
+  TmplAstSwitchBlockCase,
+  TmplAstIfBlock,
+  TmplAstSwitchBlock,
+  PropertyRead,
 } from '@angular/compiler';
 
 import { readFile } from '../../utils/file.utils';
 
-import { TemplateExtractorConfig } from './types';
+import { ContainersMetadata, TemplateExtractorConfig } from './types';
+import { ExtractorConfig } from '../../types';
 
 export function isTemplate(node: unknown): node is TmplAstTemplate {
   return node instanceof TmplAstTemplate;
@@ -47,8 +60,12 @@ export function isInterpolation(ast: unknown): ast is Interpolation {
   return ast instanceof Interpolation;
 }
 
-export function isMethodCall(ast: unknown): ast is MethodCall {
-  return ast instanceof MethodCall;
+export function isCall(ast: unknown): ast is Call {
+  return ast instanceof Call;
+}
+
+export function isPropertyRead(ast: unknown): ast is PropertyRead {
+  return ast instanceof PropertyRead;
 }
 
 export function isNgTemplateTag(node: TmplAstTemplate) {
@@ -92,4 +109,69 @@ export function isSupportedNode<Predicates extends any[]>(
   predicates: Predicates
 ): node is GuardedType<Predicates[number]> {
   return predicates.some((predicate) => predicate(node));
+}
+
+export function isBlockWithChildren(
+  node: unknown
+): node is { children: TmplAstNode[] } {
+  return (
+    node instanceof TmplAstDeferredBlockError ||
+    node instanceof TmplAstDeferredBlockLoading ||
+    node instanceof TmplAstDeferredBlockPlaceholder ||
+    node instanceof TmplAstForLoopBlockEmpty ||
+    node instanceof TmplAstIfBlockBranch ||
+    node instanceof TmplAstSwitchBlockCase
+  );
+}
+
+export function isTmplAstForLoopBlock(
+  node: unknown
+): node is TmplAstForLoopBlock {
+  return node instanceof TmplAstForLoopBlock;
+}
+
+export function isTmplAstDeferredBlock(
+  node: unknown
+): node is TmplAstDeferredBlock {
+  return node instanceof TmplAstDeferredBlock;
+}
+
+export function isTmplAstIfBlock(node: unknown): node is TmplAstIfBlock {
+  return node instanceof TmplAstIfBlock;
+}
+
+export function isTmplAstSwitchBlock(
+  node: unknown
+): node is TmplAstSwitchBlock {
+  return node instanceof TmplAstSwitchBlock;
+}
+
+/**
+ * Returns children nodes of the given node if it's a block node.
+ */
+export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
+  if (isTmplAstIfBlock(node)) {
+    return node.branches;
+  }
+
+  if (isTmplAstForLoopBlock(node)) {
+    return [...node.children, ...[node.empty].filter(Boolean)];
+  }
+
+  if (isTmplAstDeferredBlock(node)) {
+    return [
+      ...node.children,
+      ...[node.loading, node.error, node.placeholder].filter(Boolean),
+    ];
+  }
+
+  if (isTmplAstSwitchBlock(node)) {
+    return node.cases;
+  }
+
+  if (isBlockWithChildren(node)) {
+    return node.children;
+  }
+
+  return [];
 }

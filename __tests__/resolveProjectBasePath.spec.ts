@@ -15,7 +15,10 @@ const defaultConfig = {
 
 describe('resolveProjectBasePath', () => {
   it('should return the default "src"', () => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+
     expect(resolveProjectBasePath().projectBasePath).toBe('src');
+    expect(console.log).toHaveBeenCalled();
   });
 
   it('should work when having both Angular and Workspace config', () => {

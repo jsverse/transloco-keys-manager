@@ -58,7 +58,9 @@ type TranslationCategory =
   | 'multi-input'
   | 'scope-mapping'
   | 'comments'
-  | 'remove-extra-keys';
+  | 'remove-extra-keys'
+  | 'self-closing'
+  | 'control-flow';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
   type: TranslationCategory;
@@ -227,6 +229,32 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           path: 'todos-page/',
           fileFormat,
         });
+      });
+    });
+
+    describe('Self-closing', () => {
+      const type: TranslationCategory = 'self-closing';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with self-closing component', () => {
+        let expected = generateKeys({ end: 4 });
+        createTranslations(config);
+        assertTranslation({ type, expected, fileFormat });
+      });
+    });
+
+    describe('Control flow', () => {
+      const type: TranslationCategory = 'control-flow';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with control flow', () => {
+        let expected = generateKeys({ end: 26 });
+        createTranslations(config);
+        assertTranslation({ type, expected, fileFormat });
       });
     });
 

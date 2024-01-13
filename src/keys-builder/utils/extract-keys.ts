@@ -15,9 +15,9 @@ export function extractKeys(
 ): ExtractionResult {
   let { scopeToKeys } = initExtraction();
 
-
   const fileList =
-    files || input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
+    files ||
+    input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
 
   for (const file of fileList) {
     devlog('extraction', 'Extracting keys', { file, fileType });

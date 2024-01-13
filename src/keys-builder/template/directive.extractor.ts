@@ -2,7 +2,17 @@ import {
   AST,
   ASTWithSource,
   TmplAstBoundAttribute,
+  TmplAstDeferredBlock,
+  TmplAstDeferredBlockError,
+  TmplAstDeferredBlockLoading,
+  TmplAstDeferredBlockPlaceholder,
+  TmplAstForLoopBlock,
+  TmplAstForLoopBlockEmpty,
+  TmplAstIfBlock,
+  TmplAstIfBlockBranch,
   TmplAstNode,
+  TmplAstSwitchBlock,
+  TmplAstSwitchBlockCase,
   TmplAstTextAttribute,
 } from '@angular/compiler';
 
@@ -12,7 +22,10 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  getChildrendNodesIfBlock,
+  isBlockWithChildren,
   isBoundAttribute,
+  isBoundText,
   isConditionalExpression,
   isElement,
   isInterpolation,
@@ -30,6 +43,12 @@ export function directiveExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
+    const childrendNodes = getChildrendNodesIfBlock(node);
+    if (childrendNodes.length) {
+      traverse(childrendNodes, config);
+      continue;
+    }
+
     if (!isSupportedNode(node, [isTemplate, isElement])) {
       continue;
     }

@@ -2,7 +2,7 @@ import { buildTranslationFiles } from '../keys-builder';
 import { buildTranslationFile } from '../keys-builder/build-translation-file';
 import { extractTemplateKeys } from '../keys-builder/template';
 import { extractTSKeys } from '../keys-builder/typescript';
-import { Config } from '../types';
+import { Config, ScopeMap } from '../types';
 import { initExtraction } from '../utils/init-extraction';
 import { mergeDeep } from '../utils/object.utils';
 import { buildScopeFilePaths } from '../utils/path.utils';
@@ -83,7 +83,7 @@ export class TranslocoExtractKeysWebpackPlugin {
           {},
           htmlResult.scopeToKeys,
           tsResult.scopeToKeys
-        );
+        ) as ScopeMap;
         const hasTranslateKeys = Object.keys(scopeToKeys).some(
           (key) => Object.keys(scopeToKeys[key]).length > 0
         );
