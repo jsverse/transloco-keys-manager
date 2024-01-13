@@ -1,0 +1,8 @@
+<self-closing [value]="'1' | transloco" />
+<self-closing transloco="2" />
+<ng-container *transloco="let t">
+  <self-closing [value]="t('3')" />
+</ng-container>
+<ng-template transloco let-t>
+  <self-closing [value]="t('4')" />
+</ng-template>

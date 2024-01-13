@@ -14,6 +14,17 @@ import {
   TmplAstElement,
   TmplAstTemplate,
   TmplAstTextAttribute,
+  TmplAstNode,
+  TmplAstDeferredBlock,
+  TmplAstDeferredBlockError,
+  TmplAstDeferredBlockLoading,
+  TmplAstDeferredBlockPlaceholder,
+  TmplAstForLoopBlock,
+  TmplAstForLoopBlockEmpty,
+  TmplAstIfBlockBranch,
+  TmplAstSwitchBlockCase,
+  TmplAstIfBlock,
+  TmplAstSwitchBlock,
 } from '@angular/compiler';
 
 import { readFile } from '../../utils/file.utils';
@@ -97,4 +108,73 @@ export function isSupportedNode<Predicates extends any[]>(
   predicates: Predicates,
 ): node is GuardedType<Predicates[number]> {
   return predicates.some((predicate) => predicate(node));
+}
+
+export function isBlockWithChildren(
+  node: unknown,
+): node is { children: TmplAstNode[] } {
+  return (
+    node instanceof TmplAstDeferredBlockError ||
+    node instanceof TmplAstDeferredBlockLoading ||
+    node instanceof TmplAstDeferredBlockPlaceholder ||
+    node instanceof TmplAstForLoopBlockEmpty ||
+    node instanceof TmplAstIfBlockBranch ||
+    node instanceof TmplAstSwitchBlockCase
+  );
+}
+
+export function isTmplAstForLoopBlock(
+  node: unknown,
+): node is TmplAstForLoopBlock {
+  return node instanceof TmplAstForLoopBlock;
+}
+
+export function isTmplAstDeferredBlock(
+  node: unknown,
+): node is TmplAstDeferredBlock {
+  return node instanceof TmplAstDeferredBlock;
+}
+
+export function isTmplAstIfBlock(node: unknown): node is TmplAstIfBlock {
+  return node instanceof TmplAstIfBlock;
+}
+
+export function isTmplAstSwitchBlock(
+  node: unknown,
+): node is TmplAstSwitchBlock {
+  return node instanceof TmplAstSwitchBlock;
+}
+
+function isNotNull<T>(input: T | null): input is T {
+  return input !== null;
+}
+
+/**
+ * Returns children nodes of the given node if it's a block node.
+ */
+export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
+  if (isTmplAstIfBlock(node)) {
+    return node.branches;
+  }
+
+  if (isTmplAstForLoopBlock(node)) {
+    return [...node.children, ...[node.empty].filter(isNotNull)];
+  }
+
+  if (isTmplAstDeferredBlock(node)) {
+    return [
+      ...node.children,
+      ...[node.loading, node.error, node.placeholder].filter(isNotNull),
+    ];
+  }
+
+  if (isTmplAstSwitchBlock(node)) {
+    return node.cases;
+  }
+
+  if (isBlockWithChildren(node)) {
+    return node.children;
+  }
+
+  return [];
 }
