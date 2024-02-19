@@ -1,4 +1,4 @@
-import { Diff, DiffArray, DiffDeleted, DiffEdit, DiffNew } from 'deep-diff';
+import type { Diff, DiffEdit } from 'deep-diff';
 
 import { buildPath } from '../utils/path.utils';
 import { isObject } from '../utils/validators.utils';

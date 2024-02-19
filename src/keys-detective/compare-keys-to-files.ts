@@ -1,5 +1,5 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
-import { DiffDeleted, DiffNew } from 'deep-diff';
+import type { DiffDeleted, DiffNew } from 'deep-diff';
 import df from 'deep-diff';
 import { flatten } from 'flat';
 

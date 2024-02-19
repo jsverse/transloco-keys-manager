@@ -4,14 +4,14 @@ import { jest } from '@jest/globals';
 import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
 import { Config, FileFormats, Translation } from '../src/types';
-import { noop, spyOnWarn } from './utils';
+import {
+  spyOnConsole,
+  spyOnProcess,
+  spyOnResolveProjectBasePath,
+} from './utils';
 
 const sourceRoot = '__tests__';
-jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
-  resolveProjectBasePath: jest
-    .fn()
-    .mockReturnValue({ projectBasePath: sourceRoot }),
-}));
+spyOnResolveProjectBasePath(sourceRoot);
 
 const { buildTranslationFiles } = await import('../src/keys-builder');
 const { getCurrentTranslation } = await import(
@@ -102,8 +102,7 @@ function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-// const formats: FileFormats[] = ['pot', 'json'];
-const formats: FileFormats[] = ['json'];
+const formats: FileFormats[] = ['pot', 'json'];
 
 describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   function createTranslations(config) {
@@ -111,8 +110,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   }
 
   beforeAll(() => {
-    spyOnWarn();
-    jest.spyOn(process, 'exit').mockImplementation(noop as any);
+    spyOnConsole('warn');
+    spyOnProcess('exit');
   });
 
   // Reset to ensure the scopes are not being shared among the tests.

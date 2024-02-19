@@ -6,16 +6,16 @@ import type { SpyInstance } from 'jest-mock';
 import { defaultConfig as _defaultConfig } from '../src/config';
 import { messages } from '../src/messages';
 
-import { noop, spyOnLog } from './utils';
+import {
+  spyOnConsole,
+  spyOnProcess,
+  spyOnResolveProjectBasePath,
+} from './utils';
 
 const sourceRoot = '__tests__';
 let mockedGloblConfig;
 
-jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
-  resolveProjectBasePath: jest
-    .fn()
-    .mockReturnValue({ projectBasePath: sourceRoot }),
-}));
+spyOnResolveProjectBasePath(sourceRoot);
 
 jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
   getGlobalConfig: () => mockedGloblConfig,
@@ -36,10 +36,8 @@ describe('resolveConfig', () => {
 
   beforeAll(() => {
     mockedGloblConfig = {};
-    processExitSpy = jest
-      .spyOn(process, 'exit')
-      .mockImplementation(noop as any);
-    consoleLogSpy = spyOnLog();
+    processExitSpy = spyOnProcess('exit');
+    consoleLogSpy = spyOnConsole('log');
     spies = [processExitSpy, consoleLogSpy];
   });
 

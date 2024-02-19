@@ -1,6 +1,5 @@
-import { SourceFile } from 'typescript';
+import { SourceFile, Node } from 'typescript';
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { Node } from 'typescript';
 
 import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
