@@ -1,5 +1,6 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
-import { isParameter, isPropertyDeclaration, SourceFile } from 'typescript';
+import { SourceFile } from 'typescript';
+import ts from 'typescript';
 
 import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
@@ -18,7 +19,7 @@ export function serviceExtractor(ast: SourceFile): TSExtractorResult {
   let result: TSExtractorResult = [];
 
   for (const serviceName of serviceNameNodes) {
-    if (isParameter(serviceName) || isPropertyDeclaration(serviceName)) {
+    if (ts.isParameter(serviceName) || ts.isPropertyDeclaration(serviceName)) {
       const propName = serviceName.name.getText();
       const methodNodes = tsquery(
         ast,

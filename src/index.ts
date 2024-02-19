@@ -30,7 +30,7 @@ if (help) {
 const resolvedConfig = {
   ...config,
   command: mainOptions.command,
-  input: config.input.split(','),
+  ...(config.input ? { input: config.input.split(',') } : {}),
 } as Config;
 
 if (resolvedConfig.command === 'extract') {

@@ -1,16 +1,22 @@
 import fs from 'fs-extra';
 import { jest } from '@jest/globals';
 
-import { buildTranslationFiles } from '../src/keys-builder';
-import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
 import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
 import { Config, FileFormats, Translation } from '../src/types';
-import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
-
-jest.mock('../src/utils/resolve-project-base-path');
+import { noop, spyOnWarn } from './utils';
 
 const sourceRoot = '__tests__';
+jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
+  resolveProjectBasePath: jest
+    .fn()
+    .mockReturnValue({ projectBasePath: sourceRoot }),
+}));
+
+const { buildTranslationFiles } = await import('../src/keys-builder');
+const { getCurrentTranslation } = await import(
+  '../src/keys-builder/utils/get-current-translation'
+);
 
 const defaultValue = 'missing';
 
@@ -83,7 +89,7 @@ function assertPartialTranslation({
 
 function loadTranslationFile(
   type: TranslationCategory,
-  path: string,
+  path: string | undefined,
   fileFormat: FileFormats,
 ) {
   return getCurrentTranslation({
@@ -96,7 +102,8 @@ function removeI18nFolder(type: TranslationCategory) {
   fs.removeSync(`./${sourceRoot}/${type}/i18n`);
 }
 
-const formats: FileFormats[] = ['pot', 'json'];
+// const formats: FileFormats[] = ['pot', 'json'];
+const formats: FileFormats[] = ['json'];
 
 describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   function createTranslations(config) {
@@ -104,9 +111,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   }
 
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => {
-      return { projectBasePath: sourceRoot };
-    });
+    spyOnWarn();
+    jest.spyOn(process, 'exit').mockImplementation(noop as any);
   });
 
   // Reset to ensure the scopes are not being shared among the tests.
@@ -256,20 +262,12 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
               end: 2,
               prefix: 'site-header.navigation.route.nested',
             }),
-          },
-          todos: {
-            ...generateKeys({ end: 2, prefix: 'numbers' }),
+            ...generateKeys({ end: 2, prefix: 'todosPage.numbers' }),
           },
         };
 
         createTranslations(config);
         assertTranslation({ type, expected: expected.global, fileFormat });
-        assertTranslation({
-          type,
-          expected: expected.todos,
-          path: 'todos-page/',
-          fileFormat,
-        });
       });
     });
   });

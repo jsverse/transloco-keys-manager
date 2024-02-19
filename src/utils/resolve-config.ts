@@ -63,9 +63,9 @@ function flatFileConfig({
   }
 
   return {
-    translationsPath: rootTranslationsPath,
-    langs,
-    scopePathMap,
+    ...(rootTranslationsPath ? { translationsPath: rootTranslationsPath } : {}),
+    ...(langs ? { langs } : {}),
+    ...(scopePathMap ? { scopePathMap } : {}),
     ...(keysManager as Omit<TranslocoGlobalConfig['keysManager'], 'input'> &
       Pick<Config, 'input'>),
   };

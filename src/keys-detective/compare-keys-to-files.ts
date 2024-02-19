@@ -1,5 +1,6 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
-import { applyChange, diff, DiffDeleted, DiffNew } from 'deep-diff';
+import { DiffDeleted, DiffNew } from 'deep-diff';
+import df from 'deep-diff';
 import { flatten } from 'flat';
 
 import { messages } from '../messages';
@@ -116,7 +117,7 @@ export function compareKeysToFiles({
         },
       );
       // Compare the current file with the extracted keys
-      const differences = diff(flat, keys);
+      const differences = df.diff(flat, keys);
 
       if (differences) {
         const langPath = `${scope !== '__global' ? scope + '/' : ''}${lang}`;
@@ -130,7 +131,7 @@ export function compareKeysToFiles({
           if (diff.kind === 'N') {
             diffsPerLang[langPath].missing.push(diff);
             if (addMissingKeys) {
-              applyChange(translation, keys, diff);
+              df.applyChange(translation, keys, diff);
             }
           } else if (diff.kind === 'D') {
             const isComment = diff.path!.join('.').endsWith('.comment');

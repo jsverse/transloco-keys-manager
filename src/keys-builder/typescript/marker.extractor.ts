@@ -1,6 +1,6 @@
 import { SourceFile } from 'typescript';
 import { tsquery } from '@phenomnomnominal/tsquery';
-import * as ts from 'typescript';
+import { Node } from 'typescript';
 
 import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
@@ -20,7 +20,7 @@ export function markerExtractor(ast: SourceFile): TSExtractorResult {
   return buildKeysFromASTNodes(fns, [markerName]);
 }
 
-function getMarkerName(importNode: ts.Node) {
+function getMarkerName(importNode: Node) {
   const [defaultName, alias] = tsquery(
     importNode,
     'ImportSpecifier Identifier',

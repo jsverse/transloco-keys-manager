@@ -10,18 +10,16 @@ import { noop, spyOnLog } from './utils';
 
 const sourceRoot = '__tests__';
 let mockedGloblConfig;
-jest.mock('../src/utils/resolve-project-base-path', () => {
-  return {
-    resolveProjectBasePath: () => {
-      return { projectBasePath: sourceRoot };
-    },
-  };
-});
-jest.mock('@ngneat/transloco-utils', () => {
-  return {
-    getGlobalConfig: () => mockedGloblConfig,
-  };
-});
+
+jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
+  resolveProjectBasePath: jest
+    .fn()
+    .mockReturnValue({ projectBasePath: sourceRoot }),
+}));
+
+jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
+  getGlobalConfig: () => mockedGloblConfig,
+}));
 
 const { resolveConfig } = await import('../src/utils/resolve-config');
 

@@ -8,6 +8,7 @@ import {
   Call,
   parseTemplate as ngParseTemplate,
   ParseTemplateOptions,
+  PropertyRead,
   TmplAstBoundAttribute,
   TmplAstBoundText,
   TmplAstElement,
@@ -49,6 +50,10 @@ export function isInterpolation(ast: unknown): ast is Interpolation {
 
 export function isCall(ast: unknown): ast is Call {
   return ast instanceof Call;
+}
+
+export function isPropertyRead(ast: unknown): ast is PropertyRead {
+  return ast instanceof PropertyRead;
 }
 
 export function isNgTemplateTag(node: TmplAstTemplate) {

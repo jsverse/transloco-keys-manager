@@ -15,6 +15,7 @@ import {
   isLiteralExpression,
   isLiteralMap,
   isCall,
+  isPropertyRead,
   isTemplate,
   parseTemplate,
 } from './utils';
@@ -79,6 +80,8 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [ast.left, ast.right];
   } else if (isCall(ast)) {
     exp = [...ast.args, ast.receiver];
+  } else if (isPropertyRead(ast)) {
+    exp = [ast.receiver];
   }
 
   return exp.map(getPipeValuesFromAst).flat();
