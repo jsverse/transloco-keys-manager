@@ -1,5 +1,5 @@
 import debug from 'debug';
-import ora, {Ora} from 'ora';
+import ora, { Ora } from 'ora';
 
 let spinner: Ora;
 
@@ -21,7 +21,7 @@ type DebugNamespaces = 'config' | 'paths' | 'scopes' | 'extraction';
 export function devlog(
   namespace: DebugNamespaces,
   tag: string,
-  values: Record<string, any>
+  values: Record<string, any>,
 ) {
   if (!debug.enabled(namespace)) return;
 

@@ -9,8 +9,8 @@ export function jsoncParser(filepath: string, content: string) {
     const { error, offset } = errors[0];
     throw new Error(
       `Failed to parse "${filepath}" as JSON AST Object. ${printParseErrorCode(
-        error
-      )} at location: ${offset}.`
+        error,
+      )} at location: ${offset}.`,
     );
   }
   return result;

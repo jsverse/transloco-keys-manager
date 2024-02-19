@@ -8,7 +8,7 @@ export const regexFactoryMap = {
     comments: () => /<!--[^]+?-->/g,
     validateComment: (marker: string) =>
       new RegExp(
-        `<!--(\\s*${sanitizeForRegex(marker)}\\(([^)]+)\\)\\s*)+\\s*-->`
+        `<!--(\\s*${sanitizeForRegex(marker)}\\(([^)]+)\\)\\s*)+\\s*-->`,
       ),
   },
   markerValues: (marker: string) =>

@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import {jest} from '@jest/globals';
+import { jest } from '@jest/globals';
 
 import { buildTranslationFiles } from '../src/keys-builder';
 import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
@@ -30,10 +30,7 @@ function generateKeys({
   return keys;
 }
 
-function gConfig(
-  type: TranslationCategory,
-  config: Partial<Config> = {}
-) {
+function gConfig(type: TranslationCategory, config: Partial<Config> = {}) {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
@@ -87,7 +84,7 @@ function assertPartialTranslation({
 function loadTranslationFile(
   type: TranslationCategory,
   path: string,
-  fileFormat: FileFormats
+  fileFormat: FileFormats,
 ) {
   return getCurrentTranslation({
     path: `./${sourceRoot}/${type}/i18n/${path || ''}en.${fileFormat}`,
@@ -157,7 +154,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
@@ -370,7 +367,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });

@@ -23,7 +23,7 @@
     "build": "tsc",
     "postbuild": "node ./scripts/post-build.js",
     "clean:dist": "rimraf dist",
-    "prettier": "prettier --write 'src/**/*.ts' && prettier --write '__tests__/*.ts'",
+    "prettier": "prettier --write src/**/*.ts && prettier --write __tests__/*.ts",
     "conduct": "import-conductor",
     "pre-commit": "lint-staged"
   },

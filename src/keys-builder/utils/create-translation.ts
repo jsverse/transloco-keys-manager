@@ -40,7 +40,7 @@ function createJson(config: CreateTranslationOptions) {
       translation: getConfig().unflat
         ? unflatten(translation, { object: true })
         : translation,
-    })
+    }),
   );
 }
 
@@ -63,7 +63,7 @@ function createPot(config: CreateTranslationOptions) {
             ...acc,
             [msgid]: { msgid, msgstr },
           }),
-          {}
+          {},
         ),
       },
     })

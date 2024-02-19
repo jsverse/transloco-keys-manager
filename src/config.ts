@@ -13,8 +13,17 @@ export function getConfig(): Config {
 export type ProjectType = 'application' | 'library';
 
 export function defaultConfig(
-  projectType: ProjectType = 'application'
-): Omit<Config, 'config' | 'project' | 'scopes' | 'scopePathMap' | 'unflat' | 'command' | 'files'> {
+  projectType: ProjectType = 'application',
+): Omit<
+  Config,
+  | 'config'
+  | 'project'
+  | 'scopes'
+  | 'scopePathMap'
+  | 'unflat'
+  | 'command'
+  | 'files'
+> {
   const isApp = projectType === 'application';
 
   return {

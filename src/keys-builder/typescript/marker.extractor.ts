@@ -9,7 +9,7 @@ export function markerExtractor(ast: SourceFile): TSExtractorResult {
   // workaround from https://github.com/estools/esquery/issues/68
   const [importNode] = tsquery(
     ast,
-    `ImportDeclaration:has([text=/^@ngneat\\x2Ftransloco-keys-manager/])`
+    `ImportDeclaration:has([text=/^@ngneat\\x2Ftransloco-keys-manager/])`,
   );
   if (!importNode) {
     return [];
@@ -23,7 +23,7 @@ export function markerExtractor(ast: SourceFile): TSExtractorResult {
 function getMarkerName(importNode: ts.Node) {
   const [defaultName, alias] = tsquery(
     importNode,
-    'ImportSpecifier Identifier'
+    'ImportSpecifier Identifier',
   );
   return (alias || defaultName).getText();
 }

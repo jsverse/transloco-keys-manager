@@ -2,7 +2,7 @@ import { buildTranslationFiles } from '../keys-builder';
 import { buildTranslationFile } from '../keys-builder/build-translation-file';
 import { extractTemplateKeys } from '../keys-builder/template';
 import { extractTSKeys } from '../keys-builder/typescript';
-import {Config, ScopeMap, FileType} from '../types';
+import { Config, ScopeMap, FileType } from '../types';
 import { initExtraction } from '../utils/init-extraction';
 import { mergeDeep } from '../utils/object.utils';
 import { buildScopeFilePaths } from '../utils/path.utils';
@@ -21,78 +21,84 @@ export class TranslocoExtractKeysWebpackPlugin {
   }
 
   apply(compiler: any) {
-    compiler.hooks.watchRun.tapPromise('TranslocoExtractKeysPlugin', async (comp: any) => {
-      if (init) {
-        init = false;
-        return buildTranslationFiles(this.config);
-      }
-
-      const keysExtractions: Record<FileType, string[]> = { html: [], ts: [] };
-      const files =
-        comp.modifiedFiles || Object.keys(comp.watchFileSystem.watcher.mtimes);
-
-      for (const file of files) {
-        const fileType = resolveFileType(file);
-
-        if (fileType) {
-          keysExtractions[fileType].push(file)
+    compiler.hooks.watchRun.tapPromise(
+      'TranslocoExtractKeysPlugin',
+      async (comp: any) => {
+        if (init) {
+          init = false;
+          return buildTranslationFiles(this.config);
         }
-      }
 
-      if (keysExtractions.html.length || keysExtractions.ts.length) {
+        const keysExtractions: Record<FileType, string[]> = {
+          html: [],
+          ts: [],
+        };
+        const files =
+          comp.modifiedFiles ||
+          Object.keys(comp.watchFileSystem.watcher.mtimes);
 
-        let htmlResult = initExtraction();
-        let tsResult = initExtraction();
-        if (keysExtractions.ts.length) {
-          // Maybe someone added a TRANSLOCO_SCOPE
-          const newScopes = updateScopesMap({ files: keysExtractions.ts });
+        for (const file of files) {
+          const fileType = resolveFileType(file);
 
-          const paths = buildScopeFilePaths({
-            aliasToScope: newScopes,
-            langs: this.config.langs,
-            output: this.config.output,
-            fileFormat: this.config.fileFormat,
-          });
+          if (fileType) {
+            keysExtractions[fileType].push(file);
+          }
+        }
 
-          paths.forEach(({ path }) =>
-            buildTranslationFile({
-              path,
+        if (keysExtractions.html.length || keysExtractions.ts.length) {
+          let htmlResult = initExtraction();
+          let tsResult = initExtraction();
+          if (keysExtractions.ts.length) {
+            // Maybe someone added a TRANSLOCO_SCOPE
+            const newScopes = updateScopesMap({ files: keysExtractions.ts });
+
+            const paths = buildScopeFilePaths({
+              aliasToScope: newScopes,
+              langs: this.config.langs,
+              output: this.config.output,
               fileFormat: this.config.fileFormat,
-            })
+            });
+
+            paths.forEach(({ path }) =>
+              buildTranslationFile({
+                path,
+                fileFormat: this.config.fileFormat,
+              }),
+            );
+            tsResult = extractTSKeys({
+              ...this.config,
+              files: keysExtractions.ts,
+            });
+          }
+
+          if (keysExtractions.html.length) {
+            htmlResult = extractTemplateKeys({
+              ...this.config,
+              files: keysExtractions.html,
+            });
+          }
+
+          const scopeToKeys = mergeDeep(
+            {},
+            htmlResult.scopeToKeys,
+            tsResult.scopeToKeys,
+          ) as ScopeMap;
+          const hasTranslateKeys = Object.keys(scopeToKeys).some(
+            (key) => Object.keys(scopeToKeys[key]).length > 0,
           );
-          tsResult = extractTSKeys({
-            ...this.config,
-            files: keysExtractions.ts,
-          });
+
+          if (hasTranslateKeys) {
+            generateKeys({
+              config: this.config,
+              translationPath: this.config.translationsPath,
+              scopeToKeys,
+            });
+          }
         }
 
-        if (keysExtractions.html.length) {
-          htmlResult = extractTemplateKeys({
-            ...this.config,
-            files: keysExtractions.html,
-          });
-        }
-
-        const scopeToKeys = mergeDeep(
-          {},
-          htmlResult.scopeToKeys,
-          tsResult.scopeToKeys
-        ) as ScopeMap;
-        const hasTranslateKeys = Object.keys(scopeToKeys).some(
-          (key) => Object.keys(scopeToKeys[key]).length > 0
-        );
-
-        if (hasTranslateKeys) {
-          generateKeys({
-            config: this.config,
-            translationPath: this.config.translationsPath,
-            scopeToKeys,
-          });
-        }
-      }
-
-      return Promise.resolve();
-    });
+        return Promise.resolve();
+      },
+    );
   }
 }
 

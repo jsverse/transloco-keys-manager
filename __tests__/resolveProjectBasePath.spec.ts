@@ -134,7 +134,7 @@ function addProjectConfig({
   fs.mkdirsSync(resolvePath(path));
   fs.writeFileSync(
     jsonFile('project', path),
-    '// comment\n' + JSON.stringify(config)
+    '// comment\n' + JSON.stringify(config),
   );
 }
 
@@ -154,7 +154,7 @@ function addRootConfig({
 }) {
   fs.writeFileSync(
     jsonFile(configType, path),
-    '// comment\n' + JSON.stringify(config)
+    '// comment\n' + JSON.stringify(config),
   );
 }
 

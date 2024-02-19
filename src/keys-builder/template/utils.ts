@@ -56,7 +56,7 @@ export function isNgTemplateTag(node: TmplAstTemplate) {
 }
 
 export function isLiteralExpression(
-  expression: unknown
+  expression: unknown,
 ): expression is LiteralPrimitive {
   return expression instanceof LiteralPrimitive;
 }
@@ -66,7 +66,7 @@ export function isLiteralMap(expression: unknown): expression is LiteralMap {
 }
 
 export function isConditionalExpression(
-  expression: unknown
+  expression: unknown,
 ): expression is Conditional {
   return expression instanceof Conditional;
 }
@@ -77,7 +77,7 @@ export function isBinaryExpression(expression: unknown): expression is Binary {
 
 export function parseTemplate(
   config: TemplateExtractorConfig,
-  options?: ParseTemplateOptions
+  options?: ParseTemplateOptions,
 ) {
   const { file, content } = config;
   const resolvedContent = content || readFile(file);
@@ -89,7 +89,7 @@ type GuardedType<T> = T extends (x: any) => x is infer U ? U : never;
 
 export function isSupportedNode<Predicates extends any[]>(
   node: unknown,
-  predicates: Predicates
+  predicates: Predicates,
 ): node is GuardedType<Predicates[number]> {
   return predicates.some((predicate) => predicate(node));
 }

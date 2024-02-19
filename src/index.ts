@@ -5,7 +5,7 @@ import commandLineUsage from 'command-line-usage';
 import { optionDefinitions, sections } from './cli-options';
 import { buildTranslationFiles } from './keys-builder';
 import { findMissingKeys } from './keys-detective';
-import {Config} from "./types";
+import { Config } from './types';
 
 const mainDefinitions = [{ name: 'command', defaultOption: true }];
 
@@ -30,7 +30,7 @@ if (help) {
 const resolvedConfig = {
   ...config,
   command: mainOptions.command,
-  input: config.input.split(',')
+  input: config.input.split(','),
 } as Config;
 
 if (resolvedConfig.command === 'extract') {

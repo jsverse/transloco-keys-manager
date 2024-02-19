@@ -1,5 +1,5 @@
 import { getGlobalConfig } from '@ngneat/transloco-utils';
-import {applyChange, diff, DiffDeleted, DiffNew} from 'deep-diff';
+import { applyChange, diff, DiffDeleted, DiffNew } from 'deep-diff';
 import { flatten } from 'flat';
 
 import { messages } from '../messages';
@@ -40,15 +40,18 @@ export function compareKeysToFiles({
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
 
-  const diffsPerLang: Record<string, {
-    missing: Array<DiffNew<any>>,
-    extra: Array<DiffDeleted<any>>
-  }> = {};
+  const diffsPerLang: Record<
+    string,
+    {
+      missing: Array<DiffNew<any>>;
+      extra: Array<DiffDeleted<any>>;
+    }
+  > = {};
 
   /** An array of the existing translation files paths */
   const translationFiles = getTranslationFilesPath(
     translationsPath,
-    fileFormat
+    fileFormat,
   );
 
   let result: Result[] = [];
@@ -67,7 +70,7 @@ export function compareKeysToFiles({
       });
     }
   }
-  const cache:Record<string, boolean> = {};
+  const cache: Record<string, boolean> = {};
 
   for (const filePath of translationFiles) {
     const { scope = '__global' } = getScopeAndLangFromPath({
@@ -91,7 +94,7 @@ export function compareKeysToFiles({
       result.push({
         ...res,
         files: normalizedGlob(
-          `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
+          `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`,
         ),
       });
     }
@@ -106,9 +109,12 @@ export function compareKeysToFiles({
       });
       const translation = readFile(filePath, { parse: true });
       // We always build the keys flatten, so we need to make sure we compare to a flat file
-      const flat = flatten<Record<string, any>, Record<string, string>>(translation, {
-        safe: true,
-      });
+      const flat = flatten<Record<string, any>, Record<string, string>>(
+        translation,
+        {
+          safe: true,
+        },
+      );
       // Compare the current file with the extracted keys
       const differences = diff(flat, keys);
 

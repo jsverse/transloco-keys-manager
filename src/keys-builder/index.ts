@@ -16,7 +16,7 @@ export async function buildTranslationFiles(inlineConfig: Config) {
   setConfig(config);
   logger.log(
     '\x1b[4m%s\x1b[0m',
-    `\n${messages.startBuild(config.langs.length)} 👷🏗\n`
+    `\n${messages.startBuild(config.langs.length)} 👷🏗\n`,
   );
   logger.startSpinner(`${messages.extract} 🗝`);
 
@@ -33,7 +33,7 @@ export async function buildTranslationFiles(inlineConfig: Config) {
   logger.log(
     '\x1b[34m%s\x1b[0m',
     'ℹ',
-    messages.keysFound(keysFound, fileCount)
+    messages.keysFound(keysFound, fileCount),
   );
 
   await createTranslationFiles({

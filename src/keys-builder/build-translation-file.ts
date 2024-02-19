@@ -1,4 +1,4 @@
-import {outputFileSync} from 'fs-extra';
+import { outputFileSync } from 'fs-extra';
 
 import { Config, Translation } from '../types';
 
@@ -34,7 +34,7 @@ export function buildTranslationFile({
       replace,
       removeExtraKeys,
       fileFormat,
-    })
+    }),
   );
 
   return { type: currentTranslation ? 'modified' : 'new', path };

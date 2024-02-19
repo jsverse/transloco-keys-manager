@@ -16,7 +16,7 @@ export function findMissingKeys(inlineConfig: Config) {
   const { translationsPath, fileFormat } = config;
   const translationFiles = getTranslationFilesPath(
     translationsPath,
-    fileFormat
+    fileFormat,
   );
 
   if (translationFiles.length === 0) {

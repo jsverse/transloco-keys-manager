@@ -14,7 +14,7 @@ import { TSExtractorResult } from './types';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
-  allowedMethods = ['translate', 'selectTranslate']
+  allowedMethods = ['translate', 'selectTranslate'],
 ): TSExtractorResult {
   const result: TSExtractorResult = [];
 
@@ -51,7 +51,7 @@ export function buildKeysFromASTNodes(
 }
 
 function isStringNode(
-  node: Node
+  node: Node,
 ): node is StringLiteral | NoSubstitutionTemplateLiteral {
   return (
     node && (isStringLiteral(node) || isNoSubstitutionTemplateLiteral(node))

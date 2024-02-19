@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import {jest} from '@jest/globals';
-import type { SpyInstance } from "jest-mock";
+import { jest } from '@jest/globals';
+import type { SpyInstance } from 'jest-mock';
 
 import { defaultConfig as _defaultConfig } from '../src/config';
 import { messages } from '../src/messages';
@@ -14,12 +14,12 @@ jest.mock('../src/utils/resolve-project-base-path', () => {
   return {
     resolveProjectBasePath: () => {
       return { projectBasePath: sourceRoot };
-    }
-  }
+    },
+  };
 });
 jest.mock('@ngneat/transloco-utils', () => {
   return {
-    getGlobalConfig: () => mockedGloblConfig
+    getGlobalConfig: () => mockedGloblConfig,
   };
 });
 
@@ -107,7 +107,7 @@ describe('resolveConfig', () => {
     });
 
     afterAll(() => {
-      mockedGloblConfig = {}
+      mockedGloblConfig = {};
     });
 
     it('should merge the default and the transloco config', () => {
@@ -140,14 +140,14 @@ describe('resolveConfig', () => {
     function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
       expect(processExitSpy).toHaveBeenCalled();
       expect(consoleLogSpy).toHaveBeenCalledWith(
-        chalk.bgRed.black(`${prop} ${messages[msg]}`)
+        chalk.bgRed.black(`${prop} ${messages[msg]}`),
       );
       clearSpies();
     }
 
     function shouldPass() {
       [processExitSpy, consoleLogSpy].forEach((s) =>
-        expect(s).not.toHaveBeenCalled()
+        expect(s).not.toHaveBeenCalled(),
       );
       clearSpies();
     }
@@ -195,11 +195,11 @@ describe('resolveConfig', () => {
       const config = resolveConfig({ input: ['comments'] });
       const assertPath = (p) =>
         expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
-          true
+          true,
         );
       config.input.forEach(assertPath);
       ['output', 'translationsPath'].forEach((prop) =>
-        assertPath(config[prop])
+        assertPath(config[prop]),
       );
     });
   });

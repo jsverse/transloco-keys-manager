@@ -22,12 +22,12 @@ function parsePot(path: string) {
       .filter((key) => key.length > 0)
       .reduce(
         (acc, key) => {
-         return {
-           ...acc,
-           [key]: parsed.translations[''][key].msgstr.pop()!,
-         }
+          return {
+            ...acc,
+            [key]: parsed.translations[''][key].msgstr.pop()!,
+          };
         },
-        {} as Record<string, string>
+        {} as Record<string, string>,
       );
 
     return getConfig().unflat
@@ -43,7 +43,7 @@ function parsePot(path: string) {
     console.warn(
       'Something is wrong with the provided file at "%s":',
       path,
-      e.message
+      e.message,
     );
 
     return {};

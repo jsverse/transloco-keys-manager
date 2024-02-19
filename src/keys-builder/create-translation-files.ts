@@ -36,7 +36,7 @@ export async function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
-      })
+      }),
     );
   }
 
@@ -48,7 +48,7 @@ export async function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
-      })
+      }),
     );
   }
 

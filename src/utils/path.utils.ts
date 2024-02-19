@@ -90,6 +90,6 @@ export function buildScopeFilePaths({
 
       return files;
     },
-    []
+    [],
   );
 }
