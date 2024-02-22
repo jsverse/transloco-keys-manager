@@ -13,7 +13,7 @@ export function spyOnProcess(method: 'exit'): SpyInstance {
     .mockImplementation(noop as any) as SpyInstance;
 }
 
-export function spyOnResolveProjectBasePath(projectBasePath: string) {
+export function mockResolveProjectBasePath(projectBasePath: string) {
   jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
     resolveProjectBasePath: jest.fn().mockReturnValue({ projectBasePath }),
   }));

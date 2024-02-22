@@ -9,13 +9,13 @@ import { messages } from '../src/messages';
 import {
   spyOnConsole,
   spyOnProcess,
-  spyOnResolveProjectBasePath,
+  mockResolveProjectBasePath,
 } from './utils';
 
 const sourceRoot = '__tests__';
 let mockedGloblConfig;
 
-spyOnResolveProjectBasePath(sourceRoot);
+mockResolveProjectBasePath(sourceRoot);
 
 jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
   getGlobalConfig: () => mockedGloblConfig,

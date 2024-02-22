@@ -7,11 +7,11 @@ import { Config, FileFormats, Translation } from '../src/types';
 import {
   spyOnConsole,
   spyOnProcess,
-  spyOnResolveProjectBasePath,
+  mockResolveProjectBasePath,
 } from './utils';
 
 const sourceRoot = '__tests__';
-spyOnResolveProjectBasePath(sourceRoot);
+mockResolveProjectBasePath(sourceRoot);
 
 const { buildTranslationFiles } = await import('../src/keys-builder');
 const { getCurrentTranslation } = await import(
