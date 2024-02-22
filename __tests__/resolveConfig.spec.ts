@@ -21,6 +21,11 @@ jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
   getGlobalConfig: () => mockedGloblConfig,
 }));
 
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
 const { resolveConfig } = await import('../src/utils/resolve-config');
 
 describe('resolveConfig', () => {
