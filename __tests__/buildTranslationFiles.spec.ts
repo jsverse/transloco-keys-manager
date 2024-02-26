@@ -266,12 +266,20 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
               end: 2,
               prefix: 'site-header.navigation.route.nested',
             }),
-            ...generateKeys({ end: 2, prefix: 'todosPage.numbers' }),
+          },
+          todos: {
+            ...generateKeys({ end: 2, prefix: 'numbers' }),
           },
         };
 
         createTranslations(config);
         assertTranslation({ type, expected: expected.global, fileFormat });
+        assertTranslation({
+          type,
+          expected: expected.todos,
+          path: 'todos-page/',
+          fileFormat,
+        });
       });
     });
   });

@@ -1,4 +1,1 @@
-export const v = {
-  provide: TRANSLOCO_SCOPE,
-  useValue: ['nested/scope', 'todos-page'],
-};
+export const v = { provide: TRANSLOCO_SCOPE, useValue: 'todos-page' };
