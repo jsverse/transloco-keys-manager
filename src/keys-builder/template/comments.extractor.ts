@@ -94,16 +94,16 @@ function keepMarkingCommentsOnly(content: string) {
 
 function removeInnerContainers(
   content: string,
-  allContainers: ContainersMetadata[]
+  allContainers: ContainersMetadata[],
 ): string {
   return allContainers
     .filter(
       ({ containerContent }) =>
-        content !== containerContent && content.includes(containerContent)
+        content !== containerContent && content.includes(containerContent),
     )
     .reduce(
       (acc, { containerContent }) => acc.replace(containerContent, ''),
-      content
+      content,
     );
 }
 
@@ -114,7 +114,7 @@ function loadCheerio(content: string) {
 /** Get the read value from an ngTemplate/ngContainer element */
 function extractReadValue(
   element: Element,
-  templateType: TEMPLATE_TYPE
+  templateType: TEMPLATE_TYPE,
 ): string | undefined {
   let read: string | undefined;
 
@@ -127,7 +127,7 @@ function extractReadValue(
   if (templateType === TEMPLATE_TYPE.NG_TEMPLATE) {
     const attrs = Object.keys(element.attribs);
     const readSearch = attrs.find((attr) =>
-      ['translocoread', '[translocoread]'].includes(attr)
+      ['translocoread', '[translocoread]'].includes(attr),
     );
     read = readSearch && element.attribs[readSearch].replace(/['"]/g, '');
   }

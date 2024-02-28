@@ -1,9 +1,9 @@
-import {Config, ScopeMap} from '../types';
-import {checkForProblematicUnflatKeys} from '../utils/keys.utils';
-import {mergeDeep} from '../utils/object.utils';
+import { Config, ScopeMap } from '../types';
+import { checkForProblematicUnflatKeys } from '../utils/keys.utils';
+import { mergeDeep } from '../utils/object.utils';
 
-import {extractTemplateKeys} from './template';
-import {extractTSKeys} from './typescript';
+import { extractTemplateKeys } from './template';
+import { extractTSKeys } from './typescript';
 
 export function buildKeys(config: Config) {
   const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];
@@ -11,7 +11,7 @@ export function buildKeys(config: Config) {
   const scopeToKeys = mergeDeep(
     {},
     template.scopeToKeys,
-    ts.scopeToKeys
+    ts.scopeToKeys,
   ) as ScopeMap;
   const fileCount = template.fileCount + ts.fileCount;
 

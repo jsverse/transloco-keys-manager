@@ -1,16 +1,27 @@
 import fs from 'fs-extra';
-import {jest} from '@jest/globals';
+import { jest } from '@jest/globals';
 
-import { buildTranslationFiles } from '../src/keys-builder';
-import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
 import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
 import { Config, FileFormats, Translation } from '../src/types';
-import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
-
-jest.mock('../src/utils/resolve-project-base-path');
+import {
+  spyOnConsole,
+  spyOnProcess,
+  mockResolveProjectBasePath,
+} from './utils';
 
 const sourceRoot = '__tests__';
+mockResolveProjectBasePath(sourceRoot);
+
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
+const { buildTranslationFiles } = await import('../src/keys-builder');
+const { getCurrentTranslation } = await import(
+  '../src/keys-builder/utils/get-current-translation'
+);
 
 const defaultValue = 'missing';
 
@@ -30,10 +41,7 @@ function generateKeys({
   return keys;
 }
 
-function gConfig(
-  type: TranslationCategory,
-  config: Partial<Config> = {}
-) {
+function gConfig(type: TranslationCategory, config: Partial<Config> = {}) {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
@@ -86,8 +94,8 @@ function assertPartialTranslation({
 
 function loadTranslationFile(
   type: TranslationCategory,
-  path: string,
-  fileFormat: FileFormats
+  path: string | undefined,
+  fileFormat: FileFormats,
 ) {
   return getCurrentTranslation({
     path: `./${sourceRoot}/${type}/i18n/${path || ''}en.${fileFormat}`,
@@ -107,9 +115,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   }
 
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => {
-      return { projectBasePath: sourceRoot };
-    });
+    spyOnConsole('warn');
+    spyOnProcess('exit');
   });
 
   // Reset to ensure the scopes are not being shared among the tests.
@@ -157,7 +164,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
@@ -370,7 +377,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });

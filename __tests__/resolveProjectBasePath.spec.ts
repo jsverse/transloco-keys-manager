@@ -3,7 +3,7 @@ import path from 'path';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
-import { spyOnLog } from './utils';
+import { spyOnConsole } from './utils';
 
 const supportedConfigs = ['angular', 'workspace', 'project'] as const;
 const myProjectConfig = { projectType: 'library', sourceRoot: 'myRoot' };
@@ -17,7 +17,7 @@ const defaultConfig = {
 
 describe('resolveProjectBasePath', () => {
   it('should return the default "src"', () => {
-    const spy = spyOnLog();
+    const spy = spyOnConsole('log');
     expect(resolveProjectBasePath().projectBasePath).toBe('src');
     spy.mockRestore();
   });
@@ -134,7 +134,7 @@ function addProjectConfig({
   fs.mkdirsSync(resolvePath(path));
   fs.writeFileSync(
     jsonFile('project', path),
-    '// comment\n' + JSON.stringify(config)
+    '// comment\n' + JSON.stringify(config),
   );
 }
 
@@ -154,7 +154,7 @@ function addRootConfig({
 }) {
   fs.writeFileSync(
     jsonFile(configType, path),
-    '// comment\n' + JSON.stringify(config)
+    '// comment\n' + JSON.stringify(config),
   );
 }
 

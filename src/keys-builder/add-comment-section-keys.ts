@@ -60,7 +60,7 @@ export function addCommentSectionKeys({
 
         let [translationKey, scopeAlias] = resolveAliasAndKey(
           withRead,
-          baseParams.scopes
+          baseParams.scopes,
         );
 
         if (!scopeAlias) {

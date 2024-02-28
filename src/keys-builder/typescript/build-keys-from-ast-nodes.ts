@@ -1,30 +1,21 @@
-import {
-  isArrayLiteralExpression,
-  isCallExpression,
-  isIdentifier,
-  isNoSubstitutionTemplateLiteral,
-  isPropertyAccessExpression,
-  isStringLiteral,
-  Node,
-  NoSubstitutionTemplateLiteral,
-  StringLiteral,
-} from 'typescript';
+import { Node, StringLiteral, NoSubstitutionTemplateLiteral } from 'typescript';
+import ts from 'typescript';
 
 import { TSExtractorResult } from './types';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
-  allowedMethods = ['translate', 'selectTranslate']
+  allowedMethods = ['translate', 'selectTranslate'],
 ): TSExtractorResult {
   const result: TSExtractorResult = [];
 
   for (let node of nodes) {
-    if (isCallExpression(node.parent)) {
+    if (ts.isCallExpression(node.parent)) {
       const method = node.parent.expression;
       let methodName = '';
-      if (isIdentifier(method)) {
+      if (ts.isIdentifier(method)) {
         methodName = method.text;
-      } else if (isPropertyAccessExpression(method)) {
+      } else if (ts.isPropertyAccessExpression(method)) {
         methodName = method.name.text;
       }
       if (!allowedMethods.includes(methodName)) {
@@ -37,7 +28,7 @@ export function buildKeysFromASTNodes(
 
       if (isStringNode(keyNode)) {
         keys = [keyNode.text];
-      } else if (isArrayLiteralExpression(keyNode)) {
+      } else if (ts.isArrayLiteralExpression(keyNode)) {
         keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
       }
 
@@ -51,9 +42,10 @@ export function buildKeysFromASTNodes(
 }
 
 function isStringNode(
-  node: Node
+  node: Node,
 ): node is StringLiteral | NoSubstitutionTemplateLiteral {
   return (
-    node && (isStringLiteral(node) || isNoSubstitutionTemplateLiteral(node))
+    node &&
+    (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))
   );
 }

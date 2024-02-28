@@ -32,9 +32,9 @@ function logNotFound(searchPlaces: string[]) {
   console.log(
     chalk.black.bgRed(
       `Unable to load workspace config from ${searchPlaces.join(
-        ', '
-      )}. Defaulting source root to '${defaultSourceRoot}'`
-    )
+        ', ',
+      )}. Defaulting source root to '${defaultSourceRoot}'`,
+    ),
   );
 }
 
@@ -68,7 +68,11 @@ export function resolveProjectBasePath(projectName?: string): {
   }
 
   if (!resolved) {
-    console.log(chalk.black.bgRed(`Unable to resolve \`projectBasePath\` from configuration. Defaulting source root to '${defaultSourceRoot}'`));
+    console.log(
+      chalk.black.bgRed(
+        `Unable to resolve \`projectBasePath\` from configuration. Defaulting source root to '${defaultSourceRoot}'`,
+      ),
+    );
 
     return { projectBasePath: defaultSourceRoot };
   }
@@ -79,7 +83,10 @@ export function resolveProjectBasePath(projectName?: string): {
   };
 }
 
-function resolveProject(config: Record<string, any>, projectName: string | undefined): { sourceRoot: string; projectType: ProjectType } | null {
+function resolveProject(
+  config: Record<string, any>,
+  projectName: string | undefined,
+): { sourceRoot: string; projectType: ProjectType } | null {
   let projectConfig = config;
 
   if (config?.projects) {

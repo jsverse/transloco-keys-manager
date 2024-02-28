@@ -4,14 +4,21 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "module": "esnext",
-    "target": "es2020",
+    "target": "es2022",
     "declaration": true,
     "moduleResolution": "node",
-    "lib": ["es2020"],
+    "lib": ["es2022"],
     "typeRoots": [],
     "sourceMap": true
   },
   "include": [
     "src"
-  ]
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      "inputGlob": "{js,jsx,mjs}",
+      "outputCheck": ["js", "json", "jsx", "mjs"]
+    }
+  }
 }

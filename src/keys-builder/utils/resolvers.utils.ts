@@ -2,7 +2,7 @@ import { Scopes } from '../../types';
 
 export function resolveAliasAndKey(
   key: string,
-  scopes: Scopes
+  scopes: Scopes,
 ): [string, string | null] {
   /**
    *

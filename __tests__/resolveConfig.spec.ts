@@ -1,28 +1,31 @@
 import chalk from 'chalk';
 import path from 'node:path';
-import {jest} from '@jest/globals';
-import type { SpyInstance } from "jest-mock";
+import { jest } from '@jest/globals';
+import type { SpyInstance } from 'jest-mock';
 
 import { defaultConfig as _defaultConfig } from '../src/config';
 import { messages } from '../src/messages';
 
-import { noop, spyOnLog } from './utils';
+import {
+  spyOnConsole,
+  spyOnProcess,
+  mockResolveProjectBasePath,
+} from './utils';
 
 const sourceRoot = '__tests__';
 let mockedGloblConfig;
-jest.mock('../src/utils/resolve-project-base-path', () => {
-  return {
-    resolveProjectBasePath: () => {
-      return { projectBasePath: sourceRoot };
-    }
-  }
-});
-jest.mock('@ngneat/transloco-utils', () => {
-  return {
-    getGlobalConfig: () => mockedGloblConfig
-  };
-});
 
+mockResolveProjectBasePath(sourceRoot);
+
+jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
+  getGlobalConfig: () => mockedGloblConfig,
+}));
+
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
 const { resolveConfig } = await import('../src/utils/resolve-config');
 
 describe('resolveConfig', () => {
@@ -38,10 +41,8 @@ describe('resolveConfig', () => {
 
   beforeAll(() => {
     mockedGloblConfig = {};
-    processExitSpy = jest
-      .spyOn(process, 'exit')
-      .mockImplementation(noop as any);
-    consoleLogSpy = spyOnLog();
+    processExitSpy = spyOnProcess('exit');
+    consoleLogSpy = spyOnConsole('log');
     spies = [processExitSpy, consoleLogSpy];
   });
 
@@ -107,7 +108,7 @@ describe('resolveConfig', () => {
     });
 
     afterAll(() => {
-      mockedGloblConfig = {}
+      mockedGloblConfig = {};
     });
 
     it('should merge the default and the transloco config', () => {
@@ -140,14 +141,14 @@ describe('resolveConfig', () => {
     function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
       expect(processExitSpy).toHaveBeenCalled();
       expect(consoleLogSpy).toHaveBeenCalledWith(
-        chalk.bgRed.black(`${prop} ${messages[msg]}`)
+        chalk.bgRed.black(`${prop} ${messages[msg]}`),
       );
       clearSpies();
     }
 
     function shouldPass() {
       [processExitSpy, consoleLogSpy].forEach((s) =>
-        expect(s).not.toHaveBeenCalled()
+        expect(s).not.toHaveBeenCalled(),
       );
       clearSpies();
     }
@@ -195,11 +196,11 @@ describe('resolveConfig', () => {
       const config = resolveConfig({ input: ['comments'] });
       const assertPath = (p) =>
         expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
-          true
+          true,
         );
       config.input.forEach(assertPath);
       ['output', 'translationsPath'].forEach((prop) =>
-        assertPath(config[prop])
+        assertPath(config[prop]),
       );
     });
   });

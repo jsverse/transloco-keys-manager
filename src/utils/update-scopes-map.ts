@@ -41,7 +41,8 @@ const objectQueryDef: QueryDef = {
   resolver: ([node]) => {
     let result: ScopeDef = {};
 
-    for (const prop of (node as ObjectLiteralExpression).properties as NodeArray<PropertyAssignment>) {
+    for (const prop of (node as ObjectLiteralExpression)
+      .properties as NodeArray<PropertyAssignment>) {
       if (prop.initializer) {
         const key = prop.name.getText();
         if (key === 'scope' || key === 'alias') {
@@ -56,7 +57,8 @@ const objectQueryDef: QueryDef = {
 
 const arrayQueryDef: QueryDef = {
   query: 'ArrayLiteralExpression > StringLiteral',
-  resolver: (nodes) => (nodes as StringLiteral[]).map((node) => ({ scope: node.text })),
+  resolver: (nodes) =>
+    (nodes as StringLiteral[]).map((node) => ({ scope: node.text })),
 };
 
 const scopeValueQueries: QueryDef[] = [
@@ -65,11 +67,18 @@ const scopeValueQueries: QueryDef[] = [
   arrayQueryDef,
 ];
 
-type Options = { input?: string[]; files?: string[]; };
+type Options = { input?: string[]; files?: string[] };
 
-export function updateScopesMap(options: Omit<Options, 'input'>): Scopes['aliasToScope'];
-export function updateScopesMap(options: Omit<Options, 'files'>): Scopes['aliasToScope'];
-export function updateScopesMap({ input, files }: Options): Scopes['aliasToScope'] {
+export function updateScopesMap(
+  options: Omit<Options, 'input'>,
+): Scopes['aliasToScope'];
+export function updateScopesMap(
+  options: Omit<Options, 'files'>,
+): Scopes['aliasToScope'];
+export function updateScopesMap({
+  input,
+  files,
+}: Options): Scopes['aliasToScope'] {
   const tsFiles =
     files || input!.map((path) => normalizedGlob(`${path}/**/*.ts`)).flat();
   // Return only the new scopes (for the plugin)
@@ -92,13 +101,13 @@ export function updateScopesMap({ input, files }: Options): Scopes['aliasToScope
       }
     }
 
-      for (let { scope, alias } of coerceArray(result)) {
-        if (scope && !hasScope(scope)) {
-          alias ??= toCamelCase(scope);
-          addScope(scope, alias);
-          aliasToScope[alias] = scope;
-        }
+    for (let { scope, alias } of coerceArray(result)) {
+      if (scope && !hasScope(scope)) {
+        alias ??= toCamelCase(scope);
+        addScope(scope, alias);
+        aliasToScope[alias] = scope;
       }
+    }
   }
 
   return aliasToScope;

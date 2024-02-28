@@ -56,12 +56,12 @@ export function getScopeAndLangFromPath({
 }
 
 export function resolveConfigPaths(config: Config, sourceRoot: string) {
-  const resolvePath = (configPath: string) =>
-    path.resolve(process.cwd(), sourceRoot, configPath);
+  const resolvePath = (configPath?: string) =>
+    path.resolve(process.cwd(), sourceRoot, configPath || '');
+
   config.input = config.input.map(resolvePath);
-  for (const pathProp of ['output', 'translationsPath'] as const) {
-    config[pathProp] = resolvePath(config[pathProp]);
-  }
+  config.output = resolvePath(config.output);
+  config.translationsPath = resolvePath(config.translationsPath);
 }
 
 type ScopeFiles = { path: string; scope: string }[];
@@ -90,6 +90,6 @@ export function buildScopeFilePaths({
 
       return files;
     },
-    []
+    [],
   );
 }

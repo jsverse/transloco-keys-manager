@@ -1,4 +1,4 @@
-import {outputFileSync} from 'fs-extra';
+import fs from 'fs-extra';
 
 import { Config, Translation } from '../types';
 
@@ -26,7 +26,7 @@ export function buildTranslationFile({
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
 
-  outputFileSync(
+  fs.outputFileSync(
     path,
     createTranslation({
       currentTranslation,
@@ -34,7 +34,7 @@ export function buildTranslationFile({
       replace,
       removeExtraKeys,
       fileFormat,
-    })
+    }),
   );
 
   return { type: currentTranslation ? 'modified' : 'new', path };

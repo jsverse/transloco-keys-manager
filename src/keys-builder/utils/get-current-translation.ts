@@ -1,17 +1,17 @@
 import { unflatten } from 'flat';
-import * as fsExtra from 'fs-extra';
+import fs from 'fs-extra';
 import { po } from 'gettext-parser';
 
 import { getConfig } from '../../config';
 import { FileFormats, Translation } from '../../types';
 
 function parseJson(path: string): Translation {
-  return fsExtra.readJsonSync(path, { throws: false }) || {};
+  return fs.readJsonSync(path, { throws: false }) || {};
 }
 
 function parsePot(path: string) {
   try {
-    const file = fsExtra.readFileSync(path, 'utf8');
+    const file = fs.readFileSync(path, 'utf8');
     const parsed = po.parse(file, 'utf8');
 
     if (!Object.keys(parsed.translations).length) {
@@ -22,12 +22,12 @@ function parsePot(path: string) {
       .filter((key) => key.length > 0)
       .reduce(
         (acc, key) => {
-         return {
-           ...acc,
-           [key]: parsed.translations[''][key].msgstr.pop()!,
-         }
+          return {
+            ...acc,
+            [key]: parsed.translations[''][key].msgstr.pop()!,
+          };
         },
-        {} as Record<string, string>
+        {} as Record<string, string>,
       );
 
     return getConfig().unflat
@@ -43,7 +43,7 @@ function parsePot(path: string) {
     console.warn(
       'Something is wrong with the provided file at "%s":',
       path,
-      e.message
+      e.message,
     );
 
     return {};

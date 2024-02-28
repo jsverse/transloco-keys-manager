@@ -1,7 +1,7 @@
+import type { Config } from 'jest';
 import ngPreset from 'jest-preset-angular/presets/index.js';
 
-/** @type {import('ts-jest/dist/types').JestConfigWithTsJest} */
-const config = {
+const jestConfig: Config = {
   ...ngPreset.defaultsESM,
   testMatch: ['**/__tests__/**/*.spec.ts'],
   moduleNameMapper: {
@@ -21,4 +21,4 @@ const config = {
   },
 };
 
-export default config;
+export default jestConfig;

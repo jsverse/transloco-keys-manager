@@ -50,7 +50,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
       const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
         key,
         lang,
-        scopes
+        scopes,
       );
       addKey({
         scopeAlias,
@@ -83,7 +83,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
 function resolveAliasAndKeyFromService(
   key: string,
   scopePath: string,
-  scopes: Scopes
+  scopes: Scopes,
 ): [string, string | null] {
   // It means that it's the global
   if (!scopePath) {
