@@ -20,6 +20,7 @@ export type Config = {
   unflat?: boolean;
   command?: 'extract' | 'find';
   fileFormat?: FileFormats;
+  defaultLanguage?: string;
 };
 
 export type FileFormats = 'json' | 'pot';
