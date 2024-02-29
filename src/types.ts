@@ -20,7 +20,7 @@ export type Config = {
   unflat?: boolean;
   command?: 'extract' | 'find';
   fileFormat?: FileFormats;
-  userMarkerDefaults?: boolean;
+  useMarkerDefaults?: boolean;
   defaultLanguage?: string;
 };
 

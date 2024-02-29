@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Changes 
 * [breaking] Merged "marker" and "markerDefault" functions to a single use marker. 
+
+### Features 
+* Added cli and settings options for "useMarkerDefaults" and "defaultLanguage" parameters.
  
 ## [0.0.1] (2024-02-28)
 
