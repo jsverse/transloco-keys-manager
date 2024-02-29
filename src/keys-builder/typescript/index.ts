@@ -32,7 +32,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
     extractors.push(serviceExtractor, pureFunctionExtractor);
   }
 
-  if (content.includes('@ngneat/transloco-keys-manager')) {
+  if (content.includes('@nyffels/transloco-keys-manager')) {
     extractors.push(markerExtractor);
   }
 
@@ -42,7 +42,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
     scopes,
     defaultValue,
   };
-
+  
   extractors
     .map((ex) => ex(ast))
     .flat()
