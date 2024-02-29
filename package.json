@@ -1,6 +1,6 @@
 {
   "name": "@nyffels/transloco-keys-manager",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fork of transloco-keys-manager with extra functions",
   "main": "public_api.js",
   "scripts": {
