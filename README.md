@@ -29,6 +29,21 @@ Directory where the application has been launched from.
 ##### Usage 
 Set the working directory for this parameter
 
+### default-language
+
+```bash
+transloco-keys-manager extract --default-language nl
+```
+
+##### Config file
+defaultLanguage: string
+
+##### Default
+en
+
+##### usage 
+Set the default language for the default values set in code (optional). These default values will only be set for the given language. The other language files will listen to the original "default-value" parameter. If defaultValue option in code is left empty or null, then the "default-value" will be used as a fallback value.
+
 ## Functions
 
 ### marker
