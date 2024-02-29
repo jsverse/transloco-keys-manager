@@ -64,7 +64,7 @@ export function resolveConfigPaths(config: Config, sourceRoot: string) {
   });
 }
 
-type ScopeFiles = { path: string; scope: string }[];
+type ScopeFiles = { path: string; scope: string, lang: string }[];
 
 export function buildScopeFilePaths({
   aliasToScope,
@@ -85,6 +85,7 @@ export function buildScopeFilePaths({
         files.push({
           path: `${bastPath}/${lang}.${fileFormat}`,
           scope,
+          lang: lang
         });
       });
 

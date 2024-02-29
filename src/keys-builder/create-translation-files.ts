@@ -15,6 +15,7 @@ export function createTranslationFiles({
   removeExtraKeys,
   scopes,
   fileFormat,
+  defaultLanguage
 }: Config & { scopeToKeys: ScopeMap, defaults: DefaultLanguageValue[] }) {
   const logger = getLogger();
 
@@ -26,10 +27,11 @@ export function createTranslationFiles({
   });
   const globalFiles = langs.map((lang) => ({
     path: `${output}/${lang}.${fileFormat}`,
+    lang: lang
   }));
   const actions: FileAction[] = [];
 
-  for (const { path } of globalFiles) {
+  for (const { path, lang } of globalFiles) {
     actions.push(
       buildTranslationFile({
         path,
@@ -37,11 +39,13 @@ export function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
+        defaults,
+        isDefaultLanguage: lang == defaultLanguage
       })
     );
   }
 
-  for (const { path, scope } of scopeFiles) {
+  for (const { path, scope, lang } of scopeFiles) {
     actions.push(
       buildTranslationFile({
         path,
@@ -49,6 +53,8 @@ export function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
+        defaults: defaults,
+        isDefaultLanguage: lang == defaultLanguage
       })
     );
   }
