@@ -36,7 +36,10 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
     }
 
     for (const ast of astTrees) {
-      addKeysFromAst(getPipeValuesFromAst(ast), config);
+      const res = getPipeValuesFromAst(ast);
+      if (res) {
+        addKeysFromAst(res ? res.ast : null, config);
+      } 
     }
   }
 }
@@ -52,20 +55,33 @@ function isTranslocoPipe(ast: any) {
   return isTransloco || (isPipeChaining && isTranslocoPipe(ast.exp));
 }
 
-function getPipeValuesFromAst(ast: AST): AST[] {
+function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
   let exp = [];
   if (isBindingPipe(ast) && isTranslocoPipe(ast)) {
+    let defaultValue: string;
     if (isLiteralExpression(ast.exp)) {
-      return [ast.exp];
+      for (let arg of ast.args) {
+        const key = ast.exp.value;
+        const defaultIndex = arg.keys.findIndex(
+          (k) => k.key.toLowerCase() == 'default'
+        );
+        if (defaultIndex != -1) {
+          defaultValue = arg.values[defaultIndex].value;
+        }
+      }
+      return { ast: [ast.exp], defaultValue: defaultValue };
     } else if (isConditionalExpression(ast.exp)) {
-      return [ast.exp.trueExp, ast.exp.falseExp];
+      return {
+        ast: [ast.exp.trueExp, ast.exp.falseExp],
+        defaultValue: defaultValue,
+      };
     } else {
       let pipe = ast;
       while (isBindingPipe(pipe.exp)) {
         pipe = pipe.exp;
       }
 
-      return [pipe.exp];
+      return { ast: [pipe.exp], defaultValue: defaultValue };
     }
   } else if (isBindingPipe(ast)) {
     exp = [...ast.args, ast.exp];
@@ -81,7 +97,10 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [...ast.args, ast.receiver];
   }
 
-  return exp.map(getPipeValuesFromAst).flat();
+  // TODO CURRENT
+  const tmp = exp.map(getPipeValuesFromAst).flat();
+  console.log(tmp)
+  return null;
 }
 
 function addKeysFromAst(expressions: AST[], config: ExtractorConfig): void {

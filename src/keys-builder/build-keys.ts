@@ -5,7 +5,7 @@ import { extractTemplateKeys } from './template';
 import { extractTSKeys } from './typescript';
 
 export function buildKeys(config: Config) {
-  const [template, ts] = [extractTemplateKeys(config) /* TODO */, extractTSKeys(config)];
+  const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];
 
   const scopeToKeys: ScopeMap = mergeDeep(
     {},

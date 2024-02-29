@@ -21,9 +21,10 @@ export function templateExtractor(config: TemplateExtractorConfig): {
   defaults: DefaultLanguageValue[];
 } {
   const { file, scopeToKeys } = config;
+  const defaults: DefaultLanguageValue[] = [];
   let content = config.content || readFile(file);
   if (!content.includes('transloco')) {
-    return { scopeMap: scopeToKeys, defaults: [] };
+    return { scopeMap: scopeToKeys, defaults: defaults };
   }
 
   const resolvedConfig = { ...config, content };
@@ -32,5 +33,5 @@ export function templateExtractor(config: TemplateExtractorConfig): {
   directiveExtractor(resolvedConfig);
   structuralDirectiveExtractor(resolvedConfig);
 
-  return { scopeMap: scopeToKeys, defaults: [] };
+  return { scopeMap: scopeToKeys, defaults: defaults };
 }
