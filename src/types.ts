@@ -21,13 +21,14 @@ export type Config = {
   command?: 'extract' | 'find';
   fileFormat?: FileFormats;
   defaultLanguage?: string;
-  workdir?: string
+  workdir?: string;
 };
 
 export type FileFormats = 'json' | 'pot';
 
 export type ExtractionResult = {
   scopeToKeys: ScopeMap;
+  defaults?: DefaultLanguageValue[];
   fileCount?: number;
 };
 
@@ -52,6 +53,11 @@ export type Scopes = {
 export type ScopeMap = {
   __global: Record<string, string>;
   [scopePath: string]: Record<string, string>;
+};
+
+export type DefaultLanguageValue = {
+  key: string;
+  value: string;
 };
 
 export enum TEMPLATE_TYPE {

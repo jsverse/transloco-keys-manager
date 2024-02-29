@@ -1,5 +1,5 @@
 import { messages } from '../messages';
-import { Config, ScopeMap } from '../types';
+import { Config, DefaultLanguageValue, ScopeMap } from '../types';
 import { getLogger } from '../utils/logger';
 import { buildScopeFilePaths } from '../utils/path.utils';
 
@@ -8,13 +8,14 @@ import { runPrettier } from './utils/run-prettier';
 
 export function createTranslationFiles({
   scopeToKeys,
+  defaults,
   langs,
   output,
   replace,
   removeExtraKeys,
   scopes,
   fileFormat,
-}: Config & { scopeToKeys: ScopeMap }) {
+}: Config & { scopeToKeys: ScopeMap, defaults: DefaultLanguageValue[] }) {
   const logger = getLogger();
 
   const scopeFiles = buildScopeFilePaths({

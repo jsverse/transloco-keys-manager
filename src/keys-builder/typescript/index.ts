@@ -2,6 +2,7 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 
 import {
   Config,
+  DefaultLanguageValue,
   ExtractionResult,
   ExtractorConfig,
   ScopeMap,
@@ -23,7 +24,10 @@ export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
 }
 
-function TSExtractor(config: ExtractorConfig): ScopeMap {
+function TSExtractor(config: ExtractorConfig): {
+  scopeMap: ScopeMap;
+  defaults: DefaultLanguageValue[];
+} {
   const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
   const extractors = [];
@@ -42,21 +46,31 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
     scopes,
     defaultValue,
   };
-  
+
+  const defaultLanguageValues: DefaultLanguageValue[] = [];
+
   extractors
     .map((ex) => ex(ast))
     .flat()
-    .forEach(({ key, lang }) => {
+    .forEach(({ key, lang, defaultLanguageValue }) => {
       const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
         key,
         lang,
         scopes
       );
+
       addKey({
         scopeAlias,
         keyWithoutScope,
         ...baseParams,
       });
+
+      if ((defaultLanguageValue ?? '').length > 0) {
+        defaultLanguageValues.push({
+          key: key,
+          value: defaultLanguageValue,
+        });
+      }
     });
 
   /** Check for dynamic markings */
@@ -68,7 +82,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
 
   inlineTemplateExtractor(ast, config);
 
-  return scopeToKeys;
+  return { scopeMap: scopeToKeys, defaults: defaultLanguageValues };
 }
 
 /**

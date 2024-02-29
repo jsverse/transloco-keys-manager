@@ -4,7 +4,6 @@ import { Config } from '../types';
 import { countKeys } from '../utils/keys.utils';
 import { getLogger } from '../utils/logger';
 import { resolveConfig } from '../utils/resolve-config';
-
 import { buildKeys } from './build-keys';
 import { createTranslationFiles } from './create-translation-files';
 
@@ -21,7 +20,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
   logger.startSpinner(`${messages.extract} 🗝`);
 
   const result = buildKeys(config);
-  const { scopeToKeys, fileCount } = result;
+  const { scopeToKeys, fileCount, defaults } = result;
 
   logger.success(`${messages.extract} 🗝`);
 
@@ -38,6 +37,7 @@ export function buildTranslationFiles(inlineConfig: Config) {
 
   createTranslationFiles({
     scopeToKeys,
+    defaults,
     ...config,
   });
 }

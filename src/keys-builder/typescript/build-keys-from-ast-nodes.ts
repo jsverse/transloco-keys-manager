@@ -14,7 +14,8 @@ import { TSExtractorResult } from './types';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
-  allowedMethods = ['translate', 'selectTranslate']
+  allowedMethods = ['translate', 'selectTranslate'],
+  isMarker = false
 ): TSExtractorResult {
   const result = [];
 
@@ -31,9 +32,20 @@ export function buildKeysFromASTNodes(
         continue;
       }
 
-      const [keyNode, _, langNode] = node.parent.arguments;
+      let keyNode;
+      let _;
+      let langNode;
+      let defaultValueNode;
+      
+      if (isMarker) {
+        [keyNode, defaultValueNode] = node.parent.arguments;
+      } else {
+        [keyNode, _, langNode] = node.parent.arguments;
+      }
+
       let lang: string;
       let keys: string[] = [];
+      let defaultValue: string;
 
       if (isStringNode(langNode)) {
         lang = langNode.text;
@@ -44,9 +56,17 @@ export function buildKeysFromASTNodes(
       } else if (isArrayLiteralExpression(keyNode)) {
         keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
       }
+      
+      if (isStringNode(defaultValueNode)) {
+        defaultValue = defaultValueNode.text;
+      }
 
       for (const key of keys) {
-        const data = lang ? { lang, key } : { key };
+        const data = {
+          key: key ?? null, 
+          lang: lang ?? null,
+          defaultLanguageValue: defaultValue ?? null
+        };
         result.push(data);
       }
     }

@@ -12,7 +12,7 @@ export function addKey({
   scopeToKeys,
   scopeAlias,
   keyWithoutScope,
-  scopes,
+  scopes
 }: AddKeysParams) {
   if (!keyWithoutScope) {
     return;
@@ -23,7 +23,7 @@ export function addKey({
     ? `${scopeAlias}.${keyWithoutScope}`
     : keyWithoutScope;
   const keyValue = isNil(defaultValue)
-    ? `${messages.missingValue} '${keyWithScope}'`
+    ? ""
     : defaultValue
         .replace('{{key}}', keyWithScope)
         .replace('{{keyWithoutScope}}', keyWithoutScope)

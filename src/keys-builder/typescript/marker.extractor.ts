@@ -16,7 +16,7 @@ export function markerExtractor(ast: SourceFile): TSExtractorResult {
   const markerName = getMarkerName(importNode);
   const fns = tsquery(ast, `CallExpression Identifier[text=${markerName}]`);
 
-  return buildKeysFromASTNodes(fns, [markerName]);
+  return buildKeysFromASTNodes(fns, [markerName], true);
 }
 
 function getMarkerName(importNode: ts.Node) {

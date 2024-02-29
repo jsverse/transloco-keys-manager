@@ -1,5 +1,6 @@
 import {
   Config,
+  DefaultLanguageValue,
   ExtractionResult,
   ExtractorConfig,
   ScopeMap,
@@ -9,19 +10,30 @@ import { devlog } from '../../utils/logger';
 import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
-  { input, scopes, defaultValue, files }: Config,
+  { input, scopes, defaultValue, files, defaultLanguage }: Config,
   fileType: 'ts' | 'html',
-  extractor: (config: ExtractorConfig) => ScopeMap
+  extractor: (config: ExtractorConfig) => {
+    scopeMap: ScopeMap;
+    defaults: DefaultLanguageValue[];
+  }
 ): ExtractionResult {
-  let { scopeToKeys } = initExtraction();
+  let { scopeToKeys, defaults } = initExtraction();
 
   const fileList =
-    files || input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
+    files ||
+    input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
 
   for (const file of fileList) {
     devlog('extraction', 'Extracting keys', { file, fileType });
-    scopeToKeys = extractor({ file, defaultValue, scopes, scopeToKeys });
+    const res = extractor({
+      file,
+      defaultValue,
+      scopes,
+      scopeToKeys,
+    });
+    scopeToKeys = res.scopeMap
+    defaults.push(...res.defaults);
   }
 
-  return { scopeToKeys, fileCount: fileList.length };
+  return { scopeToKeys, defaults, fileCount: fileList.length };
 }
