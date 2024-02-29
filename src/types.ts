@@ -22,6 +22,7 @@ export type Config = {
   fileFormat?: FileFormats;
   useMarkerDefaults?: boolean;
   defaultLanguage?: string;
+  workdir?: string
 };
 
 export type FileFormats = 'json' | 'pot';

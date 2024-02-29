@@ -66,6 +66,9 @@ export function defaultConfig(
     useMarkerDefaults: true,
 
     // Set a default-language for the marke default value. Default is 'en'
-    defaultLanguage: 'en'
+    defaultLanguage: 'en',
+
+    // Set a work directory. Defaults to current folder
+    workdir: ''
   };
 }

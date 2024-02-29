@@ -14,9 +14,9 @@ const workspaceConfigFile = 'workspace.json';
 const projectConfigFile = 'project.json';
 const defaultSourceRoot = 'src';
 
-function searchConfig(searchPlaces: string[] | string, searchFrom = '') {
+function searchConfig(searchPlaces: string[] | string, workdir = '', searchFrom = '') {
   const cwd = process.cwd();
-  const resolvePath = path.resolve(cwd, searchFrom);
+  const resolvePath = path.resolve(cwd, workdir, searchFrom);
   const stopDir = path.resolve(cwd, '../');
 
   return cosmiconfigSync('', {
@@ -38,7 +38,7 @@ function logNotFound(searchPlaces: string[]) {
   );
 }
 
-export function resolveProjectBasePath(projectName?: string): {
+export function resolveProjectBasePath(projectName?: string, workdir?: string): {
   projectBasePath: string;
   projectType?: ProjectType;
 } {
@@ -48,9 +48,9 @@ export function resolveProjectBasePath(projectName?: string): {
     projectPath = normalizedGlob(`**/${projectName}`)[0];
   }
 
-  const angularConfig = searchConfig(angularConfigFile, projectPath);
-  const workspaceConfig = searchConfig(workspaceConfigFile, projectPath);
-  const projectConfig = searchConfig(projectConfigFile, projectPath);
+  const angularConfig = searchConfig(angularConfigFile, workdir, projectPath);
+  const workspaceConfig = searchConfig(workspaceConfigFile, workdir, projectPath);
+  const projectConfig = searchConfig(projectConfigFile, workdir, projectPath);
 
   if (!angularConfig && !workspaceConfig && !projectConfig) {
     logNotFound([...angularConfigFile, workspaceConfigFile, projectConfigFile]);
@@ -61,7 +61,7 @@ export function resolveProjectBasePath(projectName?: string): {
   let resolved: ReturnType<typeof resolveProject>;
 
   for (const config of [angularConfig, workspaceConfig, projectConfig]) {
-    resolved = resolveProject(config, projectName);
+    resolved = resolveProject(config, projectName, workdir);
     if (resolved) {
       break;
     }
@@ -75,7 +75,8 @@ export function resolveProjectBasePath(projectName?: string): {
 
 function resolveProject(
   config,
-  projectName
+  projectName,
+  workdir
 ): { sourceRoot: string; projectType: ProjectType } | null {
   let projectConfig = config;
 
@@ -90,7 +91,7 @@ function resolveProject(
 
   if (projectConfig?.sourceRoot) {
     return {
-      sourceRoot: projectConfig.sourceRoot,
+      sourceRoot: workdir ? path.resolve(workdir, projectConfig.sourceRoot) : projectConfig.sourceRoot,
       projectType: projectConfig.projectType,
     };
   }

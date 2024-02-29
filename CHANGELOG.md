@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features 
 * Added cli and settings options for "useMarkerDefaults" and "defaultLanguage" parameters.
+* Added "workdir" parameter to set the working directory
  
 ## [0.0.1] (2024-02-28)
 

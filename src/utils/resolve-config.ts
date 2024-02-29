@@ -18,7 +18,8 @@ import { isDirectory } from './validators.utils';
 
 export function resolveConfig(inlineConfig: Config): Config {
   const { projectBasePath, projectType } = resolveProjectBasePath(
-    inlineConfig.project
+    inlineConfig.project,
+    inlineConfig.workdir
   );
   const defaults = defaultConfig(projectType);
   const fileConfig = getGlobalConfig(inlineConfig.config || projectBasePath);
