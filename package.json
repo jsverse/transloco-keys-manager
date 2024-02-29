@@ -1,7 +1,7 @@
 {
-  "name": "@ngneat/transloco-keys-manager",
-  "version": "3.8.0",
-  "description": "Extract translatable keys from projects that uses Transloco",
+  "name": "@nyffels/transloco-keys-manager",
+  "version": "0.1.0",
+  "description": "Fork of transloco-keys-manager with extra functions",
   "main": "public_api.js",
   "scripts": {
     "postinstall": "npx husky install",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ngneat/transloco-keys-manager.git"
+    "url": "git+https://github.com/Nyffels-IT/transloco-keys-manager.git"
   },
   "keywords": [
     "angular",
@@ -40,19 +40,21 @@
     "cli",
     "webpack"
   ],
-  "author": "Shahar Kazaz",
+  "author": "Nyffels BV",
   "maintainers": [
     {
       "name": "Shahar Kazaz"
     },
     {
       "name": "Netanel Basal"
+    },
+    {
+      "name": "Nyffels BV",
+      "email": "chesney@nyffels.be",
+      "url": "https://nyffels.be"
     }
   ],
-  "bugs": {
-    "url": "https://github.com/ngneat/transloco-keys-manager/issues"
-  },
-  "homepage": "https://github.com/ngneat/transloco-keys-manager#readme",
+  "homepage": "https://github.com/Nyffels-IT/transloco-keys-manager#readme",
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
