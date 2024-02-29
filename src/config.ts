@@ -61,5 +61,11 @@ export function defaultConfig(
 
     // The translation files format (`json`, `pot`) default is `json`
     fileFormat: 'json',
+
+    // Use the marker defaults value? Default is true
+    userMarkerDefaults: true,
+
+    // Set a default-language for the marke default value. Default is 'en'
+    defaultLanguage: 'en'
   };
 }

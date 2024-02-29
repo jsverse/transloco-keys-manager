@@ -95,6 +95,16 @@ export const optionDefinitions = [
     description: 'Where are the main translation files',
   },
   { name: 'help', alias: 'h', type: Boolean, description: 'Help me, please!' },
+  {
+    name: 'use-marker-defaults',
+    type: Boolean,
+    description: `Use the marker function defaults value before using the 'default-value' parameter its value. Don't forget to assign the 'default-language' parameter`
+  },
+  {
+    name: 'default-language',
+    type: String,
+    description: `The language used in the markerDefault funtion. Only available if use-marker-defaults is used.`
+  }
 ];
 
 export const sections = [
