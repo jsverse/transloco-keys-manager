@@ -44,6 +44,23 @@ en
 ##### usage 
 Set the default language for the default values set in code (optional). These default values will only be set for the given language. The other language files will listen to the original "default-value" parameter. If defaultValue option in code is left empty or null, then the "default-value" will be used as a fallback value.
 
+### defaultPipeArg
+
+```bash
+transloco-keys-manager extract --default-pipe-arg Default
+```
+
+##### Config file
+defaultPipeArgument: string
+
+##### Default
+Default
+
+##### Usage 
+Add this pipe argument to a transloco pipe to set a default value for the default language. 
+
+### default-language
+
 ## Functions
 
 ### marker
