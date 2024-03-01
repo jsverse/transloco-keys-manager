@@ -22,6 +22,7 @@ export type Config = {
   fileFormat?: FileFormats;
   defaultLanguage?: string;
   workdir?: string;
+  defaultPipeArgument?: string;
 };
 
 export type FileFormats = 'json' | 'pot';
@@ -37,6 +38,7 @@ export type ExtractorConfig = {
   scopes: Scopes;
   defaultValue: string;
   scopeToKeys: ScopeMap;
+  defaultPipeArgument: string;
 };
 
 export type Scopes = {

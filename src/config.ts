@@ -66,6 +66,9 @@ export function defaultConfig(
     defaultLanguage: 'en',
 
     // Set a work directory. Defaults to current folder
-    workdir: ''
+    workdir: '',
+
+    // Set a pipe argument that contains the default value for the translation in the default language. Default is 'Default'
+    defaultPipeArgument: 'Default'
   };
 }

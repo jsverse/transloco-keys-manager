@@ -10,7 +10,7 @@ import { devlog } from '../../utils/logger';
 import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
-  { input, scopes, defaultValue, files, defaultLanguage }: Config,
+  { input, scopes, defaultValue, files, defaultPipeArgument }: Config,
   fileType: 'ts' | 'html',
   extractor: (config: ExtractorConfig) => {
     scopeMap: ScopeMap;
@@ -30,6 +30,7 @@ export function extractKeys(
       defaultValue,
       scopes,
       scopeToKeys,
+      defaultPipeArgument
     });
     scopeToKeys = res.scopeMap
     defaults.push(...res.defaults);

@@ -98,12 +98,17 @@ export const optionDefinitions = [
   {
     name: 'default-language',
     type: String,
-    description: `The language used in the markerDefault funtion. Only available if use-marker-defaults is used.`
+    description: `The language used for default values.`
   },
   {
     name: 'workdir',
     type: String, 
     description: `The workdir where the application is working from. Defaults to folder of execution.` 
+  },
+  {
+    name: 'default-pipe-arg',
+    type: String, 
+    description: `The pipe argument that contains the default translation value. Defaults to "Default"`
   }
 ];
 

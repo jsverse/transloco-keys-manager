@@ -38,6 +38,7 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
     for (const ast of astTrees) {
       const res = getPipeValuesFromAst(ast);
       if (res) {
+        console.log(res);
         addKeysFromAst(res ? res.ast : null, config);
       } 
     }
@@ -97,10 +98,12 @@ function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
     exp = [...ast.args, ast.receiver];
   }
 
-  // TODO CURRENT
-  const tmp = exp.map(getPipeValuesFromAst).flat();
-  console.log(tmp)
-  return null;
+  const expValue = exp.map(getPipeValuesFromAst).flat();
+  const asts = expValue.map(x => x.ast).flat();
+  const defaultValues = expValue.map(x => x.defaultValue).flat();
+  const res = {ast: asts, defaultValue: defaultValues.find(x => x)};
+
+  return res;
 }
 
 function addKeysFromAst(expressions: AST[], config: ExtractorConfig): void {
