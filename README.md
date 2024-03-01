@@ -59,7 +59,20 @@ Default
 ##### Usage 
 Add this pipe argument to a transloco pipe to set a default value for the default language. 
 
-### default-language
+### defaultOverrideExisting
+
+```bash
+transloco-keys-manager extract --default-override-existing
+```
+
+##### Config file
+defaultOverrideExisting: boolean
+
+##### Default
+false
+
+##### Usage 
+The default value will override the existing value on the default language. The non-default languages will not be adjusted or cleared. The console will show the keys in its log. 
 
 ## Functions
 
