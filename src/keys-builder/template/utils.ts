@@ -93,3 +93,9 @@ export function isSupportedNode<Predicates extends any[]>(
 ): node is GuardedType<Predicates[number]> {
   return predicates.some((predicate) => predicate(node));
 }
+
+export function extractDefaultFromPipeExp(obj): string {
+  return Object.keys(obj).includes('exp')
+    ? extractDefaultFromPipeExp(obj['exp'])
+    : obj.value;
+}

@@ -36,7 +36,6 @@ export function buildTranslationFile({
     defaults.forEach((d) => {
       newTranslation[d.key] = d.value;
 
-      // TODO
       if (defaultOverrideExisting) {
         const curentTranslationIndex = Object.keys(currentTranslation).findIndex(k => k == d.key);
         if (curentTranslationIndex != -1 && Object.values(currentTranslation)[curentTranslationIndex] != d.value) {

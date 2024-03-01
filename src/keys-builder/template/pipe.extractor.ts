@@ -6,6 +6,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  extractDefaultFromPipeExp,
   isBinaryExpression,
   isBindingPipe,
   isBoundText,
@@ -36,7 +37,7 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
     }
 
     for (const ast of astTrees) {
-      const res = getPipeValuesFromAst(ast);
+      const res = getPipeValuesFromAst(ast, config.defaultPipeArgument);
       if (res) {
         if (res.defaultValue) {
           config.defaults.push(res.defaultValue);
@@ -59,7 +60,10 @@ function isTranslocoPipe(ast: any) {
   return isTransloco || (isPipeChaining && isTranslocoPipe(ast.exp));
 }
 
-function getPipeValuesFromAst(ast: AST): {
+function getPipeValuesFromAst(
+  ast: AST,
+  defaultPipeArgument?: string
+): {
   ast: AST[];
   defaultValue: DefaultLanguageValue;
 } {
@@ -69,24 +73,27 @@ function getPipeValuesFromAst(ast: AST): {
     if (isLiteralExpression(ast.exp)) {
       for (let arg of ast.args) {
         const key = ast.exp.value;
+        if (key == 'label.authentication.partnerPortal.title') {
+        }
         const defaultIndex = arg.keys.findIndex(
-          (k) => k.key.toLowerCase() == 'default'
+          (k) =>
+            k.key.toLowerCase() == (defaultPipeArgument ?? '').toLowerCase()
         );
         if (defaultIndex != -1) {
           dValue = {
             key: key,
-            value: arg.values[defaultIndex].value
+            value: extractDefaultFromPipeExp(arg.values[defaultIndex]),
           };
         }
       }
       return {
         ast: [ast.exp],
-        defaultValue: dValue
+        defaultValue: dValue,
       };
     } else if (isConditionalExpression(ast.exp)) {
       return {
         ast: [ast.exp.trueExp, ast.exp.falseExp],
-        defaultValue: dValue
+        defaultValue: dValue,
       };
     } else {
       let pipe = ast;
@@ -96,7 +103,7 @@ function getPipeValuesFromAst(ast: AST): {
 
       return {
         ast: [pipe.exp],
-        defaultValue: dValue
+        defaultValue: dValue,
       };
     }
   } else if (isBindingPipe(ast)) {
@@ -113,7 +120,9 @@ function getPipeValuesFromAst(ast: AST): {
     exp = [...ast.args, ast.receiver];
   }
 
-  const expValue = exp.map(getPipeValuesFromAst).flat();
+  const expValue = exp
+    .map((ast) => getPipeValuesFromAst(ast, defaultPipeArgument))
+    .flat();
   const asts = expValue.map((x) => x.ast).flat();
   const defaultValues = expValue.map((x) => x.defaultValue).flat();
   const res = { ast: asts, defaultValue: defaultValues.find((x) => x) };
