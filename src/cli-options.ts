@@ -113,7 +113,7 @@ export const optionDefinitions = [
   {
     name: 'default-override-existing',
     type: Boolean,
-    description: `Override the translation file value if the default value has changed.`
+    description: `Override the translation file value if the default value has changed. This will not change the non-default languages, keys of updated files will be found in log.`
   }
 ];
 

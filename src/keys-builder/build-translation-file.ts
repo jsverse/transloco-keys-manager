@@ -40,8 +40,8 @@ export function buildTranslationFile({
       if (defaultOverrideExisting) {
         const curentTranslationIndex = Object.keys(currentTranslation).findIndex(k => k == d.key);
         if (curentTranslationIndex != -1 && Object.values(currentTranslation)[curentTranslationIndex] != d.value) {
-          console.log("Updated translation: '" + d.key + "'");
-          // TODO Set the current translationIndex
+          currentTranslation[d.key] = d.value;
+          console.log("💪 Updated translation: '" + d.key + "'");
         }
       }
     });

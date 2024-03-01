@@ -71,7 +71,7 @@ export function defaultConfig(
     // Set a pipe argument that contains the default value for the translation in the default language. Default is 'Default'
     defaultPipeArgument: 'Default',
 
-    // Override the trranslation file value if the default doesn't match the current value
+    // Override the trranslation file value if the default doesn't match the current value. This will not change the non-default language keys, but the key will be logged in the log
     defaultOverrideExisting: false,
   };
 }
