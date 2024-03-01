@@ -109,6 +109,11 @@ export const optionDefinitions = [
     name: 'default-pipe-arg',
     type: String, 
     description: `The pipe argument that contains the default translation value. Defaults to "Default"`
+  },
+  {
+    name: 'default-override-existing',
+    type: Boolean,
+    description: `Override the translation file value if the default value has changed.`
   }
 ];
 

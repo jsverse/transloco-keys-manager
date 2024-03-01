@@ -69,6 +69,9 @@ export function defaultConfig(
     workdir: '',
 
     // Set a pipe argument that contains the default value for the translation in the default language. Default is 'Default'
-    defaultPipeArgument: 'Default'
+    defaultPipeArgument: 'Default',
+
+    // Override the trranslation file value if the default doesn't match the current value
+    defaultOverrideExisting: false,
   };
 }

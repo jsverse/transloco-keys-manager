@@ -63,7 +63,7 @@ export class TranslocoExtractKeysWebpackPlugin {
           paths.forEach(({ path }) =>
             buildTranslationFile({
               path,
-              fileFormat: this.config.fileFormat,
+              fileFormat: this.config.fileFormat
             })
           );
           tsResult = extractTSKeys({

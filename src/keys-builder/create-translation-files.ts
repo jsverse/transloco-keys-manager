@@ -15,7 +15,8 @@ export function createTranslationFiles({
   removeExtraKeys,
   scopes,
   fileFormat,
-  defaultLanguage
+  defaultLanguage,
+  defaultOverrideExisting
 }: Config & { scopeToKeys: ScopeMap, defaults: DefaultLanguageValue[] }) {
   const logger = getLogger();
 
@@ -40,7 +41,8 @@ export function createTranslationFiles({
         removeExtraKeys,
         fileFormat,
         defaults,
-        isDefaultLanguage: lang == defaultLanguage
+        isDefaultLanguage: lang == defaultLanguage,
+        defaultOverrideExisting
       })
     );
   }
@@ -54,7 +56,8 @@ export function createTranslationFiles({
         removeExtraKeys,
         fileFormat,
         defaults: defaults,
-        isDefaultLanguage: lang == defaultLanguage
+        isDefaultLanguage: lang == defaultLanguage,
+        defaultOverrideExisting
       })
     );
   }

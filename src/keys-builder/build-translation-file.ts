@@ -14,8 +14,9 @@ interface BuildTranslationOptions
     Partial<Pick<Config, 'replace' | 'removeExtraKeys'>> {
   path: string;
   translation?: Translation;
-  defaults: DefaultLanguageValue[];
-  isDefaultLanguage: boolean;
+  defaults?: DefaultLanguageValue[];
+  isDefaultLanguage?: boolean;
+  defaultOverrideExisting?: boolean
 }
 
 export function buildTranslationFile({
@@ -26,6 +27,7 @@ export function buildTranslationFile({
   fileFormat,
   defaults,
   isDefaultLanguage,
+  defaultOverrideExisting
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
   const newTranslation = _.cloneDeep(translation);
@@ -33,6 +35,15 @@ export function buildTranslationFile({
   if (isDefaultLanguage) {
     defaults.forEach((d) => {
       newTranslation[d.key] = d.value;
+
+      // TODO
+      if (defaultOverrideExisting) {
+        const curentTranslationIndex = Object.keys(currentTranslation).findIndex(k => k == d.key);
+        if (curentTranslationIndex != -1 && Object.values(currentTranslation)[curentTranslationIndex] != d.value) {
+          console.log("Updated translation: '" + d.key + "'");
+          // TODO Set the current translationIndex
+        }
+      }
     });
   }
 

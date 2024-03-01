@@ -23,6 +23,7 @@ export type Config = {
   defaultLanguage?: string;
   workdir?: string;
   defaultPipeArgument?: string;
+  defaultOverrideExisting?: boolean;
 };
 
 export type FileFormats = 'json' | 'pot';
