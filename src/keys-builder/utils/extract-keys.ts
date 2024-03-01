@@ -30,7 +30,8 @@ export function extractKeys(
       defaultValue,
       scopes,
       scopeToKeys,
-      defaultPipeArgument
+      defaultPipeArgument,
+      defaults
     });
     scopeToKeys = res.scopeMap
     defaults.push(...res.defaults);

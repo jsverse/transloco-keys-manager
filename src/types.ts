@@ -39,6 +39,7 @@ export type ExtractorConfig = {
   defaultValue: string;
   scopeToKeys: ScopeMap;
   defaultPipeArgument: string;
+  defaults: DefaultLanguageValue[];
 };
 
 export type Scopes = {

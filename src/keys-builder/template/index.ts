@@ -20,14 +20,14 @@ export function templateExtractor(config: TemplateExtractorConfig): {
   scopeMap: ScopeMap;
   defaults: DefaultLanguageValue[];
 } {
-  const { file, scopeToKeys, defaultPipeArgument } = config;
+  const { file, scopeToKeys } = config;
   const defaults: DefaultLanguageValue[] = [];
   let content = config.content || readFile(file);
   if (!content.includes('transloco')) {
     return { scopeMap: scopeToKeys, defaults: defaults };
   }
 
-  const resolvedConfig = { ...config, content };
+  const resolvedConfig = { ...config, content, defaults };
   pipeExtractor(resolvedConfig);
   templateCommentsExtractor(resolvedConfig);
   directiveExtractor(resolvedConfig);

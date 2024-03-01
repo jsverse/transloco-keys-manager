@@ -1,6 +1,6 @@
 import { AST, ASTWithSource, TmplAstNode } from '@angular/compiler';
 
-import { ExtractorConfig } from '../../types';
+import { DefaultLanguageValue, ExtractorConfig } from '../../types';
 import { addKey } from '../add-key';
 import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
@@ -38,9 +38,12 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
     for (const ast of astTrees) {
       const res = getPipeValuesFromAst(ast);
       if (res) {
-        console.log(res);
+        if (res.defaultValue) {
+          config.defaults.push(res.defaultValue);
+        }
+
         addKeysFromAst(res ? res.ast : null, config);
-      } 
+      }
     }
   }
 }
@@ -56,10 +59,13 @@ function isTranslocoPipe(ast: any) {
   return isTransloco || (isPipeChaining && isTranslocoPipe(ast.exp));
 }
 
-function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
+function getPipeValuesFromAst(ast: AST): {
+  ast: AST[];
+  defaultValue: DefaultLanguageValue;
+} {
   let exp = [];
   if (isBindingPipe(ast) && isTranslocoPipe(ast)) {
-    let defaultValue: string;
+    let dValue: DefaultLanguageValue;
     if (isLiteralExpression(ast.exp)) {
       for (let arg of ast.args) {
         const key = ast.exp.value;
@@ -67,14 +73,20 @@ function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
           (k) => k.key.toLowerCase() == 'default'
         );
         if (defaultIndex != -1) {
-          defaultValue = arg.values[defaultIndex].value;
+          dValue = {
+            key: key,
+            value: arg.values[defaultIndex].value
+          };
         }
       }
-      return { ast: [ast.exp], defaultValue: defaultValue };
+      return {
+        ast: [ast.exp],
+        defaultValue: dValue
+      };
     } else if (isConditionalExpression(ast.exp)) {
       return {
         ast: [ast.exp.trueExp, ast.exp.falseExp],
-        defaultValue: defaultValue,
+        defaultValue: dValue
       };
     } else {
       let pipe = ast;
@@ -82,7 +94,10 @@ function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
         pipe = pipe.exp;
       }
 
-      return { ast: [pipe.exp], defaultValue: defaultValue };
+      return {
+        ast: [pipe.exp],
+        defaultValue: dValue
+      };
     }
   } else if (isBindingPipe(ast)) {
     exp = [...ast.args, ast.exp];
@@ -99,9 +114,9 @@ function getPipeValuesFromAst(ast: AST): { ast: AST[]; defaultValue: string } {
   }
 
   const expValue = exp.map(getPipeValuesFromAst).flat();
-  const asts = expValue.map(x => x.ast).flat();
-  const defaultValues = expValue.map(x => x.defaultValue).flat();
-  const res = {ast: asts, defaultValue: defaultValues.find(x => x)};
+  const asts = expValue.map((x) => x.ast).flat();
+  const defaultValues = expValue.map((x) => x.defaultValue).flat();
+  const res = { ast: asts, defaultValue: defaultValues.find((x) => x) };
 
   return res;
 }
