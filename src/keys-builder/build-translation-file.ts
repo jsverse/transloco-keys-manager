@@ -16,7 +16,7 @@ interface BuildTranslationOptions
   translation?: Translation;
   defaults?: DefaultLanguageValue[];
   isDefaultLanguage?: boolean;
-  defaultOverrideExisting?: boolean
+  defaultOverrideExisting?: boolean;
 }
 
 export function buildTranslationFile({
@@ -27,7 +27,7 @@ export function buildTranslationFile({
   fileFormat,
   defaults,
   isDefaultLanguage,
-  defaultOverrideExisting
+  defaultOverrideExisting,
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
   const newTranslation = _.cloneDeep(translation);
@@ -37,10 +37,18 @@ export function buildTranslationFile({
       newTranslation[d.key] = d.value;
 
       if (defaultOverrideExisting) {
-        const curentTranslationIndex = Object.keys(currentTranslation).findIndex(k => k == d.key);
-        if (curentTranslationIndex != -1 && Object.values(currentTranslation)[curentTranslationIndex] != d.value) {
+        const curentTranslationIndex = Object.keys(
+          currentTranslation
+        ).findIndex((k) => k == d.key);
+        if (
+          curentTranslationIndex != -1 &&
+          Object.values(currentTranslation)[curentTranslationIndex] != d.value
+        ) {
+          const oldText = currentTranslation[d.key];
           currentTranslation[d.key] = d.value;
-          console.log("💪 Updated translation: '" + d.key + "'");
+          console.log(
+            `💪 Updated translation: '${d.key}' from '${oldText}' to '${d.value}'`
+          );
         }
       }
     });

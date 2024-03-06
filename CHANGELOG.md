@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0] (2024-05-06)
+
+### Changes
+- Added more information about the updated texts in the console. 
+
 ## [1.0.2] (2024-03-01)
 
 ### Fixes
