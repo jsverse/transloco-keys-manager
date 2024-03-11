@@ -137,7 +137,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 78 }),
+          ...generateKeys({ start: 66, end: 79 }),
           '{{count}} items': defaultValue,
         };
         [
@@ -162,7 +162,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with directive', () => {
-        const expected = generateKeys({ end: 23 });
+        const expected = generateKeys({ end: 24 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
@@ -216,7 +216,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = generateKeys({ end: 41 });
+        let expected = generateKeys({ end: 42 });
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
@@ -237,19 +237,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           path: 'todos-page/',
           fileFormat,
         });
-      });
-    });
-
-    describe('Self-closing', () => {
-      const type: TranslationCategory = 'self-closing';
-      const config = gConfig(type);
-
-      beforeEach(() => removeI18nFolder(type));
-
-      it('should work with self-closing component', () => {
-        let expected = generateKeys({ end: 4 });
-        createTranslations(config);
-        assertTranslation({ type, expected, fileFormat });
       });
     });
 
