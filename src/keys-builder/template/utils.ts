@@ -158,7 +158,7 @@ export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
   }
 
   if (isTmplAstForLoopBlock(node)) {
-    return [...node.children, ...[node.empty].filter(isNotNull)];
+    return node.empty ? [...node.children, node.empty] : node.children;
   }
 
   if (isTmplAstDeferredBlock(node)) {
