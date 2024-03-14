@@ -28,7 +28,8 @@ import {
   isSupportedNode,
   isTemplate,
   parseTemplate,
-  getChildrendNodesIfBlock,
+  isBlockNode,
+  resolveBlockChildNodes,
 } from './utils';
 
 interface ContainerMetaData {
@@ -50,9 +51,8 @@ export function traverse(
   config: TemplateExtractorConfig,
 ) {
   for (const node of nodes) {
-    const childrendNodes = getChildrendNodesIfBlock(node);
-    if (childrendNodes.length) {
-      traverse(childrendNodes, containers, config);
+    if (isBlockNode(node)) {
+      traverse(resolveBlockChildNodes(node), containers, config);
       continue;
     }
 

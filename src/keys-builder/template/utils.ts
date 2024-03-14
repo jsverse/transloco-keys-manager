@@ -110,6 +110,18 @@ export function isSupportedNode<Predicates extends any[]>(
   return predicates.some((predicate) => predicate(node));
 }
 
+type BlockNode =
+  | TmplAstDeferredBlockError
+  | TmplAstDeferredBlockLoading
+  | TmplAstDeferredBlockPlaceholder
+  | TmplAstForLoopBlockEmpty
+  | TmplAstIfBlockBranch
+  | TmplAstSwitchBlockCase
+  | TmplAstForLoopBlock
+  | TmplAstDeferredBlock
+  | TmplAstIfBlock
+  | TmplAstSwitchBlock;
+
 export function isBlockWithChildren(
   node: unknown,
 ): node is { children: TmplAstNode[] } {
@@ -145,14 +157,17 @@ export function isTmplAstSwitchBlock(
   return node instanceof TmplAstSwitchBlock;
 }
 
-function isNotNull<T>(input: T | null): input is T {
-  return input !== null;
+export function isBlockNode(node: TmplAstNode): node is BlockNode {
+  return (
+    isTmplAstIfBlock(node) ||
+    isTmplAstForLoopBlock(node) ||
+    isTmplAstDeferredBlock(node) ||
+    isTmplAstSwitchBlock(node) ||
+    isBlockWithChildren(node)
+  );
 }
 
-/**
- * Returns children nodes of the given node if it's a block node.
- */
-export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
+export function resolveBlockChildNodes(node: BlockNode): TmplAstNode[] {
   if (isTmplAstIfBlock(node)) {
     return node.branches;
   }
@@ -164,7 +179,9 @@ export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
   if (isTmplAstDeferredBlock(node)) {
     return [
       ...node.children,
-      ...[node.loading, node.error, node.placeholder].filter(isNotNull),
+      ...([node.loading, node.error, node.placeholder].filter(
+        Boolean,
+      ) as TmplAstNode[]),
     ];
   }
 
@@ -172,9 +189,5 @@ export function getChildrendNodesIfBlock(node: TmplAstNode): TmplAstNode[] {
     return node.cases;
   }
 
-  if (isBlockWithChildren(node)) {
-    return node.children;
-  }
-
-  return [];
+  return node.children;
 }

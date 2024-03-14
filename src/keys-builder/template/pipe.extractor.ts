@@ -18,7 +18,8 @@ import {
   isPropertyRead,
   isTemplate,
   parseTemplate,
-  getChildrendNodesIfBlock,
+  isBlockNode,
+  resolveBlockChildNodes,
 } from './utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
@@ -28,9 +29,8 @@ export function pipeExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
-    const childrendNodes = getChildrendNodesIfBlock(node);
-    if (childrendNodes.length) {
-      traverse(childrendNodes, config);
+    if (isBlockNode(node)) {
+      traverse(resolveBlockChildNodes(node), config);
       continue;
     }
 
