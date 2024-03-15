@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.7.0...v3.8.0) (2024-03-15)
+
+
+### Features
+
+* 🎸 Add support for angular 14 inject() ([#142](https://github.com/ngneat/transloco-keys-manager/issues/142)) ([0d69c07](https://github.com/ngneat/transloco-keys-manager/commit/0d69c07c344231b4797dd56319303e2241c7715f))
+
+
+### Bug Fixes
+
+* only seach ts files for scopes ([#164](https://github.com/ngneat/transloco-keys-manager/issues/164)) ([d3e583f](https://github.com/ngneat/transloco-keys-manager/commit/d3e583fd15ee20cd072e865501e5c5da2724103a))
+* writeFileSync expects encoding to be in lowercase ([#157](https://github.com/ngneat/transloco-keys-manager/issues/157)) ([9ba5f61](https://github.com/ngneat/transloco-keys-manager/commit/9ba5f618a8d08dac3c009adb87261f90ea352505))
+
 ## [3.8.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.7.0...v3.8.0) (2023-08-13)
 
 
