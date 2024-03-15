@@ -12,6 +12,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  isBlockNode,
   isBoundAttribute,
   isConditionalExpression,
   isElement,
@@ -21,6 +22,7 @@ import {
   isTemplate,
   isTextAttribute,
   parseTemplate,
+  resolveBlockChildNodes,
 } from './utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
@@ -30,6 +32,11 @@ export function directiveExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
+    if (isBlockNode(node)) {
+      traverse(resolveBlockChildNodes(node), config);
+      continue;
+    }
+
     if (!isSupportedNode(node, [isTemplate, isElement])) {
       continue;
     }

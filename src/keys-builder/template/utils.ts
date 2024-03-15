@@ -14,6 +14,17 @@ import {
   TmplAstElement,
   TmplAstTemplate,
   TmplAstTextAttribute,
+  TmplAstNode,
+  TmplAstDeferredBlock,
+  TmplAstDeferredBlockError,
+  TmplAstDeferredBlockLoading,
+  TmplAstDeferredBlockPlaceholder,
+  TmplAstForLoopBlock,
+  TmplAstForLoopBlockEmpty,
+  TmplAstIfBlockBranch,
+  TmplAstSwitchBlockCase,
+  TmplAstIfBlock,
+  TmplAstSwitchBlock,
 } from '@angular/compiler';
 
 import { readFile } from '../../utils/file.utils';
@@ -97,4 +108,86 @@ export function isSupportedNode<Predicates extends any[]>(
   predicates: Predicates,
 ): node is GuardedType<Predicates[number]> {
   return predicates.some((predicate) => predicate(node));
+}
+
+type BlockNode =
+  | TmplAstDeferredBlockError
+  | TmplAstDeferredBlockLoading
+  | TmplAstDeferredBlockPlaceholder
+  | TmplAstForLoopBlockEmpty
+  | TmplAstIfBlockBranch
+  | TmplAstSwitchBlockCase
+  | TmplAstForLoopBlock
+  | TmplAstDeferredBlock
+  | TmplAstIfBlock
+  | TmplAstSwitchBlock;
+
+export function isBlockWithChildren(
+  node: unknown,
+): node is { children: TmplAstNode[] } {
+  return (
+    node instanceof TmplAstDeferredBlockError ||
+    node instanceof TmplAstDeferredBlockLoading ||
+    node instanceof TmplAstDeferredBlockPlaceholder ||
+    node instanceof TmplAstForLoopBlockEmpty ||
+    node instanceof TmplAstIfBlockBranch ||
+    node instanceof TmplAstSwitchBlockCase
+  );
+}
+
+export function isTmplAstForLoopBlock(
+  node: unknown,
+): node is TmplAstForLoopBlock {
+  return node instanceof TmplAstForLoopBlock;
+}
+
+export function isTmplAstDeferredBlock(
+  node: unknown,
+): node is TmplAstDeferredBlock {
+  return node instanceof TmplAstDeferredBlock;
+}
+
+export function isTmplAstIfBlock(node: unknown): node is TmplAstIfBlock {
+  return node instanceof TmplAstIfBlock;
+}
+
+export function isTmplAstSwitchBlock(
+  node: unknown,
+): node is TmplAstSwitchBlock {
+  return node instanceof TmplAstSwitchBlock;
+}
+
+export function isBlockNode(node: TmplAstNode): node is BlockNode {
+  return (
+    isTmplAstIfBlock(node) ||
+    isTmplAstForLoopBlock(node) ||
+    isTmplAstDeferredBlock(node) ||
+    isTmplAstSwitchBlock(node) ||
+    isBlockWithChildren(node)
+  );
+}
+
+export function resolveBlockChildNodes(node: BlockNode): TmplAstNode[] {
+  if (isTmplAstIfBlock(node)) {
+    return node.branches;
+  }
+
+  if (isTmplAstForLoopBlock(node)) {
+    return node.empty ? [...node.children, node.empty] : node.children;
+  }
+
+  if (isTmplAstDeferredBlock(node)) {
+    return [
+      ...node.children,
+      ...([node.loading, node.error, node.placeholder].filter(
+        Boolean,
+      ) as TmplAstNode[]),
+    ];
+  }
+
+  if (isTmplAstSwitchBlock(node)) {
+    return node.cases;
+  }
+
+  return node.children;
 }
