@@ -10,10 +10,6 @@
     ".": {
       "import": "./public-api.js",
       "types": "./public-api.d.ts"
-    },
-    "./marker": {
-      "import": "./marker.js",
-      "types": "./marker.d.ts"
     }
   },
   "bin": {
@@ -29,7 +25,6 @@
     "postbuild": "node ./scripts/post-build.js",
     "clean:dist": "rimraf dist",
     "prettier": "prettier --write src/**/*.ts && prettier --write __tests__/*.ts",
-    "conduct": "import-conductor",
     "pre-commit": "lint-staged"
   },
   "license": "MIT",
@@ -69,12 +64,6 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  },
-  "lint-staged": {
-    "*.ts": [
-      "import-conductor --staged",
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@angular/compiler": "17.2.0",
