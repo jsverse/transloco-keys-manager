@@ -1,3 +1,9 @@
+# Transloco Keys Manager V4
+
+The library is now ESM only in order to use the newer versions of the angular compiler.
+The publishing scope has changes from `@ngneat/transloco-keys-manager` to `@jsverse/transloco-keys-manager`,
+this means you'll need to update the import paths of the marker functions in case you are using it.
+
 # Transloco Keys Manager V2
 
 #### Paths resolution
