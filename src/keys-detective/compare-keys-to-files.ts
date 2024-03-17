@@ -6,7 +6,7 @@ import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';
 import { readFile, writeFile } from '../utils/file.utils';
 import { getLogger } from '../utils/logger';
-import { getScopeAndLangFromPath } from '../utils/path.utils';
+import { filterPathByLang, getScopeAndLangFromPath } from '../utils/path.utils';
 
 import { buildTable } from './build-table';
 import { getTranslationFilesPath } from './get-translation-files-path';
@@ -28,6 +28,7 @@ interface CompareKeysOptions
     | 'translationsPath'
   > {
   scopeToKeys: ScopeMap;
+  langs?: ReadonlyArray<string>;
 }
 
 export function compareKeysToFiles({
@@ -36,9 +37,15 @@ export function compareKeysToFiles({
   addMissingKeys,
   emitErrorOnExtraKeys,
   fileFormat,
+  langs: langsToProcess = [],
 }: CompareKeysOptions) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
+
+  const scopeAndLangFromPathOption = {
+    translationsPath,
+    fileFormat,
+  };
 
   const diffsPerLang = {};
 
@@ -52,7 +59,7 @@ export function compareKeysToFiles({
   const scopePaths = getGlobalConfig().scopePathMap || {};
   for (const [scope, path] of Object.entries(scopePaths)) {
     const keys = scopeToKeys[scope];
-    if (keys) {
+    if (keys && typeof path === 'string') {
       const res: Omit<Result, 'files'> = {
         keys,
         scope,
@@ -60,7 +67,8 @@ export function compareKeysToFiles({
       };
       result.push({
         ...res,
-        files: normalizedGlob(`${res.baseFilesPath}/*.${fileFormat}`),
+        files: normalizedGlob(`${res.baseFilesPath}/*.${fileFormat}`)
+          .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
   }
@@ -68,9 +76,8 @@ export function compareKeysToFiles({
 
   for (const filePath of translationFiles) {
     const { scope = '__global' } = getScopeAndLangFromPath({
+      ...scopeAndLangFromPathOption,
       filePath,
-      translationsPath,
-      fileFormat,
     });
     if (cache[scope]) {
       continue;
@@ -89,7 +96,8 @@ export function compareKeysToFiles({
         ...res,
         files: normalizedGlob(
           `${res.baseFilesPath}/${isGlobal ? '' : scope}/*.${fileFormat}`
-        ),
+        )
+        .filter(filterPathByLang(langsToProcess, scopeAndLangFromPathOption)),
       });
     }
   }
