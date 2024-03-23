@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.8.0...v4.0.0) (2024-03-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 Imports path changes to @jsverse/transloco-keys-manager
+* 🧨 The lib is now ESM
+
+### Features
+
+* 🎸 Add support for self closing tag and control flow ([#180](https://github.com/ngneat/transloco-keys-manager/issues/180)) ([0e3ab54](https://github.com/ngneat/transloco-keys-manager/commit/0e3ab54b7ff7017aeffde07f398794c1fe1456b3))
+
+
+* 🤖 change package scope to jsverse ([0be3a4d](https://github.com/ngneat/transloco-keys-manager/commit/0be3a4de5fd84c278f361a12f1f968e616e799b7))
+* 🤖 migrate to esm  ([#177](https://github.com/ngneat/transloco-keys-manager/issues/177)) ([ac283b7](https://github.com/ngneat/transloco-keys-manager/commit/ac283b78a60a9f1ad6b3a09e682712e6e41a144f))
+
 ## [3.8.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.7.0...v3.8.0) (2024-03-15)
 
 
