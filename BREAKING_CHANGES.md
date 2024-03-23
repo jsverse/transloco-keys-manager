@@ -19,7 +19,7 @@ The `sourceRoot` value is determined by the following logic:
 
 #### Dynamic Template Keys
 
-Comments in the templates will now **inherit the `read` [input](https://ngneat.github.io/transloco/docs/structural-directive/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+Comments in the templates will now **inherit the `read` [input](https://jsverse.github.io/transloco/docs/structural-directive/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
 ```html
 <!-- t(this.is.cool) -->
 <ng-container *transloco="let m; read: 'messages'">
