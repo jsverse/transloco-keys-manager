@@ -2,15 +2,10 @@
  <img width="50%" height="50%" src="./logo.png">
 </p>
 
-[![Build Status](https://github.com/ngneat/transloco-keys-manager/actions/workflows/ci.yml/badge.svg)]()
-[![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
-[![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
-[![coc-badge](https://img.shields.io/badge/codeof-conduct-ff69b4.svg?style=flat-square)]()
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e5079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
-[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Join the chat at https://gitter.im/ngneat-transloco](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/ngneat-transloco/lobby?source=orgpage)
-
 > 🦄 The Key to a Better Translation Experience
+
+![Build Status](https://github.com/jsverse/transloco-keys-manager/actions/workflows/ci.yml/badge.svg)
+[![NPM Version](https://img.shields.io/npm/v/%40jsverse%2Ftransloco-keys-manager)](https://www.npmjs.com/package/@jsverse/transloco-keys-manager)
 
 Translation is a tiresome and repetitive task. Each time we add new text, we need to create a new entry in the translation file, find the correct placement for it, etc. Moreover, when we delete existing keys, we need to remember to remove them from each translation file.
 
@@ -46,7 +41,7 @@ To make the process less burdensome, we've created two tools for the Transloco l
 Assuming you've already added Transloco to your project, run the following schematics command:
 
 ```
-ng g @ngneat/transloco:keys-manager
+ng g @jsverse/transloco:keys-manager
 ```
 
 At this point, you'll have to choose whether you want to use the CLI, Webpack Plugin, or both. The project will be updated according to your choice.
@@ -57,8 +52,8 @@ At this point, you'll have to choose whether you want to use the CLI, Webpack Pl
 
 Install the Transloco keys manager package via `yarn` or `npm` by running:
 ```shell script
-npm i -D @ngneat/transloco-keys-manager
-yarn add -D @ngneat/transloco-keys-manager
+npm i -D @jsverse/transloco-keys-manager
+yarn add -D @jsverse/transloco-keys-manager
 ```
 
 Add the following scripts to your `package.json` file:
@@ -103,9 +98,9 @@ You should see a new file named `webpack-dev.config.js` configured with `Translo
 
 ```ts
 // webpack-dev.config.js
-const { TranslocoExtractKeysWebpackPlugin } = require('@ngneat/transloco-keys-manager');
+import { TranslocoExtractKeysWebpackPlugin } from '@jsverse/transloco-keys-manager';
 
-module.exports = {
+export default {
   plugins: [
     new TranslocoExtractKeysWebpackPlugin(config?),
   ]
@@ -124,10 +119,10 @@ Now run `npm start` and it'll generate new keys whenever a **save** is made to t
 
 ### Scopes Support
 
-The extractor supports [scopes](https://ngneat.github.io/transloco/docs/scope-configuration/) out of the box. When you define a new scope in the `providers` array:
+The extractor supports [scopes](https://jsverse.github.io/transloco/docs/scope-configuration/) out of the box. When you define a new scope in the `providers` array:
 
 ```ts
-import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TRANSLOCO_SCOPE } from '@jsverse/transloco';
 
 @Component({
   templateUrl: './admin-page.component.html',
@@ -154,7 +149,7 @@ It'll extract the scope (`admin` in our case) keys into the relevant folder:
 
 ### Inline Loaders
 
-Let's say that we're using the following [inline](https://ngneat.github.io/transloco/docs/inline-loaders) loader:
+Let's say that we're using the following [inline](https://jsverse.github.io/transloco/docs/inline-loaders) loader:
 
 ```ts
 export const loader = ['en', 'es'].reduce((acc, lang) => {
@@ -197,7 +192,7 @@ Now, it'll create the files in the provided folder.
 There are times when we need to extract keys with values that may change during runtime. One example can be when you need to use a dynamic expression:
 
 ```ts
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse`/transloco';
 
 class MyComponent {
   someMethod() {
@@ -209,7 +204,7 @@ class MyComponent {
 To support such cases, you can add a special comment to your code, which tells the CLI to extract it. It can be added to Typescript files:
 
 ```ts
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 
 class MyComponent {
   /**
@@ -229,16 +224,16 @@ Or to templates:
 <ng-container *transloco="let t">...</ng-container>
 ```
 
-When using comments in the templates they will also **inherit the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+When using comments in the templates they will also **inherit the `read` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
 ```html
 <!-- t(this.is.cool) -->
 <ng-container *transloco="let m; read: 'messages'">
+  ...
+  <!-- t(success, error) -->
+  <ng-container *transloco="let g; read: 'general'">
     ...
-    <!-- t(success, error) -->
-    <ng-container *transloco="let g; read: 'general'">
-        ...
-        <!-- t(ok, cancel) -->
-    </ng-container>
+    <!-- t(ok, cancel) -->
+  </ng-container>
 </ng-container>
 ```
 
@@ -254,43 +249,43 @@ The extracted keys for the code above will be:
 ```
 
 *Notes:*
-1. When using a Typescript file, you must have an `import { } from '@ngneat/transloco'` statement in it.
+1. When using a Typescript file, you must have an `import { } from '@jsverse/transloco'` statement in it.
 2. When using comments in your HTML files, they *must* contain only the markers without additional text.
-Here's an example for invalid comment:
-`<!-- For dropdown t(dynamic.1, dynamic.2) -->`
+   Here's an example for invalid comment:
+   `<!-- For dropdown t(dynamic.1, dynamic.2) -->`
 
 ### Marker function
 
 If you want to extract some standalone strings that are not part of any translation call (via the template or service)
 you can wrap them with the marker function to tell the keys manager to extract them:
 ```ts
-import { marker } from '@ngneat/transloco-keys-manager/marker';
+import { marker } from '@jsverse/transloco-keys-manager';
 
 class MyClass {
-    static titles = {
-        username: marker('auth.username'), // ==> 'auth.username'
-        password: marker('auth.password') // ==> 'auth.password'
-    };
-    ...
+  static titles = {
+    username: marker('auth.username'), // ==> 'auth.username'
+    password: marker('auth.password') // ==> 'auth.password'
+  };
+...
 }
 ```
 The marker function will return the string which was passed to it.
 You can alias the marker function if needed:
 ```ts
-import { marker as _ } from '@ngneat/transloco-keys-manager/marker';
+import { marker as _ } from '@jsverse/transloco-keys-manager';
 
 class MyClass {
-    static titles = {
-        username: _('auth.username'),
-        password: _('auth.password')
-    };
-    ...
+  static titles = {
+    username: _('auth.username'),
+    password: _('auth.password')
+  };
+...
 }
 ```
 
 ### Extra Support
 
-- Supports for the `read` [input](https://ngneat.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input):
+- Supports for the `read` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input):
 
 ```html
 <ng-container *transloco="let t; read: 'dashboard'">
@@ -317,7 +312,7 @@ The extracted keys for the code above will be:
 <h1>{{ condition ? 'keyOne' : 'keyTwo' | transloco }}</h1>
 
 <comp *transloco="let t; read: 'ternary'">
-    <h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
+  <h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
 </comp>
 ```
 
@@ -337,7 +332,7 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 ## 🕹 Options
 
 - `project`*: The targeted project (default is `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
-In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
+  In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
 ```
 transloco-keys-manager extract --project first-app
@@ -403,9 +398,9 @@ transloco-keys-manager extract --unflat
 transloco-keys-manager extract -u
 ```
 
-  If you are using unflat files keep in mind that “parent” keys won't be usable for a separate translation value, i.e. if you have two keys `first` and `first.second` you cannot assign a value to `first` as the translation file will look like `{ "first": { "second": "…" } }`.
+If you are using unflat files keep in mind that “parent” keys won't be usable for a separate translation value, i.e. if you have two keys `first` and `first.second` you cannot assign a value to `first` as the translation file will look like `{ "first": { "second": "…" } }`.
 
-  During key extraction you will get a warning with a list of concerned keys you have to check for.
+During key extraction you will get a warning with a list of concerned keys you have to check for.
 
 - `defaultValue`: The default value of a generated key: (default is `Missing value for {{key}}`)
 
@@ -502,15 +497,6 @@ You can also chain several namespaces:
 }
 ```
 
-## Core Team
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/shaharkazaz"><img src="https://avatars2.githubusercontent.com/u/17194830?v=4" width="100px;" alt="Shahar Kazaz"/><br /><sub><b>Shahar Kazaz</b></sub></a><br /></td>
-    <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt="Netanel Basal"/><br /><sub><b>Netanel Basal</b></sub></a><br /></td>
-  </tr>
-</table>
-
 ## Contributors ✨
 
-Thank goes to all these wonderful [people who contributed](https://github.com/ngneat/transloco-keys-manager/graphs/contributors) ❤️
+Thank goes to all these wonderful [people who contributed](https://github.com/jsverse/transloco-keys-manager/graphs/contributors) ❤️

@@ -15,225 +15,225 @@ All notable changes to this project will be documented in this file. See [standa
 * only seach ts files for scopes ([#164](https://github.com/ngneat/transloco-keys-manager/issues/164)) ([d3e583f](https://github.com/ngneat/transloco-keys-manager/commit/d3e583fd15ee20cd072e865501e5c5da2724103a))
 * writeFileSync expects encoding to be in lowercase ([#157](https://github.com/ngneat/transloco-keys-manager/issues/157)) ([9ba5f61](https://github.com/ngneat/transloco-keys-manager/commit/9ba5f618a8d08dac3c009adb87261f90ea352505))
 
-## [3.8.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.7.0...v3.8.0) (2023-08-13)
+## [3.8.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.7.0...v3.8.0) (2023-08-13)
 
 
 ### Features
 
-* 🎸 Add support for angular 14 inject() ([#142](https://github.com/ngneat/transloco-keys-manager/issues/142)) ([0d69c07](https://github.com/ngneat/transloco-keys-manager/commit/0d69c07c344231b4797dd56319303e2241c7715f))
+* 🎸 Add support for angular 14 inject() ([#142](https://github.com/jsverse/transloco-keys-manager/issues/142)) ([0d69c07](https://github.com/jsverse/transloco-keys-manager/commit/0d69c07c344231b4797dd56319303e2241c7715f))
 
 
 ### Bug Fixes
 
-* only search ts files for scopes ([#164](https://github.com/ngneat/transloco-keys-manager/issues/164)) ([d3e583f](https://github.com/ngneat/transloco-keys-manager/commit/d3e583fd15ee20cd072e865501e5c5da2724103a))
-* writeFileSync expects encoding to be in lowercase ([#157](https://github.com/ngneat/transloco-keys-manager/issues/157)) ([9ba5f61](https://github.com/ngneat/transloco-keys-manager/commit/9ba5f618a8d08dac3c009adb87261f90ea352505))
+* only search ts files for scopes ([#164](https://github.com/jsverse/transloco-keys-manager/issues/164)) ([d3e583f](https://github.com/jsverse/transloco-keys-manager/commit/d3e583fd15ee20cd072e865501e5c5da2724103a))
+* writeFileSync expects encoding to be in lowercase ([#157](https://github.com/jsverse/transloco-keys-manager/issues/157)) ([9ba5f61](https://github.com/jsverse/transloco-keys-manager/commit/9ba5f618a8d08dac3c009adb87261f90ea352505))
 
-## [3.7.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.2...v3.7.0) (2023-03-25)
+## [3.7.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.6.2...v3.7.0) (2023-03-25)
 
 
 ### Features
 
-* 🎸 add option to delete missing keys ([e19baa9](https://github.com/ngneat/transloco-keys-manager/commit/e19baa95baf66674cb6a993913766f5230106f55))
+* 🎸 add option to delete missing keys ([e19baa9](https://github.com/jsverse/transloco-keys-manager/commit/e19baa95baf66674cb6a993913766f5230106f55))
 
-### [3.6.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.1...v3.6.2) (2023-03-05)
+### [3.6.2](https://github.com/jsverse/transloco-keys-manager/compare/v3.6.1...v3.6.2) (2023-03-05)
 
 
 ### Bug Fixes
 
-* 🐛 normalized glob.sync calls ([#152](https://github.com/ngneat/transloco-keys-manager/issues/152)) ([1ec3d1b](https://github.com/ngneat/transloco-keys-manager/commit/1ec3d1b99dac584fa2cdc96637a57295d87c7e99))
+* 🐛 normalized glob.sync calls ([#152](https://github.com/jsverse/transloco-keys-manager/issues/152)) ([1ec3d1b](https://github.com/jsverse/transloco-keys-manager/commit/1ec3d1b99dac584fa2cdc96637a57295d87c7e99))
 
-### [3.6.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.6.0...v3.6.1) (2023-03-04)
+### [3.6.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.6.0...v3.6.1) (2023-03-04)
 
 
 ### Bug Fixes
  
-* added a glob ignore to the `resolveProjectBasePath` ([#150](https://github.com/ngneat/transloco-keys-manager/issues/150)) ([111bc3f](https://github.com/ngneat/transloco-keys-manager/commit/111bc3f991f998f0b99c464778c61a1235fdbc5c))
+* added a glob ignore to the `resolveProjectBasePath` ([#150](https://github.com/jsverse/transloco-keys-manager/issues/150)) ([111bc3f](https://github.com/jsverse/transloco-keys-manager/commit/111bc3f991f998f0b99c464778c61a1235fdbc5c))
 
-## [3.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.5.0...v3.6.0) (2023-03-04)
-
-
-### Features
-
-* 🎸 support workspaces without root configs ([2a8bbe8](https://github.com/ngneat/transloco-keys-manager/commit/2a8bbe8ee98b1492a189858838abcef897571194)), closes [#149](https://github.com/ngneat/transloco-keys-manager/issues/149)
-
-## [3.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.2...v3.5.0) (2022-12-16)
+## [3.6.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.5.0...v3.6.0) (2023-03-04)
 
 
 ### Features
 
-* 🎸 use jsonc-parser to parse configs ([#147](https://github.com/ngneat/transloco-keys-manager/issues/147)) ([66a5cde](https://github.com/ngneat/transloco-keys-manager/commit/66a5cde716139f01ce38ab7dd88a26ba68aa3e14))
+* 🎸 support workspaces without root configs ([2a8bbe8](https://github.com/jsverse/transloco-keys-manager/commit/2a8bbe8ee98b1492a189858838abcef897571194)), closes [#149](https://github.com/jsverse/transloco-keys-manager/issues/149)
 
-### [3.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.1...v3.4.2) (2022-08-19)
-
-
-### Bug Fixes
-
-* 🐛 scope mapping throws an error ([c696694](https://github.com/ngneat/transloco-keys-manager/commit/c69669416574bc35db8f3935261846a87f1577f1)), closes [#136](https://github.com/ngneat/transloco-keys-manager/issues/136)
-
-### [3.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.4.0...v3.4.1) (2022-04-08)
-
-
-### Bug Fixes
-
-* 🐛 support scopes with array as value ([425f34c](https://github.com/ngneat/transloco-keys-manager/commit/425f34c9b08ac50d1c493ab83ebec8b9de773a98)), closes [#128](https://github.com/ngneat/transloco-keys-manager/issues/128)
-
-## [3.4.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.6...v3.4.0) (2022-04-08)
+## [3.5.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.4.2...v3.5.0) (2022-12-16)
 
 
 ### Features
 
-* support pot format for the translation files ([#124](https://github.com/ngneat/transloco-keys-manager/issues/124)) ([658c4b0](https://github.com/ngneat/transloco-keys-manager/commit/658c4b005eaf5b5d8212844ac5abe111e7b09123)), closes [#45](https://github.com/ngneat/transloco-keys-manager/issues/45)
+* 🎸 use jsonc-parser to parse configs ([#147](https://github.com/jsverse/transloco-keys-manager/issues/147)) ([66a5cde](https://github.com/jsverse/transloco-keys-manager/commit/66a5cde716139f01ce38ab7dd88a26ba68aa3e14))
 
-### [3.3.6](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.5...v3.3.6) (2022-04-05)
-
-### [3.3.5](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.4...v3.3.5) (2022-03-31)
-
-### [3.3.4](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.3...v3.3.4) (2022-03-31)
-
-### [3.3.3](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.2...v3.3.3) (2022-01-23)
+### [3.4.2](https://github.com/jsverse/transloco-keys-manager/compare/v3.4.1...v3.4.2) (2022-08-19)
 
 
 ### Bug Fixes
 
-* 🐛 update vulnerable deps ([de2e4a3](https://github.com/ngneat/transloco-keys-manager/commit/de2e4a3061b4b118080290e55f7f93072a404c0a)), closes [#123](https://github.com/ngneat/transloco-keys-manager/issues/123)
+* 🐛 scope mapping throws an error ([c696694](https://github.com/jsverse/transloco-keys-manager/commit/c69669416574bc35db8f3935261846a87f1577f1)), closes [#136](https://github.com/jsverse/transloco-keys-manager/issues/136)
 
-### [3.3.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.1...v3.3.2) (2022-01-22)
-
-
-### Bug Fixes
-
-* 🐛 extract keys from template attrs ([e27d750](https://github.com/ngneat/transloco-keys-manager/commit/e27d75096303bc5fc7fc787566fd591ed58b5e0d)), closes [#119](https://github.com/ngneat/transloco-keys-manager/issues/119)
-
-### [3.3.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.3.0...v3.3.1) (2022-01-21)
+### [3.4.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.4.0...v3.4.1) (2022-04-08)
 
 
 ### Bug Fixes
 
-* 🐛 take first project from config if no default ([0c8f1bb](https://github.com/ngneat/transloco-keys-manager/commit/0c8f1bbcfeca3ca5a8a9133d2f82042316eb0637))
+* 🐛 support scopes with array as value ([425f34c](https://github.com/jsverse/transloco-keys-manager/commit/425f34c9b08ac50d1c493ab83ebec8b9de773a98)), closes [#128](https://github.com/jsverse/transloco-keys-manager/issues/128)
 
-## [3.3.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.2.1...v3.3.0) (2022-01-21)
+## [3.4.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.6...v3.4.0) (2022-04-08)
 
 
 ### Features
 
-* 🎸 support project level config ([0cb4bbd](https://github.com/ngneat/transloco-keys-manager/commit/0cb4bbd55b456f500a5ef7cb2e28c67f216dec68)), closes [#116](https://github.com/ngneat/transloco-keys-manager/issues/116)
+* support pot format for the translation files ([#124](https://github.com/jsverse/transloco-keys-manager/issues/124)) ([658c4b0](https://github.com/jsverse/transloco-keys-manager/commit/658c4b005eaf5b5d8212844ac5abe111e7b09123)), closes [#45](https://github.com/jsverse/transloco-keys-manager/issues/45)
 
-### [3.2.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.2.0...v3.2.1) (2022-01-10)
+### [3.3.6](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.5...v3.3.6) (2022-04-05)
+
+### [3.3.5](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.4...v3.3.5) (2022-03-31)
+
+### [3.3.4](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.3...v3.3.4) (2022-03-31)
+
+### [3.3.3](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.2...v3.3.3) (2022-01-23)
 
 
 ### Bug Fixes
 
-* 🐛 update buggy dep ([a028b0c](https://github.com/ngneat/transloco-keys-manager/commit/a028b0cbde413d5df8dd8d9a50550dcf400bead7)), closes [#121](https://github.com/ngneat/transloco-keys-manager/issues/121)
+* 🐛 update vulnerable deps ([de2e4a3](https://github.com/jsverse/transloco-keys-manager/commit/de2e4a3061b4b118080290e55f7f93072a404c0a)), closes [#123](https://github.com/jsverse/transloco-keys-manager/issues/123)
 
-## [3.2.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.1.1...v3.2.0) (2021-11-17)
+### [3.3.2](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.1...v3.3.2) (2022-01-22)
+
+
+### Bug Fixes
+
+* 🐛 extract keys from template attrs ([e27d750](https://github.com/jsverse/transloco-keys-manager/commit/e27d75096303bc5fc7fc787566fd591ed58b5e0d)), closes [#119](https://github.com/jsverse/transloco-keys-manager/issues/119)
+
+### [3.3.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.3.0...v3.3.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* 🐛 take first project from config if no default ([0c8f1bb](https://github.com/jsverse/transloco-keys-manager/commit/0c8f1bbcfeca3ca5a8a9133d2f82042316eb0637))
+
+## [3.3.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.2.1...v3.3.0) (2022-01-21)
 
 
 ### Features
 
-* 🎸 detect keys in pipes args ([#115](https://github.com/ngneat/transloco-keys-manager/issues/115)) ([063c39f](https://github.com/ngneat/transloco-keys-manager/commit/063c39fd06586b29afe85664efb1f3859065e399)), closes [#114](https://github.com/ngneat/transloco-keys-manager/issues/114)
+* 🎸 support project level config ([0cb4bbd](https://github.com/jsverse/transloco-keys-manager/commit/0cb4bbd55b456f500a5ef7cb2e28c67f216dec68)), closes [#116](https://github.com/jsverse/transloco-keys-manager/issues/116)
 
-### [3.1.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.1.0...v3.1.1) (2021-11-04)
+### [3.2.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.2.0...v3.2.1) (2022-01-10)
 
 
 ### Bug Fixes
 
-* 🐛 import for @ngneat/transloco-utils ([#113](https://github.com/ngneat/transloco-keys-manager/issues/113)) ([e8ee33b](https://github.com/ngneat/transloco-keys-manager/commit/e8ee33bf6063fcf8e80a909d0fa279729704d920))
+* 🐛 update buggy dep ([a028b0c](https://github.com/jsverse/transloco-keys-manager/commit/a028b0cbde413d5df8dd8d9a50550dcf400bead7)), closes [#121](https://github.com/jsverse/transloco-keys-manager/issues/121)
 
-## [3.1.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.4...v3.1.0) (2021-10-31)
+## [3.2.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.1.1...v3.2.0) (2021-11-17)
 
 
 ### Features
 
-* 🎸 support workspace.json configs ([953deaa](https://github.com/ngneat/transloco-keys-manager/commit/953deaa90a4a96b009f024124b182271ce6af86a)), closes [#72](https://github.com/ngneat/transloco-keys-manager/issues/72)
+* 🎸 detect keys in pipes args ([#115](https://github.com/jsverse/transloco-keys-manager/issues/115)) ([063c39f](https://github.com/jsverse/transloco-keys-manager/commit/063c39fd06586b29afe85664efb1f3859065e399)), closes [#114](https://github.com/jsverse/transloco-keys-manager/issues/114)
 
-### [3.0.4](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.3...v3.0.4) (2021-10-28)
-
-
-### Bug Fixes
-
-* 🐛 bad import ([dfbda7e](https://github.com/ngneat/transloco-keys-manager/commit/dfbda7e285cb1d1b3c04a60a4699ca197a20f03a))
-
-### [3.0.3](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.2...v3.0.3) (2021-10-28)
-
-### [3.0.2](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.1...v3.0.2) (2021-10-07)
+### [3.1.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.1.0...v3.1.1) (2021-11-04)
 
 
 ### Bug Fixes
 
-* 🐛 Keys Extractor does not extract key arrays ([#112](https://github.com/ngneat/transloco-keys-manager/issues/112)) ([852ccee](https://github.com/ngneat/transloco-keys-manager/commit/852ccee9a8ffda5dd71657649c9a93be79b9facf))
+* 🐛 import for @jsverse/transloco-utils ([#113](https://github.com/jsverse/transloco-keys-manager/issues/113)) ([e8ee33b](https://github.com/jsverse/transloco-keys-manager/commit/e8ee33bf6063fcf8e80a909d0fa279729704d920))
 
-### [3.0.1](https://github.com/ngneat/transloco-keys-manager/compare/v3.0.0...v3.0.1) (2021-09-28)
-
-
-### Bug Fixes
-
-* 🐛 handle pipes in interpolation ([#111](https://github.com/ngneat/transloco-keys-manager/issues/111)) ([bfbfec3](https://github.com/ngneat/transloco-keys-manager/commit/bfbfec376f8f4dbff707ae0164bbf5d5e28648e8)), closes [#109](https://github.com/ngneat/transloco-keys-manager/issues/109) [#109](https://github.com/ngneat/transloco-keys-manager/issues/109)
-
-## [3.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.5...v3.0.0) (2021-09-27)
+## [3.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v3.0.4...v3.1.0) (2021-10-31)
 
 
 ### Features
 
-* 🎸 run prettier on generated files ([6386b09](https://github.com/ngneat/transloco-keys-manager/commit/6386b092fb833752ffe1a898424290f2fe4c0f4f)), closes [#79](https://github.com/ngneat/transloco-keys-manager/issues/79)
-* 🎸 support inline templates ([a0b9eaa](https://github.com/ngneat/transloco-keys-manager/commit/a0b9eaa55bb0de94c587d6b0689fb2bd3e203d1a)), closes [#83](https://github.com/ngneat/transloco-keys-manager/issues/83)
+* 🎸 support workspace.json configs ([953deaa](https://github.com/jsverse/transloco-keys-manager/commit/953deaa90a4a96b009f024124b182271ce6af86a)), closes [#72](https://github.com/jsverse/transloco-keys-manager/issues/72)
 
-### [2.7.5](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.4...v2.7.5) (2021-09-13)
-
-
-### Bug Fixes
-
-* 🐛 false positive of prefix+marker(keys) inside comments ([#104](https://github.com/ngneat/transloco-keys-manager/issues/104)) ([eb71f58](https://github.com/ngneat/transloco-keys-manager/commit/eb71f58d53d0719a5f27e2c95d41feae68df748f))
-
-### [2.7.4](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.3...v2.7.4) (2021-07-15)
+### [3.0.4](https://github.com/jsverse/transloco-keys-manager/compare/v3.0.3...v3.0.4) (2021-10-28)
 
 
 ### Bug Fixes
 
-* 🐛 cli messages ([2997755](https://github.com/ngneat/transloco-keys-manager/commit/2997755b3a6b93ed2d4a21d14853a87a3b8a7f56)), closes [#95](https://github.com/ngneat/transloco-keys-manager/issues/95)
+* 🐛 bad import ([dfbda7e](https://github.com/jsverse/transloco-keys-manager/commit/dfbda7e285cb1d1b3c04a60a4699ca197a20f03a))
 
-### [2.7.3](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.2...v2.7.3) (2021-07-13)
+### [3.0.3](https://github.com/jsverse/transloco-keys-manager/compare/v3.0.2...v3.0.3) (2021-10-28)
 
-
-### Bug Fixes
-
-* 🐛 use webpack 5's modified file list when available ([#99](https://github.com/ngneat/transloco-keys-manager/issues/99)) ([6466972](https://github.com/ngneat/transloco-keys-manager/commit/6466972a30724d942745547c6e61b9de679de2eb)), closes [#98](https://github.com/ngneat/transloco-keys-manager/issues/98)
-
-### [2.7.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.1...v2.7.2) (2021-04-17)
-
-### [2.7.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.7.0...v2.7.1) (2020-12-12)
+### [3.0.2](https://github.com/jsverse/transloco-keys-manager/compare/v3.0.1...v3.0.2) (2021-10-07)
 
 
 ### Bug Fixes
 
-* 🐛 templateKey regex ([d5c5485](https://github.com/ngneat/transloco-keys-manager/commit/d5c54858bf6311f52bc715f9df21042a44085232)), closes [#70](https://github.com/ngneat/transloco-keys-manager/issues/70)
+* 🐛 Keys Extractor does not extract key arrays ([#112](https://github.com/jsverse/transloco-keys-manager/issues/112)) ([852ccee](https://github.com/jsverse/transloco-keys-manager/commit/852ccee9a8ffda5dd71657649c9a93be79b9facf))
 
-## [2.7.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.6.0...v2.7.0) (2020-10-31)
+### [3.0.1](https://github.com/jsverse/transloco-keys-manager/compare/v3.0.0...v3.0.1) (2021-09-28)
+
+
+### Bug Fixes
+
+* 🐛 handle pipes in interpolation ([#111](https://github.com/jsverse/transloco-keys-manager/issues/111)) ([bfbfec3](https://github.com/jsverse/transloco-keys-manager/commit/bfbfec376f8f4dbff707ae0164bbf5d5e28648e8)), closes [#109](https://github.com/jsverse/transloco-keys-manager/issues/109) [#109](https://github.com/jsverse/transloco-keys-manager/issues/109)
+
+## [3.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.5...v3.0.0) (2021-09-27)
 
 
 ### Features
 
-* 🎸 extend the default value replaceable options ([4f6cdbc](https://github.com/ngneat/transloco-keys-manager/commit/4f6cdbcae77eab35024272c413b0aed40674b688))
+* 🎸 run prettier on generated files ([6386b09](https://github.com/jsverse/transloco-keys-manager/commit/6386b092fb833752ffe1a898424290f2fe4c0f4f)), closes [#79](https://github.com/jsverse/transloco-keys-manager/issues/79)
+* 🎸 support inline templates ([a0b9eaa](https://github.com/jsverse/transloco-keys-manager/commit/a0b9eaa55bb0de94c587d6b0689fb2bd3e203d1a)), closes [#83](https://github.com/jsverse/transloco-keys-manager/issues/83)
 
-## [2.6.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.5.0...v2.6.0) (2020-09-20)
-
-
-### Features
-
-* 🎸 support library extraction ([3d6c287](https://github.com/ngneat/transloco-keys-manager/commit/3d6c287c0e6ce81f4379be5b727d55b8c2b90508)), closes [#54](https://github.com/ngneat/transloco-keys-manager/issues/54)
-
-## [2.5.0](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.2...v2.5.0) (2020-09-20)
-
-
-### Features
-
-* 🎸 exclude comments as extra keys in detective ([6bef047](https://github.com/ngneat/transloco-keys-manager/commit/6bef047683f437c2de0a1f710f7e3d1fc105ecb0)), closes [#56](https://github.com/ngneat/transloco-keys-manager/issues/56)
-
-### [2.4.2](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.1...v2.4.2) (2020-09-19)
+### [2.7.5](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.4...v2.7.5) (2021-09-13)
 
 
 ### Bug Fixes
 
-* 🐛 webpack wrong extraction when unflat with several langs ([33cb1cb](https://github.com/ngneat/transloco-keys-manager/commit/33cb1cbb7b475a6e4f3f38f5b148932e6b3a88b4)), closes [#46](https://github.com/ngneat/transloco-keys-manager/issues/46)
+* 🐛 false positive of prefix+marker(keys) inside comments ([#104](https://github.com/jsverse/transloco-keys-manager/issues/104)) ([eb71f58](https://github.com/jsverse/transloco-keys-manager/commit/eb71f58d53d0719a5f27e2c95d41feae68df748f))
+
+### [2.7.4](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.3...v2.7.4) (2021-07-15)
+
+
+### Bug Fixes
+
+* 🐛 cli messages ([2997755](https://github.com/jsverse/transloco-keys-manager/commit/2997755b3a6b93ed2d4a21d14853a87a3b8a7f56)), closes [#95](https://github.com/jsverse/transloco-keys-manager/issues/95)
+
+### [2.7.3](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.2...v2.7.3) (2021-07-13)
+
+
+### Bug Fixes
+
+* 🐛 use webpack 5's modified file list when available ([#99](https://github.com/jsverse/transloco-keys-manager/issues/99)) ([6466972](https://github.com/jsverse/transloco-keys-manager/commit/6466972a30724d942745547c6e61b9de679de2eb)), closes [#98](https://github.com/jsverse/transloco-keys-manager/issues/98)
+
+### [2.7.2](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.1...v2.7.2) (2021-04-17)
+
+### [2.7.1](https://github.com/jsverse/transloco-keys-manager/compare/v2.7.0...v2.7.1) (2020-12-12)
+
+
+### Bug Fixes
+
+* 🐛 templateKey regex ([d5c5485](https://github.com/jsverse/transloco-keys-manager/commit/d5c54858bf6311f52bc715f9df21042a44085232)), closes [#70](https://github.com/jsverse/transloco-keys-manager/issues/70)
+
+## [2.7.0](https://github.com/jsverse/transloco-keys-manager/compare/v2.6.0...v2.7.0) (2020-10-31)
+
+
+### Features
+
+* 🎸 extend the default value replaceable options ([4f6cdbc](https://github.com/jsverse/transloco-keys-manager/commit/4f6cdbcae77eab35024272c413b0aed40674b688))
+
+## [2.6.0](https://github.com/jsverse/transloco-keys-manager/compare/v2.5.0...v2.6.0) (2020-09-20)
+
+
+### Features
+
+* 🎸 support library extraction ([3d6c287](https://github.com/jsverse/transloco-keys-manager/commit/3d6c287c0e6ce81f4379be5b727d55b8c2b90508)), closes [#54](https://github.com/jsverse/transloco-keys-manager/issues/54)
+
+## [2.5.0](https://github.com/jsverse/transloco-keys-manager/compare/v2.4.2...v2.5.0) (2020-09-20)
+
+
+### Features
+
+* 🎸 exclude comments as extra keys in detective ([6bef047](https://github.com/jsverse/transloco-keys-manager/commit/6bef047683f437c2de0a1f710f7e3d1fc105ecb0)), closes [#56](https://github.com/jsverse/transloco-keys-manager/issues/56)
+
+### [2.4.2](https://github.com/jsverse/transloco-keys-manager/compare/v2.4.1...v2.4.2) (2020-09-19)
+
+
+### Bug Fixes
+
+* 🐛 webpack wrong extraction when unflat with several langs ([33cb1cb](https://github.com/jsverse/transloco-keys-manager/commit/33cb1cbb7b475a6e4f3f38f5b148932e6b3a88b4)), closes [#46](https://github.com/ngneat/transloco-keys-manager/issues/46)
 
 ### [2.4.1](https://github.com/ngneat/transloco-keys-manager/compare/v2.4.0...v2.4.1) (2020-09-19)
 

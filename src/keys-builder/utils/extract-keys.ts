@@ -2,6 +2,7 @@ import {
   Config,
   ExtractionResult,
   ExtractorConfig,
+  FileType,
   ScopeMap,
 } from '../../types';
 import { initExtraction } from '../../utils/init-extraction';
@@ -10,14 +11,14 @@ import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
   { input, scopes, defaultValue, files }: Config,
-  fileType: 'ts' | 'html',
-  extractor: (config: ExtractorConfig) => ScopeMap
+  fileType: FileType,
+  extractor: (config: ExtractorConfig) => ScopeMap,
 ): ExtractionResult {
   let { scopeToKeys } = initExtraction();
 
-
   const fileList =
-    files || input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
+    files ||
+    input.map((path) => normalizedGlob(`${path}/**/*.${fileType}`)).flat();
 
   for (const file of fileList) {
     devlog('extraction', 'Extracting keys', { file, fileType });

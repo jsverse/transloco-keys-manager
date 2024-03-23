@@ -3,7 +3,7 @@ import { BaseParams } from '../types';
 import { isNil } from '../utils/validators.utils';
 
 interface AddKeysParams extends BaseParams {
-  scopeAlias: string;
+  scopeAlias: string | null;
   keyWithoutScope: string;
 }
 
@@ -18,7 +18,7 @@ export function addKey({
     return;
   }
 
-  const scopePath = scopes.aliasToScope[scopeAlias];
+  const scopePath = scopeAlias && scopes.aliasToScope[scopeAlias];
   const keyWithScope = scopeAlias
     ? `${scopeAlias}.${keyWithoutScope}`
     : keyWithoutScope;
@@ -27,7 +27,7 @@ export function addKey({
     : defaultValue
         .replace('{{key}}', keyWithScope)
         .replace('{{keyWithoutScope}}', keyWithoutScope)
-        .replace('{{scope}}', scopeAlias);
+        .replace('{{scope}}', scopeAlias || '');
 
   if (scopePath) {
     if (!scopeToKeys[scopePath]) {

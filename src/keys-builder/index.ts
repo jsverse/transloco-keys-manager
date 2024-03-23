@@ -9,14 +9,14 @@ import { buildKeys } from './build-keys';
 import { createTranslationFiles } from './create-translation-files';
 
 /** The main function, collects the settings and starts the files build. */
-export function buildTranslationFiles(inlineConfig: Config) {
+export async function buildTranslationFiles(inlineConfig: Config) {
   const logger = getLogger();
   const config = resolveConfig(inlineConfig);
 
   setConfig(config);
   logger.log(
     '\x1b[4m%s\x1b[0m',
-    `\n${messages.startBuild(config.langs.length)} 👷🏗\n`
+    `\n${messages.startBuild(config.langs.length)} 👷🏗\n`,
   );
   logger.startSpinner(`${messages.extract} 🗝`);
 
@@ -33,10 +33,10 @@ export function buildTranslationFiles(inlineConfig: Config) {
   logger.log(
     '\x1b[34m%s\x1b[0m',
     'ℹ',
-    messages.keysFound(keysFound, fileCount)
+    messages.keysFound(keysFound, fileCount),
   );
 
-  createTranslationFiles({
+  await createTranslationFiles({
     scopeToKeys,
     ...config,
   });

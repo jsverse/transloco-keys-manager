@@ -13,13 +13,16 @@ export function stringify(val: object) {
   return JSON.stringify(value, null, 2);
 }
 
-function sortKeys(val: object) {
+function sortKeys(val: Record<string, any>) {
   return Object.keys(val)
     .sort()
-    .reduce((acc, key) => {
-      acc[key] = isObject(val[key]) ? sortKeys(val[key]) : val[key];
-      return acc;
-    }, {});
+    .reduce(
+      (acc, key) => {
+        acc[key] = isObject(val[key]) ? sortKeys(val[key]) : val[key];
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 }
 
 export function mergeDeep(target: object, ...sources: any[]) {

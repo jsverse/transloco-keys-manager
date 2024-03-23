@@ -1,16 +1,27 @@
-// import-conductor-skip
-import { Config, FileFormats, Translation } from '../src/types';
+import fs from 'fs-extra';
+import { jest } from '@jest/globals';
 
-jest.mock('../src/utils/resolve-project-base-path');
-import * as fs from 'fs-extra';
-
-import { buildTranslationFiles } from '../src/keys-builder';
-import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
 import { resetScopes } from '../src/keys-builder/utils/scope.utils';
 import { messages } from '../src/messages';
-import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
+import { Config, FileFormats, Translation } from '../src/types';
+import {
+  spyOnConsole,
+  spyOnProcess,
+  mockResolveProjectBasePath,
+} from './utils';
 
 const sourceRoot = '__tests__';
+mockResolveProjectBasePath(sourceRoot);
+
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
+const { buildTranslationFiles } = await import('../src/keys-builder');
+const { getCurrentTranslation } = await import(
+  '../src/keys-builder/utils/get-current-translation'
+);
 
 const defaultValue = 'missing';
 
@@ -30,17 +41,14 @@ function generateKeys({
   return keys;
 }
 
-function gConfig(
-  type: TranslationCategory,
-  config: Partial<Config> = {}
-): Config {
+function gConfig(type: TranslationCategory, config: Partial<Config> = {}) {
   return {
     input: [`${type}`],
     output: `${type}/i18n`,
     langs: ['en', 'es', 'it'],
     defaultValue: defaultValue,
     ...config,
-  };
+  } as Config;
 }
 
 type TranslationCategory =
@@ -58,7 +66,9 @@ type TranslationCategory =
   | 'multi-input'
   | 'scope-mapping'
   | 'comments'
-  | 'remove-extra-keys';
+  | 'remove-extra-keys'
+  | 'self-closing'
+  | 'control-flow';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
   type: TranslationCategory;
@@ -86,8 +96,8 @@ function assertPartialTranslation({
 
 function loadTranslationFile(
   type: TranslationCategory,
-  path: string,
-  fileFormat: FileFormats
+  path: string | undefined,
+  fileFormat: FileFormats,
 ) {
   return getCurrentTranslation({
     path: `./${sourceRoot}/${type}/i18n/${path || ''}en.${fileFormat}`,
@@ -107,9 +117,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   }
 
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => {
-      return { projectBasePath: sourceRoot };
-    });
+    spyOnConsole('warn');
+    spyOnProcess('exit');
   });
 
   // Reset to ensure the scopes are not being shared among the tests.
@@ -128,7 +137,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           '49.50.51.52': defaultValue,
           ...generateKeys({ start: 53, end: 62 }),
           '63.64.65': defaultValue,
-          ...generateKeys({ start: 66, end: 78 }),
+          ...generateKeys({ start: 66, end: 79 }),
+          '{{count}} items': defaultValue,
         };
         [
           'Restore Options',
@@ -152,11 +162,11 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with directive', () => {
-        const expected = generateKeys({ end: 23 });
+        const expected = generateKeys({ end: 24 });
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
@@ -206,7 +216,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with ngTemplate', () => {
-        let expected = generateKeys({ end: 41 });
+        let expected = generateKeys({ end: 42 });
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
@@ -227,6 +237,19 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           path: 'todos-page/',
           fileFormat,
         });
+      });
+    });
+
+    describe('Control flow', () => {
+      const type: TranslationCategory = 'control-flow';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with control flow', () => {
+        let expected = generateKeys({ end: 26 });
+        createTranslations(config);
+        assertTranslation({ type, expected, fileFormat });
       });
     });
 
@@ -369,7 +392,7 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
         ['Processing archive...', 'Restore Options'].forEach(
           (nonNumericKey) => {
             expected[nonNumericKey] = defaultValue;
-          }
+          },
         );
         createTranslations(config);
         assertTranslation({ type, expected, fileFormat });

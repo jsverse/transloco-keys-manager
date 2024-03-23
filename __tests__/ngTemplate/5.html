@@ -14,4 +14,7 @@ test('39.1')
   <my-comp [aa]="t('39') + 'a'">
     <comp a="{{t('40') + 'a'}}">{{t('41') + 'a'}}</comp>
   </my-comp>
+  <ng-template>
+    <self-closing [value]="t('42')" />
+  </ng-template>
 </ng-container>

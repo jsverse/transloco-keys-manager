@@ -1,4 +1,4 @@
-import path, { sep } from 'path';
+import path, { sep } from 'node:path';
 
 import { getConfig } from '../config';
 import { Config, Scopes } from '../types';
@@ -9,7 +9,7 @@ export function pathUnixFormat(path: string) {
   return path.split(sep).join('/');
 }
 
-export function buildPath(obj: object) {
+export function buildPath(obj: Record<string, any>) {
   return Object.keys(obj).reduce((acc, curr) => {
     const keys = isObject(obj[curr])
       ? buildPath(obj[curr]).map((inner) => `${curr}.${inner}`)
@@ -17,7 +17,7 @@ export function buildPath(obj: object) {
     acc.push(...keys);
 
     return acc;
-  }, []);
+  }, [] as string[]);
 }
 
 interface Options extends Pick<Config, 'fileFormat' | 'translationsPath'> {
@@ -36,7 +36,7 @@ export function getScopeAndLangFromPath({
   filePath = pathUnixFormat(filePath);
   translationsPath = pathUnixFormat(translationsPath);
 
-  if (translationsPath.endsWith('/') === false) {
+  if (!translationsPath.endsWith('/')) {
     translationsPath = `${translationsPath}/`;
   }
 
@@ -46,7 +46,7 @@ export function getScopeAndLangFromPath({
 
   let scope, lang;
   if (scopePath.length > 1) {
-    lang = removeExtension(scopePath.pop());
+    lang = removeExtension(scopePath.pop()!);
     scope = scopePath.join('/');
   } else {
     lang = removeExtension(scopePath[0]);
@@ -56,12 +56,12 @@ export function getScopeAndLangFromPath({
 }
 
 export function resolveConfigPaths(config: Config, sourceRoot: string) {
-  const resolvePath = (configPath) =>
-    path.resolve(process.cwd(), sourceRoot, configPath);
+  const resolvePath = (configPath?: string) =>
+    path.resolve(process.cwd(), sourceRoot, configPath || '');
+
   config.input = config.input.map(resolvePath);
-  ['output', 'translationsPath'].forEach((prop) => {
-    config[prop] = resolvePath(config[prop]);
-  });
+  config.output = resolvePath(config.output);
+  config.translationsPath = resolvePath(config.translationsPath);
 }
 
 type ScopeFiles = { path: string; scope: string }[];
@@ -90,6 +90,6 @@ export function buildScopeFilePaths({
 
       return files;
     },
-    []
+    [],
   );
 }

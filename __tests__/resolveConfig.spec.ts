@@ -1,36 +1,54 @@
-// import-conductor-skip
-jest.mock('../src/utils/resolve-project-base-path');
-jest.mock('@ngneat/transloco-utils');
-import { getGlobalConfig } from '@ngneat/transloco-utils';
 import chalk from 'chalk';
-import * as path from 'path';
+import path from 'node:path';
+import { jest } from '@jest/globals';
+import type { SpyInstance } from 'jest-mock';
 
-import { Config } from '../src/types';
 import { defaultConfig as _defaultConfig } from '../src/config';
-import { resolveConfig } from '../src/utils/resolve-config';
-import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 import { messages } from '../src/messages';
 
-function noop() {}
+import {
+  spyOnConsole,
+  spyOnProcess,
+  mockResolveProjectBasePath,
+} from './utils';
+
+const sourceRoot = '__tests__';
+let mockedGloblConfig;
+
+mockResolveProjectBasePath(sourceRoot);
+
+jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
+  getGlobalConfig: () => mockedGloblConfig,
+}));
+
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
+const { resolveConfig } = await import('../src/utils/resolve-config');
 
 describe('resolveConfig', () => {
-  const sourceRoot = '__tests__';
   const inlineConfig = {
     defaultValue: 'test2',
     input: ['somePath'],
     outputFormat: 'pot',
   };
-  let spies;
+  let spies: SpyInstance[];
+  let processExitSpy: SpyInstance;
+  let consoleLogSpy: SpyInstance;
   let defaultConfig = _defaultConfig();
+
   beforeAll(() => {
-    (resolveProjectBasePath as any).mockImplementation(() => {
-      return { projectBasePath: sourceRoot };
-    });
-    (getGlobalConfig as any).mockImplementation(() => ({}));
-    spies = [
-      jest.spyOn(process, 'exit').mockImplementation(noop as any),
-      jest.spyOn(console, 'log').mockImplementation(noop as any),
-    ];
+    mockedGloblConfig = {};
+    processExitSpy = spyOnProcess('exit');
+    consoleLogSpy = spyOnConsole('log');
+    spies = [processExitSpy, consoleLogSpy];
+  });
+
+  afterAll(() => {
+    processExitSpy.mockRestore();
+    consoleLogSpy.mockRestore();
   });
 
   function resolvePath(configPath: string[]): string[];
@@ -58,7 +76,7 @@ describe('resolveConfig', () => {
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
       fileFormat: 'json',
-    } as Config;
+    };
     assertConfig(expected);
   });
 
@@ -70,7 +88,7 @@ describe('resolveConfig', () => {
       input: resolvePath(inlineConfig.input),
       output: resolvePath(defaultConfig.output),
       translationsPath: resolvePath(defaultConfig.translationsPath),
-    } as Config;
+    };
     assertConfig(expected, inlineConfig);
   });
 
@@ -85,10 +103,13 @@ describe('resolveConfig', () => {
       },
     };
 
-    beforeAll(() =>
-      (getGlobalConfig as any).mockImplementation(() => translocoConfig)
-    );
-    afterAll(() => (getGlobalConfig as any).mockImplementation(() => ({})));
+    beforeAll(() => {
+      mockedGloblConfig = translocoConfig;
+    });
+
+    afterAll(() => {
+      mockedGloblConfig = {};
+    });
 
     it('should merge the default and the transloco config', () => {
       const expected = {
@@ -98,7 +119,7 @@ describe('resolveConfig', () => {
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
         langs: translocoConfig.langs,
-      } as Config;
+      };
       assertConfig(expected);
     });
 
@@ -111,29 +132,29 @@ describe('resolveConfig', () => {
         output: resolvePath(translocoConfig.keysManager.output),
         translationsPath: resolvePath(translocoConfig.rootTranslationsPath),
         langs: translocoConfig.langs,
-      } as Config;
+      };
       assertConfig(expected, inlineConfig);
     });
   });
 
   describe('validate directories', () => {
     function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
-      expect(process.exit).toHaveBeenCalled();
-      expect(console.log).toHaveBeenCalledWith(
-        chalk.bgRed.black(`${prop} ${messages[msg]}`)
+      expect(processExitSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        chalk.bgRed.black(`${prop} ${messages[msg]}`),
       );
-      resetSpies();
+      clearSpies();
     }
 
     function shouldPass() {
-      [process.exit, console.log].forEach((s) =>
-        expect(s).not.toHaveBeenCalled()
+      [processExitSpy, consoleLogSpy].forEach((s) =>
+        expect(s).not.toHaveBeenCalled(),
       );
-      resetSpies();
+      clearSpies();
     }
 
-    function resetSpies() {
-      spies.forEach((s) => s.mockReset());
+    function clearSpies() {
+      spies.forEach((s) => s.mockClear());
     }
 
     it('should fail on invalid input path', () => {
@@ -175,11 +196,11 @@ describe('resolveConfig', () => {
       const config = resolveConfig({ input: ['comments'] });
       const assertPath = (p) =>
         expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
-          true
+          true,
         );
       config.input.forEach(assertPath);
       ['output', 'translationsPath'].forEach((prop) =>
-        assertPath(config[prop])
+        assertPath(config[prop]),
       );
     });
   });

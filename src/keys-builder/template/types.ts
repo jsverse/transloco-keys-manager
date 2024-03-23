@@ -1,4 +1,4 @@
-import { ExtractorConfig } from '../../types';
+import type { ExtractorConfig } from '../../types.js';
 
 export interface TemplateExtractorConfig extends ExtractorConfig {
   content?: string;

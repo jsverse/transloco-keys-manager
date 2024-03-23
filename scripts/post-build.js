@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 // const glob = require("glob");
 // const terser = require("terser");
 
@@ -6,9 +6,16 @@ const fs = require('fs');
 copyAssets();
 
 function copyAssets() {
-    const {scripts, devDependencies, ['lint-staged']: _, config, husky, ...cleanPackage} = JSON.parse(fs.readFileSync('package.json').toString());
-    fs.writeFileSync('dist/package.json', JSON.stringify(cleanPackage, null, 2));
-    fs.copyFileSync('README.md', 'dist/README.md');
+  const {
+    scripts,
+    devDependencies,
+    ['lint-staged']: _,
+    config,
+    husky,
+    ...cleanPackage
+  } = JSON.parse(fs.readFileSync('package.json').toString());
+  fs.writeFileSync('dist/package.json', JSON.stringify(cleanPackage, null, 2));
+  fs.copyFileSync('README.md', 'dist/README.md');
 }
 
 // function minify() {
