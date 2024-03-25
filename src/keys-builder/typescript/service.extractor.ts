@@ -2,7 +2,7 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 import { SourceFile } from 'typescript';
 import ts from 'typescript';
 
-import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
+import { buildTranslateKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
 
 export function serviceExtractor(ast: SourceFile): TSExtractorResult {
@@ -26,7 +26,7 @@ export function serviceExtractor(ast: SourceFile): TSExtractorResult {
         `PropertyAccessExpression:has([name=${propName}])`,
       );
 
-      result = result.concat(buildKeysFromASTNodes(methodNodes));
+      result = result.concat(buildTranslateKeysFromASTNodes(methodNodes));
     }
   }
 
