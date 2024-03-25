@@ -1,4 +1,4 @@
-import { marker } from '@ngneat/transloco-keys-manager/marker';
+import { marker } from '@jsverse/transloco-keys-manager/marker';
 
 @Component({
   selector: 'bla-bla',

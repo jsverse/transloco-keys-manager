@@ -28,11 +28,11 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   const content = readFile(file);
   const extractors = [];
 
-  if (content.includes('@ngneat/transloco')) {
+  if (content.includes('@ngneat/transloco') || content.includes('@jsverse/transloco')) {
     extractors.push(serviceExtractor, pureFunctionExtractor);
   }
 
-  if (content.includes('@ngneat/transloco-keys-manager')) {
+  if (content.includes('@jsverse/transloco-keys-manager')) {
     extractors.push(markerExtractor);
   }
 
