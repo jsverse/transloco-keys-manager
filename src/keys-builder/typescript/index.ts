@@ -23,16 +23,18 @@ export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
 }
 
+const translocoImport = /@(jsverse|ngneat)\/transloco/;
+const translocoKeysManagerImport = /@(jsverse|ngneat)\/transloco-keys-manager/;
 function TSExtractor(config: ExtractorConfig): ScopeMap {
   const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
   const extractors = [];
 
-  if (content.includes('@ngneat/transloco')) {
+  if (translocoImport.test(content)) {
     extractors.push(serviceExtractor, pureFunctionExtractor);
   }
 
-  if (content.includes('@ngneat/transloco-keys-manager')) {
+  if (translocoKeysManagerImport.test(content)) {
     extractors.push(markerExtractor);
   }
 

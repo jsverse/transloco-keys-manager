@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TRANSLOCO_SCOPE } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-home',
