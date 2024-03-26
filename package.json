@@ -10,6 +10,10 @@
     ".": {
       "import": "./public-api.js",
       "types": "./public-api.d.ts"
+    },
+    "./marker": {
+      "import": "./marker.js",
+      "types": "./marker.d.ts"
     }
   },
   "bin": {
@@ -48,14 +52,6 @@
     "webpack"
   ],
   "author": "Shahar Kazaz",
-  "maintainers": [
-    {
-      "name": "Shahar Kazaz"
-    },
-    {
-      "name": "Netanel Basal"
-    }
-  ],
   "bugs": {
     "url": "https://github.com/jsverse/transloco-keys-manager/issues"
   },
