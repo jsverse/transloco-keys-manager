@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.0.0...v4.0.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* 🐛 jsverse import resolution ([#182](https://github.com/jsverse/transloco-keys-manager/issues/182)) ([ba1285a](https://github.com/jsverse/transloco-keys-manager/commit/ba1285a803364e8bb21afd093079a7d95d9935a7))
+* 🐛 package exports ([770a3d9](https://github.com/jsverse/transloco-keys-manager/commit/770a3d9db3e7012975abcd64c2839dd3b023cad3)), closes [#181](https://github.com/jsverse/transloco-keys-manager/issues/181)
+
 ## [4.0.0](https://github.com/ngneat/transloco-keys-manager/compare/v3.8.0...v4.0.0) (2024-03-23)
 
 
