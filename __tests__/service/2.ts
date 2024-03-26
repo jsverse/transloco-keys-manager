@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { TranslocoService, TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TranslocoService, TRANSLOCO_SCOPE } from '@jsverse/transloco';
 
 const SEARCH_INTERVAL = 400;
 const ITEM_ANIMATION_DURATION = 350;

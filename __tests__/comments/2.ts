@@ -4,7 +4,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, HostBinding, Input, Output, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { translate } from '@ngneat/transloco';
+import { translate } from '@jsverse/transloco';
 
 export type ExtendedGridOptions = {
   onRowDataUpdated: (event) => void;

@@ -15,7 +15,7 @@ import {
   TranslocoService,
   translate,
   TRANSLOCO_SCOPE,
-} from '@ngneat/transloco';
+} from '@jsverse/transloco';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 /** t(18) * */
 @Component({
