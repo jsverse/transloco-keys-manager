@@ -23,7 +23,7 @@ export function serviceExtractor(ast: SourceFile): TSExtractorResult {
       const propName = serviceName.name.getText();
       const methodNodes = tsquery(
         ast,
-        `PropertyAccessExpression:has([name=${propName}])`,
+        `PropertyAccessExpression:has([text="${propName}"])`,
       );
 
       result = result.concat(buildKeysFromASTNodes(methodNodes));
