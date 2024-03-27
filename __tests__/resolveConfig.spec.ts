@@ -17,7 +17,7 @@ let mockedGloblConfig;
 
 mockResolveProjectBasePath(sourceRoot);
 
-jest.unstable_mockModule('@ngneat/transloco-utils', () => ({
+jest.unstable_mockModule('@jsverse/transloco-utils', () => ({
   getGlobalConfig: () => mockedGloblConfig,
 }));
 

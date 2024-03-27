@@ -1,7 +1,7 @@
 import {
   getGlobalConfig,
   TranslocoGlobalConfig,
-} from '@ngneat/transloco-utils';
+} from '@jsverse/transloco-utils';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 

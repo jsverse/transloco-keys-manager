@@ -1,4 +1,4 @@
-import { getGlobalConfig } from '@ngneat/transloco-utils';
+import { getGlobalConfig } from '@jsverse/transloco-utils';
 import type { DiffDeleted, DiffNew } from 'deep-diff';
 import df from 'deep-diff';
 import { flatten } from 'flat';
