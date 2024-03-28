@@ -48,10 +48,10 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   extractors
     .map((ex) => ex(ast))
     .flat()
-    .forEach(({ key, lang }) => {
-      const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
+    .forEach(({ key, scope }) => {
+      const [keyWithoutScope, scopeAlias] = resolveKeyAndScopeAliasFunctions(
         key,
-        lang,
+        scope,
         scopes,
       );
       addKey({
@@ -73,16 +73,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   return scopeToKeys;
 }
 
-/**
- *
- * It can be one of the following:
- *
- * translate('2', {}, 'some/nested');
- * translate('3', {}, 'some/nested/en');
- * translate('globalKey');
- *
- */
-function resolveAliasAndKeyFromService(
+function resolveKeyAndScopeAliasFunctions(
   key: string,
   scopePath: string,
   scopes: Scopes,
