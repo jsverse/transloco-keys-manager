@@ -64,6 +64,7 @@ type TranslationCategory =
   | 'unflat-sort'
   | 'unflat-problematic-keys'
   | 'multi-input'
+  | 'scope'
   | 'scope-mapping'
   | 'comments'
   | 'remove-extra-keys'
@@ -294,6 +295,42 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           expected: expected.todos,
           path: 'todos-page/',
           fileFormat,
+        });
+      });
+    });
+
+    describe('scope', () => {
+      const type: TranslationCategory = 'scope';
+      const config = gConfig(type);
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with scope', () => {
+        const scopes = [
+          'scope1',
+          'scope2',
+          'scope3',
+          'scope4',
+          'scope5',
+          'scope6',
+          'scope7',
+          'scope8',
+          'scope9',
+        ];
+
+        const expected = scopes.reduce(
+          (acc, scope) => ({ ...acc, [scope]: generateKeys({ end: 1 }) }),
+          {},
+        );
+
+        createTranslations(config);
+        scopes.forEach((scope) => {
+          assertTranslation({
+            type,
+            expected: expected[scope],
+            path: `${scope}/`,
+            fileFormat,
+          });
         });
       });
     });
