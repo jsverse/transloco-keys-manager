@@ -1,4 +1,4 @@
-import { TranslocoGlobalConfig } from '@ngneat/transloco-utils';
+import { TranslocoGlobalConfig } from '@jsverse/transloco-utils';
 import { unflatten } from 'flat';
 import { sync as globSync } from 'glob';
 import { basename } from 'node:path';
