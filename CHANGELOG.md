@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.0.1...v4.1.0) (2024-04-01)
+
+
+### Features
+
+* 🎸 handle private class field ([#187](https://github.com/jsverse/transloco-keys-manager/issues/187)) ([595138b](https://github.com/jsverse/transloco-keys-manager/commit/595138bf16c839e8aed4d7019c251dea7b0937f2)), closes [#166](https://github.com/jsverse/transloco-keys-manager/issues/166)
+
+
+### Bug Fixes
+
+* 🐛 use @jsverse/transloco-utils ([#186](https://github.com/jsverse/transloco-keys-manager/issues/186)) ([3a433ee](https://github.com/jsverse/transloco-keys-manager/commit/3a433eed572c529af9e616913bb85c60b4123a2e))
+
 ### [4.0.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.0.0...v4.0.1) (2024-03-26)
 
 
