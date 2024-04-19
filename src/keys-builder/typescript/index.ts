@@ -1,4 +1,4 @@
-import { tsquery } from '@phenomnomnominal/tsquery';
+import { tsquery, ScriptKind } from '@phenomnomnominal/tsquery';
 
 import {
   Config,
@@ -38,7 +38,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
     extractors.push(markerExtractor);
   }
 
-  const ast = tsquery.ast(content);
+  const ast = tsquery.ast(content, undefined, ScriptKind.TS);
   const baseParams = {
     scopeToKeys,
     scopes,

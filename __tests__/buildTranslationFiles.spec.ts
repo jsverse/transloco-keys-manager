@@ -68,6 +68,7 @@ type TranslationCategory =
   | 'comments'
   | 'remove-extra-keys'
   | 'self-closing'
+  | 'pure-function'
   | 'control-flow';
 
 interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
@@ -361,6 +362,20 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
         createTranslations(config);
         assertPartialTranslation({ type, expected, fileFormat });
+      });
+    });
+
+    describe('pure-function', () => {
+      const type: TranslationCategory = 'pure-function';
+
+      beforeEach(() => removeI18nFolder(type));
+
+      it('should work with the pure `translate` function', () => {
+        const config = gConfig(type);
+
+        let expected = generateKeys({ end: 3 });
+        createTranslations(config);
+        assertTranslation({ type, expected, fileFormat });
       });
     });
 

@@ -1,10 +1,10 @@
-import { tsquery } from '@phenomnomnominal/tsquery';
+import { ScriptKind, tsquery } from '@phenomnomnominal/tsquery';
 import {
-  StringLiteral,
+  Node,
+  NodeArray,
   ObjectLiteralExpression,
   PropertyAssignment,
-  NodeArray,
-  Node,
+  StringLiteral,
 } from 'typescript';
 
 import { addScope, hasScope } from '../keys-builder/utils/scope.utils';
@@ -91,7 +91,7 @@ export function updateScopesMap({
 
     let result: ScopeDef | ScopeDef[] | undefined;
 
-    const ast = tsquery.ast(content);
+    const ast = tsquery.ast(content, undefined, ScriptKind.TS);
 
     for (const { query, resolver } of scopeValueQueries) {
       const nodes = tsquery(ast, `${baseQuery} > ${query}`);
