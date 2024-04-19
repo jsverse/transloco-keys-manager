@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.1.0...v4.1.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* 🐛 TypeScript prefix cast operator ast issue ([1cf3ab8](https://github.com/jsverse/transloco-keys-manager/commit/1cf3ab8a1700fd17523fc39b30ec27b2b4d1a258)), closes [#192](https://github.com/jsverse/transloco-keys-manager/issues/192)
+
 ## [4.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.0.1...v4.1.0) (2024-04-01)
 
 
