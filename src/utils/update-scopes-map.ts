@@ -15,21 +15,21 @@ import { readFile } from './file.utils';
 import { toCamelCase } from './string.utils';
 import { normalizedGlob } from './normalize-glob-path';
 
-type Alias = string;
 type Scope = string;
+type Alias = string;
 
 interface ScopeDef {
-  scope?: Alias;
-  alias?: Scope;
+  scope?: Scope;
+  alias?: Alias;
 }
 
 interface QueryDef {
   query: string;
-  resolver: (node: Node[]) => ScopeDef | ScopeDef[];
+  resolver: (node: Node[]) => ScopeDef;
 }
 
-// TODO add provideScope
-const baseQuery = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) PropertyAssignment:has(Identifier[name=/useValue|useFactory/])`;
+const tokenProviderQuery = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) > PropertyAssignment > Identifier[name=/useValue|useFactory/]`;
+const functionProviderQuery = `CallExpression > Identifier[name=provideTranslocoScope]`;
 
 const stringQueryDef: QueryDef = {
   query: `StringLiteral`,
@@ -37,7 +37,7 @@ const stringQueryDef: QueryDef = {
 };
 
 const objectQueryDef: QueryDef = {
-  query: 'ObjectLiteralExpression',
+  query: 'ObjectLiteralExpression:has(Identifier[name=scope])',
   resolver: ([node]) => {
     let result: ScopeDef = {};
 
@@ -55,19 +55,12 @@ const objectQueryDef: QueryDef = {
   },
 };
 
-const arrayQueryDef: QueryDef = {
-  query: 'ArrayLiteralExpression > StringLiteral',
-  resolver: (nodes) =>
-    (nodes as StringLiteral[]).map((node) => ({ scope: node.text })),
-};
-
-const scopeValueQueries: QueryDef[] = [
-  stringQueryDef,
-  objectQueryDef,
-  arrayQueryDef,
-];
+// Order is important, we check is is object first, then string
+const scopeValueQueries: QueryDef[] = [objectQueryDef, stringQueryDef];
 
 type Options = { input?: string[]; files?: string[] };
+
+const translocoProvider = /(TRANSLOCO_SCOPE|provideTranslocoScope)/;
 
 export function updateScopesMap(
   options: Omit<Options, 'input'>,
@@ -87,21 +80,30 @@ export function updateScopesMap({
   for (const file of tsFiles) {
     const content = readFile(file);
 
-    if (!content.includes('TRANSLOCO_SCOPE')) continue;
+    if (!translocoProvider.test(content)) continue;
 
-    let result: ScopeDef | ScopeDef[] | undefined;
+    let result: ScopeDef[] = [];
 
     const ast = tsquery.ast(content, undefined, ScriptKind.TS);
 
-    for (const { query, resolver } of scopeValueQueries) {
-      const nodes = tsquery(ast, `${baseQuery} > ${query}`);
-      if (nodes.length > 0) {
-        result = resolver(nodes);
-        break;
+    // :has(> child) is not supported ... So we need to use a workaround, select child and make second query for parent
+    const tokenAndProviderNodes = tsquery(
+      ast,
+      `${tokenProviderQuery}, ${functionProviderQuery}`,
+    );
+
+    for (const node of tokenAndProviderNodes) {
+      // Order is important, we check is is object first, then string
+      for (const { query, resolver } of scopeValueQueries) {
+        const nodes = tsquery(node.parent, query);
+        if (nodes.length > 0) {
+          result.push(resolver(nodes));
+          break;
+        }
       }
     }
 
-    for (let { scope, alias } of coerceArray(result)) {
+    for (let { scope, alias } of result) {
       if (scope && !hasScope(scope)) {
         alias ??= toCamelCase(scope);
         addScope(scope, alias);
