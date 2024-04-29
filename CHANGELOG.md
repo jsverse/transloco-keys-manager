@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.1.1...v4.2.0) (2024-04-29)
+
+
+### Features
+
+* 🎸 Add support for prefix attribute and providers array ([df064eb](https://github.com/jsverse/transloco-keys-manager/commit/df064ebc6541a11b13c7b55b702a140b7d859b3c))
+* 🎸 add support of provideTranslocoScope ([#190](https://github.com/jsverse/transloco-keys-manager/issues/190)) ([5f59487](https://github.com/jsverse/transloco-keys-manager/commit/5f59487cd205ba5ddc50c214ae798ba5b08ba91b))
+
 ### [4.1.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.1.0...v4.1.1) (2024-04-19)
 
 
