@@ -122,11 +122,15 @@ Now run `npm start` and it'll generate new keys whenever a **save** is made to t
 The extractor supports [scopes](https://jsverse.github.io/transloco/docs/scope-configuration/) out of the box. When you define a new scope in the `providers` array:
 
 ```ts
-import { TRANSLOCO_SCOPE } from '@jsverse/transloco';
+import { TRANSLOCO_SCOPE, provideTranslocoScope } from '@jsverse/transloco';
 
 @Component({
   templateUrl: './admin-page.component.html',
-  providers: [{ provide: TRANSLOCO_SCOPE, useValue: 'admin' }]
+  providers: [
+      { provide: TRANSLOCO_SCOPE, useValue: 'admin' },
+      provideTranslocoScope('todo'),
+      provideTranslocoScope(['another', {scope: 'reallyLong', alias: 'rl'}]),
+  ]
 })
 export class AdminPageComponent {}
 ```
