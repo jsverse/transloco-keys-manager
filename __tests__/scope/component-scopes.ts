@@ -7,11 +7,16 @@ import { TRANSLOCO_SCOPE, provideTranslocoScope } from '@jsverse/transloco';
   providers: [
     { provide: TRANSLOCO_SCOPE, useValue: 'scope4' },
     { provide: TRANSLOCO_SCOPE, useValue: { scope: 'scope5' } },
-    { provide: TRANSLOCO_SCOPE, useValue: { scope: 'scope6', alias: 'scopeAlias6' } },
-    provideTranslocoScope('scope7'),
-    provideTranslocoScope({ scope: 'scope8' }),
-    provideTranslocoScope({ scope: 'scope9', alias: 'scopeAlias9' }),
+    {
+      provide: TRANSLOCO_SCOPE,
+      useValue: { scope: 'scope6', alias: 'scopeAlias6' },
+    },
+    provideTranslocoScope([
+      'scope7',
+      { scope: 'scope8' },
+      { scope: 'scope9', alias: 'scopeAlias9' },
+    ]),
   ],
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {}

@@ -307,22 +307,12 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
       beforeEach(() => removeI18nFolder(type));
 
       it('should work with scope', () => {
-        const scopes = [
-          'scope1',
-          'scope2',
-          'scope3',
-          'scope4',
-          'scope5',
-          'scope6',
-          'scope7',
-          'scope8',
-          'scope9',
-        ];
+        const scopes = Array.from(Array(9), (_, index) => `scope${index + 1}`);
 
-        const expected = scopes.reduce(
-          (acc, scope) => ({ ...acc, [scope]: generateKeys({ end: 1 }) }),
-          {},
-        );
+        const expected = {};
+        for (const scope of scopes) {
+          expected[scope] = generateKeys({ end: 1 });
+        }
 
         createTranslations(config);
         scopes.forEach((scope) => {

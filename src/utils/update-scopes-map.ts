@@ -1,5 +1,6 @@
 import { ScriptKind, tsquery } from '@phenomnomnominal/tsquery';
-import {
+import ts, {
+  ArrayLiteralExpression,
   Node,
   NodeArray,
   ObjectLiteralExpression,
@@ -10,7 +11,6 @@ import {
 import { addScope, hasScope } from '../keys-builder/utils/scope.utils';
 import { Scopes } from '../types';
 
-import { coerceArray } from './collection.utils';
 import { readFile } from './file.utils';
 import { toCamelCase } from './string.utils';
 import { normalizedGlob } from './normalize-glob-path';
@@ -23,23 +23,27 @@ interface ScopeDef {
   alias?: Alias;
 }
 
-interface QueryDef {
-  query: string;
-  resolver: (node: Node[]) => ScopeDef;
-}
+type ScopeResolver = (node: Node) => ScopeDef[];
 
 const tokenProviderQuery = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) > PropertyAssignment > Identifier[name=/useValue|useFactory/]`;
 const functionProviderQuery = `CallExpression > Identifier[name=provideTranslocoScope]`;
 
-const stringQueryDef: QueryDef = {
-  query: `StringLiteral`,
-  resolver: ([node]) => ({ scope: (node as StringLiteral).text }),
-};
+function stringQueryDef(rootNode: Node) {
+  return (
+    tsquery(rootNode, `StringLiteral`)
+      // Since we are querying for StringLiteral we might pickup nested nodes from
+      // the scope def and cause duplications, we only want direct children from the root node
+      .filter((node) => node.parent === rootNode)
+      .map((node) => ({ scope: (node as StringLiteral).text }))
+  );
+}
 
-const objectQueryDef: QueryDef = {
-  query: 'ObjectLiteralExpression:has(Identifier[name=scope])',
-  resolver: ([node]) => {
-    let result: ScopeDef = {};
+function objectQueryDef(rootNode: Node) {
+  return tsquery(
+    rootNode,
+    'ObjectLiteralExpression:has(Identifier[name=scope])',
+  ).map((node) => {
+    const result: ScopeDef = {};
 
     for (const prop of (node as ObjectLiteralExpression)
       .properties as NodeArray<PropertyAssignment>) {
@@ -52,11 +56,11 @@ const objectQueryDef: QueryDef = {
     }
 
     return result;
-  },
-};
+  });
+}
 
-// Order is important, we check is is object first, then string
-const scopeValueQueries: QueryDef[] = [objectQueryDef, stringQueryDef];
+// Order is important, we check if it's an object first, then string
+const scopeValueQueries: ScopeResolver[] = [objectQueryDef, stringQueryDef];
 
 type Options = { input?: string[]; files?: string[] };
 
@@ -86,21 +90,24 @@ export function updateScopesMap({
 
     const ast = tsquery.ast(content, undefined, ScriptKind.TS);
 
-    // :has(> child) is not supported ... So we need to use a workaround, select child and make second query for parent
     const tokenAndProviderNodes = tsquery(
       ast,
       `${tokenProviderQuery}, ${functionProviderQuery}`,
     );
 
-    for (const node of tokenAndProviderNodes) {
-      // Order is important, we check is is object first, then string
-      for (const { query, resolver } of scopeValueQueries) {
-        const nodes = tsquery(node.parent, query);
-        if (nodes.length > 0) {
-          result.push(resolver(nodes));
-          break;
+    for (let node of tokenAndProviderNodes) {
+      // :has(> child) is not supported ... So we need to use a workaround, select child and make second query for parent
+      node = node.parent;
+
+      if (ts.isCallExpression(node)) {
+        const [providersArray] = tsquery(node, 'ArrayLiteralExpression');
+        if (providersArray) {
+          result.push(...resolveScopeProvider(providersArray));
+          continue;
         }
       }
+
+      result.push(...resolveScopeProvider(node));
     }
 
     for (let { scope, alias } of result) {
@@ -113,4 +120,8 @@ export function updateScopesMap({
   }
 
   return aliasToScope;
+}
+
+function resolveScopeProvider(node: Node) {
+  return scopeValueQueries.map((resolver) => resolver(node)).flat();
 }

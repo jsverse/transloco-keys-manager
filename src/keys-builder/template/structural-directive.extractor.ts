@@ -134,8 +134,8 @@ function isTranslocoAttr(attr: TmplAstTextAttribute | TmplAstBoundAttribute) {
   return attr.name === 'transloco';
 }
 
-function isReadAttr<T extends { name: string }>(attr: T) {
-  return attr.name === 'translocoRead';
+function isPrefixAttr<T extends { name: string }>(attr: T) {
+  return attr.name === 'translocoPrefix' || attr.name === 'translocoRead';
 }
 
 function isTranslocoTemplate(node: TmplAstNode): node is TmplAstTemplate {
@@ -163,9 +163,9 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
   let metadata: Omit<ContainerMetaData, 'spanOffset' | 'exp'>[];
   if (isNgTemplateTag(node)) {
     const implicitVars = node.variables.filter((attr) => !attr.value);
-    let read = node.attributes.find(isReadAttr)?.value;
+    let read = node.attributes.find(isPrefixAttr)?.value;
     if (!read) {
-      const ast = (node.inputs.find(isReadAttr)?.value as ASTWithSource)?.ast;
+      const ast = (node.inputs.find(isPrefixAttr)?.value as ASTWithSource)?.ast;
       if (isLiteralExpression(ast)) {
         read = ast.value;
       }
@@ -176,7 +176,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
     const { name } = node.variables.find(
       (variable) => variable.value === '$implicit',
     )!;
-    const read = node.templateAttrs.find(isReadAttr)?.value as ASTWithSource;
+    const read = node.templateAttrs.find(isPrefixAttr)?.value as ASTWithSource;
     metadata = isLiteralExpression(read?.ast)
       ? [{ name, read: read.ast.value }]
       : [{ name }];
