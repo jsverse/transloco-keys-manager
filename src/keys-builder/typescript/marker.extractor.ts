@@ -1,7 +1,7 @@
 import { SourceFile, Node } from 'typescript';
 import { tsquery } from '@phenomnomnominal/tsquery';
 
-import { buildKeysFromASTNodes } from './build-keys-from-ast-nodes';
+import { buildMarkerKeysFromASTNodes, buildTranslateKeysFromASTNodes } from './build-keys-from-ast-nodes';
 import { TSExtractorResult } from './types';
 
 export function markerExtractor(ast: SourceFile): TSExtractorResult {
@@ -16,7 +16,7 @@ export function markerExtractor(ast: SourceFile): TSExtractorResult {
   const markerName = getMarkerName(importNode);
   const fns = tsquery(ast, `CallExpression Identifier[text=${markerName}]`);
 
-  return buildKeysFromASTNodes(fns, [markerName]);
+  return buildMarkerKeysFromASTNodes(fns, markerName);
 }
 
 function getMarkerName(importNode: Node) {

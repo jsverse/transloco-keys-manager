@@ -129,9 +129,11 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   describe('Template Extraction', () => {
     describe('Pipe', () => {
       const type: TranslationCategory = 'pipe';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with pipe', () => {
         const expected = {
@@ -152,16 +154,17 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           expected[nonNumericKey] = defaultValue;
         });
 
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
     });
 
     describe('Directive', () => {
       const type: TranslationCategory = 'directive';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with directive', () => {
         const expected = generateKeys({ end: 24 });
@@ -170,16 +173,17 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
             expected[nonNumericKey] = defaultValue;
           },
         );
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
     });
 
     describe('ngContainer', () => {
       const type: TranslationCategory = 'ngContainer';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with ngContainer', () => {
         let expected = generateKeys({ end: 46 });
@@ -188,7 +192,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           expected['another(test)'] =
           expected['last "one"'] =
             defaultValue;
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
 
@@ -201,7 +204,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           '5': defaultValue,
         };
 
-        createTranslations(config);
         assertTranslation({
           type,
           expected,
@@ -213,13 +215,14 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
     describe('ngTemplate', () => {
       const type: TranslationCategory = 'ngTemplate';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with ngTemplate', () => {
         let expected = generateKeys({ end: 42 });
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
 
@@ -232,7 +235,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           '5': defaultValue,
         };
 
-        createTranslations(config);
         assertTranslation({
           type,
           expected,
@@ -244,22 +246,25 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
     describe('Control flow', () => {
       const type: TranslationCategory = 'control-flow';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with control flow', () => {
         let expected = generateKeys({ end: 26 });
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
     });
 
     describe('read', () => {
       const type: TranslationCategory = 'read';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with read', () => {
         const expected = {
@@ -289,7 +294,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           },
         };
 
-        createTranslations(config);
         assertTranslation({ type, expected: expected.global, fileFormat });
         assertTranslation({
           type,
@@ -330,9 +334,11 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
   describe('Typescript Extraction', () => {
     describe('service', () => {
       const type: TranslationCategory = 'service';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with service', () => {
         const expected = {
@@ -343,7 +349,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           'private-class-field.test': defaultValue,
         };
 
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
 
@@ -363,7 +368,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
           },
         };
 
-        createTranslations(config);
         assertTranslation({
           type,
           expected: expected.todos,
@@ -386,8 +390,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
 
       it('should work when passing an array of keys', () => {
         const expected = generateKeys({ start: 26, end: 33 });
-
-        createTranslations(config);
         assertPartialTranslation({ type, expected, fileFormat });
       });
     });
@@ -409,26 +411,42 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
     describe('marker', () => {
       const type: TranslationCategory = 'marker';
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with marker', () => {
-        const config = gConfig(type);
-
         let expected = {};
         expected['username4'] = defaultValue;
         expected['password4'] = defaultValue;
         expected['username'] = defaultValue;
         expected['password'] = defaultValue;
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
+      });
+
+      it('should work with scopes', () => {
+        const expected = {
+          username: defaultValue,
+          password: defaultValue,
+        };
+
+        assertTranslation({
+          type,
+          expected: expected,
+          path: 'nested/scope/',
+          fileFormat,
+        });
       });
     });
 
     describe('inline template', () => {
       const type: TranslationCategory = 'inline-template';
-      const config = gConfig(type);
 
-      beforeEach(() => removeI18nFolder(type));
+      beforeEach(() => {
+        removeI18nFolder(type);
+        createTranslations(gConfig(type));
+      });
 
       it('should work with inline templates', () => {
         const expected = generateKeys({ end: 23 });
@@ -437,7 +455,6 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
             expected[nonNumericKey] = defaultValue;
           },
         );
-        createTranslations(config);
         assertTranslation({ type, expected, fileFormat });
       });
     });
