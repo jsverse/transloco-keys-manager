@@ -31,6 +31,7 @@ export function testCommentsExtraction(fileFormat: Config['fileFormat']) {
           'a.some.key': defaultValue,
           'b.some.key': defaultValue,
           'c.some.key': defaultValue,
+          'prefix_c.some.key': defaultValue,
           'need.transloco': defaultValue,
           '1.some': defaultValue,
           ...generateKeys({ end: 8 }),
