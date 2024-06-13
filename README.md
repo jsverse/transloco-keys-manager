@@ -231,13 +231,13 @@ Or to templates:
 <ng-container *transloco="let t">...</ng-container>
 ```
 
-When using comments in the templates they will also **inherit the `read` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input) value** (if exists), and will be prefixed with it:
+When using comments in the templates they will also **inherit the `prefix` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template#utilizing-the-prefix-input) value** (if exists), and will be prefixed with it:
 ```html
 <!-- t(this.is.cool) -->
-<ng-container *transloco="let m; read: 'messages'">
+<ng-container *transloco="let m; prefix: 'messages'">
   ...
   <!-- t(success, error) -->
-  <ng-container *transloco="let g; read: 'general'">
+  <ng-container *transloco="let g; prefix: 'general'">
     ...
     <!-- t(ok, cancel) -->
   </ng-container>
@@ -292,10 +292,10 @@ class MyClass {
 
 ### Extra Support
 
-- Supports for the `read` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template/#utilizing-the-read-input):
+- Supports for the `prefix` [input](https://jsverse.github.io/transloco/docs/translation-in-the-template#utilizing-the-prefix-input):
 
 ```html
-<ng-container *transloco="let t; read: 'dashboard'">
+<ng-container *transloco="let t; prefix: 'dashboard'">
   <h1>{{ t('title') }}</h1>
 
   <p>{{ t('desc') }}</p>
@@ -318,7 +318,7 @@ The extracted keys for the code above will be:
 <comp [placeholder]="condition ? 'keyOne' : 'keyTwo' | transloco"></comp>
 <h1>{{ condition ? 'keyOne' : 'keyTwo' | transloco }}</h1>
 
-<comp *transloco="let t; read: 'ternary'">
+<comp *transloco="let t; prefix: 'ternary'">
   <h1>{{ t(condition ? 'keyOne' : 'keyTwo') }}</h1>
 </comp>
 ```
