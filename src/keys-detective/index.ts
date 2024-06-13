@@ -30,12 +30,13 @@ export function findMissingKeys(inlineConfig: Config) {
   const result = buildKeys(config);
   logger.success(`${messages.extract} 🗝`);
 
-  const { addMissingKeys, emitErrorOnExtraKeys } = config;
+  const { addMissingKeys, emitErrorOnExtraKeys, unflat } = config;
   compareKeysToFiles({
     scopeToKeys: result.scopeToKeys,
     translationsPath,
     addMissingKeys,
     emitErrorOnExtraKeys,
     fileFormat,
+    unflat,
   });
 }

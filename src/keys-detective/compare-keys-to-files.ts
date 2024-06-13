@@ -1,7 +1,7 @@
 import { getGlobalConfig } from '@jsverse/transloco-utils';
 import type { DiffDeleted, DiffNew } from 'deep-diff';
 import df from 'deep-diff';
-import { flatten } from 'flat';
+import { flatten, unflatten } from 'flat';
 
 import { messages } from '../messages';
 import { Config, ScopeMap } from '../types';
@@ -23,6 +23,7 @@ interface Result {
 interface CompareKeysOptions
   extends Pick<
     Config,
+    | 'unflat'
     | 'fileFormat'
     | 'addMissingKeys'
     | 'emitErrorOnExtraKeys'
@@ -37,6 +38,7 @@ export function compareKeysToFiles({
   addMissingKeys,
   emitErrorOnExtraKeys,
   fileFormat,
+  unflat,
 }: CompareKeysOptions) {
   const logger = getLogger();
   logger.startSpinner(`${messages.checkMissing} ✨`);
@@ -142,7 +144,7 @@ export function compareKeysToFiles({
         }
 
         if (addMissingKeys) {
-          writeFile(filePath, translation);
+          writeFile(filePath, unflat ? unflatten(translation) : translation);
         }
       }
     }
