@@ -3,7 +3,7 @@ import path from 'path';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 
-import { spyOnConsole } from './utils';
+import { spyOnConsole } from './spec-utils';
 
 const supportedConfigs = ['angular', 'workspace', 'project'] as const;
 const myProjectConfig = { projectType: 'library', sourceRoot: 'myRoot' };
