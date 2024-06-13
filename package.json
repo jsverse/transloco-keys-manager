@@ -1,6 +1,6 @@
 {
   "name": "@jsverse/transloco-keys-manager",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Extract translatable keys from projects that uses Transloco",
   "engines": {
     "node": ">=18.13.0"

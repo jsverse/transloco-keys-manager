@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.2.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.0...v4.2.1) (2024-06-13)
+
+
+### Bug Fixes
+
+* 🐛 keys detective should respect the unflat option ([21e02ed](https://github.com/jsverse/transloco-keys-manager/commit/21e02edc9d5490e0b23e8d5bcc5c1f255e0ebd35)), closes [#195](https://github.com/jsverse/transloco-keys-manager/issues/195)
+
 ## [4.2.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.1.1...v4.2.0) (2024-04-29)
 
 
