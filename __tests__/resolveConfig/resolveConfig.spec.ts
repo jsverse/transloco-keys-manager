@@ -171,7 +171,11 @@ describe('resolveConfig', () => {
 
     it('should fail on invalid translations path', () => {
       /* should only fail translation path when in find mode */
-      resolveConfig({ input: ['src/folder'], translationsPath: 'noFolder' });
+      resolveConfig({
+        input: ['src/folder'],
+        translationsPath: 'noFolder',
+        command: 'extract',
+      });
       shouldPass();
       resolveConfig({
         input: ['src/folder'],
