@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.2.2](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.1...v4.2.2) (2024-06-14)
+
+
+### Bug Fixes
+
+* 🐛 comments with prefix not extracted ([#197](https://github.com/jsverse/transloco-keys-manager/issues/197)) ([#198](https://github.com/jsverse/transloco-keys-manager/issues/198)) ([0106b9e](https://github.com/jsverse/transloco-keys-manager/commit/0106b9e9c2fa08458763e11c830b9c78b8465dc7))
+* 🐛 table generation stuck (downgrade cli-table3) ([#196](https://github.com/jsverse/transloco-keys-manager/issues/196)) ([#199](https://github.com/jsverse/transloco-keys-manager/issues/199)) ([03f6d4f](https://github.com/jsverse/transloco-keys-manager/commit/03f6d4f60914d6529a56f4074d6f4de62b898603))
+
 ### [4.2.1](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.0...v4.2.1) (2024-06-13)
 
 
