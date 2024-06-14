@@ -6,7 +6,7 @@ import { buildScopeFilePaths } from '../utils/path.utils';
 import { buildTranslationFile, FileAction } from './build-translation-file';
 import { runPrettier } from './utils/run-prettier';
 
-export function createTranslationFiles({
+export async function createTranslationFiles({
   scopeToKeys,
   defaults,
   langs,
@@ -40,10 +40,14 @@ export function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
+<<<<<<< HEAD
         defaults,
         isDefaultLanguage: lang == defaultLanguage,
         defaultOverrideExisting
       })
+=======
+      }),
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
     );
   }
 
@@ -55,15 +59,19 @@ export function createTranslationFiles({
         replace,
         removeExtraKeys,
         fileFormat,
+<<<<<<< HEAD
         defaults: defaults,
         isDefaultLanguage: lang == defaultLanguage,
         defaultOverrideExisting
       })
+=======
+      }),
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
     );
   }
 
   if (fileFormat === 'json') {
-    runPrettier(actions.map(({ path }) => path));
+    await runPrettier(actions.map(({ path }) => path));
   }
 
   const newFiles = actions.filter((action) => action.type === 'new');

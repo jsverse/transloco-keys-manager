@@ -12,6 +12,7 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
+  isBlockNode,
   isBoundAttribute,
   isConditionalExpression,
   isElement,
@@ -21,6 +22,7 @@ import {
   isTemplate,
   isTextAttribute,
   parseTemplate,
+  resolveBlockChildNodes,
 } from './utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
@@ -30,6 +32,11 @@ export function directiveExtractor(config: TemplateExtractorConfig) {
 
 function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
   for (const node of nodes) {
+    if (isBlockNode(node)) {
+      traverse(resolveBlockChildNodes(node), config);
+      continue;
+    }
+
     if (!isSupportedNode(node, [isTemplate, isElement])) {
       continue;
     }
@@ -51,7 +58,7 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
 }
 
 function isTranslocoDirective(
-  ast: unknown
+  ast: unknown,
 ): ast is TmplAstBoundAttribute | TmplAstTextAttribute {
   return (
     (isBoundAttribute(ast) || isTextAttribute(ast)) && ast.name === 'transloco'
@@ -60,7 +67,7 @@ function isTranslocoDirective(
 
 function addKeysFromAst(
   expressions: Array<string | AST>,
-  config: ExtractorConfig
+  config: ExtractorConfig,
 ): void {
   for (const exp of expressions) {
     const isString = typeof exp === 'string';
@@ -69,7 +76,7 @@ function addKeysFromAst(
     } else if (isLiteralExpression(exp) || isString) {
       const [key, scopeAlias] = resolveAliasAndKey(
         isString ? exp : exp.value,
-        config.scopes
+        config.scopes,
       );
       addKey({
         ...config,

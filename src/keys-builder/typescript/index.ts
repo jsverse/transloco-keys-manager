@@ -1,4 +1,4 @@
-import { tsquery } from '@phenomnomnominal/tsquery';
+import { tsquery, ScriptKind } from '@phenomnomnominal/tsquery';
 
 import {
   Config,
@@ -24,23 +24,33 @@ export function extractTSKeys(config: Config): ExtractionResult {
   return extractKeys(config, 'ts', TSExtractor);
 }
 
+<<<<<<< HEAD
 function TSExtractor(config: ExtractorConfig): {
   scopeMap: ScopeMap;
   defaults: DefaultLanguageValue[];
 } {
+=======
+const translocoImport = /@(jsverse|ngneat)\/transloco/;
+const translocoKeysManagerImport = /@(jsverse|ngneat)\/transloco-keys-manager/;
+function TSExtractor(config: ExtractorConfig): ScopeMap {
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
   const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
   const extractors = [];
 
-  if (content.includes('@ngneat/transloco')) {
+  if (translocoImport.test(content)) {
     extractors.push(serviceExtractor, pureFunctionExtractor);
   }
 
+<<<<<<< HEAD
   if (content.includes('@nyffels/transloco-keys-manager')) {
+=======
+  if (translocoKeysManagerImport.test(content)) {
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
     extractors.push(markerExtractor);
   }
 
-  const ast = tsquery.ast(content);
+  const ast = tsquery.ast(content, undefined, ScriptKind.TS);
   const baseParams = {
     scopeToKeys,
     scopes,
@@ -56,7 +66,7 @@ function TSExtractor(config: ExtractorConfig): {
       const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
         key,
         lang,
-        scopes
+        scopes,
       );
 
       addKey({
@@ -97,8 +107,8 @@ function TSExtractor(config: ExtractorConfig): {
 function resolveAliasAndKeyFromService(
   key: string,
   scopePath: string,
-  scopes: Scopes
-): [string, string] {
+  scopes: Scopes,
+): [string, string | null] {
   // It means that it's the global
   if (!scopePath) {
     return [key, null];

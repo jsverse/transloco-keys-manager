@@ -6,11 +6,11 @@ import { templateExtractor } from '../template';
 
 export function inlineTemplateExtractor(
   ast: SourceFile,
-  config: ExtractorConfig
+  config: ExtractorConfig,
 ) {
   const [inlineTemplate] = tsquery(
     ast,
-    'ClassDeclaration Decorator CallExpression:has([name=Component]) ObjectLiteralExpression PropertyAssignment:has([name=template]) NoSubstitutionTemplateLiteral'
+    'ClassDeclaration Decorator CallExpression:has([name=Component]) ObjectLiteralExpression PropertyAssignment:has([name=template]) NoSubstitutionTemplateLiteral',
   );
 
   if (inlineTemplate) {

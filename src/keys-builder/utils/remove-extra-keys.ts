@@ -3,7 +3,7 @@ import { Translation } from '../../types';
 
 export function removeExtraKeys(
   currentTranslation: Translation,
-  extractedTranslation: Translation
+  extractedTranslation: Translation,
 ): Translation {
   const resolved: Translation = {};
 
@@ -15,7 +15,7 @@ export function removeExtraKeys(
     if (isObject(currentTranslation[key])) {
       resolved[key] = removeExtraKeys(
         currentTranslation[key],
-        extractedTranslation[key]
+        extractedTranslation[key],
       );
     } else {
       resolved[key] = currentTranslation[key];

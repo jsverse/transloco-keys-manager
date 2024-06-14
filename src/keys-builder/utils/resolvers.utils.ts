@@ -2,8 +2,8 @@ import { Scopes } from '../../types';
 
 export function resolveAliasAndKey(
   key: string,
-  scopes: Scopes
-): [string, string] {
+  scopes: Scopes,
+): [string, string | null] {
   /**
    *
    * It can be one of the following:

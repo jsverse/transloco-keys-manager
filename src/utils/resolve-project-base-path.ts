@@ -32,9 +32,9 @@ function logNotFound(searchPlaces: string[]) {
   console.log(
     chalk.black.bgRed(
       `Unable to load workspace config from ${searchPlaces.join(
-        ', '
-      )}. Defaulting source root to '${defaultSourceRoot}'`
-    )
+        ', ',
+      )}. Defaulting source root to '${defaultSourceRoot}'`,
+    ),
   );
 }
 
@@ -58,13 +58,23 @@ export function resolveProjectBasePath(projectName?: string, workdir?: string): 
     return { projectBasePath: defaultSourceRoot };
   }
 
-  let resolved: ReturnType<typeof resolveProject>;
+  let resolved: ReturnType<typeof resolveProject> | null = null;
 
   for (const config of [angularConfig, workspaceConfig, projectConfig]) {
     resolved = resolveProject(config, projectName, workdir);
     if (resolved) {
       break;
     }
+  }
+
+  if (!resolved) {
+    console.log(
+      chalk.black.bgRed(
+        `Unable to resolve \`projectBasePath\` from configuration. Defaulting source root to '${defaultSourceRoot}'`,
+      ),
+    );
+
+    return { projectBasePath: defaultSourceRoot };
   }
 
   return {
@@ -74,16 +84,21 @@ export function resolveProjectBasePath(projectName?: string, workdir?: string): 
 }
 
 function resolveProject(
+<<<<<<< HEAD
   config,
   projectName,
   workdir
+=======
+  config: Record<string, any>,
+  projectName: string | undefined,
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
 ): { sourceRoot: string; projectType: ProjectType } | null {
   let projectConfig = config;
 
   if (config?.projects) {
     projectName =
       projectName || config.defaultProject || Object.keys(config.projects)[0];
-    const project = config.projects[projectName];
+    const project = config.projects[projectName!];
     projectConfig = isString(project)
       ? searchConfig(projectConfigFile, project)
       : project;

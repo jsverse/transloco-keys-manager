@@ -1,19 +1,24 @@
 {
   "compilerOptions": {
+    "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",
-    "module": "commonjs",
-    "target": "ES2017",
+    "module": "esnext",
+    "target": "es2022",
     "declaration": true,
-    "lib": [
-      "es2017",
-      "esnext",
-      "es2015"
-    ],
+    "moduleResolution": "node",
+    "lib": ["es2022"],
     "typeRoots": [],
     "sourceMap": true
   },
   "include": [
     "src"
-  ]
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      "inputGlob": "{js,jsx,mjs}",
+      "outputCheck": ["js", "json", "jsx", "mjs"]
+    }
+  }
 }

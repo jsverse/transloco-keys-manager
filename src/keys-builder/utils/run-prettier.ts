@@ -1,21 +1,21 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 
 import { readFile } from '../../utils/file.utils';
 
-export function runPrettier(filePaths: string[]) {
+export async function runPrettier(filePaths: string[]) {
   try {
-    const prettier = require('prettier');
-    const options = prettier.resolveConfig.sync(filePaths[0]);
+    const prettier = await import('prettier');
+    const options = await prettier.resolveConfig(filePaths[0]);
     if (options) {
       for (const filePath of filePaths) {
-        const formatted = prettier.format(readFile(filePath), {
+        const formatted = await prettier.format(readFile(filePath), {
           ...options,
           filepath: filePath,
         });
         writeFileSync(filePath, formatted);
       }
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.code !== 'MODULE_NOT_FOUND') {
       console.warn('Failed to run prettier', e.message);
     }

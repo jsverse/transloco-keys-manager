@@ -2,7 +2,7 @@
 
 Please check if your PR fulfills the following requirements:
 
-- [ ] The commit message follows our guidelines: https://github.com/ngneat/transloco/blob/master/CONTRIBUTING.md#commit
+- [ ] The commit message follows our guidelines: https://github.com/jsverse/transloco/blob/master/CONTRIBUTING.md#commit
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
 

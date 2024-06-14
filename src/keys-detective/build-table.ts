@@ -35,7 +35,7 @@ export function buildTable({
         border: ['white'],
       },
       head: ['File Name', 'Missing Keys', 'Extra Keys'].map((h) =>
-        chalk.cyan(h)
+        chalk.cyan(h),
       ),
     });
 

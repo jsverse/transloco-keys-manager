@@ -36,7 +36,7 @@ export function templateCommentsExtractor({
           ? TEMPLATE_TYPE.STRUCTURAL
           : TEMPLATE_TYPE.NG_TEMPLATE;
         templateContainers.push({
-          containerContent: $(element).html(),
+          containerContent: $(element).html()!,
           read: extractReadValue(element, containerType),
         });
       });
@@ -94,16 +94,16 @@ function keepMarkingCommentsOnly(content: string) {
 
 function removeInnerContainers(
   content: string,
-  allContainers: ContainersMetadata[]
+  allContainers: ContainersMetadata[],
 ): string {
   return allContainers
     .filter(
       ({ containerContent }) =>
-        content !== containerContent && content.includes(containerContent)
+        content !== containerContent && content.includes(containerContent),
     )
     .reduce(
       (acc, { containerContent }) => acc.replace(containerContent, ''),
-      content
+      content,
     );
 }
 
@@ -114,20 +114,20 @@ function loadCheerio(content: string) {
 /** Get the read value from an ngTemplate/ngContainer element */
 function extractReadValue(
   element: Element,
-  templateType: TEMPLATE_TYPE
-): string {
-  let read: string;
+  templateType: TEMPLATE_TYPE,
+): string | undefined {
+  let read: string | undefined;
 
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
-    const readSearch = data.match(/read:\s*(['"])(?<read>[^"']*)\1/);
-    read = readSearch?.groups.read;
+    const readSearch = data.match(/(?:read|prefix):\s*(['"])(?<read>[^"']*)\1/);
+    read = readSearch?.groups?.read;
   }
 
   if (templateType === TEMPLATE_TYPE.NG_TEMPLATE) {
     const attrs = Object.keys(element.attribs);
     const readSearch = attrs.find((attr) =>
-      ['translocoread', '[translocoread]'].includes(attr)
+      ['translocoread', '[translocoread]', 'translocoprefix', '[translocoprefix]'].includes(attr),
     );
     read = readSearch && element.attribs[readSearch].replace(/['"]/g, '');
   }

@@ -3,6 +3,7 @@ import {
   DefaultLanguageValue,
   ExtractionResult,
   ExtractorConfig,
+  FileType,
   ScopeMap,
 } from '../../types';
 import { initExtraction } from '../../utils/init-extraction';
@@ -10,6 +11,7 @@ import { devlog } from '../../utils/logger';
 import { normalizedGlob } from '../../utils/normalize-glob-path';
 
 export function extractKeys(
+<<<<<<< HEAD
   { input, scopes, defaultValue, files, defaultPipeArgument }: Config,
   fileType: 'ts' | 'html',
   extractor: (config: ExtractorConfig) => {
@@ -18,6 +20,13 @@ export function extractKeys(
   }
 ): ExtractionResult {
   let { scopeToKeys, defaults } = initExtraction();
+=======
+  { input, scopes, defaultValue, files }: Config,
+  fileType: FileType,
+  extractor: (config: ExtractorConfig) => ScopeMap,
+): ExtractionResult {
+  let { scopeToKeys } = initExtraction();
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
 
   const fileList =
     files ||

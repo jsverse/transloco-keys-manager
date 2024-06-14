@@ -1,7 +1,7 @@
 import {
   getGlobalConfig,
   TranslocoGlobalConfig,
-} from '@ngneat/transloco-utils';
+} from '@jsverse/transloco-utils';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 
@@ -16,72 +16,68 @@ import { resolveProjectBasePath } from './resolve-project-base-path';
 import { updateScopesMap } from './update-scopes-map';
 import { isDirectory } from './validators.utils';
 
-export function resolveConfig(inlineConfig: Config): Config {
+export function resolveConfig(inlineConfig: Partial<Config>): Config {
   const { projectBasePath, projectType } = resolveProjectBasePath(
     inlineConfig.project,
+<<<<<<< HEAD
     inlineConfig.workdir
+=======
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
   );
   const defaults = defaultConfig(projectType);
   const fileConfig = getGlobalConfig(inlineConfig.config || projectBasePath);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
-  const config = { ...defaults, ...userConfig };
+  const mergedConfig = { ...defaults, ...userConfig } as Config;
 
   devlog('config', 'Config', {
     Default: defaults,
     'Transloco file': flatFileConfig(fileConfig),
     Inline: inlineConfig,
-    Merged: config,
+    Merged: mergedConfig,
   });
 
-  resolveConfigPaths(config, projectBasePath);
-  validateDirectories(config);
+  resolveConfigPaths(mergedConfig, projectBasePath);
+  validateDirectories(mergedConfig);
 
   devlog('paths', 'Configuration Paths', {
-    Input: config.input,
-    Output: config.output,
-    Translations: config.translationsPath,
+    Input: mergedConfig.input,
+    Output: mergedConfig.output,
+    Translations: mergedConfig.translationsPath,
   });
 
-  updateScopesMap({ input: config.input });
+  updateScopesMap({ input: mergedConfig.input });
 
   devlog('scopes', 'Scopes', {
     'Scopes map': getScopes().scopeToAlias,
   });
 
-  return { ...config, scopes: getScopes() };
+  return { ...mergedConfig, scopes: getScopes() };
 }
 
-function flatFileConfig(fileConfig: TranslocoGlobalConfig): Partial<Config> {
-  const keysManager = fileConfig.keysManager || {};
-  const { rootTranslationsPath, langs, scopePathMap } = fileConfig;
-
-  if (keysManager.input) {
+function flatFileConfig({
+  keysManager,
+  rootTranslationsPath,
+  langs,
+  scopePathMap,
+}: TranslocoGlobalConfig): Partial<Config> {
+  if (keysManager?.input) {
     keysManager.input = Array.isArray(keysManager.input)
       ? keysManager.input
       : keysManager.input.split(',');
   }
-  const config: Partial<Config> = {
-    ...keysManager,
-  } as TranslocoGlobalConfig['keysManager'] & { input?: string[] };
 
-  if (rootTranslationsPath) {
-    config.translationsPath = rootTranslationsPath;
-  }
-
-  if (langs) {
-    config.langs = langs;
-  }
-
-  if (scopePathMap) {
-    config.scopePathMap = scopePathMap;
-  }
-
-  return config;
+  return {
+    ...(rootTranslationsPath ? { translationsPath: rootTranslationsPath } : {}),
+    ...(langs ? { langs } : {}),
+    ...(scopePathMap ? { scopePathMap } : {}),
+    ...(keysManager as Omit<TranslocoGlobalConfig['keysManager'], 'input'> &
+      Pick<Config, 'input'>),
+  };
 }
 
 function validateDirectories({ input, translationsPath, command }: Config) {
   let invalidPath = false;
-  const log = (path, prop) => {
+  const log = (path: string, prop: string) => {
     const msg = existsSync(path)
       ? messages.pathIsNotDir
       : messages.pathDoesntExist;

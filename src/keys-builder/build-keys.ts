@@ -7,11 +7,11 @@ import { extractTSKeys } from './typescript';
 export function buildKeys(config: Config) {
   const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];
 
-  const scopeToKeys: ScopeMap = mergeDeep(
+  const scopeToKeys = mergeDeep(
     {},
     template.scopeToKeys,
-    ts.scopeToKeys
-  );
+    ts.scopeToKeys,
+  ) as ScopeMap;
   const fileCount = template.fileCount + ts.fileCount;
   const defaults = template.defaults.concat(ts.defaults);
 

@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 import * as fsExtra from 'fs-extra';
 import { Config, DefaultLanguageValue, Translation } from '../types';
+=======
+import fs from 'fs-extra';
+
+import { Config, Translation } from '../types';
+
+>>>>>>> 0106b9e9c2fa08458763e11c830b9c78b8465dc7
 import { createTranslation } from './utils/create-translation';
 import { getCurrentTranslation } from './utils/get-current-translation';
 import _ from 'lodash';
@@ -10,7 +17,7 @@ export interface FileAction {
 }
 
 interface BuildTranslationOptions
-  extends Pick<Config, 'fileFormat'>,
+  extends Required<Pick<Config, 'fileFormat'>>,
     Partial<Pick<Config, 'replace' | 'removeExtraKeys'>> {
   path: string;
   translation?: Translation;
@@ -54,7 +61,7 @@ export function buildTranslationFile({
     });
   }
 
-  fsExtra.outputFileSync(
+  fs.outputFileSync(
     path,
     createTranslation({
       currentTranslation,
@@ -62,7 +69,7 @@ export function buildTranslationFile({
       replace,
       removeExtraKeys,
       fileFormat,
-    })
+    }),
   );
 
   return { type: currentTranslation ? 'modified' : 'new', path };

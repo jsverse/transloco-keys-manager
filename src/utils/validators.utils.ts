@@ -1,14 +1,14 @@
 import { existsSync, lstatSync } from 'fs';
 
-export function isObject(value: any) {
+export function isObject(value: any): value is Record<string, any> {
   return value && typeof value === 'object' && !Array.isArray(value);
 }
 
 export function isNil(value: unknown): value is undefined | null {
-  return typeof value === 'undefined' || value === null;
+  return isUndefined(value) || value === null;
 }
 
-export function isDirectory(path): boolean {
+export function isDirectory(path: string): boolean {
   return existsSync(path) && lstatSync(path).isDirectory();
 }
 
