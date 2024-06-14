@@ -120,14 +120,14 @@ function extractReadValue(
 
   if (templateType === TEMPLATE_TYPE.STRUCTURAL) {
     const data = element.attribs.__transloco;
-    const readSearch = data.match(/read:\s*(['"])(?<read>[^"']*)\1/);
+    const readSearch = data.match(/(?:read|prefix):\s*(['"])(?<read>[^"']*)\1/);
     read = readSearch?.groups?.read;
   }
 
   if (templateType === TEMPLATE_TYPE.NG_TEMPLATE) {
     const attrs = Object.keys(element.attribs);
     const readSearch = attrs.find((attr) =>
-      ['translocoread', '[translocoread]'].includes(attr),
+      ['translocoread', '[translocoread]', 'translocoprefix', '[translocoprefix]'].includes(attr),
     );
     read = readSearch && element.attribs[readSearch].replace(/['"]/g, '');
   }
