@@ -38,27 +38,22 @@ describe('resolveConfig', () => {
     outputFormat: 'pot',
   };
   let spies: SpyInstance[];
-  let processExitSpy: SpyInstance;
-  let consoleLogSpy: SpyInstance;
-  let defaultConfig = _defaultConfig();
+  const defaultConfig = _defaultConfig();
 
   beforeAll(() => {
     mockedGloblConfig = {};
-    processExitSpy = spyOnProcess('exit');
-    consoleLogSpy = spyOnConsole('log');
-    spies = [processExitSpy, consoleLogSpy];
+    spies = [spyOnProcess('exit'), spyOnConsole('log')];
   });
 
   afterAll(() => {
-    processExitSpy.mockRestore();
-    consoleLogSpy.mockRestore();
+    spies.forEach((s) => s.mockRestore());
   });
 
   function resolvePath(configPath: string[]): string[];
   function resolvePath(configPath: string): string;
   function resolvePath(configPath: string, asArray: true): string[];
   function resolvePath(configPath: string | string[], asArray = false) {
-    const resolve = (p) => path.resolve(process.cwd(), sourceRoot, p);
+    const resolve = (p: string) => path.resolve(process.cwd(), sourceRoot, p);
     if (Array.isArray(configPath)) {
       return configPath.map(resolve);
     }
@@ -66,7 +61,7 @@ describe('resolveConfig', () => {
     return asArray ? [resolve(configPath)] : resolve(configPath);
   }
 
-  function assertConfig(expected, inline = {}) {
+  function assertConfig<T>(expected: T, inline = {}) {
     const { scopes, ...config } = resolveConfig(inline);
     expect(config).toEqual(expected);
     expect(scopes).toBeDefined();
@@ -142,6 +137,7 @@ describe('resolveConfig', () => {
 
   describe('validate directories', () => {
     function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
+      const [processExitSpy, consoleLogSpy] = spies;
       expect(processExitSpy).toHaveBeenCalled();
       expect(consoleLogSpy).toHaveBeenCalledWith(
         chalk.bgRed.black(`${prop} ${messages[msg]}`),
@@ -150,9 +146,7 @@ describe('resolveConfig', () => {
     }
 
     function shouldPass() {
-      [processExitSpy, consoleLogSpy].forEach((s) =>
-        expect(s).not.toHaveBeenCalled(),
-      );
+      spies.forEach((s) => expect(s).not.toHaveBeenCalled());
       clearSpies();
     }
 
@@ -169,8 +163,7 @@ describe('resolveConfig', () => {
       shouldFail('Input', 'pathIsNotDir');
     });
 
-    it('should fail on invalid translations path', () => {
-      /* should only fail translation path when in find mode */
+    it('should pass on invalid translations path in extract mode', () => {
       resolveConfig({
         input: ['src/folder'],
         translationsPath: 'noFolder',
@@ -183,6 +176,9 @@ describe('resolveConfig', () => {
         command: 'extract',
       });
       shouldPass();
+    });
+
+    it('should fail on invalid translations path in find mode', () => {
       resolveConfig({
         input: ['src/folder'],
         translationsPath: 'noFolder',
@@ -201,12 +197,12 @@ describe('resolveConfig', () => {
   describe('resolveConfigPaths', () => {
     it('should prefix all the paths in the config with the process cwd', () => {
       const config = resolveConfig({ input: ['folder'] });
-      const assertPath = (p) =>
+      const assertPath = (p: string) =>
         expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
           true,
         );
       config.input.forEach(assertPath);
-      ['output', 'translationsPath'].forEach((prop) =>
+      (['output', 'translationsPath'] as const).forEach((prop) =>
         assertPath(config[prop]),
       );
     });
