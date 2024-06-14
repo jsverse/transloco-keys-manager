@@ -345,7 +345,7 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 transloco-keys-manager extract --project first-app
 ```
 
-\* **Note:** If no `angular.json` file is present, `sourceRoot` will be `src`.
+**Note:** If no `angular.json` file is present, `sourceRoot` will be `src`.
 
 - `config`: The root search directory for the transloco config file: (default is `process.cwd()`)
 
@@ -362,7 +362,7 @@ transloco-keys-manager extract --input src/my/path,project/another/path
 transloco-keys-manager extract -i src/my/path
 ```
 
-\* **Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
+**Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
 
 - `output`: The target directory for all generated translation files: (default is `assets/i18n`)
 
@@ -442,7 +442,8 @@ transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
 
-- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (default is `false`)
+- `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (default is `false`)  
+Extra keys are keys that exist in your translations but are no usages of them in the code.
 
 ```
 transloco-keys-manager find --emit-error-on-extra-keys
