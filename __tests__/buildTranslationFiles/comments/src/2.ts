@@ -1,7 +1,7 @@
 /**
  * some commment
  */
-
+// @jsverse/transloco
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -15,7 +15,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { translate } from '@jsverse/transloco';
 
 export type ExtendedGridOptions = {
   onRowDataUpdated: (event) => void;

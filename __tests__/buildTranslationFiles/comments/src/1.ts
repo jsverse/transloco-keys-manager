@@ -1,4 +1,4 @@
-import { translate } from '@jsverse/transloco';
+// @jsverse/transloco'
 
 class a {
   /**

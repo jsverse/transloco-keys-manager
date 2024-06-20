@@ -256,7 +256,8 @@ The extracted keys for the code above will be:
 ```
 
 *Notes:*
-1. When using a Typescript file, you must have an `import { } from '@jsverse/transloco'` statement in it.
+1. When using a Typescript file, you must have `@jsverse/transloco` present somewhere in the file, if it's an import or
+simply adding a comment `// @jsverse/transloco`.
 2. When using comments in your HTML files, they *must* contain only the markers without additional text.
    Here's an example for invalid comment:
    `<!-- For dropdown t(dynamic.1, dynamic.2) -->`
