@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.2.4](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.3...v4.2.4) (2024-07-18)
+
+
+### Bug Fixes
+
+* 🐛 support inject assignment to a variable ([a326b78](https://github.com/jsverse/transloco-keys-manager/commit/a326b78b481b5c23778a0b72548968f512b48b03)), closes [#141](https://github.com/jsverse/transloco-keys-manager/issues/141)
+
 ### [4.2.3](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.2...v4.2.3) (2024-07-18)
 
 
