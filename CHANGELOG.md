@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.2.3](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.2...v4.2.3) (2024-07-18)
+
+
+### Bug Fixes
+
+* 🐛 find throws Translations path missing ([12fbadd](https://github.com/jsverse/transloco-keys-manager/commit/12fbadd6f824ea1d4f5064793e2ee92f862ed4c6)), closes [#163](https://github.com/jsverse/transloco-keys-manager/issues/163)
+
 ### [4.2.2](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.1...v4.2.2) (2024-06-14)
 
 
