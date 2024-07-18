@@ -56,8 +56,17 @@ export function getScopeAndLangFromPath({
 }
 
 export function resolveConfigPaths(config: Config, sourceRoot: string) {
-  const resolvePath = (configPath?: string) =>
-    path.resolve(process.cwd(), sourceRoot, configPath || '');
+  const resolvePath = (configPath = '') => {
+    const fragments = [process.cwd()];
+    if (!configPath.startsWith(sourceRoot)) {
+      fragments.push(sourceRoot);
+    } else {
+      console.warn('Your path is automatically prefixed with the sourceRoot');
+    }
+    fragments.push(configPath);
+
+    return path.resolve(...fragments);
+  };
 
   config.input = config.input.map(resolvePath);
   config.output = resolvePath(config.output);

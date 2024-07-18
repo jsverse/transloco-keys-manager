@@ -206,5 +206,21 @@ describe('resolveConfig', () => {
         assertPath(config[prop]),
       );
     });
+
+    it('should should handle paths prefixed with the sourceRoot', () => {
+      const config = resolveConfig({
+        input: [`${sourceRoot}/folder`],
+        translationsPath: `${sourceRoot}/1`,
+        output: `${sourceRoot}/2`,
+      });
+      const assertPath = (p: string) =>
+        expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
+          true,
+        );
+      config.input.forEach(assertPath);
+      (['output', 'translationsPath'] as const).forEach((prop) =>
+        assertPath(config[prop]),
+      );
+    });
   });
 });

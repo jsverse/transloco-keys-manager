@@ -33,13 +33,14 @@ export function resolveConfig(inlineConfig: Partial<Config>): Config {
   });
 
   resolveConfigPaths(mergedConfig, projectBasePath);
-  validateDirectories(mergedConfig);
 
   devlog('paths', 'Configuration Paths', {
     Input: mergedConfig.input,
     Output: mergedConfig.output,
     Translations: mergedConfig.translationsPath,
   });
+
+  validateDirectories(mergedConfig);
 
   updateScopesMap({ input: mergedConfig.input });
 

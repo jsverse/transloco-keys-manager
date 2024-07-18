@@ -339,25 +339,33 @@ Run `npm run i18n:find`, and you'll get a lovely list that summarizes the keys f
 
 ## 🕹 Options
 
-- `project`*: The targeted project (default is `defaultProject`). The `sourceRoot` of this project will be extracted from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
+- `config`: The root search directory for the transloco config file: (default is `process.cwd()`)
+
+```bash
+transloco-keys-manager extract --config src/my/path
+transloco-keys-manager extract -c src/my/path
+```
+
+- `project`*: The targeted project (default is `defaultProject`). The `sourceRoot` of this project will be extracted 
+  from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
   In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
-```
+```bash
 transloco-keys-manager extract --project first-app
 ```
 
 **Note:** If no `angular.json` file is present, `sourceRoot` will be `src`.
 
-- `config`: The root search directory for the transloco config file: (default is `process.cwd()`)
+- `translationsPath`: The path for the root directory of the translation files (default is `${sourceRoot}/assets/i18n`)
 
-```
-transloco-keys-manager extract --config src/my/path
-transloco-keys-manager extract -c src/my/path
+```bash
+transloco-keys-manager find --translations-path my/path
+transloco-keys-manager find -p my/path
 ```
 
-- `input`: The source directory for all files using the translation keys: (default is `['app']`)
+- `input`: The source directory for all files using the translation keys: (default is `[${sourceRoot}/app']`)
 
-```
+```bash
 transloco-keys-manager extract --input src/my/path
 transloco-keys-manager extract --input src/my/path,project/another/path
 transloco-keys-manager extract -i src/my/path
@@ -365,43 +373,43 @@ transloco-keys-manager extract -i src/my/path
 
 **Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
 
-- `output`: The target directory for all generated translation files: (default is `assets/i18n`)
+- `output`: The target directory for all generated translation files: (default is `${sourceRoot}/assets/i18n`)
 
-```
+```bash
 transloco-keys-manager extract --output my/path
 transloco-keys-manager extract -o my/path
 ```
 
 - `fileFormat`: The translation file format `'json' | 'pot'`: (default is `json`)
 
-```
+```bash
 transloco-keys-manager extract --file-format pot
 transloco-keys-manager extract -f pot
 ```
 
 - `langs`: The languages files to generate: (default is `[en]`)
 
-```
+```bash
 transloco-keys-manager extract --langs en es it
 transloco-keys-manager extract -l en es it
 ```
 
 - `marker`: The marker sign for dynamic values: (default is `t`)
 
-```
+```bash
 transloco-keys-manager extract --marker _
 transloco-keys-manager extract -m  _
 ```
 
 - `sort`: Whether to sort the keys using JS `sort()` method: (default is `false`)
 
-```
+```bash
 transloco-keys-manager extract --sort
 ```
 
 - `unflat`: Whether to `unflat` instead of `flat`: (default is `flat`)
 
-```
+```bash
 transloco-keys-manager extract --unflat
 transloco-keys-manager extract -u
 ```
@@ -412,7 +420,7 @@ During key extraction you will get a warning with a list of concerned keys you h
 
 - `defaultValue`: The default value of a generated key: (default is `Missing value for {{key}}`)
 
-```
+```bash
 transloco-keys-manager extract --default-value missingValue
 transloco-keys-manager extract -d "{{key}} translation is missing"
 ```
@@ -424,21 +432,21 @@ There are several placeholders that are replaced during extraction:
 
 - `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)
 
-```
+```bash
 transloco-keys-manager extract --replace
 transloco-keys-manager extract -r
 ```
 
 - `removeExtraKeys`: Remove extra keys from existing translation files (defaults to `false`)
 
-```
+```bash
 transloco-keys-manager extract --remove-extra-keys
 transloco-keys-manager extract -R
 ```
 
 - `addMissingKeys`: Add missing keys that were found by the detective (default is `false`)
 
-```
+```bash
 transloco-keys-manager find --add-missing-keys
 transloco-keys-manager find -a
 ```
@@ -446,21 +454,14 @@ transloco-keys-manager find -a
 - `emitErrorOnExtraKeys`: Emit an error and exit the process if extra keys were found (default is `false`)  
 Extra keys are keys that exist in your translations but are no usages of them in the code.
 
-```
+```bash
 transloco-keys-manager find --emit-error-on-extra-keys
 transloco-keys-manager find -e
 ```
 
-- `translationsPath`: The path for the root directory of the translation files (default is `assets/i18n`)
-
-```
-transloco-keys-manager find --translations-path my/path
-transloco-keys-manager find -p my/path
-```
-
 - `help`:
 
-```
+```bash
 transloco-keys-manager --help
 transloco-keys-manager -h
 ```
