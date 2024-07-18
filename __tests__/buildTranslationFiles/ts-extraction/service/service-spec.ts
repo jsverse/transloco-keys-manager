@@ -33,6 +33,8 @@ export function testServiceExtraction(fileFormat: Config['fileFormat']) {
         ...generateKeys({ start: 24, end: 33 }),
         'inject.test': defaultValue,
         'private-class-field.test': defaultValue,
+        'permission.snackbar.no-permission': defaultValue,
+        'permission.snackbar.close': defaultValue,
       };
 
       buildTranslationFiles(config);

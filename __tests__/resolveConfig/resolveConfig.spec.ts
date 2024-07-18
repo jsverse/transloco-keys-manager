@@ -208,6 +208,7 @@ describe('resolveConfig', () => {
     });
 
     it('should should handle paths prefixed with the sourceRoot', () => {
+      const spy = spyOnConsole('warn');
       const config = resolveConfig({
         input: [`${sourceRoot}/folder`],
         translationsPath: `${sourceRoot}/1`,
@@ -221,6 +222,8 @@ describe('resolveConfig', () => {
       (['output', 'translationsPath'] as const).forEach((prop) =>
         assertPath(config[prop]),
       );
+      expect(spy).toHaveBeenCalledTimes(3);
+      spy.mockClear();
     });
   });
 });
