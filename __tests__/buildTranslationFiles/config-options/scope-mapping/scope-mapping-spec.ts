@@ -21,10 +21,13 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testScopeMappingConfig(fileFormat: Config['fileFormat']) {
   describe('Scope mapping', () => {
     const type: TranslationTestCase = 'config-options/scope-mapping';
-    const config = buildConfig(type, {
-      fileFormat,
-      scopePathMap: {
-        scope1: `./${sourceRoot}/${type}/i18n/scopes/mapped`,
+    const config = buildConfig({
+      type,
+      config: {
+        fileFormat,
+        scopePathMap: {
+          scope1: `./${sourceRoot}/${type}/i18n/scopes/mapped`,
+        },
       },
     });
 

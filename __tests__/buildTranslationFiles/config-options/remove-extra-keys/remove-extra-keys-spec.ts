@@ -83,7 +83,10 @@ export function testRemoveExtraKeysConfig(fileFormat: Config['fileFormat']) {
         group3: { '2': 'missing' },
       };
 
-      const baseConfig = buildConfig(type, { unflat: true, fileFormat });
+      const baseConfig = buildConfig({
+        type: type,
+        config: { unflat: true, fileFormat },
+      });
       testRemoveExtraKeys({
         baseConfig,
         expected: {
@@ -114,7 +117,10 @@ export function testRemoveExtraKeysConfig(fileFormat: Config['fileFormat']) {
         'group3.2': 'missing',
       };
 
-      const baseConfig = buildConfig(type, { unflat: false, fileFormat });
+      const baseConfig = buildConfig({
+        type,
+        config: { unflat: false, fileFormat },
+      });
       testRemoveExtraKeys({
         baseConfig,
         expected: {

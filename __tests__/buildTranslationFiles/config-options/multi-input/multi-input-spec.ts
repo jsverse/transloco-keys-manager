@@ -23,9 +23,14 @@ export function testMultiInputsConfig(fileFormat: Config['fileFormat']) {
   describe('Multi Inputs', () => {
     const type: TranslationTestCase = 'config-options/multi-input';
     const basePath = nodePath.join(type, 'src');
-    const config = buildConfig(type, {
-      fileFormat,
-      input: [`${basePath}/folder-1`, `${basePath}/folder-2`],
+    const config = buildConfig({
+      type,
+      config: {
+        fileFormat,
+        input: [1, 2].map((v) =>
+          nodePath.join(sourceRoot, basePath, `folder-${v}`),
+        ),
+      },
     });
 
     beforeEach(() => removeI18nFolder(type));

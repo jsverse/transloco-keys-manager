@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testPureFunctionExtraction(fileFormat: Config['fileFormat']) {
   describe('pure-function', () => {
     const type: TranslationTestCase = 'ts-extraction/pure-function';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

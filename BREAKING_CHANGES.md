@@ -1,3 +1,49 @@
+# Transloco Keys Manager V5
+
+The source root is now only prefixed to the **default** config, which means you need to write the full path relative to
+the project root.
+If I had the following config:
+
+```ts
+import {TranslocoGlobalConfig} from "@jsverse/transloco-utils";
+
+const config: TranslocoGlobalConfig = {
+   rootTranslationsPath: 'assets/i18n/',
+   langs: ['it', 'en'],
+   keysManager: {
+       input: ['app'],
+       output: 'assets/i18n/'
+   },
+}
+
+export default config;
+```
+
+When migrating to v5 I'll need to prefix the paths with the source root:
+```ts
+import {TranslocoGlobalConfig} from "@jsverse/transloco-utils";
+
+const config: TranslocoGlobalConfig = {
+   //                     👇
+   rootTranslationsPath: 'src/assets/i18n/',
+   langs: ['it', 'en'],
+   keysManager: {
+       input: [
+       //    👇
+           'src/app', 
+       // 🥳 Scanning non buildable libs is now supported
+           'projects/ui-lib/src/lib'
+       ],
+       //        👇
+       output: 'src/assets/i18n/'
+   },
+}
+
+export default config;
+```
+
+This change is necessary to [allow scanning arbitrary folders](https://github.com/jsverse/transloco-keys-manager/issues/160) and will open support for a more dynamic features.
+
 # Transloco Keys Manager V4
 
 The library is now ESM only in order to use the newer versions of the angular compiler.

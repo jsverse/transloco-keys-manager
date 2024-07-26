@@ -347,7 +347,8 @@ transloco-keys-manager extract -c src/my/path
 ```
 
 - `project`*: The targeted project (default is `defaultProject`). The `sourceRoot` of this project will be extracted 
-  from the `angular.json` file and will prefix the `input`, `output`, and `translationPath` properties.
+  from the `angular.json` file and will prefix **the default** `input`, `output`, and `translationPath` properties, So 
+  when overriding these options make sure you provide the full path.
   In addition, the transloco config file will be searched in the project's `sourceRoot` (unless the `config` option is passed):
 
 ```bash
@@ -359,8 +360,8 @@ transloco-keys-manager extract --project first-app
 - `translationsPath`: The path for the root directory of the translation files (default is `${sourceRoot}/assets/i18n`)
 
 ```bash
-transloco-keys-manager find --translations-path my/path
-transloco-keys-manager find -p my/path
+transloco-keys-manager find --translations-path src/assets/my/path
+transloco-keys-manager find -p src/assets/my/path
 ```
 
 - `input`: The source directory for all files using the translation keys: (default is `[${sourceRoot}/app']`)
@@ -371,7 +372,7 @@ transloco-keys-manager extract --input src/my/path,project/another/path
 transloco-keys-manager extract -i src/my/path
 ```
 
-**Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['lib']`.
+**Note:** If a `project` is provided the default input value will be determined by the `projectType`, when given a library the default input value will be `['${sourceRoot}/lib']`.
 
 - `output`: The target directory for all generated translation files: (default is `${sourceRoot}/assets/i18n`)
 
@@ -468,11 +469,13 @@ transloco-keys-manager -h
 
 ### Transloco Config File
 
-One more option to define the `config` object for this library is to create a `transloco.config.js` file in the project's root folder and add the configuration in it:
+If you installed transloco via the schematics, a `transloco.config.ts` should have been created.
+Otherwise, you can just create a `transloco.config.ts` in the project's root folder and add the configuration in it:
 
 ```ts
-// transloco.config.js
-module.exports = {
+import {TranslocoGlobalConfig} from "@jsverse/transloco-utils";
+
+const config: TranslocoGlobalConfig = {
   rootTranslationsPath?: string;
   langs?: string[];
   keysManager: {
@@ -485,8 +488,10 @@ module.exports = {
     replace?: boolean;
     defaultValue?: string | undefined;
     unflat?: boolean;
-  };
-}
+  }
+};
+
+export default config;
 ```
 
 ### 🐞 Debugging

@@ -17,11 +17,11 @@ import { updateScopesMap } from './update-scopes-map';
 import { isDirectory } from './validators.utils';
 
 export function resolveConfig(inlineConfig: Partial<Config>): Config {
-  const { projectBasePath, projectType } = resolveProjectBasePath(
+  const { projectBasePath: sourceRoot, projectType } = resolveProjectBasePath(
     inlineConfig.project,
   );
-  const defaults = defaultConfig(projectType);
-  const fileConfig = getGlobalConfig(inlineConfig.config || projectBasePath);
+  const defaults = defaultConfig({ projectType, sourceRoot });
+  const fileConfig = getGlobalConfig(inlineConfig.config || sourceRoot);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
   const mergedConfig = { ...defaults, ...userConfig } as Config;
 
@@ -32,7 +32,7 @@ export function resolveConfig(inlineConfig: Partial<Config>): Config {
     Merged: mergedConfig,
   });
 
-  resolveConfigPaths(mergedConfig, projectBasePath);
+  resolveConfigPaths(mergedConfig);
 
   devlog('paths', 'Configuration Paths', {
     Input: mergedConfig.input,

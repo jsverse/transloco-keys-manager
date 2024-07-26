@@ -1,16 +1,16 @@
 import {
-  assertTranslation,
+  defaultValue,
+  mockResolveProjectBasePath,
   buildConfig,
+  assertTranslation,
   removeI18nFolder,
-  TranslationTestCase,
-} from '../../buildTranslationFiles/build-translation-utils';
-import { defaultValue, mockResolveProjectBasePath } from '../../spec-utils';
+} from '../../spec-utils';
 import { Config } from '../../../src/types';
 import nodePath from 'node:path';
 import fs from 'fs-extra';
 import { unflatten } from 'flat';
 
-const sourceRoot = '__tests__/findMissingKeys';
+const sourceRoot = '__tests__/findMissingKeys/add-missing-keys';
 mockResolveProjectBasePath(sourceRoot);
 
 /**
@@ -36,21 +36,22 @@ export function testAddMissingKeysConfig(
   fileFormat: Config['fileFormat'] = 'json',
 ) {
   describe('Add Missing Keys', () => {
-    const type: TranslationTestCase = 'add-missing-keys';
-    const config = buildConfig(type, {
-      fileFormat,
-      addMissingKeys: true,
+    const config = buildConfig({
+      config: {
+        fileFormat,
+        addMissingKeys: true,
+      },
+      sourceRoot,
     });
-    const translationPath = nodePath.join(sourceRoot, type, 'i18n', 'en.json');
+    const translationPath = nodePath.join(sourceRoot, 'i18n', 'en.json');
 
-    beforeEach(() => removeI18nFolder(type, sourceRoot));
+    beforeEach(() => removeI18nFolder(sourceRoot));
 
     it('should add missing keys to translation', () => {
       fs.ensureFileSync(translationPath);
       fs.writeFileSync(translationPath, JSON.stringify(missingJson));
       findMissingKeys(config);
       assertTranslation({
-        type,
         expected: expectedJson,
         fileFormat,
         root: sourceRoot,
@@ -62,7 +63,6 @@ export function testAddMissingKeysConfig(
       fs.writeFileSync(translationPath, JSON.stringify(unflatten(missingJson)));
       findMissingKeys({ ...config, unflat: true });
       assertTranslation({
-        type,
         expected: unflatten(expectedJson),
         fileFormat,
         root: sourceRoot,

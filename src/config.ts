@@ -12,9 +12,14 @@ export function getConfig(): Config {
 
 export type ProjectType = 'application' | 'library';
 
-export function defaultConfig(
-  projectType: ProjectType = 'application',
-): Omit<
+interface Options {
+  projectType?: ProjectType;
+  sourceRoot?: string;
+}
+export function defaultConfig({
+  projectType = 'application',
+  sourceRoot = 'src',
+}: Options = {}): Omit<
   Config,
   | 'config'
   | 'project'
@@ -25,13 +30,15 @@ export function defaultConfig(
   | 'files'
 > {
   const isApp = projectType === 'application';
+  const input = `${sourceRoot}/${isApp ? 'app' : 'lib'}`;
+  const i18nPath = `${sourceRoot}/assets/i18n`;
 
   return {
     // The source directory for all files using the translation keys
-    input: [isApp ? 'app' : 'lib'],
+    input: [input],
 
     // The target directory for all generated translation files
-    output: 'assets/i18n',
+    output: i18nPath,
 
     // The language files to generate
     langs: ['en'],
@@ -66,7 +73,7 @@ export function defaultConfig(
     emitErrorOnExtraKeys: false,
 
     // The path for the root translation files (for example: assets/i18n)
-    translationsPath: 'assets/i18n',
+    translationsPath: i18nPath,
 
     // The translation files format (`json`, `pot`) default is `json`
     fileFormat: 'json',

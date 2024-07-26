@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../src/keys-builder');
 export function testCommentsExtraction(fileFormat: Config['fileFormat']) {
   describe('comments', () => {
     const type: TranslationTestCase = 'comments';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

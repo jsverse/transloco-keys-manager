@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testPrefixExtraction(fileFormat: Config['fileFormat']) {
   describe('prefix', () => {
     const type: TranslationTestCase = 'template-extraction/prefix';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

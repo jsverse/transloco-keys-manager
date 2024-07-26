@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testNgTemplateExtraction(fileFormat: Config['fileFormat']) {
   describe('ng-template', () => {
     const type: TranslationTestCase = 'template-extraction/ng-template';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

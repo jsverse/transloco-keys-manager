@@ -24,7 +24,7 @@ export function testMarkerExtraction(fileFormat: Config['fileFormat']) {
     beforeEach(() => removeI18nFolder(type));
 
     it('should work with marker', () => {
-      const config = buildConfig(type, { fileFormat });
+      const config = buildConfig({ type, config: { fileFormat } });
 
       const expected = {
         username4: defaultValue,

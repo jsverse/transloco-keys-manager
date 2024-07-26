@@ -1,5 +1,18 @@
 import { jest } from '@jest/globals';
 import type { SpyInstance } from 'jest-mock';
+import { Config } from '../src/types';
+import nodePath from 'node:path';
+import { sourceRoot } from './buildTranslationFiles/build-translation-utils';
+import fs from 'fs-extra';
+
+/**
+ * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
+ * This thing is still in WIP at Jest, so keep an eye on it.
+ * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
+ */
+const { getCurrentTranslation } = await import(
+  '../src/keys-builder/utils/get-current-translation'
+);
 
 export function noop() {}
 
@@ -20,3 +33,55 @@ export function mockResolveProjectBasePath(projectBasePath: string) {
 }
 
 export const defaultValue = 'missing';
+
+export interface BuildConfigOptions {
+  config?: Partial<Config>;
+  sourceRoot: string;
+}
+
+export function buildConfig({ config = {}, sourceRoot }: BuildConfigOptions) {
+  const output = nodePath.join(sourceRoot, `i18n`);
+  return {
+    input: [nodePath.join(sourceRoot, 'src')],
+    output,
+    translationsPath: output,
+    langs: ['en', 'es', 'it'],
+    defaultValue,
+    ...config,
+  } as Config;
+}
+
+export function removeI18nFolder(root = sourceRoot) {
+  fs.removeSync(nodePath.join(root, 'i18n'));
+}
+
+export interface AssertTranslationParams extends Pick<Config, 'fileFormat'> {
+  expected: object;
+  path?: string;
+  root: string;
+}
+
+export function assertTranslation({
+  expected,
+  ...rest
+}: AssertTranslationParams) {
+  expect(loadTranslationFile(rest)).toEqual(expected);
+}
+
+export function assertPartialTranslation({
+  expected,
+  ...rest
+}: AssertTranslationParams) {
+  expect(loadTranslationFile(rest)).toMatchObject(expected);
+}
+
+function loadTranslationFile({
+  path,
+  fileFormat,
+  root,
+}: Omit<AssertTranslationParams, 'expected'>) {
+  return getCurrentTranslation({
+    path: nodePath.join(root, 'i18n', `${path || ''}en.${fileFormat}`),
+    fileFormat,
+  });
+}

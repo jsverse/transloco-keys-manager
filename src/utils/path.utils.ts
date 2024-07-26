@@ -55,19 +55,11 @@ export function getScopeAndLangFromPath({
   return { scope, lang };
 }
 
-export function resolveConfigPaths(config: Config, sourceRoot: string) {
-  const resolvePath = (configPath = '') => {
-    const fragments = [process.cwd()];
-    if (!configPath.startsWith(sourceRoot)) {
-      fragments.push(sourceRoot);
-    } else {
-      console.warn('Your path is automatically prefixed with the sourceRoot');
-    }
-    fragments.push(configPath);
+function resolvePath(configPath = '') {
+  return path.resolve(process.cwd(), configPath);
+}
 
-    return path.resolve(...fragments);
-  };
-
+export function resolveConfigPaths(config: Config) {
   config.input = config.input.map(resolvePath);
   config.output = resolvePath(config.output);
   config.translationsPath = resolvePath(config.translationsPath);

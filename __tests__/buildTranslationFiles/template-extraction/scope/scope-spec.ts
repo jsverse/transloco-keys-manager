@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testScopeExtraction(fileFormat: Config['fileFormat']) {
   describe('scope', () => {
     const type: TranslationTestCase = 'template-extraction/scope';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

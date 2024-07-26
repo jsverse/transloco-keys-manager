@@ -21,7 +21,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testInlineTemplateExtraction(fileFormat: Config['fileFormat']) {
   describe('inline template', () => {
     const type: TranslationTestCase = 'ts-extraction/inline-template';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

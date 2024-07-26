@@ -1,16 +1,13 @@
-import { Config } from '../../src/types';
-import fs from 'fs-extra';
 import nodePath from 'node:path';
-import { defaultValue } from '../spec-utils';
-
-/**
- * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
- * This thing is still in WIP at Jest, so keep an eye on it.
- * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
- */
-const { getCurrentTranslation } = await import(
-  '../../src/keys-builder/utils/get-current-translation'
-);
+import {
+  BuildConfigOptions,
+  defaultValue,
+  buildConfig as _buildConfig,
+  removeI18nFolder as _removeI18nFolder,
+  assertPartialTranslation as _assertPartialTranslation,
+  assertTranslation as _assertTranslation,
+  AssertTranslationParams,
+} from '../spec-utils';
 
 export const sourceRoot = '__tests__/buildTranslationFiles';
 
@@ -48,56 +45,35 @@ export type TranslationTestCase =
   | 'config-options/multi-input'
   | 'config-options/scope-mapping'
   | 'config-options/remove-extra-keys'
-  | 'add-missing-keys'
   | 'comments';
 
+type WithTestCase<T> = T & { type: TranslationTestCase };
+
 export function buildConfig(
-  type: TranslationTestCase,
-  config: Partial<Config> = {},
+  options: WithTestCase<Omit<BuildConfigOptions, 'sourceRoot'>>,
 ) {
-  return {
-    input: [nodePath.join(type, 'src' + '')],
-    output: nodePath.join(type, `i18n`),
-    translationsPath: nodePath.join(type, `i18n`),
-    langs: ['en', 'es', 'it'],
-    defaultValue,
-    ...config,
-  } as Config;
-}
-
-interface assertTranslationParams extends Pick<Config, 'fileFormat'> {
-  type: TranslationTestCase;
-  expected: object;
-  path?: string;
-  root?: string;
-}
-
-export function assertTranslation({
-  expected,
-  ...rest
-}: assertTranslationParams) {
-  expect(loadTranslationFile(rest)).toEqual(expected);
-}
-
-export function assertPartialTranslation({
-  expected,
-  ...rest
-}: assertTranslationParams) {
-  expect(loadTranslationFile(rest)).toMatchObject(expected);
-}
-
-function loadTranslationFile({
-  type,
-  path,
-  fileFormat,
-  root = sourceRoot,
-}: Omit<assertTranslationParams, 'expected'>) {
-  return getCurrentTranslation({
-    path: nodePath.join(root, type, 'i18n', `${path || ''}en.${fileFormat}`),
-    fileFormat,
+  return _buildConfig({
+    ...options,
+    sourceRoot: nodePath.join(sourceRoot, options.type),
   });
 }
 
-export function removeI18nFolder(type: TranslationTestCase, root = sourceRoot) {
-  fs.removeSync(nodePath.join(root, type, 'i18n'));
+type AssertParams = WithTestCase<Omit<AssertTranslationParams, 'root'>>;
+
+export function assertTranslation({ type, ...params }: AssertParams) {
+  _assertTranslation({
+    ...params,
+    root: nodePath.join(sourceRoot, type),
+  });
+}
+
+export function assertPartialTranslation({ type, ...params }: AssertParams) {
+  _assertPartialTranslation({
+    ...params,
+    root: nodePath.join(sourceRoot, type),
+  });
+}
+
+export function removeI18nFolder(type: TranslationTestCase) {
+  _removeI18nFolder(nodePath.join(sourceRoot, type));
 }

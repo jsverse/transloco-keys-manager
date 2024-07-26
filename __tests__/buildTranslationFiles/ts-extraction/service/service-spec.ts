@@ -22,7 +22,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testServiceExtraction(fileFormat: Config['fileFormat']) {
   describe('service', () => {
     const type: TranslationTestCase = 'ts-extraction/service';
-    const config = buildConfig(type, { fileFormat });
+    const config = buildConfig({ type, config: { fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

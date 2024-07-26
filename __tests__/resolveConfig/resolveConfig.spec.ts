@@ -34,11 +34,12 @@ const { resolveConfig } = await import('../../src/utils/resolve-config');
 describe('resolveConfig', () => {
   const inlineConfig = {
     defaultValue: 'test2',
-    input: ['somePath'],
+    input: [`${sourceRoot}/somePath`],
     outputFormat: 'pot',
   };
   let spies: SpyInstance[];
-  const defaultConfig = _defaultConfig();
+  const defaultConfig = _defaultConfig({ sourceRoot });
+  const validInput = [`${sourceRoot}/src/folder`];
 
   beforeAll(() => {
     mockedGloblConfig = {};
@@ -53,7 +54,7 @@ describe('resolveConfig', () => {
   function resolvePath(configPath: string): string;
   function resolvePath(configPath: string, asArray: true): string[];
   function resolvePath(configPath: string | string[], asArray = false) {
-    const resolve = (p: string) => path.resolve(process.cwd(), sourceRoot, p);
+    const resolve = (p: string) => path.resolve(process.cwd(), p);
     if (Array.isArray(configPath)) {
       return configPath.map(resolve);
     }
@@ -92,12 +93,12 @@ describe('resolveConfig', () => {
 
   describe('with transloco config', () => {
     const translocoConfig = {
-      rootTranslationsPath: '1/2',
+      rootTranslationsPath: `${sourceRoot}/1/2`,
       langs: ['en', 'jp'],
       keysManager: {
         defaultValue: 'test',
-        input: 'test',
-        output: 'assets/override',
+        input: `${sourceRoot}/src/test`,
+        output: `${sourceRoot}/src/assets/override`,
       },
     };
 
@@ -157,21 +158,15 @@ describe('resolveConfig', () => {
     it('should fail on invalid input path', () => {
       resolveConfig({ input: ['noFolder'] });
       shouldFail('Input', 'pathDoesntExist');
-      resolveConfig({ input: ['src/folder', 'anotherMissingFolder'] });
+      resolveConfig({ input: validInput.concat('anotherMissingFolder') });
       shouldFail('Input', 'pathDoesntExist');
-      resolveConfig({ input: ['src/1.html'] });
+      resolveConfig({ input: [`${sourceRoot}/src/1.html`] });
       shouldFail('Input', 'pathIsNotDir');
     });
 
     it('should pass on invalid translations path in extract mode', () => {
       resolveConfig({
-        input: ['src/folder'],
-        translationsPath: 'noFolder',
-        command: 'extract',
-      });
-      shouldPass();
-      resolveConfig({
-        input: ['src/folder'],
+        input: validInput,
         translationsPath: 'noFolder',
         command: 'extract',
       });
@@ -180,14 +175,14 @@ describe('resolveConfig', () => {
 
     it('should fail on invalid translations path in find mode', () => {
       resolveConfig({
-        input: ['src/folder'],
+        input: validInput,
         translationsPath: 'noFolder',
         command: 'find',
       });
       shouldFail('Translations', 'pathDoesntExist');
       resolveConfig({
-        input: ['src/folder'],
-        translationsPath: 'src/1.html',
+        input: validInput,
+        translationsPath: `${sourceRoot}/src/1.html`,
         command: 'find',
       });
       shouldFail('Translations', 'pathIsNotDir');
@@ -198,32 +193,10 @@ describe('resolveConfig', () => {
     it('should prefix all the paths in the config with the process cwd', () => {
       const config = resolveConfig({ input: ['folder'] });
       const assertPath = (p: string) =>
-        expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
-          true,
-        );
+        expect(p.startsWith(path.resolve(process.cwd()))).toBe(true);
       config.input.forEach(assertPath);
-      (['output', 'translationsPath'] as const).forEach((prop) =>
-        assertPath(config[prop]),
-      );
-    });
-
-    it('should should handle paths prefixed with the sourceRoot', () => {
-      const spy = spyOnConsole('warn');
-      const config = resolveConfig({
-        input: [`${sourceRoot}/folder`],
-        translationsPath: `${sourceRoot}/1`,
-        output: `${sourceRoot}/2`,
-      });
-      const assertPath = (p: string) =>
-        expect(p.startsWith(path.resolve(process.cwd(), sourceRoot))).toBe(
-          true,
-        );
-      config.input.forEach(assertPath);
-      (['output', 'translationsPath'] as const).forEach((prop) =>
-        assertPath(config[prop]),
-      );
-      expect(spy).toHaveBeenCalledTimes(3);
-      spy.mockClear();
+      assertPath(config.translationsPath);
+      assertPath(config.output);
     });
   });
 });

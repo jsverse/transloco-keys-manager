@@ -20,7 +20,10 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testUnflatSortExtraction(fileFormat: Config['fileFormat']) {
   describe('unflat-sort', () => {
     const type: TranslationTestCase = 'config-options/unflat-sort';
-    const config = buildConfig(type, { unflat: true, sort: true, fileFormat });
+    const config = buildConfig({
+      type,
+      config: { unflat: true, sort: true, fileFormat },
+    });
 
     beforeEach(() => removeI18nFolder(type));
 

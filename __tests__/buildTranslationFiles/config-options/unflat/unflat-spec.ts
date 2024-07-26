@@ -20,7 +20,7 @@ const { buildTranslationFiles } = await import('../../../../src/keys-builder');
 export function testUnflatExtraction(fileFormat: Config['fileFormat']) {
   describe('unflat', () => {
     const type: TranslationTestCase = 'config-options/unflat';
-    const config = buildConfig(type, { unflat: true, fileFormat });
+    const config = buildConfig({ type, config: { unflat: true, fileFormat } });
 
     beforeEach(() => removeI18nFolder(type));
 

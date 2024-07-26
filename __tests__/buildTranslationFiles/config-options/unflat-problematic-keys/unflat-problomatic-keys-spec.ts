@@ -24,7 +24,7 @@ export function testUnflatProblomaticKeysConfig(
 ) {
   describe('Unflat problematic keys', () => {
     const type: TranslationTestCase = 'config-options/unflat-problematic-keys';
-    const config = buildConfig(type, { unflat: true, fileFormat });
+    const config = buildConfig({ type, config: { unflat: true, fileFormat } });
     const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
 
     beforeEach(() => removeI18nFolder(type));
