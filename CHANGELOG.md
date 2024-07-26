@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.4...v5.0.0) (2024-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 The source root won't be automatically prefixed to the `input`,
+`output`and `translationsPath` anymore. for more inforamtion see the
+BREAKING_CHANGES.md file.
+
+### Features
+
+* 🎸 Support scanning arbitrary folders ([4979e83](https://github.com/jsverse/transloco-keys-manager/commit/4979e83aeb9cc8852d9a5221bdc7bd6eb351c511)), closes [#160](https://github.com/jsverse/transloco-keys-manager/issues/160)
+
 ### [4.2.4](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.3...v4.2.4) (2024-07-18)
 
 
