@@ -4,6 +4,10 @@ export function isObject(value: any): value is Record<string, any> {
   return value && typeof value === 'object' && !Array.isArray(value);
 }
 
+export function isFunction(value: any): value is (...args: any[]) => any {
+  return typeof value === 'function';
+}
+
 export function isNil(value: unknown): value is undefined | null {
   return isUndefined(value) || value === null;
 }

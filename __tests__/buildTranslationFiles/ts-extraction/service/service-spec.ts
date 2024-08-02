@@ -2,12 +2,17 @@ import {
   assertPartialTranslation,
   assertTranslation,
   buildConfig,
-  generateKeys,
   removeI18nFolder,
   sourceRoot,
   TranslationTestCase,
 } from '../../build-translation-utils';
-import { defaultValue, mockResolveProjectBasePath } from '../../../spec-utils';
+import {
+  defaultValue,
+  generateKeys,
+  mockResolveProjectBasePath,
+  buildKeysFromParams,
+  setParamsInput,
+} from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
 mockResolveProjectBasePath(sourceRoot);
@@ -83,6 +88,21 @@ export function testServiceExtraction(fileFormat: Config['fileFormat']) {
 
       buildTranslationFiles(config);
       assertPartialTranslation({ type, expected, fileFormat });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({ end: 11, withParams: true }),
+        ...buildKeysFromParams([
+          'inject.test',
+          'private-class-field.test',
+          'variable',
+          'another.variable',
+        ]),
+      };
+
+      buildTranslationFiles(setParamsInput(config));
+      assertTranslation({ type, expected, fileFormat });
     });
   });
 }

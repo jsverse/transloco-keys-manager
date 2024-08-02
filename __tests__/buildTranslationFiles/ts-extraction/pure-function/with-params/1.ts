@@ -8,7 +8,8 @@ import { translate } from '@jsverse/transloco';
 })
 export class AppComponent {
   constructor() {
-    translate('1');
+    translate('1', { 1: '' });
+    translate(['2'], { 2: '' });
   }
 
   getString(): string {
@@ -16,8 +17,9 @@ export class AppComponent {
   }
 
   extractionProblem(): void {
-    translate('2');
     const foo = <string>this.getString();
-    translate(['3', '4']);
+    translate('4', { foo: '', a: '', b: { c: '' } });
   }
 }
+
+translate('3', { 3: '' });

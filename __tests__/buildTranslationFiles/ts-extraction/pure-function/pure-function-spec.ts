@@ -1,12 +1,17 @@
 import {
   assertTranslation,
   buildConfig,
-  generateKeys,
   removeI18nFolder,
   sourceRoot,
   TranslationTestCase,
 } from '../../build-translation-utils';
-import { mockResolveProjectBasePath } from '../../../spec-utils';
+import {
+  buildKeysFromParams,
+  mockResolveProjectBasePath,
+  setParamsInput,
+  generateKeys,
+  resolveValueWithParams,
+} from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
 mockResolveProjectBasePath(sourceRoot);
@@ -26,9 +31,19 @@ export function testPureFunctionExtraction(fileFormat: Config['fileFormat']) {
     beforeEach(() => removeI18nFolder(type));
 
     it('should work with the pure `translate` function', () => {
-      const expected = generateKeys({ end: 3 });
+      const expected = generateKeys({ end: 4 });
 
       buildTranslationFiles(config);
+      assertTranslation({ type, expected, fileFormat });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({ end: 3, withParams: true }),
+        4: resolveValueWithParams(['foo', 'a', 'b.c']),
+      };
+
+      buildTranslationFiles(setParamsInput(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });

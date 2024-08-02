@@ -1,12 +1,11 @@
 import {
   assertTranslation,
   buildConfig,
-  generateKeys,
   removeI18nFolder,
   sourceRoot,
   TranslationTestCase,
 } from '../../build-translation-utils';
-import { mockResolveProjectBasePath } from '../../../spec-utils';
+import { generateKeys, mockResolveProjectBasePath } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
 mockResolveProjectBasePath(sourceRoot);

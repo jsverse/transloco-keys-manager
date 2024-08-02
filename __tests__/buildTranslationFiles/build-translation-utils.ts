@@ -1,31 +1,14 @@
 import nodePath from 'node:path';
 import {
-  BuildConfigOptions,
-  defaultValue,
-  buildConfig as _buildConfig,
-  removeI18nFolder as _removeI18nFolder,
   assertPartialTranslation as _assertPartialTranslation,
   assertTranslation as _assertTranslation,
   AssertTranslationParams,
+  buildConfig as _buildConfig,
+  BuildConfigOptions,
+  removeI18nFolder as _removeI18nFolder,
 } from '../spec-utils';
 
 export const sourceRoot = '__tests__/buildTranslationFiles';
-
-export function generateKeys({
-  start = 1,
-  end,
-  prefix,
-}: {
-  start?: number;
-  end: number;
-  prefix?: string;
-}): { [index: string]: string } {
-  const keys = {};
-  for (let i = start; i <= end; i++) {
-    keys[prefix ? `${prefix}.${i}` : i] = defaultValue;
-  }
-  return keys;
-}
 
 export type TranslationTestCase =
   | 'template-extraction/pipe'

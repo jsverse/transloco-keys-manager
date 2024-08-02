@@ -2,6 +2,7 @@ import { Node, StringLiteral, NoSubstitutionTemplateLiteral } from 'typescript';
 import ts from 'typescript';
 
 import { TSExtractorResult } from './types';
+import { flatten } from 'flat';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
@@ -10,31 +11,35 @@ export function buildKeysFromASTNodes(
   const result: TSExtractorResult = [];
 
   for (let node of nodes) {
-    if (ts.isCallExpression(node.parent)) {
-      const method = node.parent.expression;
-      let methodName = '';
-      if (ts.isIdentifier(method)) {
-        methodName = method.text;
-      } else if (ts.isPropertyAccessExpression(method)) {
-        methodName = method.name.text;
-      }
-      if (!allowedMethods.includes(methodName)) {
-        continue;
-      }
+    if (!ts.isCallExpression(node.parent)) continue;
 
-      const [keyNode, _, langNode] = node.parent.arguments;
-      let lang = isStringNode(langNode) ? langNode.text : '';
-      let keys: string[] = [];
+    const method = node.parent.expression;
+    let methodName = '';
+    if (ts.isIdentifier(method)) {
+      methodName = method.text;
+    } else if (ts.isPropertyAccessExpression(method)) {
+      methodName = method.name.text;
+    }
+    if (!allowedMethods.includes(methodName)) {
+      continue;
+    }
 
-      if (isStringNode(keyNode)) {
-        keys = [keyNode.text];
-      } else if (ts.isArrayLiteralExpression(keyNode)) {
-        keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
-      }
+    const [keyNode, paramsNode, langNode] = node.parent.arguments;
+    let lang = isStringNode(langNode) ? langNode.text : '';
+    let keys: string[] = [];
+    const params: string[] =
+      paramsNode && ts.isObjectLiteralExpression(paramsNode)
+        ? resolveParams(paramsNode)
+        : [];
 
-      for (const key of keys) {
-        result.push({ key, lang });
-      }
+    if (isStringNode(keyNode)) {
+      keys = [keyNode.text];
+    } else if (ts.isArrayLiteralExpression(keyNode)) {
+      keys = keyNode.elements.filter(isStringNode).map((node) => node.text);
+    }
+
+    for (const key of keys) {
+      result.push({ key, lang, params });
     }
   }
 
@@ -48,4 +53,40 @@ function isStringNode(
     node &&
     (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))
   );
+}
+
+function resolveParams(params: ts.ObjectLiteralExpression): string[] {
+  return Object.keys(flatten(traverseParams(params)));
+}
+
+function traverseParams(
+  params: ts.ObjectLiteralExpression,
+): Record<string, any> {
+  const properties: Record<string, any> = {};
+
+  // Recursive function to handle nested properties
+  function processProperty(property: ts.PropertyAssignment) {
+    const key = property.name.getText().replace(/['"]/g, '');
+    const initializer = property.initializer;
+
+    if (!initializer) return;
+
+    if (ts.isObjectLiteralExpression(initializer)) {
+      // Handle nested object
+      properties[key] = traverseParams(initializer);
+    } else {
+      // Simple value (string, number, etc.)
+      properties[key] = initializer.getText();
+    }
+  }
+
+  // Iterate through the properties of the ObjectLiteralExpression
+  for (const property of params.properties) {
+    if (ts.isPropertyAssignment(property)) {
+      processProperty(property);
+    }
+  }
+
+  // Convert the properties object to a JSON string
+  return properties;
 }

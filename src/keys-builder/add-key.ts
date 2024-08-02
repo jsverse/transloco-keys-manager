@@ -1,10 +1,11 @@
 import { messages } from '../messages';
 import { BaseParams } from '../types';
-import { isNil } from '../utils/validators.utils';
+import { isFunction, isNil, isString } from '../utils/validators.utils';
 
 interface AddKeysParams extends BaseParams {
   scopeAlias: string | null;
   keyWithoutScope: string;
+  params?: string[];
 }
 
 export function addKey({
@@ -13,6 +14,7 @@ export function addKey({
   scopeAlias,
   keyWithoutScope,
   scopes,
+  params = [],
 }: AddKeysParams) {
   if (!keyWithoutScope) {
     return;
@@ -22,11 +24,14 @@ export function addKey({
   const keyWithScope = scopeAlias
     ? `${scopeAlias}.${keyWithoutScope}`
     : keyWithoutScope;
+  const paramsWithInterpolation = params.map((p) => `{{${p}}}`).join(' ');
+
   const keyValue = isNil(defaultValue)
     ? `${messages.missingValue} '${keyWithScope}'`
     : defaultValue
         .replace('{{key}}', keyWithScope)
         .replace('{{keyWithoutScope}}', keyWithoutScope)
+        .replace('{{params}}', paramsWithInterpolation)
         .replace('{{scope}}', scopeAlias || '');
 
   if (scopePath) {

@@ -41,11 +41,7 @@ export class Something implements OnInit, AfterViewInit, OnDestroy {
     this._dispose = [
       this._onStateChange(),
       this.transloco.translate('1', {}, 'todos-page'),
-      transloco.selectTranslate(
-        '2.1',
-        { myVAr: { nested: 'bla' } },
-        'todos-page',
-      ),
+      transloco.selectTranslate('2.1', {}, 'todos-page'),
       reaction(
         () => this.leftNavStore.itemClicked,
         (data) => {
@@ -113,7 +109,7 @@ export class Something implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onScroll(event) {
-    this.transloco.selectTranslate(`6.1`, { some: 'asd' }, `nested/scope/es`);
+    this.transloco.selectTranslate(`6.1`, {}, `nested/scope/es`);
   }
 
   onSearch() {

@@ -48,7 +48,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   extractors
     .map((ex) => ex(ast))
     .flat()
-    .forEach(({ key, lang }) => {
+    .forEach(({ key, lang, params }) => {
       const [keyWithoutScope, scopeAlias] = resolveAliasAndKeyFromService(
         key,
         lang,
@@ -57,6 +57,7 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
       addKey({
         scopeAlias,
         keyWithoutScope,
+        params,
         ...baseParams,
       });
     });
