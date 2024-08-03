@@ -1,0 +1,9 @@
+<div>
+    {{ '1' | transloco:{'1': ''} }}
+    <p [title]="'2' | transloco:{'2': 123}"></p>
+</div>
+
+<a [title]="'admin.1' | lowercase
+    | transloco:{someKey: 'asd'}"
+   [routerLink]="'admin' | lowercase">
+</a>

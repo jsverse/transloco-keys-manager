@@ -1,4 +1,11 @@
-import { AST, ASTWithSource, TmplAstNode } from '@angular/compiler';
+import {
+  AST,
+  ASTWithSource,
+  BindingPipe,
+  LiteralMap,
+  LiteralPrimitive,
+  TmplAstNode,
+} from '@angular/compiler';
 
 import { ExtractorConfig } from '../../types';
 import { addKey } from '../add-key';
@@ -21,6 +28,7 @@ import {
   isBlockNode,
   resolveBlockChildNodes,
 } from './utils';
+import { notNil } from '../../utils/validators.utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
   const ast = parseTemplate(config);
@@ -44,7 +52,12 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
     }
 
     for (const ast of astTrees) {
-      addKeysFromAst(getPipeValuesFromAst(ast), config);
+      const pipes = getTranslocoPipeAst(ast) as BindingPipe[];
+      const keysWithParams = pipes
+        .map((p) => resolveKeyAndParam(p))
+        .flat()
+        .filter(notNil);
+      addKeysFromAst(keysWithParams, config);
     }
   }
 }
@@ -60,21 +73,10 @@ function isTranslocoPipe(ast: any): boolean {
   return isTransloco || (isPipeChaining && isTranslocoPipe(ast.exp));
 }
 
-function getPipeValuesFromAst(ast: AST): AST[] {
+function getTranslocoPipeAst(ast: AST): AST[] {
   let exp = [];
   if (isBindingPipe(ast) && isTranslocoPipe(ast)) {
-    if (isLiteralExpression(ast.exp)) {
-      return [ast.exp];
-    } else if (isConditionalExpression(ast.exp)) {
-      return [ast.exp.trueExp, ast.exp.falseExp];
-    } else {
-      let pipe = ast;
-      while (isBindingPipe(pipe.exp)) {
-        pipe = pipe.exp;
-      }
-
-      return [pipe.exp];
-    }
+    return [ast];
   } else if (isBindingPipe(ast)) {
     exp = [...ast.args, ast.exp];
   } else if (isLiteralMap(ast)) {
@@ -91,20 +93,56 @@ function getPipeValuesFromAst(ast: AST): AST[] {
     exp = [ast.receiver];
   }
 
-  return exp.map(getPipeValuesFromAst).flat();
+  return exp.map(getTranslocoPipeAst).flat();
 }
 
-function addKeysFromAst(expressions: AST[], config: ExtractorConfig): void {
-  for (const exp of expressions) {
-    if (isConditionalExpression(exp)) {
-      addKeysFromAst([exp.trueExp, exp.falseExp], config);
-    } else if (isLiteralExpression(exp)) {
-      const [key, scopeAlias] = resolveAliasAndKey(exp.value, config.scopes);
-      addKey({
-        ...config,
-        keyWithoutScope: key,
-        scopeAlias,
+interface KeyWithParam {
+  keyNode: LiteralPrimitive;
+  paramsNode: AST;
+}
+
+function resolveKeyAndParam(
+  pipe: BindingPipe,
+  paramsNode?: AST,
+): KeyWithParam | KeyWithParam[] | null {
+  const resolvedParams: AST = paramsNode ?? pipe.args[0];
+  if (isConditionalExpression(pipe.exp)) {
+    return [pipe.exp.trueExp, pipe.exp.falseExp]
+      .filter(isLiteralExpression)
+      .map((keyNode) => {
+        return {
+          keyNode,
+          paramsNode: resolvedParams,
+        };
       });
+  } else if (isLiteralExpression(pipe.exp)) {
+    return {
+      keyNode: pipe.exp,
+      paramsNode: resolvedParams,
+    };
+  } else if (isBindingPipe(pipe.exp)) {
+    let nestedPipe = pipe;
+    while (isBindingPipe(nestedPipe.exp)) {
+      nestedPipe = nestedPipe.exp;
     }
+
+    return resolveKeyAndParam(nestedPipe, resolvedParams);
+  }
+
+  return null;
+}
+
+function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
+  for (const { keyNode, paramsNode } of keys) {
+    const [key, scopeAlias] = resolveAliasAndKey(keyNode.value, config.scopes);
+    const params = isLiteralMap(paramsNode)
+      ? paramsNode.keys.map((k) => k.key)
+      : [];
+    addKey({
+      ...config,
+      keyWithoutScope: key,
+      scopeAlias,
+      params,
+    });
   }
 }

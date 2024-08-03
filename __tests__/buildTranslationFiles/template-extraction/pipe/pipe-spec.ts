@@ -9,6 +9,8 @@ import {
   defaultValue,
   generateKeys,
   mockResolveProjectBasePath,
+  resolveValueWithParams,
+  setParamsInput,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -48,6 +50,15 @@ export function testPipeExtraction(fileFormat: Config['fileFormat']) {
       });
 
       buildTranslationFiles(config);
+      assertTranslation({ type, expected, fileFormat });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({ end: 2, withParams: true }),
+        'admin.1': resolveValueWithParams(['someKey']),
+      };
+      buildTranslationFiles(setParamsInput(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });
