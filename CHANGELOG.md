@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v5.0.0...v5.1.0) (2024-08-06)
+
+
+### Features
+
+* 🎸 support params in pipe and directive ([020e6bc](https://github.com/jsverse/transloco-keys-manager/commit/020e6bc65033897152ad824f1e654313c1ca1948)), closes [#153](https://github.com/jsverse/transloco-keys-manager/issues/153)
+* 🎸 support pipe params extraction ([d867d5c](https://github.com/jsverse/transloco-keys-manager/commit/d867d5c588ac5058de4905ce1567e8b34f21dfa0))
+* 🎸 support structural directive params extraction ([5e11689](https://github.com/jsverse/transloco-keys-manager/commit/5e116895cd7e6cc766ca208f9fd1fecb7c3de39d)), closes [#153](https://github.com/jsverse/transloco-keys-manager/issues/153)
+* 🎸 support ts params extraction ([0ccbe95](https://github.com/jsverse/transloco-keys-manager/commit/0ccbe9545712599c3c178d169c5ad51031bbb147)), closes [#153](https://github.com/jsverse/transloco-keys-manager/issues/153)
+
 ## [5.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v4.2.4...v5.0.0) (2024-07-26)
 
 
