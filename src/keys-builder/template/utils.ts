@@ -191,3 +191,23 @@ export function resolveBlockChildNodes(node: BlockNode): TmplAstNode[] {
 
   return node.children;
 }
+
+export function resolveKeysFromLiteralMap(node: LiteralMap): string[] {
+  let keys: string[] = [];
+
+  for (let i = 0; i < node.values.length; i++) {
+    const { key } = node.keys[i];
+    const value = node.values[i];
+
+    if (isLiteralMap(value)) {
+      const prefixedKeys = resolveKeysFromLiteralMap(value).map(
+        (k) => `${key}.${k}`,
+      );
+      keys = keys.concat(prefixedKeys);
+    } else {
+      keys.push(key);
+    }
+  }
+
+  return keys;
+}

@@ -67,7 +67,7 @@ export function buildConfig({ config = {}, sourceRoot }: BuildConfigOptions) {
   } as Config;
 }
 
-export function setParamsInput(config: Config) {
+export function paramsTestConfig(config: Config) {
   return {
     ...config,
     input: [nodePath.resolve(config.input[0], '../', 'with-params')],

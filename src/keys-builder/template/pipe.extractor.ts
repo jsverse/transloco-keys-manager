@@ -27,6 +27,7 @@ import {
   parseTemplate,
   isBlockNode,
   resolveBlockChildNodes,
+  resolveKeysFromLiteralMap,
 } from './utils';
 import { notNil } from '../../utils/validators.utils';
 
@@ -136,7 +137,7 @@ function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
   for (const { keyNode, paramsNode } of keys) {
     const [key, scopeAlias] = resolveAliasAndKey(keyNode.value, config.scopes);
     const params = isLiteralMap(paramsNode)
-      ? paramsNode.keys.map((k) => k.key)
+      ? resolveKeysFromLiteralMap(paramsNode)
       : [];
     addKey({
       ...config,

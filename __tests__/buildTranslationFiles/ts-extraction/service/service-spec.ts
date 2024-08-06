@@ -11,7 +11,7 @@ import {
   generateKeys,
   mockResolveProjectBasePath,
   buildKeysFromParams,
-  setParamsInput,
+  paramsTestConfig,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -101,7 +101,7 @@ export function testServiceExtraction(fileFormat: Config['fileFormat']) {
         ]),
       };
 
-      buildTranslationFiles(setParamsInput(config));
+      buildTranslationFiles(paramsTestConfig(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });

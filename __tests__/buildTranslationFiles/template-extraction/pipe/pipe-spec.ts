@@ -10,7 +10,7 @@ import {
   generateKeys,
   mockResolveProjectBasePath,
   resolveValueWithParams,
-  setParamsInput,
+  paramsTestConfig,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -56,9 +56,9 @@ export function testPipeExtraction(fileFormat: Config['fileFormat']) {
     it('should extract params', () => {
       const expected = {
         ...generateKeys({ end: 2, withParams: true }),
-        'admin.1': resolveValueWithParams(['someKey']),
+        'admin.1': resolveValueWithParams(['a', 'b.c']),
       };
-      buildTranslationFiles(setParamsInput(config));
+      buildTranslationFiles(paramsTestConfig(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });

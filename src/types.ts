@@ -65,3 +65,4 @@ export type BaseParams = {
 };
 
 export type Translation = Record<string, any>;
+export type OrArray<T> = T | T[];

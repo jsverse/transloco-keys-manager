@@ -6,7 +6,7 @@ import {
   TmplAstTextAttribute,
 } from '@angular/compiler';
 
-import { ExtractorConfig } from '../../types';
+import { ExtractorConfig, OrArray } from '../../types';
 import { addKey } from '../add-key';
 import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
@@ -18,12 +18,15 @@ import {
   isElement,
   isInterpolation,
   isLiteralExpression,
+  isLiteralMap,
   isSupportedNode,
   isTemplate,
   isTextAttribute,
   parseTemplate,
   resolveBlockChildNodes,
+  resolveKeysFromLiteralMap,
 } from './utils';
+import { coerceArray } from '../../utils/collection.utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
   const ast = parseTemplate(config);
@@ -41,7 +44,18 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
       continue;
     }
 
-    const astTrees = [...node.inputs, ...node.attributes]
+    const params = node.inputs
+      .filter(isTranslocoParams)
+      .map((ast) => {
+        const value = ast.value;
+        if (value instanceof ASTWithSource && isLiteralMap(value.ast)) {
+          return resolveKeysFromLiteralMap(value.ast);
+        }
+
+        return [];
+      })
+      .flat();
+    const keys = [...node.inputs, ...node.attributes]
       .filter(isTranslocoDirective)
       .map((ast) => {
         let value = ast.value;
@@ -51,9 +65,11 @@ function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
 
         return isInterpolation(value) ? (value.expressions as AST[]) : value;
       })
+      .flat()
+      .map(resolveKey)
       .flat();
+    addKeys(keys, params, config);
     traverse(node.children, config);
-    addKeysFromAst(astTrees, config);
   }
 }
 
@@ -65,24 +81,37 @@ function isTranslocoDirective(
   );
 }
 
-function addKeysFromAst(
-  expressions: Array<string | AST>,
+function isTranslocoParams(ast: unknown): ast is TmplAstBoundAttribute {
+  return isBoundAttribute(ast) && ast.name === 'translocoParams';
+}
+
+function resolveKey(ast: OrArray<AST | string>): string[] {
+  return coerceArray(ast)
+    .map((expression) => {
+      if (typeof expression === 'string') {
+        return expression;
+      } else if (isConditionalExpression(expression)) {
+        return resolveKey([expression.trueExp, expression.falseExp]);
+      } else if (isLiteralExpression(expression)) {
+        return expression.value;
+      }
+    })
+    .filter(Boolean)
+    .flat();
+}
+
+function addKeys(
+  keys: string[],
+  params: string[],
   config: ExtractorConfig,
 ): void {
-  for (const exp of expressions) {
-    const isString = typeof exp === 'string';
-    if (isConditionalExpression(exp)) {
-      addKeysFromAst([exp.trueExp, exp.falseExp], config);
-    } else if (isLiteralExpression(exp) || isString) {
-      const [key, scopeAlias] = resolveAliasAndKey(
-        isString ? exp : exp.value,
-        config.scopes,
-      );
-      addKey({
-        ...config,
-        keyWithoutScope: key,
-        scopeAlias,
-      });
-    }
+  for (const rawKey of keys) {
+    const [key, scopeAlias] = resolveAliasAndKey(rawKey, config.scopes);
+    addKey({
+      ...config,
+      keyWithoutScope: key,
+      scopeAlias,
+      params,
+    });
   }
 }

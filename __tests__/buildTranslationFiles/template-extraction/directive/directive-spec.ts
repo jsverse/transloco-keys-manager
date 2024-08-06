@@ -9,6 +9,8 @@ import {
   defaultValue,
   generateKeys,
   mockResolveProjectBasePath,
+  resolveValueWithParams,
+  paramsTestConfig,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -34,6 +36,16 @@ export function testDirectiveExtraction(fileFormat: Config['fileFormat']) {
         expected[nonNumericKey] = defaultValue;
       });
       buildTranslationFiles(config);
+      assertTranslation({ type, expected, fileFormat });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({ end: 3, withParams: true }),
+        ...generateKeys({ start: 4, end: 5 }),
+        'admin.key': resolveValueWithParams(['a', 'b.c', 'b.d.e', 'b.f']),
+      };
+      buildTranslationFiles(paramsTestConfig(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });

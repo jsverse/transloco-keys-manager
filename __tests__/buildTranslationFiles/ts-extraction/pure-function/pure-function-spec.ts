@@ -6,10 +6,9 @@ import {
   TranslationTestCase,
 } from '../../build-translation-utils';
 import {
-  buildKeysFromParams,
-  mockResolveProjectBasePath,
-  setParamsInput,
   generateKeys,
+  mockResolveProjectBasePath,
+  paramsTestConfig,
   resolveValueWithParams,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
@@ -43,7 +42,7 @@ export function testPureFunctionExtraction(fileFormat: Config['fileFormat']) {
         4: resolveValueWithParams(['foo', 'a', 'b.c']),
       };
 
-      buildTranslationFiles(setParamsInput(config));
+      buildTranslationFiles(paramsTestConfig(config));
       assertTranslation({ type, expected, fileFormat });
     });
   });
