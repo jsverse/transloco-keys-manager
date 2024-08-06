@@ -30,10 +30,17 @@ import {
   parseTemplate,
   isBlockNode,
   resolveBlockChildNodes,
+  isLiteralMap,
+  resolveKeysFromLiteralMap,
 } from './utils';
 
+interface MethodCallMetadata {
+  keyNode?: AST;
+  params: string[];
+  read?: string;
+}
+
 interface ContainerMetaData {
-  exp?: AST;
   name: string;
   read?: string;
   /* We need to keep the element's span since we might have several method declarations with the same name */
@@ -56,7 +63,7 @@ export function traverse(
       continue;
     }
 
-    let methodUsages: ContainerMetaData[] = [];
+    let methodUsages: MethodCallMetadata[] = [];
 
     if (isBoundText(node)) {
       const { expressions } = (node.value as ASTWithSource)
@@ -110,16 +117,18 @@ function unwrapMethodCalls(exp: AST): Call[] {
   return unwrapper.expressions;
 }
 
-function getMethodUsages(
-  expressions: AST[],
-  containers: ContainerMetaData[],
-): ContainerMetaData[] {
+function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
   return expressions
     .flatMap(unwrapMethodCalls)
     .filter((exp) => isTranslocoMethod(exp, containers))
     .map((exp) => {
+      const [keyNode, paramsNode] = exp.args;
+
       return {
-        exp: exp.args[0],
+        keyNode,
+        params: isLiteralMap(paramsNode)
+          ? resolveKeysFromLiteralMap(paramsNode)
+          : [],
         ...containers.find(({ name, spanOffset: { start, end } }) => {
           const inRange =
             exp.sourceSpan.end < end && exp.sourceSpan.start > start;
@@ -160,7 +169,7 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
   /*
    * An ngTemplate element might have more than once implicit variables, we need to capture all of them.
    * */
-  let metadata: Omit<ContainerMetaData, 'spanOffset' | 'exp'>[];
+  let metadata: Omit<ContainerMetaData, 'spanOffset'>[];
   if (isNgTemplateTag(node)) {
     const implicitVars = node.variables.filter((attr) => !attr.value);
     let read = node.attributes.find(isPrefixAttr)?.value;
@@ -196,19 +205,27 @@ function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {
 }
 
 function addKeysFromAst(
-  expressions: Array<Pick<ContainerMetaData, 'exp' | 'read'>>,
+  expressions: MethodCallMetadata[],
   config: ExtractorConfig,
-): void {
-  for (const { exp, read } of expressions) {
-    if (isConditionalExpression(exp)) {
-      for (const conditionValue of [exp.trueExp, exp.falseExp]) {
-        addKeysFromAst([{ exp: conditionValue, read }], config);
-      }
-    } else if (isLiteralExpression(exp) && exp.value) {
-      let value = read ? `${read}.${exp.value}` : exp.value;
+) {
+  for (const { keyNode, read, params } of expressions) {
+    if (isConditionalExpression(keyNode)) {
+      addKeysFromAst(
+        [keyNode.trueExp, keyNode.falseExp].map((kn) => {
+          return {
+            keyNode: kn,
+            read,
+            params,
+          };
+        }),
+        config,
+      );
+    } else if (isLiteralExpression(keyNode) && keyNode.value) {
+      let value = read ? `${read}.${keyNode.value}` : keyNode.value;
       const [key, scopeAlias] = resolveAliasAndKey(value, config.scopes);
       addKey({
         ...config,
+        params,
         keyWithoutScope: key,
         scopeAlias,
       });

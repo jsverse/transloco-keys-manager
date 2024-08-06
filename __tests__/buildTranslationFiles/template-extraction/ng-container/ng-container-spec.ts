@@ -9,6 +9,8 @@ import {
   defaultValue,
   generateKeys,
   mockResolveProjectBasePath,
+  paramsTestConfig,
+  resolveValueWithParams,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -55,6 +57,20 @@ export function testNgContainerExtraction(fileFormat: Config['fileFormat']) {
         path: 'admin-page/',
         fileFormat,
       });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({
+          end: 7,
+          withParams: true,
+        }),
+        ...generateKeys({ start: 8, end: 11 }),
+        nested: resolveValueWithParams(['a', 'b.c.d']),
+        'skip.params': defaultValue,
+      };
+      buildTranslationFiles(paramsTestConfig(config));
+      assertTranslation({ type, expected, fileFormat });
     });
   });
 }

@@ -9,6 +9,8 @@ import {
   defaultValue,
   generateKeys,
   mockResolveProjectBasePath,
+  paramsTestConfig,
+  resolveValueWithParams,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 
@@ -50,6 +52,19 @@ export function testNgTemplateExtraction(fileFormat: Config['fileFormat']) {
         path: 'todos-page/',
         fileFormat,
       });
+    });
+
+    it('should extract params', () => {
+      const expected = {
+        ...generateKeys({
+          start: 2,
+          end: 6,
+          withParams: true,
+        }),
+        ...generateKeys({ start: 7, end: 8 }),
+      };
+      buildTranslationFiles(paramsTestConfig(config));
+      assertTranslation({ type, expected, fileFormat });
     });
   });
 }

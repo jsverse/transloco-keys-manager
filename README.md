@@ -324,6 +324,31 @@ The extracted keys for the code above will be:
 </comp>
 ```
 
+- Supports params:
+
+```html
+<comp *transloco="let t;">
+  <h1>{{ t('key', {value: '123', another: property}) }}</h1>
+  <p>{{ 'description' | transloco:{'param': 123} }}</p>
+  <footer transloco="footer" [translocoParams]="{param: 123}"></footer>
+</comp>
+```
+
+```ts
+import {translate} from '@jsverse/transloco';
+
+translate('key', {param: 123});
+
+class MyComponent {
+  someMethod() {
+    const value = translocoService.translate(`key`, {param: 123});
+    const value$ = translocoService.selectTranslate(`key`, {param: 123});
+    // Only literal params are supported, the following won't be extracted:   
+    translocoService.translate(`key`, this.myParams);
+  }
+}
+```
+
 ## 🕵 Keys Detective
 
 This tool detects two things: First, it detects any key that exists in one of your translation files but is missing in any of the others. Secondly, it detects any key that exists in the translation files but is missing from any of the templates or typescript files.
@@ -429,6 +454,7 @@ There are several placeholders that are replaced during extraction:
 1. `{{key}}` - complete key including the scope.
 2. `{{keyWithoutScope}}` - key value without the scope.
 3. `{{scope}}` - the key's scope.
+4. `{{params}}` - the params used for this key.
 
 
 - `replace`: Replace the contents of a translation file (if it exists) with the generated one (default value is `false`, in which case files are merged)
