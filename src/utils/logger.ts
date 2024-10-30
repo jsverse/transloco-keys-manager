@@ -23,7 +23,7 @@ export function devlog(
   tag: string,
   values: Record<string, any>,
 ) {
-  if (!debug.enabled(namespace)) return;
+  if (!debug.enabled(`tkm:${namespace}`)) return;
 
   console.log(`\n\x1b[4m🐞 DEBUG - ${tag}:\x1b[0m`);
   // To prevent from logging the namespace twice, we set an empty namespace and enable it

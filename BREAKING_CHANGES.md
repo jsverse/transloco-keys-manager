@@ -1,3 +1,7 @@
+# Transloco Keys Manager V6
+
+All the debug namespaces are now prefixed with `tkm:` to avoid conflicts with other libraries.  
+
 # Transloco Keys Manager V5
 
 The source root is now only prefixed to the **default** config, which means you need to write the full path relative to

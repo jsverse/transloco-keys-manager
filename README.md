@@ -525,18 +525,11 @@ export default config;
 You can extend the keys manager default logs by setting the `DEBUG` environment variable:
 ```json
 {
-  "i18n:extract": "DEBUG=* transloco-keys-manager extract",
+  "i18n:extract": "DEBUG=tkm:config,tkm:paths transloco-keys-manager extract",
   "i18n:find": "DEBUG=* transloco-keys-manager find"
 }
 ```
-Supported namespaces: `*|config|paths|scopes|extraction`, setting `*` will print all the debugger logs.
-
-You can also chain several namespaces:
-```json
-{
-  "i18n:extract": "DEBUG=config,paths transloco-keys-manager extract"
-}
-```
+Supported namespaces: `tkm:*|config|paths|scopes|extraction`, setting `tkm:*` will print all the debugger logs.
 
 ## Contributors ✨
 
