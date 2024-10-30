@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v5.1.0...v6.0.0) (2024-10-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 The keys manager debug spaces are now perfixed with tkm
+
+### Features
+
+* 🎸 support [@let](https://github.com/let) control flow syntax ([dc2005b](https://github.com/jsverse/transloco-keys-manager/commit/dc2005b2e96b81e06c605f31ee9c323b5b449305)), closes [#202](https://github.com/jsverse/transloco-keys-manager/issues/202)
+
+
+* 💡 prefix debug namespaces with tkm ([c039711](https://github.com/jsverse/transloco-keys-manager/commit/c0397114ea4cf33c8cb698e9a4a4feb1bf9d1ee0))
+
 ## [5.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v5.0.0...v5.1.0) (2024-08-06)
 
 
