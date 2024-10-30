@@ -14,11 +14,8 @@ import { TemplateExtractorConfig } from './types';
 import {
   isBlockNode,
   isBoundAttribute,
-  isConditionalExpression,
   isElement,
   isInterpolation,
-  isLiteralExpression,
-  isLiteralMap,
   isSupportedNode,
   isTemplate,
   isTextAttribute,
@@ -27,6 +24,7 @@ import {
   resolveKeysFromLiteralMap,
 } from './utils';
 import { coerceArray } from '../../utils/collection.utils';
+import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
   const ast = parseTemplate(config);

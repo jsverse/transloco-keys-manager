@@ -1,35 +1,32 @@
 import {
-  Binary,
-  BindingPipe,
-  Conditional,
+  Call,
   Interpolation,
   LiteralMap,
-  LiteralPrimitive,
-  Call,
   parseTemplate as ngParseTemplate,
   ParseTemplateOptions,
   PropertyRead,
   TmplAstBoundAttribute,
   TmplAstBoundText,
-  TmplAstElement,
-  TmplAstTemplate,
-  TmplAstTextAttribute,
-  TmplAstNode,
   TmplAstDeferredBlock,
   TmplAstDeferredBlockError,
   TmplAstDeferredBlockLoading,
   TmplAstDeferredBlockPlaceholder,
+  TmplAstElement,
   TmplAstForLoopBlock,
   TmplAstForLoopBlockEmpty,
-  TmplAstIfBlockBranch,
-  TmplAstSwitchBlockCase,
   TmplAstIfBlock,
+  TmplAstIfBlockBranch,
+  TmplAstNode,
   TmplAstSwitchBlock,
+  TmplAstSwitchBlockCase,
+  TmplAstTemplate,
+  TmplAstTextAttribute
 } from '@angular/compiler';
 
 import { readFile } from '../../utils/file.utils';
 
 import { TemplateExtractorConfig } from './types';
+import { isLiteralMap } from '@jsverse/utils';
 
 export function isTemplate(node: unknown): node is TmplAstTemplate {
   return node instanceof TmplAstTemplate;
@@ -51,9 +48,6 @@ export function isTextAttribute(node: unknown): node is TmplAstTextAttribute {
   return node instanceof TmplAstTextAttribute;
 }
 
-export function isBindingPipe(ast: unknown): ast is BindingPipe {
-  return ast instanceof BindingPipe;
-}
 
 export function isInterpolation(ast: unknown): ast is Interpolation {
   return ast instanceof Interpolation;
@@ -69,26 +63,6 @@ export function isPropertyRead(ast: unknown): ast is PropertyRead {
 
 export function isNgTemplateTag(node: TmplAstTemplate) {
   return node.tagName === 'ng-template';
-}
-
-export function isLiteralExpression(
-  expression: unknown,
-): expression is LiteralPrimitive {
-  return expression instanceof LiteralPrimitive;
-}
-
-export function isLiteralMap(expression: unknown): expression is LiteralMap {
-  return expression instanceof LiteralMap;
-}
-
-export function isConditionalExpression(
-  expression: unknown,
-): expression is Conditional {
-  return expression instanceof Conditional;
-}
-
-export function isBinaryExpression(expression: unknown): expression is Binary {
-  return expression instanceof Binary;
 }
 
 export function parseTemplate(

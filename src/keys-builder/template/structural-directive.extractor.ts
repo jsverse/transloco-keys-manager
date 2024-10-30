@@ -19,10 +19,8 @@ import { TemplateExtractorConfig } from './types';
 import {
   isBoundAttribute,
   isBoundText,
-  isConditionalExpression,
   isElement,
   isInterpolation,
-  isLiteralExpression,
   isCall,
   isNgTemplateTag,
   isSupportedNode,
@@ -30,9 +28,9 @@ import {
   parseTemplate,
   isBlockNode,
   resolveBlockChildNodes,
-  isLiteralMap,
   resolveKeysFromLiteralMap,
 } from './utils';
+import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/utils';
 
 interface MethodCallMetadata {
   keyNode?: AST;

@@ -1,11 +1,4 @@
-import {
-  AST,
-  ASTWithSource,
-  BindingPipe,
-  LiteralMap,
-  LiteralPrimitive,
-  TmplAstNode,
-} from '@angular/compiler';
+import { AST, BindingPipe, LiteralPrimitive, tmplAstVisitAll } from '@angular/compiler';
 
 import { ExtractorConfig } from '../../types';
 import { addKey } from '../add-key';
@@ -13,88 +6,30 @@ import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
 import {
-  isBinaryExpression,
-  isBindingPipe,
-  isBoundText,
-  isConditionalExpression,
-  isElement,
-  isInterpolation,
-  isLiteralExpression,
-  isLiteralMap,
-  isCall,
-  isPropertyRead,
-  isTemplate,
   parseTemplate,
-  isBlockNode,
-  resolveBlockChildNodes,
-  resolveKeysFromLiteralMap,
+  resolveKeysFromLiteralMap
 } from './utils';
 import { notNil } from '../../utils/validators.utils';
+import {
+  AstPipeCollector,
+  isBindingPipe,
+  isConditionalExpression,
+  isLiteralExpression, isLiteralMap,
+  TmplPipeCollector
+} from '@jsverse/utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
-  const ast = parseTemplate(config);
-  traverse(ast.nodes, config);
-}
-
-function traverse(nodes: TmplAstNode[], config: ExtractorConfig) {
-  for (const node of nodes) {
-    if (isBlockNode(node)) {
-      traverse(resolveBlockChildNodes(node), config);
-      continue;
-    }
-
-    let astTrees: AST[] = [];
-
-    if (isElement(node) || isTemplate(node)) {
-      astTrees = node.inputs.map((input) => (input.value as ASTWithSource).ast);
-      traverse(node.children, config);
-    } else if (isBoundText(node)) {
-      astTrees = [(node.value as ASTWithSource).ast];
-    }
-
-    for (const ast of astTrees) {
-      const pipes = getTranslocoPipeAst(ast) as BindingPipe[];
-      const keysWithParams = pipes
-        .map((p) => resolveKeyAndParam(p))
-        .flat()
-        .filter(notNil);
-      addKeysFromAst(keysWithParams, config);
-    }
+  const parsedTemplate = parseTemplate(config);
+  const tmplVisitor = new TmplPipeCollector('transloco');
+  tmplAstVisitAll(tmplVisitor, parsedTemplate.nodes);
+  const astVisitor = new AstPipeCollector();
+  astVisitor.visitAll([...tmplVisitor.astTrees], {});
+  const keysWithParams = astVisitor.pipes.get('transloco')?.map((p) => resolveKeyAndParam(p.node))
+    .flat()
+    .filter(notNil);
+  if (keysWithParams) {
+    addKeysFromAst(keysWithParams, config);
   }
-}
-
-function isTranslocoPipe(ast: any): boolean {
-  const isPipeChaining = isBindingPipe(ast.exp);
-  const isTransloco =
-    ast.name === 'transloco' &&
-    (isPipeChaining ||
-      isLiteralExpression(ast.exp) ||
-      isConditionalExpression(ast.exp));
-
-  return isTransloco || (isPipeChaining && isTranslocoPipe(ast.exp));
-}
-
-function getTranslocoPipeAst(ast: AST): AST[] {
-  let exp = [];
-  if (isBindingPipe(ast) && isTranslocoPipe(ast)) {
-    return [ast];
-  } else if (isBindingPipe(ast)) {
-    exp = [...ast.args, ast.exp];
-  } else if (isLiteralMap(ast)) {
-    exp = ast.values;
-  } else if (isInterpolation(ast)) {
-    exp = ast.expressions;
-  } else if (isConditionalExpression(ast)) {
-    exp = [ast.condition, ast.trueExp, ast.falseExp];
-  } else if (isBinaryExpression(ast)) {
-    exp = [ast.left, ast.right];
-  } else if (isCall(ast)) {
-    exp = [...ast.args, ast.receiver];
-  } else if (isPropertyRead(ast)) {
-    exp = [ast.receiver];
-  }
-
-  return exp.map(getTranslocoPipeAst).flat();
 }
 
 interface KeyWithParam {
