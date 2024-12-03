@@ -1,1 +1,3 @@
-import 'jest-preset-angular/setup-jest.mjs';
+import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone/index.mjs';
+
+setupZoneTestEnv();
