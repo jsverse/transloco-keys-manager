@@ -36,6 +36,7 @@ To make the process less burdensome, we've created two tools for the Transloco l
 - [Options](#-options)
 - [Transloco Config File](#transloco-config-file)
 - [Debugging](#-debugging)
+- [Using with NX](#using-with-nx)
 
 ## 🌩 Installation
 
@@ -530,6 +531,61 @@ You can extend the keys manager default logs by setting the `DEBUG` environment 
 }
 ```
 Supported namespaces: `tkm:*|config|paths|scopes|extraction`, setting `tkm:*` will print all the debugger logs.
+
+### Using with NX
+
+You can use the keys manager with a NX workspace by providing the
+`transloco.config.ts` file at the root level. 
+
+```ts
+import { TranslocoGlobalConfig } from '@jsverse/transloco-utils';
+
+const config: TranslocoGlobalConfig = {
+  // rootTranslationsPath: 'src/assets/i18n/', <-- Default path
+  langs: ['en', 'fr', 'es'],
+  keysManager: {
+    // input: ['src/app'],  <-- Default path
+    // output: 'src/assets/i18n',  <-- Default path
+    /** @ts-ignore: Somehow the type doesnt have it. */
+    sort: true,
+    /** @ts-ignore: Somehow the type doesnt have it. */
+    unflat: true,
+  },
+};
+
+export default config;
+```
+
+This config will take the passed `--project=projectName` as the base path for
+`rootTranslationsPath`, `input` and `output` variables and provide the correct
+`i18n` files.
+
+To run the commands in a nx workspace, add the following to the `project.json`
+for each "app" or "library" where you want to transloco to lookup for missing
+keys or extract keys.
+
+```json
+{
+  "i18n-extract": {
+    "executor": "nx:run-commands",
+    "outputs": [],
+    "options": {
+      "command": "transloco-keys-manager extract --project projectName"
+    }
+  },
+  "i18n-find": {
+    "executor": "nx:run-commands",
+    "outputs": [],
+    "options": {
+      "command": "transloco-keys-manager find --project projectName"
+    }
+  }
+}
+```
+
+As important note, do not pass the `cwd` option to these nx commands as it will
+affect the root path to lookup for the "prettier" config file used by the keys
+manager.
 
 ## Contributors ✨
 
