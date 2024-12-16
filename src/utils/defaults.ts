@@ -1,4 +1,5 @@
 import { AST } from '@angular/compiler';
+import ts from 'typescript';
 
 export abstract class Defaults {
   private constructor() {}
@@ -21,5 +22,14 @@ export abstract class Defaults {
       defaultTranslation = (paramsNode as any).values[defaultIndex].value;
     }
     this._defaults.push({key, defaultTranslation});
+  }
+
+  public static markerExtractorDefaults(node:  ts.NodeArray<ts.Expression>) {
+    const markerNodes = node.filter(e => e?.parent?.expression?.escapedText == "marker");
+    if (markerNodes.length > 0) {
+      const key = markerNodes[0].text
+      const defaultTranslation = markerNodes[1]?.text ?? "";
+      this._defaults.push({key, defaultTranslation});
+    }
   }
 }
