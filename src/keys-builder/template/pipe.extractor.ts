@@ -1,22 +1,26 @@
-import { AST, BindingPipe, LiteralPrimitive, tmplAstVisitAll } from '@angular/compiler';
+import {
+  AST,
+  BindingPipe,
+  LiteralPrimitive,
+  tmplAstVisitAll,
+} from '@angular/compiler';
 
 import { ExtractorConfig } from '../../types';
 import { addKey } from '../add-key';
 import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
-import {
-  parseTemplate,
-  resolveKeysFromLiteralMap
-} from './utils';
+import { parseTemplate, resolveKeysFromLiteralMap } from './utils';
 import { notNil } from '../../utils/validators.utils';
 import {
   AstPipeCollector,
   isBindingPipe,
   isConditionalExpression,
-  isLiteralExpression, isLiteralMap,
-  TmplPipeCollector
+  isLiteralExpression,
+  isLiteralMap,
+  TmplPipeCollector,
 } from '@jsverse/utils';
+import { Defaults } from '../../utils/defaults';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
   const parsedTemplate = parseTemplate(config);
@@ -24,7 +28,9 @@ export function pipeExtractor(config: TemplateExtractorConfig) {
   tmplAstVisitAll(tmplVisitor, parsedTemplate.nodes);
   const astVisitor = new AstPipeCollector();
   astVisitor.visitAll([...tmplVisitor.astTrees], {});
-  const keysWithParams = astVisitor.pipes.get('transloco')?.map((p) => resolveKeyAndParam(p.node))
+  const keysWithParams = astVisitor.pipes
+    .get('transloco')
+    ?.map((p) => resolveKeyAndParam(p.node))
     .flat()
     .filter(notNil);
   if (keysWithParams) {
@@ -71,9 +77,11 @@ function resolveKeyAndParam(
 function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
   for (const { keyNode, paramsNode } of keys) {
     const [key, scopeAlias] = resolveAliasAndKey(keyNode.value, config.scopes);
+    addKeyDefault(paramsNode, key);
     const params = isLiteralMap(paramsNode)
       ? resolveKeysFromLiteralMap(paramsNode)
       : [];
+
     addKey({
       ...config,
       keyWithoutScope: key,
@@ -81,4 +89,15 @@ function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
       params,
     });
   }
+}
+
+function addKeyDefault(paramsNode: AST, key: string) {
+  let defaultTranslation = '';
+  const defaultIndex = (paramsNode as any).keys.findIndex(
+    (e: any) => e.key.toLowerCase() === 'default',
+  );
+  if (defaultIndex >= 0) {
+    defaultTranslation = (paramsNode as any).values[defaultIndex].value;
+  }
+  Defaults.addDefault(key, defaultTranslation);
 }

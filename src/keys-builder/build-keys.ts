@@ -1,7 +1,6 @@
 import { Config, ScopeMap } from '../types';
 import { checkForProblematicUnflatKeys } from '../utils/keys.utils';
 import { mergeDeep } from '../utils/object.utils';
-
 import { extractTemplateKeys } from './template';
 import { extractTSKeys } from './typescript';
 
