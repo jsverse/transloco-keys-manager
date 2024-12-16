@@ -25,10 +25,10 @@ export abstract class Defaults {
   }
 
   public static markerExtractorDefaults(node:  ts.NodeArray<ts.Expression>) {
-    const markerNodes = node.filter(e => e?.parent?.expression?.escapedText == "marker");
+    const markerNodes = node.filter(e => (e?.parent as any)?.expression?.escapedText == "marker");
     if (markerNodes.length > 0) {
-      const key = markerNodes[0].text
-      const defaultTranslation = markerNodes[1]?.text ?? "";
+      const key = (markerNodes[0] as any).text
+      const defaultTranslation = (markerNodes[1] as any)?.text ?? "";
       this._defaults.push({key, defaultTranslation});
     }
   }
