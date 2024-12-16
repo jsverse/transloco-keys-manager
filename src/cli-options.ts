@@ -62,9 +62,9 @@ export const optionDefinitions = [
     description: `The language of the default values`
   },
   {
-    name: 'default-override-existing',
+    name: 'default-overwrite',
     type: Boolean,
-    description: `Override existing translation files for the default values. Non default languages will be made empty`,
+    description: `Overwrite existing translation entries for the default values. Non default languages will be made empty`,
   },
   {
     name: 'sort',
