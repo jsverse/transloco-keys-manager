@@ -53,9 +53,11 @@ export function buildTranslationFileWithDefaults({
   fileFormat,
   lang
 }: BuildTranslationOptionsWithDefaults): FileAction {
-  const currentTranslation = getCurrentTranslation({ path, fileFormat });
+  let currentTranslation = getCurrentTranslation({ path, fileFormat });
 
-  Defaults.handleTranslation(translation, currentTranslation, lang);
+  const defRes = Defaults.handleTranslation(translation, currentTranslation, lang);
+  translation = defRes.translation;
+  currentTranslation = defRes.currentTranslation;
 
   fs.outputFileSync(
     path,

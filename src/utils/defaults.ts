@@ -2,6 +2,7 @@ import { AST } from '@angular/compiler';
 import ts from 'typescript';
 import { FileFormats, Translation } from '../types';
 import { getCurrentTranslation } from '../keys-builder/utils/get-current-translation';
+import { getLogger } from './logger';
 
 export abstract class Defaults {
   private constructor() {}
@@ -45,8 +46,34 @@ export abstract class Defaults {
   }
 
   public static handleTranslation(translation: Translation, currentTranslation: Translation, lang: string) {
-    // if (lang.toLowerCase() === this._defaultLanguage.toLowerCase()) {
-    //   console.log(translation);
-    // }
+    if (lang.toLowerCase() === this._defaultLanguage.toLowerCase()) {
+      if (this._defaultOverwrite) {
+        for (const key of Object.keys(translation)) {
+          const isUpdate = this._updatedTranslations.includes(key);
+          let oldValue = "";
+          if (isUpdate) {
+            oldValue = currentTranslation[key];
+          }
+
+          currentTranslation[key] = this._defaults.find(d => d.key == key)?.defaultTranslation ?? "";
+          if (isUpdate) {
+            const logger = getLogger();
+            logger.log(`💪 Updated '${key}' from '${oldValue}' to '${currentTranslation[key]}'.`);
+          }
+        }
+      } else {
+        for (const key of Object.keys(translation).filter(e => currentTranslation[e].length == 0)) {
+          currentTranslation[key] = this._defaults.find(d => d.key == key)?.defaultTranslation ?? "";
+        }
+      }
+    } else {
+      if (this._defaultOverwrite) {
+        for (const key of this._updatedTranslations) {
+          currentTranslation[key] = "";
+        }
+      }
+    }
+
+    return {translation, currentTranslation};
   }
 }
