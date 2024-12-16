@@ -8,8 +8,7 @@ import { Defaults } from '../utils/defaults';
 export function buildKeys(config: Config) {
   const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];
 
-  Defaults.setDefaultOverwrite(config.defaultOverwrite);
-  Defaults.setDefaultLanguage(config.defaultLanguage);
+  Defaults.setConfigDefaults(config.defaultLanguage, config.defaultOverwrite);;
 
   const scopeToKeys = mergeDeep(
     {},

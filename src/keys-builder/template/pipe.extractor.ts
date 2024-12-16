@@ -77,7 +77,7 @@ function resolveKeyAndParam(
 function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
   for (const { keyNode, paramsNode } of keys) {
     const [key, scopeAlias] = resolveAliasAndKey(keyNode.value, config.scopes);
-    addKeyDefault(paramsNode, key);
+    Defaults.pipeExtractorDefaults(paramsNode, key);
     const params = isLiteralMap(paramsNode)
       ? resolveKeysFromLiteralMap(paramsNode)
       : [];
@@ -89,15 +89,4 @@ function addKeysFromAst(keys: KeyWithParam[], config: ExtractorConfig): void {
       params,
     });
   }
-}
-
-function addKeyDefault(paramsNode: AST, key: string) {
-  let defaultTranslation = '';
-  const defaultIndex = (paramsNode as any).keys.findIndex(
-    (e: any) => e.key.toLowerCase() === 'default',
-  );
-  if (defaultIndex >= 0) {
-    defaultTranslation = (paramsNode as any).values[defaultIndex].value;
-  }
-  Defaults.addDefault(key, defaultTranslation);
 }
