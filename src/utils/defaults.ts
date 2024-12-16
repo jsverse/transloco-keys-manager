@@ -1,12 +1,15 @@
 import { AST } from '@angular/compiler';
 import ts from 'typescript';
+import { FileFormats, Translation } from '../types';
+import { getCurrentTranslation } from '../keys-builder/utils/get-current-translation';
 
 export abstract class Defaults {
   private constructor() {}
 
-  public static _defaults: {key: string, defaultTranslation: string}[] = [];
-  public static _defaultLanguage: string = "en";
-  public static _defaultOverwrite: boolean = false;
+  private static _defaults: {key: string, defaultTranslation: string}[] = [];
+  private static _defaultLanguage: string = "en";
+  private static _defaultOverwrite: boolean = false;
+  private static _updatedTranslations: string[] = [];
 
   public static setConfigDefaults(iso: string, overwrite: boolean) {
     this._defaultLanguage = iso;
@@ -31,5 +34,19 @@ export abstract class Defaults {
       const defaultTranslation = (markerNodes[1] as any)?.text ?? "";
       this._defaults.push({key, defaultTranslation});
     }
+  }
+
+  public static findUpdatedValuesInGlobalFiles(globalFiles: {path: string, lang: string}[], fileFormat: FileFormats) {
+    const defaultGlobalFile = globalFiles.find((e: any) => e.lang .toLowerCase() == this._defaultLanguage.toLowerCase());
+    if (defaultGlobalFile) {
+      const currentTranslation = getCurrentTranslation({path: defaultGlobalFile.path, fileFormat});
+      this._updatedTranslations = Object.keys(currentTranslation).filter(e => currentTranslation[e].length > 0 && this._defaults.find(d => d.key == e)?.defaultTranslation != currentTranslation[e]);
+    }
+  }
+
+  public static handleTranslation(translation: Translation, currentTranslation: Translation, lang: string) {
+    // if (lang.toLowerCase() === this._defaultLanguage.toLowerCase()) {
+    //   console.log(translation);
+    // }
   }
 }

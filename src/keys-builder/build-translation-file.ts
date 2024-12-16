@@ -4,6 +4,7 @@ import { Config, Translation } from '../types';
 
 import { createTranslation } from './utils/create-translation';
 import { getCurrentTranslation } from './utils/get-current-translation';
+import { Defaults } from '../utils/defaults';
 
 export interface FileAction {
   path: string;
@@ -22,7 +23,7 @@ export function buildTranslationFile({
   translation = {},
   replace = false,
   removeExtraKeys = false,
-  fileFormat,
+  fileFormat
 }: BuildTranslationOptions): FileAction {
   const currentTranslation = getCurrentTranslation({ path, fileFormat });
 
@@ -39,3 +40,34 @@ export function buildTranslationFile({
 
   return { type: currentTranslation ? 'modified' : 'new', path };
 }
+
+interface BuildTranslationOptionsWithDefaults extends  BuildTranslationOptions {
+  lang: string;
+}
+
+export function buildTranslationFileWithDefaults({
+  path,
+  translation = {},
+  replace = false,
+  removeExtraKeys = false,
+  fileFormat,
+  lang
+}: BuildTranslationOptionsWithDefaults): FileAction {
+  const currentTranslation = getCurrentTranslation({ path, fileFormat });
+
+  Defaults.handleTranslation(translation, currentTranslation, lang);
+
+  fs.outputFileSync(
+    path,
+    createTranslation({
+      currentTranslation,
+      translation,
+      replace,
+      removeExtraKeys,
+      fileFormat,
+    }),
+  );
+
+  return { type: currentTranslation ? 'modified' : 'new', path };
+}
+
