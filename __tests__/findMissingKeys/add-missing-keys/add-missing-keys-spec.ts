@@ -9,6 +9,7 @@ import { Config } from '../../../src/types';
 import nodePath from 'node:path';
 import fs from 'fs-extra';
 import { unflatten } from 'flat';
+import { describe, beforeEach, it } from 'vitest';
 
 const sourceRoot = '__tests__/findMissingKeys/add-missing-keys';
 mockResolveProjectBasePath(sourceRoot);

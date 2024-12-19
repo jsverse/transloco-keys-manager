@@ -1,5 +1,14 @@
 import fs from 'fs-extra';
 import path from 'path';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
 

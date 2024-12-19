@@ -7,8 +7,8 @@ import {
 } from '../../build-translation-utils';
 import { defaultValue, mockResolveProjectBasePath } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
-import { jest } from '@jest/globals';
 import { messages } from '../../../../src/messages';
+import { beforeEach, describe, it, vi, afterEach, expect } from 'vitest';
 
 mockResolveProjectBasePath(sourceRoot);
 
@@ -25,9 +25,12 @@ export function testUnflatProblomaticKeysConfig(
   describe('Unflat problematic keys', () => {
     const type: TranslationTestCase = 'config-options/unflat-problematic-keys';
     const config = buildConfig({ type, config: { unflat: true, fileFormat } });
-    const spy = jest.spyOn(messages, 'problematicKeysForUnflat');
+    const spy = vi.spyOn(messages, 'problematicKeysForUnflat');
 
-    beforeEach(() => removeI18nFolder(type));
+    beforeEach(() => {
+      spy.mockReset();
+      removeI18nFolder(type);
+    });
 
     it('should work with unflat true and problematic keys', () => {
       const expected = {

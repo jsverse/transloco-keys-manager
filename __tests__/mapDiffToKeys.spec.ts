@@ -1,5 +1,6 @@
 import { mapDiffToKeys } from '../src/keys-detective/map-diff-to-keys';
 import type { Diff } from 'deep-diff';
+import { describe, expect, it } from 'vitest';
 
 describe('mapDiffToKeys', () => {
   it('should pass when no missing or extra keys were found', () => {

@@ -12,6 +12,7 @@ import {
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
 import nodePath from 'node:path';
+import { beforeEach, describe, it } from 'vitest';
 
 mockResolveProjectBasePath(sourceRoot);
 

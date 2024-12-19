@@ -4,12 +4,14 @@
     "module": "ES2022",
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "types": ["vitest/globals"],
     "lib": ["es2020"]
   },
+  "files": ["vitest.config.ts"],
   "include": [
-    "setup-jest.ts",
     "__tests__/**/*-utils.ts",
     "__tests__/**/*-spec.ts",
     "__tests__/**/*.spec.ts"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }

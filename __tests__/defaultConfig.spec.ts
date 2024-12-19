@@ -1,4 +1,5 @@
 import { defaultConfig } from '../src/config';
+import { describe, expect, it } from 'vitest';
 
 describe('defaultConfig', () => {
   it('should set the input path to "app"', () => {

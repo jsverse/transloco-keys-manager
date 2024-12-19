@@ -9,6 +9,7 @@ import { mockResolveProjectBasePath } from '../../../spec-utils';
 import { Config, Translation } from '../../../../src/types';
 import fs from 'fs-extra';
 import nodePath from 'node:path';
+import { afterEach, beforeEach, describe, it } from 'vitest';
 
 mockResolveProjectBasePath(sourceRoot);
 

@@ -7,6 +7,7 @@ import {
 } from '../../build-translation-utils';
 import { generateKeys, mockResolveProjectBasePath } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
+import { describe, beforeEach, it } from 'vitest';
 
 mockResolveProjectBasePath(sourceRoot);
 
@@ -27,7 +28,7 @@ export function testScopeExtraction(fileFormat: Config['fileFormat']) {
     it('should work with scope', () => {
       const scopes = Array.from(Array(9), (_, index) => `scope${index + 1}`);
 
-      const expected = {};
+      const expected: Record<string, ReturnType<typeof generateKeys>> = {};
       for (const scope of scopes) {
         expected[scope] = generateKeys({ end: 1 });
       }

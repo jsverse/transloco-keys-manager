@@ -1,35 +1,27 @@
+import { vi, MockInstance, beforeAll, afterAll, expect } from 'vitest';
+
 import chalk from 'chalk';
 import path from 'node:path';
-import { jest } from '@jest/globals';
-import type { SpyInstance } from 'jest-mock';
 
 import { defaultConfig as _defaultConfig } from '../../src/config';
 import { messages } from '../../src/messages';
 
 import { spyOnConsole, spyOnProcess } from '../spec-utils';
+import { resolveConfig } from '../../src/utils/resolve-config';
+import { describe, it } from 'vitest';
 
 const sourceRoot = '__tests__/resolveConfig';
-let mockedGloblConfig;
+let mockedGlobalConfig = {};
 
-jest.unstable_mockModule(
-  '../../src/utils/resolve-project-base-path.ts',
-  () => ({
-    resolveProjectBasePath: jest
-      .fn()
-      .mockReturnValue({ projectBasePath: sourceRoot }),
-  }),
-);
-
-jest.unstable_mockModule('@jsverse/transloco-utils', () => ({
-  getGlobalConfig: () => mockedGloblConfig,
+vi.mock('../../src/utils/resolve-project-base-path.ts', () => ({
+  resolveProjectBasePath: vi
+    .fn()
+    .mockReturnValue({ projectBasePath: '__tests__/resolveConfig' }),
 }));
 
-/**
- * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
- * This thing is still in WIP at Jest, so keep an eye on it.
- * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
- */
-const { resolveConfig } = await import('../../src/utils/resolve-config');
+vi.mock('@jsverse/transloco-utils', () => ({
+  getGlobalConfig: () => mockedGlobalConfig,
+}));
 
 describe('resolveConfig', () => {
   const inlineConfig = {
@@ -37,12 +29,12 @@ describe('resolveConfig', () => {
     input: [`${sourceRoot}/somePath`],
     outputFormat: 'pot',
   };
-  let spies: SpyInstance[];
+  let spies: MockInstance[];
   const defaultConfig = _defaultConfig({ sourceRoot });
   const validInput = [`${sourceRoot}/src/folder`];
 
   beforeAll(() => {
-    mockedGloblConfig = {};
+    mockedGlobalConfig = {};
     spies = [spyOnProcess('exit'), spyOnConsole('log')];
   });
 
@@ -103,11 +95,11 @@ describe('resolveConfig', () => {
     };
 
     beforeAll(() => {
-      mockedGloblConfig = translocoConfig;
+      mockedGlobalConfig = translocoConfig;
     });
 
     afterAll(() => {
-      mockedGloblConfig = {};
+      mockedGlobalConfig = {};
     });
 
     it('should merge the default and the transloco config', () => {
