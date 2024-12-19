@@ -1,34 +1,23 @@
-import { jest } from '@jest/globals';
-import type { SpyInstance } from 'jest-mock';
 import { Config } from '../src/types';
 import nodePath from 'node:path';
 import { sourceRoot } from './buildTranslationFiles/build-translation-utils';
 import fs from 'fs-extra';
-
-/**
- * With ESM modules, you need to mock the modules beforehand (with jest.unstable_mockModule) and import them ashynchronously afterwards.
- * This thing is still in WIP at Jest, so keep an eye on it.
- * @see https://jestjs.io/docs/ecmascript-modules#module-mocking-in-esm
- */
-const { getCurrentTranslation } = await import(
-  '../src/keys-builder/utils/get-current-translation'
-);
+import { expect, vi } from 'vitest';
+import { getCurrentTranslation } from '../src/keys-builder/utils/get-current-translation';
 
 export function noop() {}
 
-export function spyOnConsole(method: 'log' | 'warn'): SpyInstance {
-  return jest.spyOn(console, method).mockImplementation(noop);
+export function spyOnConsole(method: 'log' | 'warn') {
+  return vi.spyOn(console, method).mockImplementation(noop);
 }
 
-export function spyOnProcess(method: 'exit'): SpyInstance {
-  return jest
-    .spyOn(process, method)
-    .mockImplementation(noop as any) as SpyInstance;
+export function spyOnProcess(method: 'exit') {
+  return vi.spyOn(process, method).mockImplementation(noop as any);
 }
 
 export function mockResolveProjectBasePath(projectBasePath: string) {
-  jest.unstable_mockModule('../src/utils/resolve-project-base-path.ts', () => ({
-    resolveProjectBasePath: jest.fn().mockReturnValue({ projectBasePath }),
+  vi.mock('src/utils/resolve-project-base-path.ts', () => ({
+    resolveProjectBasePath: vi.fn().mockReturnValue({ projectBasePath }),
   }));
 }
 
@@ -42,12 +31,15 @@ export function resolveValueWithParams(params: string[]) {
   );
 }
 
-export function buildKeysFromParams(params: string[]): Record<string, string> {
-  return params.reduce((acc, p) => {
-    acc[p] = resolveValueWithParams([p]);
+export function buildKeysFromParams(params: string[]) {
+  return params.reduce(
+    (acc, p) => {
+      acc[p] = resolveValueWithParams([p]);
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 }
 
 export interface BuildConfigOptions {
@@ -122,7 +114,7 @@ export function generateKeys({
   prefix,
   withParams = false,
 }: GenerateKeysParams): { [index: string]: string } {
-  let keys = {};
+  let keys: Record<string, string> = {};
   for (let i = start; i <= end; i++) {
     const key = prefix ? `${prefix}.${i}` : `${i}`;
     if (withParams) {

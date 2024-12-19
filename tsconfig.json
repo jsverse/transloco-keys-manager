@@ -11,9 +11,8 @@
     "typeRoots": [],
     "sourceMap": true
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
+  "exclude": ["__tests__"],
   "tsc-alias": {
     "resolveFullPaths": true,
     "fileExtensions": {

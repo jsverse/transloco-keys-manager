@@ -12,6 +12,7 @@ import {
   resolveValueWithParams,
 } from '../../../spec-utils';
 import { Config } from '../../../../src/types';
+import { describe, beforeEach, it } from 'vitest';
 
 mockResolveProjectBasePath(sourceRoot);
 

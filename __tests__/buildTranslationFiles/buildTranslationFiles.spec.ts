@@ -19,6 +19,7 @@ import { testUnflatExtraction } from './config-options/unflat/unflat-spec';
 import { testScopeMappingConfig } from './config-options/scope-mapping/scope-mapping-spec';
 import { testRemoveExtraKeysConfig } from './config-options/remove-extra-keys/remove-extra-keys-spec';
 import { testMultiInputsConfig } from './config-options/multi-input/multi-input-spec';
+import { describe, beforeAll, afterEach } from 'vitest';
 
 const formats: FileFormats[] = ['pot', 'json'];
 
