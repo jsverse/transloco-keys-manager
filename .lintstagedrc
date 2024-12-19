@@ -1,3 +1,3 @@
 {
-  "*.{ts,js}": ["prettier --write"]
+  "*.{ts,js,json,yml}": ["prettier --write"]
 }
