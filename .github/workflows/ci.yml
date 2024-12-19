@@ -38,5 +38,8 @@ jobs:
           node-version: '18'
           cache: pnpm
 
+      - name: Install dependencies
+        run: pnpm i
+
       - name: Run tests
         run: pnpm test
