@@ -546,10 +546,6 @@ const config: TranslocoGlobalConfig = {
   keysManager: {
     // input: ['src/app'],  <-- Default path
     // output: 'src/assets/i18n',  <-- Default path
-    /** @ts-ignore: Somehow the type doesnt have it. */
-    sort: true,
-    /** @ts-ignore: Somehow the type doesnt have it. */
-    unflat: true,
   },
 };
 
