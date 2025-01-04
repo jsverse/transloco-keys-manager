@@ -56,7 +56,7 @@
   "bugs": {
     "url": "https://github.com/jsverse/transloco-keys-manager/issues"
   },
-  "homepage": "https://github.com/jsverse/transloco-keys-manager#readme",
+  "homepage": "https://jsverse.gitbook.io/transloco/tools/keys-manager-tkm",
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
