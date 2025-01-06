@@ -57,6 +57,16 @@ export const optionDefinitions = [
     description: 'Remove extra keys from existing translation files',
   },
   {
+    name: 'default-language',
+    type: String,
+    description: `The language of the default values`
+  },
+  {
+    name: 'default-overwrite',
+    type: Boolean,
+    description: `Overwrite existing translation entries for the default values. Non default languages will be made empty`,
+  },
+  {
     name: 'sort',
     alias: 's',
     type: Boolean,

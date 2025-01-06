@@ -3,6 +3,7 @@ import ts from 'typescript';
 
 import { TSExtractorResult } from './types';
 import { flatten } from 'flat';
+import { Defaults } from '../../utils/defaults';
 
 export function buildKeysFromASTNodes(
   nodes: Node[],
@@ -24,6 +25,7 @@ export function buildKeysFromASTNodes(
       continue;
     }
 
+    Defaults.markerExtractorDefaults(node.parent.arguments);
     const [keyNode, paramsNode, langNode] = node.parent.arguments;
     let lang = isStringNode(langNode) ? langNode.text : '';
     let keys: string[] = [];

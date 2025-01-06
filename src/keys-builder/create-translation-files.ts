@@ -3,8 +3,9 @@ import { Config, ScopeMap } from '../types';
 import { getLogger } from '../utils/logger';
 import { buildScopeFilePaths } from '../utils/path.utils';
 
-import { buildTranslationFile, FileAction } from './build-translation-file';
+import { buildTranslationFile, buildTranslationFileWithDefaults, FileAction } from './build-translation-file';
 import { runPrettier } from './utils/run-prettier';
+import { Defaults } from '../utils/defaults';
 
 export async function createTranslationFiles({
   scopeToKeys,
@@ -23,19 +24,23 @@ export async function createTranslationFiles({
     output,
     fileFormat,
   });
+
   const globalFiles = langs.map((lang) => ({
     path: `${output}/${lang}.${fileFormat}`,
+    lang: lang
   }));
   const actions: FileAction[] = [];
+  Defaults.findUpdatedValuesInGlobalFiles(globalFiles, fileFormat);
 
-  for (const { path } of globalFiles) {
+  for (const { path, lang } of globalFiles) {
     actions.push(
-      buildTranslationFile({
+      buildTranslationFileWithDefaults({
         path,
         translation: scopeToKeys.__global,
         replace,
         removeExtraKeys,
         fileFormat,
+        lang
       }),
     );
   }
@@ -47,7 +52,7 @@ export async function createTranslationFiles({
         translation: scopeToKeys[scope],
         replace,
         removeExtraKeys,
-        fileFormat,
+        fileFormat
       }),
     );
   }

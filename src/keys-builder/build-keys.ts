@@ -1,12 +1,14 @@
 import { Config, ScopeMap } from '../types';
 import { checkForProblematicUnflatKeys } from '../utils/keys.utils';
 import { mergeDeep } from '../utils/object.utils';
-
 import { extractTemplateKeys } from './template';
 import { extractTSKeys } from './typescript';
+import { Defaults } from '../utils/defaults';
 
 export function buildKeys(config: Config) {
   const [template, ts] = [extractTemplateKeys(config), extractTSKeys(config)];
+
+  Defaults.setConfigDefaults(config.defaultLanguage, config.defaultOverwrite);;
 
   const scopeToKeys = mergeDeep(
     {},

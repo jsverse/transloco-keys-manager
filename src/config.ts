@@ -34,6 +34,9 @@ export function defaultConfig({
   const i18nPath = `${sourceRoot}/assets/i18n`;
 
   return {
+    defaultLanguage: 'en',
+    defaultOverwrite: false,
+
     // The source directory for all files using the translation keys
     input: [input],
 
@@ -76,6 +79,6 @@ export function defaultConfig({
     translationsPath: i18nPath,
 
     // The translation files format (`json`, `pot`) default is `json`
-    fileFormat: 'json',
+    fileFormat: 'json'
   };
 }
