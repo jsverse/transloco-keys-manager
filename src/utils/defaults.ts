@@ -62,7 +62,7 @@ export abstract class Defaults {
           }
         }
       } else {
-        for (const key of Object.keys(translation).filter(e => currentTranslation[e].length == 0)) {
+        for (const key of Object.keys(translation).filter(e => !currentTranslation[e] || currentTranslation[e].length == 0)) {
           currentTranslation[key] = this._defaults.find(d => d.key == key)?.defaultTranslation ?? "";
         }
       }
