@@ -21,6 +21,7 @@ export type TranslationTestCase =
   | 'ts-extraction/service'
   | 'ts-extraction/pure-function'
   | 'ts-extraction/marker'
+  | 'ts-extraction/signal'
   | 'ts-extraction/inline-template'
   | 'config-options/unflat'
   | 'config-options/unflat-sort'

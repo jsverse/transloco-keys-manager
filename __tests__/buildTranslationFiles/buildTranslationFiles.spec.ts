@@ -11,6 +11,7 @@ import { testScopeExtraction } from './template-extraction/scope/scope-spec';
 import { testServiceExtraction } from './ts-extraction/service/service-spec';
 import { testPureFunctionExtraction } from './ts-extraction/pure-function/pure-function-spec';
 import { testMarkerExtraction } from './ts-extraction/marker/marker-spec';
+import { testSignalExtraction } from './ts-extraction/signal/signal-spec';
 import { testInlineTemplateExtraction } from './ts-extraction/inline-template/inline-template-spec';
 import { testCommentsExtraction } from './comments/comments-spec';
 import { testUnflatSortExtraction } from './config-options/unflat-sort/unflat-sort-spec';
@@ -54,6 +55,8 @@ describe.each(formats)('buildTranslationFiles in %s', (fileFormat) => {
     testPureFunctionExtraction(fileFormat);
 
     testMarkerExtraction(fileFormat);
+
+    testSignalExtraction(fileFormat);
 
     testInlineTemplateExtraction(fileFormat);
   });
