@@ -57,7 +57,7 @@ function resolveKeyNode(ast: OrArray<AST>): LiteralPrimitive[] {
       }
       return undefined;
     })
-    .filter((value) => value !== undefined);
+    .filter(notNil);
 }
 
 function resolveKeyAndParam(
