@@ -72,12 +72,14 @@ function resolveKeyAndParam(
     }
 
     return resolveKeyAndParam(nestedPipe, resolvedParams);
-  } else if (resolveKeyNode(pipe.exp).length >= 1) {
+  } else {
     const keyNodes = resolveKeyNode(pipe.exp);
-    return keyNodes.map((keyNode) => ({
-      keyNode,
-      paramsNode: resolvedParams,
-    }));
+    if (keyNodes.length >= 1) {
+      return keyNodes.map((keyNode) => ({
+        keyNode,
+        paramsNode: resolvedParams,
+      }));
+    }
   }
 
   return null;
