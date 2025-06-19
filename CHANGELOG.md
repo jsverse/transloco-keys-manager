@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/jsverse/transloco-keys-manager/compare/v6.1.0...v6.2.0) (2025-06-19)
+
+
+### Features
+
+* 🎸 Support angular 20 ([#225](https://github.com/jsverse/transloco-keys-manager/issues/225)) ([6c121df](https://github.com/jsverse/transloco-keys-manager/commit/6c121df159ffa32bcec7e8987d58dd495da8516b))
+* 🎸 support signal-based API ([#223](https://github.com/jsverse/transloco-keys-manager/issues/223)) ([a0d75c3](https://github.com/jsverse/transloco-keys-manager/commit/a0d75c3c32fabee5a23ea05d274dbc9ffe10de1f))
+
 ## [6.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v6.0.0...v6.1.0) (2024-12-19)
 
 
