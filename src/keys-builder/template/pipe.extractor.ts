@@ -1,21 +1,27 @@
-import { AST, BindingPipe, LiteralPrimitive, tmplAstVisitAll } from '@angular/compiler';
+import {
+  AST,
+  BindingPipe,
+  LiteralPrimitive,
+  ParenthesizedExpression,
+  tmplAstVisitAll,
+} from '@angular/compiler';
 
-import { ExtractorConfig } from '../../types';
+import { ExtractorConfig, OrArray } from '../../types';
 import { addKey } from '../add-key';
 import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
-import {
-  parseTemplate,
-  resolveKeysFromLiteralMap
-} from './utils';
+import { parseTemplate, resolveKeysFromLiteralMap } from './utils';
 import { notNil } from '../../utils/validators.utils';
+import { coerceArray } from '../../utils/collection.utils';
+
 import {
   AstPipeCollector,
   isBindingPipe,
   isConditionalExpression,
-  isLiteralExpression, isLiteralMap,
-  TmplPipeCollector
+  isLiteralExpression,
+  isLiteralMap,
+  TmplPipeCollector,
 } from '@jsverse/utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
@@ -24,7 +30,9 @@ export function pipeExtractor(config: TemplateExtractorConfig) {
   tmplAstVisitAll(tmplVisitor, parsedTemplate.nodes);
   const astVisitor = new AstPipeCollector();
   astVisitor.visitAll([...tmplVisitor.astTrees], {});
-  const keysWithParams = astVisitor.pipes.get('transloco')?.map((p) => resolveKeyAndParam(p.node))
+  const keysWithParams = astVisitor.pipes
+    .get('transloco')
+    ?.map((p) => resolveKeyAndParam(p.node))
     .flat()
     .filter(notNil);
   if (keysWithParams) {
@@ -37,32 +45,41 @@ interface KeyWithParam {
   paramsNode: AST;
 }
 
+function resolveKeyNode(ast: OrArray<AST>): LiteralPrimitive[] {
+  return coerceArray(ast)
+    .flatMap((expression) => {
+      if (isLiteralExpression(expression)) {
+        return expression;
+      } else if (isConditionalExpression(expression)) {
+        return resolveKeyNode([expression.trueExp, expression.falseExp]);
+      } else if (expression instanceof ParenthesizedExpression) {
+        return resolveKeyNode(expression.expression);
+      }
+      return undefined;
+    })
+    .filter(notNil);
+}
+
 function resolveKeyAndParam(
   pipe: BindingPipe,
   paramsNode?: AST,
 ): KeyWithParam | KeyWithParam[] | null {
   const resolvedParams: AST = paramsNode ?? pipe.args[0];
-  if (isConditionalExpression(pipe.exp)) {
-    return [pipe.exp.trueExp, pipe.exp.falseExp]
-      .filter(isLiteralExpression)
-      .map((keyNode) => {
-        return {
-          keyNode,
-          paramsNode: resolvedParams,
-        };
-      });
-  } else if (isLiteralExpression(pipe.exp)) {
-    return {
-      keyNode: pipe.exp,
-      paramsNode: resolvedParams,
-    };
-  } else if (isBindingPipe(pipe.exp)) {
+  if (isBindingPipe(pipe.exp)) {
     let nestedPipe = pipe;
     while (isBindingPipe(nestedPipe.exp)) {
       nestedPipe = nestedPipe.exp;
     }
 
     return resolveKeyAndParam(nestedPipe, resolvedParams);
+  } else {
+    const keyNodes = resolveKeyNode(pipe.exp);
+    if (keyNodes.length >= 1) {
+      return keyNodes.map((keyNode) => ({
+        keyNode,
+        paramsNode: resolvedParams,
+      }));
+    }
   }
 
   return null;
