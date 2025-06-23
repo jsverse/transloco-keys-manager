@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v6.2.2...v7.0.0) (2025-06-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* 🧨 Minimum Angular version is 20 + Minimum node version is 20.19.0
+
+This reverts commit fb965a6dc6e1429f3991e2a7bf53d55801821c47.
+
+### Features
+
+* 🎸 Support angular 20 ([#225](https://github.com/jsverse/transloco-keys-manager/issues/225)) ([26162b9](https://github.com/jsverse/transloco-keys-manager/commit/26162b91d17bbf35cdb6b220f2d482aba5fc3786))
+
 ### [6.2.2](https://github.com/jsverse/transloco-keys-manager/compare/v6.2.1...v6.2.2) (2025-06-23)
 
 ### [6.2.1](https://github.com/jsverse/transloco-keys-manager/compare/v6.2.0...v6.2.1) (2025-06-23)
