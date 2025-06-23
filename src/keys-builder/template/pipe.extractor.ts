@@ -2,7 +2,6 @@ import {
   AST,
   BindingPipe,
   LiteralPrimitive,
-  ParenthesizedExpression,
   tmplAstVisitAll,
 } from '@angular/compiler';
 
@@ -52,8 +51,14 @@ function resolveKeyNode(ast: OrArray<AST>): LiteralPrimitive[] {
         return expression;
       } else if (isConditionalExpression(expression)) {
         return resolveKeyNode([expression.trueExp, expression.falseExp]);
-      } else if (expression instanceof ParenthesizedExpression) {
-        return resolveKeyNode(expression.expression);
+        // TODO: Temporary check for backward compatibility between v19 and v20.
+        // In the future (major version), prefer:
+        // else if (expression instanceof ParenthesizedExpression) {
+        //   return resolveKeyNode(expression.expression);
+        // }
+        // Consider this refactor for the next major version.
+      } else if (expression.constructor.name === 'ParenthesizedExpression') {
+        return resolveKeyNode((expression as any).expression);
       }
       return undefined;
     })

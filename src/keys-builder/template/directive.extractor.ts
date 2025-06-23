@@ -1,7 +1,6 @@
 import {
   AST,
   ASTWithSource,
-  ParenthesizedExpression,
   TmplAstBoundAttribute,
   TmplAstNode,
   TmplAstTextAttribute,
@@ -93,8 +92,14 @@ function resolveKey(ast: OrArray<AST | string>): string[] {
         return resolveKey([expression.trueExp, expression.falseExp]);
       } else if (isLiteralExpression(expression)) {
         return expression.value;
-      } else if (expression instanceof ParenthesizedExpression) {
-        return resolveKey(expression.expression);
+        // TODO: Temporary check for backward compatibility between v19 and v20.
+        // In the future (major version), prefer:
+        // else if (expression instanceof ParenthesizedExpression) {
+        //   return resolveKeyNode(expression.expression);
+        // }
+        // Consider this refactor for the next major version.
+      } else if (expression.constructor.name === 'ParenthesizedExpression') {
+        return resolveKey((expression as any).expression);
       }
     })
     .filter(Boolean)
