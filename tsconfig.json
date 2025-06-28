@@ -6,7 +6,7 @@
     "module": "esnext",
     "target": "es2022",
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["es2022"],
     "typeRoots": [],
     "sourceMap": true
