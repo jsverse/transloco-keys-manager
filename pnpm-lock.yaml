@@ -11,12 +11,12 @@ importers:
       '@angular/compiler':
         specifier: ^20.0.0
         version: 20.0.0
+      '@jsverse/angular-utils':
+        specifier: 1.0.0-beta.5
+        version: 1.0.0-beta.5(@angular/compiler@20.0.0)
       '@jsverse/transloco-utils':
         specifier: 7.0.2
         version: 7.0.2(typescript@5.8.3)
-      '@jsverse/utils':
-        specifier: 1.0.0-beta.3
-        version: 1.0.0-beta.3(@angular/compiler@20.0.0)(tslib@2.8.1)
       '@phenomnomnominal/tsquery':
         specifier: 6.1.3
         version: 6.1.3(typescript@5.8.3)
@@ -1332,15 +1332,14 @@ packages:
     peerDependencies:
       tslib: '2'
 
+  '@jsverse/angular-utils@1.0.0-beta.5':
+    resolution: {integrity: sha512-0E1M7qT11QoJRaQasNShmI7OEq1ycI5zokaOZUf3nyx9d5abQNVyi1xXLPoWc3NNUV7HaotGW1GQAwGceJg/BA==}
+    peerDependencies:
+      '@angular/compiler': '>=18.1.0'
+
   '@jsverse/transloco-utils@7.0.2':
     resolution: {integrity: sha512-zud1M68mMC/Pu6irEba+Z2SzmwmmPzUPnBzMKlcGdIhzUe1z41cqQutK1M0QaQpY4h4yhumXcNaY/Ot6piv6QQ==}
     engines: {node: '>=16'}
-
-  '@jsverse/utils@1.0.0-beta.3':
-    resolution: {integrity: sha512-/wn9toL705YNV31+VdQ1yi5eq5jZzuekUsHBfEuc669qwRq7qb5iTLnnGPfbZa+6mQKwENhckHbC29+7xM6Wdg==}
-    peerDependencies:
-      '@angular/compiler': '>=17.0.0'
-      tslib: ^2.3.0
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
@@ -7367,17 +7366,17 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@jsverse/angular-utils@1.0.0-beta.5(@angular/compiler@20.0.0)':
+    dependencies:
+      '@angular/compiler': 20.0.0
+      tslib: 2.8.1
+
   '@jsverse/transloco-utils@7.0.2(typescript@5.8.3)':
     dependencies:
       cosmiconfig: 8.3.6(typescript@5.8.3)
       tslib: 2.8.0
     transitivePeerDependencies:
       - typescript
-
-  '@jsverse/utils@1.0.0-beta.3(@angular/compiler@20.0.0)(tslib@2.8.1)':
-    dependencies:
-      '@angular/compiler': 20.0.0
-      tslib: 2.8.1
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 

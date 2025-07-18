@@ -22,7 +22,7 @@ import {
   isLiteralExpression,
   isLiteralMap,
   TmplPipeCollector,
-} from '@jsverse/utils';
+} from '@jsverse/angular-utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
   const parsedTemplate = parseTemplate(config);

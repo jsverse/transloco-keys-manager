@@ -26,7 +26,7 @@ import {
 import { readFile } from '../../utils/file.utils';
 
 import { TemplateExtractorConfig } from './types';
-import { isLiteralMap } from '@jsverse/utils';
+import { isLiteralMap } from '@jsverse/angular-utils';
 
 export function isTemplate(node: unknown): node is TmplAstTemplate {
   return node instanceof TmplAstTemplate;

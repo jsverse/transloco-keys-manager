@@ -25,7 +25,7 @@ import {
   resolveKeysFromLiteralMap,
 } from './utils';
 import { coerceArray } from '../../utils/collection.utils';
-import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/utils';
+import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/angular-utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
   const ast = parseTemplate(config);
