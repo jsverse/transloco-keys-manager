@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.2](https://github.com/jsverse/transloco-keys-manager/compare/v7.0.1...v7.0.2) (2025-07-20)
+
+
+### Bug Fixes
+
+* 🐛 angular-utils breaking TKM ([e82bdb6](https://github.com/jsverse/transloco-keys-manager/commit/e82bdb6b65eeda86c075243abaa0bd5119a4e108)), closes [#231](https://github.com/jsverse/transloco-keys-manager/issues/231)
+
 ### [7.0.1](https://github.com/jsverse/transloco-keys-manager/compare/v7.0.0...v7.0.1) (2025-07-18)
 
 ## [7.0.0](https://github.com/jsverse/transloco-keys-manager/compare/v6.2.2...v7.0.0) (2025-06-23)
