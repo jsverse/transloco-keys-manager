@@ -12,8 +12,8 @@ importers:
         specifier: ^20.0.0
         version: 20.0.0
       '@jsverse/angular-utils':
-        specifier: 1.0.0-beta.5
-        version: 1.0.0-beta.5(@angular/compiler@20.0.0)
+        specifier: 1.0.0-beta.6
+        version: 1.0.0-beta.6(@angular/compiler@20.0.0)
       '@jsverse/transloco-utils':
         specifier: 7.0.2
         version: 7.0.2(typescript@5.8.3)
@@ -1332,8 +1332,8 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  '@jsverse/angular-utils@1.0.0-beta.5':
-    resolution: {integrity: sha512-0E1M7qT11QoJRaQasNShmI7OEq1ycI5zokaOZUf3nyx9d5abQNVyi1xXLPoWc3NNUV7HaotGW1GQAwGceJg/BA==}
+  '@jsverse/angular-utils@1.0.0-beta.6':
+    resolution: {integrity: sha512-Gq7jhGX5ktZgWs7HOt9dcMrfUMBFfj+B1voxcn3O2Wyq8UNcyL32vvLd1bD4RpVRrAj5jFLgZ2Goz5mlsfTDNA==}
     peerDependencies:
       '@angular/compiler': '>=18.1.0'
 
@@ -7366,7 +7366,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@jsverse/angular-utils@1.0.0-beta.5(@angular/compiler@20.0.0)':
+  '@jsverse/angular-utils@1.0.0-beta.6(@angular/compiler@20.0.0)':
     dependencies:
       '@angular/compiler': 20.0.0
       tslib: 2.8.1
