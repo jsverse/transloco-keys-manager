@@ -8,12 +8,14 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./public-api.d.ts",
       "import": "./public-api.js",
-      "types": "./public-api.d.ts"
+      "default": "./public-api.js"
     },
     "./marker": {
+      "types": "./marker.d.ts",
       "import": "./marker.js",
-      "types": "./marker.d.ts"
+      "default": "./marker.js"
     }
   },
   "bin": {
