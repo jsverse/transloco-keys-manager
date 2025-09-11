@@ -1,4 +1,5 @@
-import cheerio, { Element } from 'cheerio';
+import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 
 import { getConfig } from '../../config';
 import { TEMPLATE_TYPE } from '../../types';
@@ -108,7 +109,11 @@ function removeInnerContainers(
 }
 
 function loadCheerio(content: string) {
-  return cheerio.load(content, { decodeEntities: false });
+  return cheerio.load(content, { 
+    xml: { 
+      decodeEntities: false 
+    } 
+  });
 }
 
 /** Get the read value from an ngTemplate/ngContainer element */

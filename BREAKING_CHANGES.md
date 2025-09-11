@@ -1,3 +1,7 @@
+# Transloco Keys Manager V7
+
+Support Angular 20
+
 # Transloco Keys Manager V6
 
 All the debug namespaces are now prefixed with `tkm:` to avoid conflicts with other libraries.  

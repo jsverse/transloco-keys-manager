@@ -1,6 +1,7 @@
 import {
   AST,
   ASTWithSource,
+  ParenthesizedExpression,
   TmplAstBoundAttribute,
   TmplAstNode,
   TmplAstTextAttribute,
@@ -24,7 +25,7 @@ import {
   resolveKeysFromLiteralMap,
 } from './utils';
 import { coerceArray } from '../../utils/collection.utils';
-import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/utils';
+import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/angular-utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {
   const ast = parseTemplate(config);
@@ -92,6 +93,8 @@ function resolveKey(ast: OrArray<AST | string>): string[] {
         return resolveKey([expression.trueExp, expression.falseExp]);
       } else if (isLiteralExpression(expression)) {
         return expression.value;
+      } else if (expression instanceof ParenthesizedExpression) {
+        return resolveKey(expression.expression);
       }
     })
     .filter(Boolean)

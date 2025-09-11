@@ -30,7 +30,7 @@ import {
   resolveBlockChildNodes,
   resolveKeysFromLiteralMap,
 } from './utils';
-import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/utils';
+import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/angular-utils';
 
 interface MethodCallMetadata {
   keyNode?: AST;
