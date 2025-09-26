@@ -4,7 +4,7 @@ import { sync as globSync } from 'glob';
 import { basename } from 'node:path';
 
 import { ScopeMap, Config } from '../types';
-import { readFile, writeFile } from '../utils/file.utils';
+import { readFile } from '../utils/file.utils';
 import { mergeDeep } from '../utils/object.utils';
 
 type Params = {
@@ -54,13 +54,18 @@ export function generateKeys({ translationPath, scopeToKeys, config }: Params) {
     }
   }
 
-  for (let { files, keys } of result) {
+  return result.flatMap(({ files, keys }) => {
     if (config.unflat) {
       keys = unflatten(keys);
     }
-    for (const filePath of files) {
-      const translation = readFile(filePath, { parse: true });
-      writeFile(filePath, mergeDeep({}, keys, translation));
-    }
-  }
+    return files.map((filePath) => {
+      let translation: Record<string, any>;
+      try {
+        translation = readFile(filePath, { parse: true });
+      } catch {
+        translation = {};
+      }
+      return { filePath, content: mergeDeep({}, keys, translation) };
+    });
+  });
 }

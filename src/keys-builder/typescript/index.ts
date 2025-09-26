@@ -26,7 +26,7 @@ export function extractTSKeys(config: Config): ExtractionResult {
 
 const translocoImport = /@(jsverse|ngneat)\/transloco/;
 const translocoKeysManagerImport = /@(jsverse|ngneat)\/transloco-keys-manager/;
-function TSExtractor(config: ExtractorConfig): ScopeMap {
+export function TSExtractor(config: ExtractorConfig): ScopeMap {
   const { file, scopes, defaultValue, scopeToKeys } = config;
   const content = readFile(file);
   const extractors = [];
