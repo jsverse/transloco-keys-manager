@@ -33,8 +33,18 @@ export function testMarkerExtraction(fileFormat: Config['fileFormat']) {
         username: defaultValue,
         password: defaultValue,
       };
+      const expectedInScope = {
+        marker_with_scope_username: defaultValue,
+      };
+      const expectedInNestedScope = {
+        marker_with_scope_password: defaultValue,
+      };
+
       buildTranslationFiles(config);
-      assertTranslation({ type, expected, fileFormat });
+
+      assertTranslation({ type, fileFormat, expected });
+      assertTranslation({ type, fileFormat, expected: expectedInScope, path: 'scope/' });
+      assertTranslation({ type, fileFormat, expected: expectedInNestedScope, path: 'nested/scope/' });
     });
   });
 }
