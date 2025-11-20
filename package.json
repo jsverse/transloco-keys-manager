@@ -80,16 +80,16 @@
     "gettext-parser": "8.0.0",
     "glob": "13.0.0",
     "jsonc-parser": "3.3.1",
-    "ora": "8.2.0"
+    "ora": "9.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
     "@babel/preset-env": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-angular": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
+    "@commitlint/cli": "20.1.0",
+    "@commitlint/config-angular": "20.0.0",
+    "@commitlint/config-conventional": "20.0.0",
     "@types/command-line-args": "^5.2.3",
     "@types/command-line-usage": "^5.0.4",
     "@types/debug": "4.1.12",
