@@ -31,3 +31,9 @@ jobs:
 
       - name: Run ${{ matrix.task }}
         run: pnpm ${{ matrix.task }}
+
+      - name: Publish any commit / build for testing
+        if: ${{ matrix.target == 'build' && github.ref != 'refs/heads/master' }}
+        run: pnpm run release:pkg-pr-new
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

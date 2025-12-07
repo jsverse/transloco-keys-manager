@@ -23,7 +23,11 @@ export function resolveConfig(inlineConfig: Partial<Config>): Config {
   const defaults = defaultConfig({ projectType, sourceRoot });
   const fileConfig = getGlobalConfig(inlineConfig.config || sourceRoot);
   const userConfig = { ...flatFileConfig(fileConfig), ...inlineConfig };
-  const mergedConfig = { ...defaults, ...userConfig } as Config;
+  const mergedConfig = {
+    ...defaults,
+    ...userConfig,
+    __sourceRoot: sourceRoot,
+  } as Config;
 
   devlog('config', 'Config', {
     Default: defaults,

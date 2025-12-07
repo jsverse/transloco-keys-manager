@@ -30,7 +30,8 @@
     "build": "tsc && tsc-alias",
     "postbuild": "node ./scripts/post-build.js",
     "clean:dist": "rimraf dist",
-    "format:all": "prettier --write src/**/*.ts && prettier --write __tests__/*.ts"
+    "format:all": "prettier --write src/**/*.ts && prettier --write __tests__/*.ts",
+    "release:pkg-pr-new": "npx pkg-pr-new@0.0.54 publish './dist/'"
   },
   "license": "MIT",
   "publishConfig": {

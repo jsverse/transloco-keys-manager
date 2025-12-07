@@ -8,6 +8,7 @@ import { messages } from '../../src/messages';
 
 import { spyOnConsole, spyOnProcess } from '../spec-utils';
 import { resolveConfig } from '../../src/utils/resolve-config';
+import { resolveProjectBasePath } from '../../src/utils/resolve-project-base-path';
 import { describe, it } from 'vitest';
 
 const sourceRoot = '__tests__/resolveConfig';
@@ -55,7 +56,7 @@ describe('resolveConfig', () => {
   }
 
   function assertConfig<T>(expected: T, inline = {}) {
-    const { scopes, ...config } = resolveConfig(inline);
+    const { scopes, __sourceRoot, ...config } = resolveConfig(inline);
     expect(config).toEqual(expected);
     expect(scopes).toBeDefined();
   }
@@ -189,6 +190,107 @@ describe('resolveConfig', () => {
       config.input.forEach(assertPath);
       assertPath(config.translationsPath);
       assertPath(config.output);
+    });
+  });
+
+  describe('${sourceRoot} interpolation', () => {
+    it('should interpolate ${sourceRoot} in output path', () => {
+      const config = resolveConfig({
+        input: validInput,
+        output: '${sourceRoot}/public/i18n',
+      });
+      expect(config.output).toBe(resolvePath(`${sourceRoot}/public/i18n`));
+    });
+
+    it('should interpolate ${sourceRoot} with relative paths', () => {
+      const config = resolveConfig({
+        input: validInput,
+        output: '${sourceRoot}/../dist/i18n',
+      });
+      expect(config.output).toBe(resolvePath(`${sourceRoot}/../dist/i18n`));
+    });
+
+    it('should interpolate ${sourceRoot} in translationsPath', () => {
+      const config = resolveConfig({
+        input: validInput,
+        translationsPath: '${sourceRoot}/custom/translations',
+      });
+      expect(config.translationsPath).toBe(
+        resolvePath(`${sourceRoot}/custom/translations`),
+      );
+    });
+
+    it('should interpolate ${sourceRoot} in input paths', () => {
+      const config = resolveConfig({
+        input: ['${sourceRoot}/src/app'],
+      });
+      expect(config.input).toEqual(
+        resolvePath([`${sourceRoot}/src/app`]),
+      );
+    });
+
+    it('should leave paths without ${sourceRoot} unchanged', () => {
+      const config = resolveConfig({
+        input: validInput,
+        output: 'custom/path/i18n',
+      });
+      expect(config.output).toBe(resolvePath('custom/path/i18n'));
+    });
+
+    it('should store sourceRoot in config for scopePathMap interpolation', () => {
+      const config = resolveConfig({ input: validInput });
+      expect(config.__sourceRoot).toBe(sourceRoot);
+    });
+
+    describe('NX workspace scenario (issue #220)', () => {
+      afterAll(() => {
+        // Reset mock to default behavior
+        vi.mocked(resolveProjectBasePath).mockReturnValue({
+          projectBasePath: '__tests__/resolveConfig',
+        });
+      });
+
+      it('should resolve different paths for different projects in NX workspace', () => {
+        // Simulate NX workspace with multiple projects
+        // Mock resolveProjectBasePath to return different sourceRoots for different projects
+        vi.mocked(resolveProjectBasePath).mockImplementation((projectName?: string) => {
+          if (projectName === 'my-app') {
+            return { projectBasePath: 'apps/my-app/src', projectType: 'application' };
+          } else if (projectName === 'my-lib') {
+            return { projectBasePath: 'libs/my-lib/src', projectType: 'library' };
+          }
+          return { projectBasePath: '__tests__/resolveConfig' };
+        });
+
+        // Same config used for both projects (simulating a shared transloco.config.js)
+        const sharedConfig = {
+          output: '${sourceRoot}/../public/i18n',
+          input: ['${sourceRoot}/app'],
+        };
+
+        // Run for my-app
+        const appConfig = resolveConfig({
+          ...sharedConfig,
+          project: 'my-app',
+        });
+
+        // Run for my-lib
+        const libConfig = resolveConfig({
+          ...sharedConfig,
+          project: 'my-lib',
+        });
+
+        // Verify each got their own interpolated paths
+        expect(appConfig.output).toBe(resolvePath('apps/my-app/src/../public/i18n'));
+        expect(appConfig.input).toEqual([resolvePath('apps/my-app/src/app')]);
+
+        expect(libConfig.output).toBe(resolvePath('libs/my-lib/src/../public/i18n'));
+        expect(libConfig.input).toEqual([resolvePath('libs/my-lib/src/app')]);
+
+        // Paths should be different for each project
+        expect(appConfig.output).not.toBe(libConfig.output);
+        expect(appConfig.input).not.toEqual(libConfig.input);
+      });
     });
   });
 });

@@ -60,9 +60,11 @@ function resolvePath(configPath = '') {
 }
 
 export function resolveConfigPaths(config: Config) {
-  config.input = config.input.map(resolvePath);
-  config.output = resolvePath(config.output);
-  config.translationsPath = resolvePath(config.translationsPath);
+  const interpolate = interpolatePathFactory(config.__sourceRoot);
+
+  config.input = config.input.map(interpolate).map(resolvePath);
+  config.output = resolvePath(interpolate(config.output));
+  config.translationsPath = resolvePath(interpolate(config.translationsPath));
 }
 
 type ScopeFiles = { path: string; scope: string }[];
@@ -75,12 +77,14 @@ export function buildScopeFilePaths({
 }: Pick<Config, 'output' | 'langs' | 'fileFormat'> & {
   aliasToScope: Scopes['aliasToScope'];
 }) {
-  const { scopePathMap = {} } = getConfig();
+  const { scopePathMap = {}, __sourceRoot = '' } = getConfig();
+  const interpolate = interpolatePathFactory(__sourceRoot);
+
   return Object.values(aliasToScope).reduce(
     (files: ScopeFiles, scope: string) => {
       langs.forEach((lang) => {
         let bastPath = scopePathMap[scope]
-          ? scopePathMap[scope]
+          ? interpolate(scopePathMap[scope])
           : `${output}/${scope}`;
 
         files.push({
@@ -93,4 +97,8 @@ export function buildScopeFilePaths({
     },
     [],
   );
+}
+
+function interpolatePathFactory(sourceRoot?: string) {
+  return sourceRoot ? (pathStr: string) => pathStr.replace(/\$\{sourceRoot}/g, sourceRoot) : (v: string) => v;
 }
