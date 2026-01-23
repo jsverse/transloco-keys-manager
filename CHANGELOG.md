@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.2.0](https://github.com/jsverse/transloco-keys-manager/compare/v7.1.0...v7.2.0) (2026-01-23)
+
+
+### Features
+
+* 🎸 allow scope in marker function ([#238](https://github.com/jsverse/transloco-keys-manager/issues/238)) ([8aacf64](https://github.com/jsverse/transloco-keys-manager/commit/8aacf64774130520f8cab8e14eb0250c875271e5)), closes [#132](https://github.com/jsverse/transloco-keys-manager/issues/132) [#178](https://github.com/jsverse/transloco-keys-manager/issues/178)
+* add ${sourceRoot} variable interpolation for NX workspaces ([#244](https://github.com/jsverse/transloco-keys-manager/issues/244)) ([257b91c](https://github.com/jsverse/transloco-keys-manager/commit/257b91c543b2f168e4072004259c31047f53172c)), closes [#220](https://github.com/jsverse/transloco-keys-manager/issues/220)
+
 ## [7.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v7.0.2...v7.1.0) (2025-12-02)
 
 
