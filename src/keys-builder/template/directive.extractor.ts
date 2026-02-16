@@ -23,9 +23,11 @@ import {
   parseTemplate,
   resolveBlockChildNodes,
   resolveKeysFromLiteralMap,
+  isConditionalExpression,
+  isLiteralExpression,
+  isLiteralMap,
 } from './utils';
 import { coerceArray } from '../../utils/collection.utils';
-import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/angular-utils';
 import { isString, notNil } from '../../utils/validators.utils';
 
 export function directiveExtractor(config: TemplateExtractorConfig) {

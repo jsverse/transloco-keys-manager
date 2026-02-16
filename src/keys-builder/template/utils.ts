@@ -1,9 +1,12 @@
 import {
+  BindingPipe,
   Call,
+  Conditional,
   Interpolation,
   LiteralMap,
   LiteralMapKey,
   LiteralMapPropertyKey,
+  LiteralPrimitive,
   parseTemplate as ngParseTemplate,
   ParseTemplateOptions,
   PropertyRead,
@@ -28,7 +31,6 @@ import {
 import { readFile } from '../../utils/file.utils';
 
 import { TemplateExtractorConfig } from './types';
-import { isLiteralMap } from '@jsverse/angular-utils';
 
 export function isTemplate(node: unknown): node is TmplAstTemplate {
   return node instanceof TmplAstTemplate;
@@ -179,6 +181,22 @@ export function resolveBlockChildNodes(node: BlockNode): TmplAstNode[] {
   }
 
   return node.children;
+}
+
+export function isLiteralExpression(ast: unknown): ast is LiteralPrimitive {
+  return (ast as any)?.constructor?.name === 'LiteralPrimitive';
+}
+
+export function isConditionalExpression(ast: unknown): ast is Conditional {
+  return (ast as any)?.constructor?.name === 'Conditional';
+}
+
+export function isLiteralMap(ast: unknown): ast is LiteralMap {
+  return (ast as any)?.constructor?.name === 'LiteralMap';
+}
+
+export function isBindingPipe(ast: unknown): ast is BindingPipe {
+  return (ast as any)?.constructor?.name === 'BindingPipe';
 }
 
 export function resolveKeysFromLiteralMap(node: LiteralMap): string[] {

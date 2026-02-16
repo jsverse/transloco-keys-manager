@@ -11,18 +11,18 @@ import { addKey } from '../add-key';
 import { resolveAliasAndKey } from '../utils/resolvers.utils';
 
 import { TemplateExtractorConfig } from './types';
-import { parseTemplate, resolveKeysFromLiteralMap } from './utils';
-import { notNil } from '../../utils/validators.utils';
-import { coerceArray } from '../../utils/collection.utils';
-
 import {
-  AstPipeCollector,
+  parseTemplate,
+  resolveKeysFromLiteralMap,
   isBindingPipe,
   isConditionalExpression,
   isLiteralExpression,
   isLiteralMap,
-  TmplPipeCollector,
-} from '@jsverse/angular-utils';
+} from './utils';
+import { notNil } from '../../utils/validators.utils';
+import { coerceArray } from '../../utils/collection.utils';
+
+import { AstPipeCollector, TmplPipeCollector } from '@jsverse/angular-utils';
 
 export function pipeExtractor(config: TemplateExtractorConfig) {
   const parsedTemplate = parseTemplate(config);

@@ -29,8 +29,10 @@ import {
   isBlockNode,
   resolveBlockChildNodes,
   resolveKeysFromLiteralMap,
+  isConditionalExpression,
+  isLiteralExpression,
+  isLiteralMap,
 } from './utils';
-import { isConditionalExpression, isLiteralExpression, isLiteralMap } from '@jsverse/angular-utils';
 import { isString } from '../../utils/validators.utils';
 
 interface MethodCallMetadata {
