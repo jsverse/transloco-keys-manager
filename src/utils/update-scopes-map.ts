@@ -26,7 +26,6 @@ interface ScopeDef {
 type ScopeResolver = (node: Node) => ScopeDef[];
 
 const tokenProviderQuery = `ObjectLiteralExpression:has(PropertyAssignment > Identifier[name=TRANSLOCO_SCOPE]) > PropertyAssignment > Identifier[name=/useValue|useFactory/]`;
-const functionProviderQuery = `CallExpression > Identifier[name=provideTranslocoScope]`;
 
 function stringQueryDef(rootNode: Node) {
   return (
@@ -62,9 +61,17 @@ function objectQueryDef(rootNode: Node) {
 // Order is important, we check if it's an object first, then string
 const scopeValueQueries: ScopeResolver[] = [objectQueryDef, stringQueryDef];
 
-type Options = { input?: string[]; files?: string[] };
+type Options = { input?: string[]; files?: string[]; scopeProviderFunctions?: string[] };
 
-const translocoProvider = /(TRANSLOCO_SCOPE|provideTranslocoScope)/;
+function buildProviderRegex(custom: string[] = []): RegExp {
+  const names = ['TRANSLOCO_SCOPE', 'provideTranslocoScope', ...custom];
+  return new RegExp(`(${names.join('|')})`);
+}
+
+function buildFunctionProviderQuery(custom: string[] = []): string {
+  const names = ['provideTranslocoScope', ...custom];
+  return names.map((n) => `CallExpression > Identifier[name=${n}]`).join(', ');
+}
 
 export function updateScopesMap(
   options: Omit<Options, 'input'>,
@@ -75,11 +82,15 @@ export function updateScopesMap(
 export function updateScopesMap({
   input,
   files,
+  scopeProviderFunctions,
 }: Options): Scopes['aliasToScope'] {
   const tsFiles =
     files || input!.map((path) => normalizedGlob(`${path}/**/*.ts`)).flat();
   // Return only the new scopes (for the plugin)
   const aliasToScope: Record<Alias, Scope> = {};
+
+  const translocoProvider = buildProviderRegex(scopeProviderFunctions);
+  const dynamicFunctionProviderQuery = buildFunctionProviderQuery(scopeProviderFunctions);
 
   for (const file of tsFiles) {
     const content = readFile(file);
@@ -92,7 +103,7 @@ export function updateScopesMap({
 
     const tokenAndProviderNodes = tsquery(
       ast,
-      `${tokenProviderQuery}, ${functionProviderQuery}`,
+      `${tokenProviderQuery}, ${dynamicFunctionProviderQuery}`,
     );
 
     for (let node of tokenAndProviderNodes) {

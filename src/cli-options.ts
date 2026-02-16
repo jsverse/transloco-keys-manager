@@ -94,6 +94,20 @@ export const optionDefinitions = [
     type: String,
     description: 'Where are the main translation files',
   },
+  {
+    name: 'scope-provider-functions',
+    type: String,
+    multiple: true,
+    description:
+      'Additional function names that provide translation scopes (e.g. custom wrappers around provideTranslocoScope)',
+  },
+  {
+    name: 'service-names',
+    type: String,
+    multiple: true,
+    description:
+      'Additional service class names that wrap TranslocoService (e.g. TranslationsService)',
+  },
   { name: 'help', alias: 'h', type: Boolean, description: 'Help me, please!' },
 ];
 
