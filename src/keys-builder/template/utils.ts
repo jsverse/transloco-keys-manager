@@ -183,9 +183,10 @@ export function resolveBlockChildNodes(node: BlockNode): TmplAstNode[] {
 
 export function resolveKeysFromLiteralMap(node: LiteralMap): string[] {
   let keys: string[] = [];
+  const propertyKeys = node.keys.filter(isLiteralMapPropertyKey);
 
   for (let i = 0; i < node.values.length; i++) {
-    const { key } = node.keys.filter(isLiteralMapPropertyKey)[i];
+    const { key } = propertyKeys[i];
     const value = node.values[i];
 
     if (isLiteralMap(value)) {
