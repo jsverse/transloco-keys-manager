@@ -98,8 +98,9 @@
     "@types/fs-extra": "11.0.4",
     "@types/gettext-parser": "^4.0.4",
     "@types/glob": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@vitest/ui": "^4.0.12",
+    "@typescript-eslint/eslint-plugin": "8.60.0",
+    "@vitest/coverage-v8": "4.1.7",
+    "@vitest/ui": "^4.1.7",
     "c8": "^11.0.0",
     "cross-env": "7.0.3",
     "domhandler": "^6.0.1",
@@ -112,6 +113,6 @@
     "standard-version": "9.5.0",
     "tsc-alias": "^1.8.17",
     "typescript": "5.9.3",
-    "vitest": "^4.0.12"
+    "vitest": "^4.1.7"
   }
 }

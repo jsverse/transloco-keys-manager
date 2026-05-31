@@ -4,3 +4,4 @@ dist
 **/i18n
 .idx
 .vscode
+coverage
