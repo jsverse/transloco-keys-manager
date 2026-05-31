@@ -74,6 +74,10 @@ export function parseTemplate(
   config: TemplateExtractorConfig,
   options?: ParseTemplateOptions,
 ) {
+  if (config.parsedTemplate) {
+    return config.parsedTemplate;
+  }
+
   const { file, content } = config;
   const resolvedContent = content || readFile(file);
 
