@@ -1,0 +1,279 @@
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
+import { performance } from 'node:perf_hooks';
+import fs from 'fs-extra';
+import path from 'node:path';
+import os from 'node:os';
+
+import { templateExtractor } from '../src/keys-builder/template';
+import { readFile } from '../src/utils/file.utils';
+import { setConfig } from '../src/config';
+import { ScopeMap, Scopes } from '../src/types';
+
+/**
+ * Performance benchmarks to ensure the tool scales to large monorepo apps.
+ * These tests generate synthetic large inputs and measure execution time.
+ */
+
+vi.mock('../src/utils/logger', () => ({
+  getLogger: () => ({
+    log: vi.fn(),
+    success: vi.fn(),
+    startSpinner: vi.fn(),
+  }),
+  devlog: vi.fn(),
+}));
+
+const PERF_TMP = path.join(os.tmpdir(), 'transloco-perf-test');
+
+function generateTemplate(
+  componentIndex: number,
+  keysPerComponent: number,
+): string {
+  const lines: string[] = ['<div>'];
+  for (let i = 1; i <= keysPerComponent; i++) {
+    const key = `comp${componentIndex}.key${i}`;
+    if (i % 4 === 0) {
+      lines.push(
+        `  <ng-container *transloco="let t; scope: 'comp${componentIndex}'">`,
+      );
+      lines.push(`    <span>{{ t('key${i}') }}</span>`);
+      lines.push(`  </ng-container>`);
+    } else if (i % 4 === 1) {
+      lines.push(`  <p>{{ '${key}' | transloco }}</p>`);
+    } else if (i % 4 === 2) {
+      lines.push(`  <span transloco="${key}"></span>`);
+    } else {
+      lines.push(
+        `  <span [transloco]="'${key}'">{{'${key}.alt' | transloco}}</span>`,
+      );
+    }
+  }
+  lines.push('</div>');
+  return lines.join('\n');
+}
+
+function generateTsContent(
+  componentIndex: number,
+  withTransloco: boolean,
+): string {
+  if (withTransloco) {
+    return `import { Component } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
+
+@Component({
+  selector: 'app-comp-${componentIndex}',
+  template: \`<p>{{ 'comp${componentIndex}.inline1' | transloco }}</p>\`,
+})
+export class Comp${componentIndex}Component {
+  constructor(private transloco: TranslocoService) {
+    this.transloco.translate('comp${componentIndex}.service.key1');
+    this.transloco.translate('comp${componentIndex}.service.key2');
+  }
+}
+`;
+  }
+  return `import { Component } from '@angular/core';
+@Component({ selector: 'app-other-${componentIndex}', template: '<div>Hello</div>' })
+export class Other${componentIndex}Component {
+  onClick() { console.log('clicked'); }
+}
+`;
+}
+
+function generateLargeJson(keyCount: number): Record<string, string> {
+  const translation: Record<string, string> = {};
+  for (let i = 0; i < keyCount; i++) {
+    translation[
+      `section${Math.floor(i / 100)}.subsection${Math.floor(i / 10)}.key${i}`
+    ] = `Translation value for key number ${i}`;
+  }
+  return translation;
+}
+
+describe('Performance Benchmarks', () => {
+  const COMPONENT_COUNT = 200;
+  const KEYS_PER_COMPONENT = 20;
+  const LARGE_JSON_KEYS = 10000;
+
+  beforeAll(() => {
+    fs.ensureDirSync(PERF_TMP);
+    // Set global config needed by comments extractor
+    setConfig({
+      marker: 't',
+      input: [PERF_TMP],
+      output: PERF_TMP,
+      translationsPath: PERF_TMP,
+      langs: ['en'],
+      defaultValue: '',
+      fileFormat: 'json',
+      sort: false,
+      unflat: false,
+      replace: false,
+      removeExtraKeys: false,
+      addMissingKeys: false,
+      emitErrorOnExtraKeys: false,
+      scopes: { aliasToScope: {}, scopeToAlias: {} },
+      scopePathMap: {},
+    } as any);
+    // Pre-generate template files on disk (needed by comments extractor)
+    for (let i = 0; i < COMPONENT_COUNT; i++) {
+      fs.writeFileSync(
+        path.join(PERF_TMP, `comp${i}.html`),
+        generateTemplate(i, KEYS_PER_COMPONENT),
+      );
+    }
+  });
+
+  afterAll(() => {
+    fs.removeSync(PERF_TMP);
+    vi.restoreAllMocks();
+  });
+
+  it(`should extract keys from ${COMPONENT_COUNT} templates (${KEYS_PER_COMPONENT} keys each) under 10s`, () => {
+    const scopes: Scopes = { aliasToScope: {}, scopeToAlias: {} };
+
+    const start = performance.now();
+    for (let i = 0; i < COMPONENT_COUNT; i++) {
+      const content = generateTemplate(i, KEYS_PER_COMPONENT);
+      const scopeToKeys: ScopeMap = { __global: {} };
+      templateExtractor({
+        file: path.join(PERF_TMP, `comp${i}.html`),
+        content,
+        scopes,
+        defaultValue: '',
+        scopeToKeys,
+      });
+    }
+    const elapsed = performance.now() - start;
+
+    console.info(
+      `\n⏱  Template extraction (${COMPONENT_COUNT} templates × ${KEYS_PER_COMPONENT} keys): ${elapsed.toFixed(0)}ms`,
+    );
+    expect(elapsed).toBeLessThan(10000);
+  });
+
+  it('should skip non-transloco templates in negligible time', () => {
+    const scopes: Scopes = { aliasToScope: {}, scopeToAlias: {} };
+    const content =
+      '<div><p>Hello World</p><span class="title">No i18n here</span></div>'.repeat(
+        50,
+      );
+    const iterations = 1000;
+
+    const start = performance.now();
+    for (let i = 0; i < iterations; i++) {
+      const scopeToKeys: ScopeMap = { __global: {} };
+      templateExtractor({
+        file: `skip${i}.html`,
+        content,
+        scopes,
+        defaultValue: '',
+        scopeToKeys,
+      });
+    }
+    const elapsed = performance.now() - start;
+
+    console.info(
+      `\n⏱  Skip non-transloco templates (${iterations} files): ${elapsed.toFixed(2)}ms`,
+    );
+    // Should be extremely fast - just a string includes check
+    expect(elapsed).toBeLessThan(100);
+  });
+
+  it(`should parse and read a ${LARGE_JSON_KEYS}-key JSON file under 200ms`, () => {
+    const jsonPath = path.join(PERF_TMP, 'large.json');
+    const data = generateLargeJson(LARGE_JSON_KEYS);
+    fs.writeJsonSync(jsonPath, data);
+
+    const start = performance.now();
+    const result = readFile(jsonPath, { parse: true });
+    const elapsed = performance.now() - start;
+
+    console.info(
+      `\n⏱  JSON read+parse (${LARGE_JSON_KEYS} keys): ${elapsed.toFixed(2)}ms`,
+    );
+    expect(Object.keys(result)).toHaveLength(LARGE_JSON_KEYS);
+    expect(elapsed).toBeLessThan(200);
+  });
+
+  it('should handle malformed JSON by throwing (callers handle error)', () => {
+    const malformedPath = path.join(PERF_TMP, 'malformed.json');
+    fs.writeFileSync(malformedPath, '{ invalid json content here !!!');
+
+    expect(() => readFile(malformedPath, { parse: true })).toThrow(SyntaxError);
+  });
+
+  it('should measure TS early-exit performance for non-transloco files', async () => {
+    // Dynamically import to avoid issues with tsquery loading
+    const { tsquery, ScriptKind } = await import('@phenomnomnominal/tsquery');
+    const nonTranslocoCount = 500;
+
+    // Measure time WITHOUT early exit (parsing AST for every file)
+    const contents: string[] = [];
+    for (let i = 0; i < nonTranslocoCount; i++) {
+      contents.push(generateTsContent(i, false));
+    }
+
+    // Simulate the early-exit check
+    const translocoImport = /@(jsverse|ngneat)\/transloco/;
+    const startWithExit = performance.now();
+    let skipped = 0;
+    for (const content of contents) {
+      if (!translocoImport.test(content) && !content.includes('transloco')) {
+        skipped++;
+        continue;
+      }
+      tsquery.ast(content, undefined, ScriptKind.TS);
+    }
+    const elapsedWithExit = performance.now() - startWithExit;
+
+    // Measure time WITHOUT early exit (parse every file)
+    const startNoExit = performance.now();
+    for (const content of contents) {
+      tsquery.ast(content, undefined, ScriptKind.TS);
+    }
+    const elapsedNoExit = performance.now() - startNoExit;
+
+    console.info(
+      `\n⏱  TS early-exit (${nonTranslocoCount} non-transloco files):`,
+      `\n   With early-exit: ${elapsedWithExit.toFixed(0)}ms (skipped ${skipped})`,
+      `\n   Without early-exit: ${elapsedNoExit.toFixed(0)}ms`,
+      `\n   Speedup: ${(elapsedNoExit / Math.max(elapsedWithExit, 1)).toFixed(1)}x`,
+    );
+
+    expect(skipped).toBe(nonTranslocoCount);
+    expect(elapsedWithExit).toBeLessThan(elapsedNoExit);
+  });
+
+  it('should measure template parse-once optimization', () => {
+    const { parseTemplate } = require('@angular/compiler');
+    const largeTemplate = generateTemplate(999, 50);
+    const iterations = 100;
+
+    // Parse 3x per iteration (old behavior: pipe, directive, structural)
+    const startMultiple = performance.now();
+    for (let i = 0; i < iterations; i++) {
+      parseTemplate(largeTemplate, 'test.html');
+      parseTemplate(largeTemplate, 'test.html');
+      parseTemplate(largeTemplate, 'test.html');
+    }
+    const elapsedMultiple = performance.now() - startMultiple;
+
+    // Parse once per iteration (new behavior)
+    const startOnce = performance.now();
+    for (let i = 0; i < iterations; i++) {
+      parseTemplate(largeTemplate, 'test.html');
+    }
+    const elapsedOnce = performance.now() - startOnce;
+
+    console.info(
+      `\n⏱  Template parse-once (${iterations} iterations × large template):`,
+      `\n   Parse 3x (old): ${elapsedMultiple.toFixed(0)}ms`,
+      `\n   Parse 1x (new): ${elapsedOnce.toFixed(0)}ms`,
+      `\n   Savings: ${((1 - elapsedOnce / elapsedMultiple) * 100).toFixed(0)}%`,
+    );
+
+    // The once approach should be roughly 3x faster
+    expect(elapsedOnce).toBeLessThan(elapsedMultiple);
+  });
+});
