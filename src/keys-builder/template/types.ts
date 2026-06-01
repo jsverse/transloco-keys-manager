@@ -1,15 +1,9 @@
-import { ParseError, TmplAstNode } from '@angular/compiler';
+import { parseTemplate as ngParseTemplate } from '@angular/compiler';
 import type { ExtractorConfig } from '../../types.js';
-
-export interface ParsedTemplateResult {
-  nodes: TmplAstNode[];
-  errors: ParseError[] | null;
-  [key: string]: any;
-}
 
 export interface TemplateExtractorConfig extends ExtractorConfig {
   content?: string;
-  parsedTemplate?: ParsedTemplateResult;
+  parsedTemplate?: ReturnType<typeof ngParseTemplate>;
 }
 
 export interface ContainersMetadata {
