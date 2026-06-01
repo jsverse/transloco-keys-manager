@@ -152,7 +152,10 @@ describe('compareKeysToFiles', () => {
     mockNormalizedGlob.mockReturnValue(['/tmp/i18n/admin/en.json']);
 
     compareKeysToFiles({
-      scopeToKeys: { __global: { key: 'value', newKey: 'new' } },
+      scopeToKeys: {
+        __global: {},
+        admin: { key: 'value', newKey: 'new' },
+      },
       translationsPath: '/tmp/i18n',
       addMissingKeys: false,
       emitErrorOnExtraKeys: false,

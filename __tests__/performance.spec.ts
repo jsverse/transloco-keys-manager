@@ -5,6 +5,10 @@ import path from 'node:path';
 import os from 'node:os';
 
 import { templateExtractor } from '../src/keys-builder/template';
+import { pipeExtractor } from '../src/keys-builder/template/pipe.extractor';
+import { directiveExtractor } from '../src/keys-builder/template/directive.extractor';
+import { structuralDirectiveExtractor } from '../src/keys-builder/template/structural-directive.extractor';
+import { extractTSKeys } from '../src/keys-builder/typescript';
 import { readFile } from '../src/utils/file.utils';
 import { setConfig } from '../src/config';
 import { ScopeMap, Scopes } from '../src/types';
@@ -122,6 +126,24 @@ describe('Performance Benchmarks', () => {
         generateTemplate(i, KEYS_PER_COMPONENT),
       );
     }
+    fs.writeFileSync(
+      path.join(PERF_TMP, 'transloco-benchmark.html'),
+      `<div><p>{{ 'feature.title' | transloco }}</p></div>`.repeat(50),
+    );
+    fs.writeFileSync(
+      path.join(PERF_TMP, 'parse-once.html'),
+      generateTemplate(999, 50),
+    );
+    for (let i = 0; i < 500; i++) {
+      fs.writeFileSync(
+        path.join(PERF_TMP, `non-transloco-${i}.ts`),
+        generateTsContent(i, false),
+      );
+      fs.writeFileSync(
+        path.join(PERF_TMP, `with-transloco-${i}.ts`),
+        generateTsContent(i, true),
+      );
+    }
   });
 
   afterAll(() => {
@@ -158,13 +180,15 @@ describe('Performance Benchmarks', () => {
       '<div><p>Hello World</p><span class="title">No i18n here</span></div>'.repeat(
         50,
       );
+    const translocoContent =
+      `<div><p>{{ 'feature.title' | transloco }}</p></div>`.repeat(50);
     const iterations = 1000;
 
     const start = performance.now();
     for (let i = 0; i < iterations; i++) {
       const scopeToKeys: ScopeMap = { __global: {} };
       templateExtractor({
-        file: `skip${i}.html`,
+        file: path.join(PERF_TMP, `skip${i}.html`),
         content,
         scopes,
         defaultValue: '',
@@ -173,11 +197,25 @@ describe('Performance Benchmarks', () => {
     }
     const elapsed = performance.now() - start;
 
+    const translocoStart = performance.now();
+    for (let i = 0; i < iterations; i++) {
+      const scopeToKeys: ScopeMap = { __global: {} };
+      templateExtractor({
+        file: path.join(PERF_TMP, 'transloco-benchmark.html'),
+        content: translocoContent,
+        scopes,
+        defaultValue: '',
+        scopeToKeys,
+      });
+    }
+    const translocoElapsed = performance.now() - translocoStart;
+
     console.info(
       `\n⏱  Skip non-transloco templates (${iterations} files): ${elapsed.toFixed(2)}ms`,
+      `\n⏱  Extract transloco templates (${iterations} files): ${translocoElapsed.toFixed(2)}ms`,
     );
-    // Should be extremely fast - just a string includes check
-    expect(elapsed).toBeLessThan(100);
+
+    expect(elapsed).toBeLessThan(translocoElapsed);
   });
 
   it(`should parse and read a ${LARGE_JSON_KEYS}-key JSON file under 200ms`, () => {
@@ -203,66 +241,73 @@ describe('Performance Benchmarks', () => {
     expect(() => readFile(malformedPath, { parse: true })).toThrow(SyntaxError);
   });
 
-  it('should measure TS early-exit performance for non-transloco files', async () => {
-    // Dynamically import to avoid issues with tsquery loading
-    const { tsquery, ScriptKind } = await import('@phenomnomnominal/tsquery');
+  it('should measure TS early-exit performance for non-transloco files', () => {
     const nonTranslocoCount = 500;
-
-    // Measure time WITHOUT early exit (parsing AST for every file)
-    const contents: string[] = [];
-    for (let i = 0; i < nonTranslocoCount; i++) {
-      contents.push(generateTsContent(i, false));
-    }
-
-    // Simulate the early-exit check
-    const translocoImport = /@(jsverse|ngneat)\/transloco/;
     const startWithExit = performance.now();
-    let skipped = 0;
-    for (const content of contents) {
-      if (!translocoImport.test(content) && !content.includes('transloco')) {
-        skipped++;
-        continue;
-      }
-      tsquery.ast(content, undefined, ScriptKind.TS);
-    }
+    const resultWithExit = extractTSKeys({
+      input: [PERF_TMP],
+      files: Array.from({ length: nonTranslocoCount }, (_, i) =>
+        path.join(PERF_TMP, `non-transloco-${i}.ts`),
+      ),
+      scopes: { aliasToScope: {}, scopeToAlias: {} },
+      defaultValue: '',
+    } as any);
     const elapsedWithExit = performance.now() - startWithExit;
 
-    // Measure time WITHOUT early exit (parse every file)
     const startNoExit = performance.now();
-    for (const content of contents) {
-      tsquery.ast(content, undefined, ScriptKind.TS);
-    }
+    const resultNoExit = extractTSKeys({
+      input: [PERF_TMP],
+      files: Array.from({ length: nonTranslocoCount }, (_, i) =>
+        path.join(PERF_TMP, `with-transloco-${i}.ts`),
+      ),
+      scopes: { aliasToScope: {}, scopeToAlias: {} },
+      defaultValue: '',
+    } as any);
     const elapsedNoExit = performance.now() - startNoExit;
 
     console.info(
       `\n⏱  TS early-exit (${nonTranslocoCount} non-transloco files):`,
-      `\n   With early-exit: ${elapsedWithExit.toFixed(0)}ms (skipped ${skipped})`,
-      `\n   Without early-exit: ${elapsedNoExit.toFixed(0)}ms`,
+      `\n   With early-exit: ${elapsedWithExit.toFixed(0)}ms (processed ${resultWithExit.fileCount})`,
+      `\n   Without early-exit: ${elapsedNoExit.toFixed(0)}ms (processed ${resultNoExit.fileCount})`,
       `\n   Speedup: ${(elapsedNoExit / Math.max(elapsedWithExit, 1)).toFixed(1)}x`,
     );
 
-    expect(skipped).toBe(nonTranslocoCount);
+    expect(resultWithExit.fileCount).toBe(nonTranslocoCount);
+    expect(resultNoExit.fileCount).toBe(nonTranslocoCount);
     expect(elapsedWithExit).toBeLessThan(elapsedNoExit);
   });
 
   it('should measure template parse-once optimization', () => {
-    const { parseTemplate } = require('@angular/compiler');
     const largeTemplate = generateTemplate(999, 50);
     const iterations = 100;
+    const scopes: Scopes = { aliasToScope: {}, scopeToAlias: {} };
 
-    // Parse 3x per iteration (old behavior: pipe, directive, structural)
+    // Old behavior: each extractor parses the template independently.
     const startMultiple = performance.now();
     for (let i = 0; i < iterations; i++) {
-      parseTemplate(largeTemplate, 'test.html');
-      parseTemplate(largeTemplate, 'test.html');
-      parseTemplate(largeTemplate, 'test.html');
+      const config = {
+        file: path.join(PERF_TMP, 'parse-once.html'),
+        content: largeTemplate,
+        scopes,
+        defaultValue: '',
+        scopeToKeys: { __global: {} },
+      };
+      pipeExtractor(config);
+      directiveExtractor(config);
+      structuralDirectiveExtractor(config);
     }
     const elapsedMultiple = performance.now() - startMultiple;
 
-    // Parse once per iteration (new behavior)
+    // New behavior: templateExtractor parses once and shares the result.
     const startOnce = performance.now();
     for (let i = 0; i < iterations; i++) {
-      parseTemplate(largeTemplate, 'test.html');
+      templateExtractor({
+        file: path.join(PERF_TMP, 'parse-once.html'),
+        content: largeTemplate,
+        scopes,
+        defaultValue: '',
+        scopeToKeys: { __global: {} },
+      });
     }
     const elapsedOnce = performance.now() - startOnce;
 

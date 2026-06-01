@@ -41,6 +41,8 @@ describe('buildTable', () => {
   });
 
   it('should display "--" for missing column when no missing keys', () => {
+    const logger = getLogger();
+
     buildTable({
       langs: ['en'],
       diffsPerLang: {
@@ -54,9 +56,12 @@ describe('buildTable', () => {
     });
 
     expect(process.exit).not.toHaveBeenCalled();
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('--'));
   });
 
   it('should display "--" for extra column when no extra keys', () => {
+    const logger = getLogger();
+
     buildTable({
       langs: ['en'],
       diffsPerLang: {
@@ -70,6 +75,7 @@ describe('buildTable', () => {
     });
 
     expect(process.exit).not.toHaveBeenCalled();
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('--'));
   });
 
   it('should call process.exit(1) when missing keys exist and addMissingKeys is false', () => {
