@@ -70,9 +70,9 @@ describe('path.utils - resolveConfigPaths', () => {
 
     resolveConfigPaths(config);
 
-    expect(config.input[0].replace('\\', '/')).toContain('src/app');
-    expect(config.output.replace('\\', '/')).toContain('src/i18n');
-    expect(config.translationsPath.replace('\\', '/')).toContain('src/i18n');
+    expect(config.input[0].replace(/\\/g, '/')).toContain('src/app');
+    expect(config.output.replace(/\\/g, '/')).toContain('src/i18n');
+    expect(config.translationsPath.replace(/\\/g, '/')).toContain('src/i18n');
   });
 
   it('should resolve config paths without sourceRoot', () => {
