@@ -64,7 +64,7 @@
     }
   },
   "dependencies": {
-    "@angular/compiler": ">= 21.1.0 < 22.0.0",
+    "@angular/compiler": ">= 21.1.0 < 23.0.0",
     "@jsverse/angular-utils": "1.0.0-beta.6",
     "@jsverse/transloco-utils": "8.3.0",
     "@phenomnomnominal/tsquery": "6.2.0",
@@ -84,8 +84,8 @@
     "ora": "9.4.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.1.0",
-    "@angular/compiler-cli": "^21.1.0",
+    "@angular/build": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
     "@babel/preset-env": "7.29.7",
     "@babel/preset-typescript": "7.29.7",
     "@commitlint/cli": "21.0.2",
@@ -98,7 +98,7 @@
     "@types/fs-extra": "11.0.4",
     "@types/gettext-parser": "^4.0.4",
     "@types/glob": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "8.60.0",
+    "@typescript-eslint/eslint-plugin": "8.60.1",
     "@vitest/coverage-v8": "4.1.8",
     "@vitest/ui": "^4.1.8",
     "c8": "^11.0.0",
