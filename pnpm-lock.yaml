@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@angular/compiler':
-        specifier: 22.0.0
+        specifier: '>= 21.1.0 < 23.0.0'
         version: 22.0.0
       '@jsverse/angular-utils':
         specifier: 1.0.0-beta.6
@@ -5778,8 +5778,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.60.0(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.60.0(typescript@5.9.3)
-      '@typescript-eslint/types': 8.60.0
+      '@typescript-eslint/tsconfig-utils': 8.60.1(typescript@5.9.3)
+      '@typescript-eslint/types': 8.60.1
       debug: 4.4.3
       typescript: 5.9.3
     transitivePeerDependencies:
