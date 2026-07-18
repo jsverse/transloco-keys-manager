@@ -49,8 +49,11 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
     defaultValue,
   };
 
-  // Skip expensive AST parsing if no transloco-related content found
-  if (!hasTranslocoImport && !hasMarkerImport && !hasTranslocoUsage) {
+  // Skip expensive AST parsing if no transloco-related content found.
+  // Note: hasTranslocoImport/hasMarkerImport imply hasTranslocoUsage, since
+  // both import regexes match strings that contain "transloco", so checking
+  // !hasTranslocoUsage alone is sufficient here.
+  if (!hasTranslocoUsage) {
     addCommentSectionKeys({
       content,
       regexFactory: regexFactoryMap.ts.comments,
