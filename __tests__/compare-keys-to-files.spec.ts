@@ -143,7 +143,7 @@ describe('compareKeysToFiles', () => {
     );
   });
 
-  it('should handle scoped translation files', () => {
+  it('should namespace missing keys under the scope path (e.g. admin/en) for scoped translation files', () => {
     mockGetTranslationFilesPath.mockReturnValue(['/tmp/i18n/admin/en.json']);
     mockReadFile.mockImplementation(((path: string, opts?: any) => {
       if (opts?.parse) return { key: 'value' };
@@ -163,7 +163,19 @@ describe('compareKeysToFiles', () => {
       unflat: false,
     });
 
-    expect(mockBuildTable).toHaveBeenCalled();
+    // Scoped diffs must be keyed as `<scope>/<lang>` (not the global `<lang>`
+    // key), and must contain the actual missing key detected for that scope.
+    expect(mockBuildTable).toHaveBeenCalledWith(
+      expect.objectContaining({
+        langs: ['admin/en'],
+        diffsPerLang: expect.objectContaining({
+          'admin/en': expect.objectContaining({
+            missing: [expect.objectContaining({ path: ['newKey'] })],
+            extra: [],
+          }),
+        }),
+      }),
+    );
   });
 
   it('should unflatten translation before writing when unflat is true', () => {

@@ -52,16 +52,30 @@ describe('findMissingKeys', () => {
     consoleSpy.mockRestore();
   });
 
-  it('should call compareKeysToFiles when translation files exist', async () => {
+  it('should forward the built keys and resolved config to compareKeysToFiles when translation files exist', async () => {
     const { getTranslationFilesPath } =
       await import('../src/keys-detective/get-translation-files-path');
     (getTranslationFilesPath as any).mockReturnValue(['/tmp/i18n/en.json']);
+
+    const { buildKeys } = await import('../src/keys-builder/build-keys');
+    const scopeToKeys = { __global: { 'some.key': 'missing' } };
+    (buildKeys as any).mockReturnValue({ scopeToKeys });
 
     const { compareKeysToFiles } =
       await import('../src/keys-detective/compare-keys-to-files');
 
     findMissingKeys({} as Config);
 
-    expect(compareKeysToFiles).toHaveBeenCalled();
+    // Assert the actual data flowing through, not just that the mock fired:
+    // the keys built by buildKeys and the config fields resolved upstream
+    // must reach compareKeysToFiles unchanged.
+    expect(compareKeysToFiles).toHaveBeenCalledWith({
+      scopeToKeys,
+      translationsPath: '/tmp/i18n',
+      addMissingKeys: false,
+      emitErrorOnExtraKeys: false,
+      fileFormat: 'json',
+      unflat: false,
+    });
   });
 });
