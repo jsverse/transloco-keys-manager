@@ -70,7 +70,7 @@
     "@phenomnomnominal/tsquery": "6.1.4",
     "chalk": "5.6.2",
     "cheerio": "1.1.2",
-    "cli-table3": "0.6.5",
+    "cli-table3": "0.6.1",
     "command-line-args": "6.0.1",
     "command-line-usage": "7.0.3",
     "cosmiconfig": "9.0.0",
