@@ -73,6 +73,7 @@ export function testCommentsExtraction(fileFormat: Config['fileFormat']) {
           '217.218': defaultValue,
           'from.comment': defaultValue,
           'pretty.cool.da': defaultValue,
+          'early.exit.comment.key': defaultValue,
           ...generateKeys({ end: 4, prefix: 'global' }),
           ...generateKeys({ end: 8, prefix: 'outer.read' }),
           ...generateKeys({ end: 4, prefix: 'inner.read' }),

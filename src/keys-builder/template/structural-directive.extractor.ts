@@ -117,9 +117,11 @@ function unwrapMethodCalls(exp: AST): Call[] {
 }
 
 function getMethodUsages(expressions: AST[], containers: ContainerMetaData[]) {
+  const containerNames = new Set(containers.map((c) => c.name));
+
   return expressions
     .flatMap(unwrapMethodCalls)
-    .filter((exp) => isTranslocoMethod(exp, containers))
+    .filter((exp) => isTranslocoMethod(exp, containerNames))
     .map((exp) => {
       const [keyNode, paramsNode] = exp.args;
 
@@ -156,12 +158,9 @@ function isTranslocoTemplate(node: TmplAstNode): node is TmplAstTemplate {
 
 function isTranslocoMethod(
   exp: AST,
-  containers: ContainerMetaData[],
+  containers: Set<string>,
 ): exp is Call {
-  return (
-    isCall(exp) &&
-    containers.some(({ name }) => name === (exp.receiver as PropertyRead).name)
-  );
+  return isCall(exp) && containers.has((exp.receiver as PropertyRead).name);
 }
 
 function resolveMetadata(node: TmplAstTemplate): ContainerMetaData[] {

@@ -4,3 +4,5 @@ dist
 **/i18n
 .idx
 .vscode
+coverage
+__tests__/__perf_fixtures__

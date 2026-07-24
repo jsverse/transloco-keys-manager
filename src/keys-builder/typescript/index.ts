@@ -31,20 +31,38 @@ function TSExtractor(config: ExtractorConfig): ScopeMap {
   const content = readFile(file);
   const extractors = [];
 
-  if (translocoImport.test(content)) {
+  const hasTranslocoImport = translocoImport.test(content);
+  const hasMarkerImport = translocoKeysManagerImport.test(content);
+  const hasTranslocoUsage = content.includes('transloco');
+
+  if (hasTranslocoImport) {
     extractors.push(serviceExtractor, pureFunctionExtractor, signalExtractor);
   }
 
-  if (translocoKeysManagerImport.test(content)) {
+  if (hasMarkerImport) {
     extractors.push(markerExtractor);
   }
 
-  const ast = tsquery.ast(content, undefined, ScriptKind.TS);
   const baseParams = {
     scopeToKeys,
     scopes,
     defaultValue,
   };
+
+  // Skip expensive AST parsing if no transloco-related content found.
+  // Note: hasTranslocoImport/hasMarkerImport imply hasTranslocoUsage, since
+  // both import regexes match strings that contain "transloco", so checking
+  // !hasTranslocoUsage alone is sufficient here.
+  if (!hasTranslocoUsage) {
+    addCommentSectionKeys({
+      content,
+      regexFactory: regexFactoryMap.ts.comments,
+      ...baseParams,
+    });
+    return scopeToKeys;
+  }
+
+  const ast = tsquery.ast(content, undefined, ScriptKind.TS);
 
   extractors
     .map((ex) => ex(ast))

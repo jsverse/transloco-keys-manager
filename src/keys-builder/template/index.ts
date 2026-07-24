@@ -1,3 +1,4 @@
+import { parseTemplate as ngParseTemplate } from '@angular/compiler';
 import { Config, ExtractionResult } from '../../types';
 import { readFile } from '../../utils/file.utils';
 import { extractKeys } from '../utils/extract-keys';
@@ -17,7 +18,9 @@ export function templateExtractor(config: TemplateExtractorConfig) {
   let content = config.content || readFile(file);
   if (!content.includes('transloco')) return scopeToKeys;
 
-  const resolvedConfig = { ...config, content };
+  // Parse template once and share across extractors
+  const parsedTemplate = ngParseTemplate(content, file);
+  const resolvedConfig = { ...config, content, parsedTemplate };
   pipeExtractor(resolvedConfig);
   templateCommentsExtractor(resolvedConfig);
   directiveExtractor(resolvedConfig);
