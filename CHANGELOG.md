@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.1.1](https://github.com/jsverse/transloco-keys-manager/compare/v8.1.0...v8.1.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* 🐛 pin cli-table3 to 0.6.1 to fix find hang on large key sets ([#248](https://github.com/jsverse/transloco-keys-manager/issues/248)) ([#256](https://github.com/jsverse/transloco-keys-manager/issues/256)) ([58a35ed](https://github.com/jsverse/transloco-keys-manager/commit/58a35ed49ab38b1372fc224a7d63b50548f03bc5)), closes [#196](https://github.com/jsverse/transloco-keys-manager/issues/196) [#199](https://github.com/jsverse/transloco-keys-manager/issues/199)
+
 ## [8.1.0](https://github.com/jsverse/transloco-keys-manager/compare/v8.0.0...v8.1.0) (2026-01-23)
 
 
