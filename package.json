@@ -3,8 +3,10 @@
   "version": "8.1.1",
   "description": "Extract translatable keys from projects that uses Transloco",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=20.19.0",
+    "pnpm": ">=11.5.2"
   },
+  "packageManager": "pnpm@11.5.2",
   "type": "module",
   "exports": {
     ".": {
