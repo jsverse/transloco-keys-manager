@@ -132,7 +132,7 @@ describe('resolveConfig', () => {
   describe('validate directories', () => {
     function shouldFail(prop: string, msg: 'pathDoesntExist' | 'pathIsNotDir') {
       const [processExitSpy, consoleLogSpy] = spies;
-      expect(processExitSpy).toHaveBeenCalled();
+      expect(processExitSpy).toHaveBeenCalledWith(1);
       expect(consoleLogSpy).toHaveBeenCalledWith(
         chalk.bgRed.black(`${prop} ${messages[msg]}`),
       );
@@ -179,6 +179,15 @@ describe('resolveConfig', () => {
         command: 'find',
       });
       shouldFail('Translations', 'pathIsNotDir');
+    });
+
+    it('should exit with a non-zero code so CI fails (issue #217)', () => {
+      const [processExitSpy] = spies;
+      resolveConfig({ input: ['noFolder'] });
+      const [exitCode] = processExitSpy.mock.calls.at(-1)!;
+      expect(exitCode).not.toBe(0);
+      expect(exitCode).toBeDefined();
+      clearSpies();
     });
   });
 
