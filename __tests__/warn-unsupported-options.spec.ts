@@ -1,9 +1,34 @@
 import commandLineArgs from 'command-line-args';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { optionDefinitions } from '../src/cli-options';
+import { commandSpecificOptions, optionDefinitions } from '../src/cli-options';
 import { warnUnsupportedOptions } from '../src/utils/warn-unsupported-options';
 import { spyOnConsole } from './spec-utils';
+
+/**
+ * The options both commands read, spelled out so `commandSpecificOptions` can't
+ * silently miss a new flag: an option that is neither classified there nor
+ * listed here fails the tests below, which forces the call to be made when the
+ * flag is added instead of after a bug report.
+ */
+const sharedOptions = [
+  'project',
+  'config',
+  'input',
+  'langs',
+  'fileFormat',
+  'marker',
+  'sort',
+  'unflat',
+  'defaultValue',
+  'translationsPath',
+  'help',
+];
+
+/** Mirrors the camelCasing `commandLineArgs` applies to the option names. */
+function camelCase(option: string) {
+  return option.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
 
 describe('warnUnsupportedOptions', () => {
   let warnSpy: ReturnType<typeof spyOnConsole>;
@@ -95,5 +120,34 @@ describe('warnUnsupportedOptions', () => {
     warnUnsupportedOptions('extract', parsed);
 
     expect(warnSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('commandSpecificOptions', () => {
+  it('should classify every CLI option as command specific or shared', () => {
+    const unclassified = optionDefinitions
+      .map(({ name }) => camelCase(name))
+      .filter(
+        (option) =>
+          !commandSpecificOptions[option] && !sharedOptions.includes(option),
+      );
+
+    expect(
+      unclassified,
+      'Add the option to `commandSpecificOptions` if a single command reads it, otherwise to `sharedOptions` in this spec',
+    ).toEqual([]);
+  });
+
+  it('should not hold options that no longer exist', () => {
+    const definedOptions = optionDefinitions.map(({ name }) => camelCase(name));
+
+    const stale = Object.keys(commandSpecificOptions).filter(
+      (option) => !definedOptions.includes(option),
+    );
+
+    expect(
+      stale,
+      '`commandSpecificOptions` holds a renamed or removed option, so nothing warns about it anymore',
+    ).toEqual([]);
   });
 });
