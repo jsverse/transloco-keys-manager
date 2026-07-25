@@ -103,6 +103,58 @@ describe('resolveProjectBasePath', () => {
     });
   });
 
+  describe('Project level config with a name', () => {
+    const bookingButton = 'libs/booking/ui/button';
+    const invoicingButton = 'libs/invoicing/ui/button';
+    const sharedUtils = 'libs/shared/utils';
+
+    beforeEach(() => {
+      addProjectConfig({
+        path: bookingButton,
+        config: { ...myProjectConfig, name: 'booking-ui-button' },
+      });
+      addProjectConfig({
+        path: invoicingButton,
+        config: {
+          name: 'invoicing-ui-button',
+          projectType: 'application',
+          sourceRoot: 'invoicingRoot',
+        },
+      });
+      // relies on the project name being inferred from the directory
+      addProjectConfig({
+        path: sharedUtils,
+        config: { projectType: 'library', sourceRoot: 'sharedRoot' },
+      });
+    });
+
+    afterEach(() => {
+      // all three projects live under `libs`, which is removed as a whole
+      removeProjectConfig(bookingButton);
+    });
+
+    it('should resolve a project whose name differs from its directory', () => {
+      const { projectBasePath, projectType } =
+        resolveProjectBasePath('booking-ui-button');
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('library');
+    });
+
+    it('should tell apart projects sharing the same directory name', () => {
+      const { projectBasePath, projectType } = resolveProjectBasePath(
+        'invoicing-ui-button',
+      );
+      expect(projectBasePath).toBe('invoicingRoot');
+      expect(projectType).toBe('application');
+    });
+
+    it('should fall back to the directory name when the config has none', () => {
+      const { projectBasePath, projectType } = resolveProjectBasePath('utils');
+      expect(projectBasePath).toBe('sharedRoot');
+      expect(projectType).toBe('library');
+    });
+  });
+
   supportedConfigs.forEach((configType) => {
     describe(`${configType} config`, () => {
       beforeAll(() => {

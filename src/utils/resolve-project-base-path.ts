@@ -5,6 +5,7 @@ import path from 'path';
 import { ProjectType } from '../config';
 
 import { coerceArray } from './collection.utils';
+import { readFile } from './file.utils';
 import { jsoncParser } from './json.utils';
 import { isString } from './validators.utils';
 import { normalizedGlob } from './normalize-glob-path';
@@ -42,15 +43,9 @@ export function resolveProjectBasePath(projectName?: string): {
   projectBasePath: string;
   projectType?: ProjectType;
 } {
-  let projectPath = '';
-
-  if (projectName) {
-    projectPath = normalizedGlob(`**/${projectName}`)[0];
-  }
-
-  const angularConfig = searchConfig(angularConfigFile, projectPath);
-  const workspaceConfig = searchConfig(workspaceConfigFile, projectPath);
-  const projectConfig = searchConfig(projectConfigFile, projectPath);
+  const angularConfig = searchConfig(angularConfigFile);
+  const workspaceConfig = searchConfig(workspaceConfigFile);
+  const projectConfig = resolveProjectConfig(projectName);
 
   if (!angularConfig && !workspaceConfig && !projectConfig) {
     logNotFound([...angularConfigFile, workspaceConfigFile, projectConfigFile]);
@@ -81,6 +76,43 @@ export function resolveProjectBasePath(projectName?: string): {
     projectBasePath: resolved.sourceRoot,
     projectType: resolved.projectType,
   };
+}
+
+/**
+ * Locates the `project.json` of the given project.
+ *
+ * The project name can't be used as a path since workspaces are free to name a
+ * project differently than the directory holding it, e.g. `libs/booking/ui/button`
+ * is commonly named `booking-ui-button`. Therefore every `project.json` is matched
+ * against its `name`, preferring it over the directory name, which is what a config
+ * omitting the `name` is named after.
+ */
+function resolveProjectConfig(projectName?: string) {
+  if (projectName) {
+    let directoryMatch: Record<string, any> | undefined;
+
+    for (const configPath of normalizedGlob(`**/${projectConfigFile}`)) {
+      const config = jsoncParser(configPath, readFile(configPath));
+
+      if (config?.name === projectName) {
+        return config;
+      }
+
+      if (
+        !directoryMatch &&
+        path.basename(path.dirname(configPath)) === projectName
+      ) {
+        directoryMatch = config;
+      }
+    }
+
+    if (directoryMatch) {
+      return directoryMatch;
+    }
+  }
+
+  // a root level config holding a `projects` map, resolved by `resolveProject`
+  return searchConfig(projectConfigFile);
 }
 
 function resolveProject(
