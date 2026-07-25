@@ -97,5 +97,5 @@ function validateDirectories({ input, translationsPath, command }: Config) {
     log(translationsPath, 'Translations');
   }
 
-  invalidPath && process.exit();
+  invalidPath && process.exit(1);
 }
