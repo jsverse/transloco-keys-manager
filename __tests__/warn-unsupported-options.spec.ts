@@ -138,16 +138,33 @@ describe('commandSpecificOptions', () => {
     ).toEqual([]);
   });
 
-  it('should not hold options that no longer exist', () => {
-    const definedOptions = optionDefinitions.map(({ name }) => camelCase(name));
-
-    const stale = Object.keys(commandSpecificOptions).filter(
-      (option) => !definedOptions.includes(option),
+  /**
+   * An option listed in both places passes the check above, which would let a
+   * later deletion from `commandSpecificOptions` go unnoticed: the option stops
+   * warning while `sharedOptions` keeps it looking classified.
+   */
+  it('should not classify an option as both command specific and shared', () => {
+    const overlapping = Object.keys(commandSpecificOptions).filter((option) =>
+      sharedOptions.includes(option),
     );
 
     expect(
+      overlapping,
+      'The option is both command specific and shared, remove it from one of the two',
+    ).toEqual([]);
+  });
+
+  it('should not classify options that no longer exist', () => {
+    const definedOptions = optionDefinitions.map(({ name }) => camelCase(name));
+
+    const stale = [
+      ...Object.keys(commandSpecificOptions),
+      ...sharedOptions,
+    ].filter((option) => !definedOptions.includes(option));
+
+    expect(
       stale,
-      '`commandSpecificOptions` holds a renamed or removed option, so nothing warns about it anymore',
+      'The option was renamed or removed, drop it from `commandSpecificOptions` or from `sharedOptions`. A leftover key in the former warns about nothing',
     ).toEqual([]);
   });
 });
