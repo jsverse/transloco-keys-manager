@@ -173,6 +173,7 @@ describe('resolveProjectBasePath', () => {
 
   describe('Directory name matches', () => {
     afterEach(() => {
+      // every fixture below lives under `libs`, which is removed as a whole
       removeProjectConfig('libs/a');
     });
 
@@ -186,21 +187,29 @@ describe('resolveProjectBasePath', () => {
       expect(resolveProjectBasePath('button').projectBasePath).toBe('myRoot');
     });
 
-    it('should prefer a nameless config over one named otherwise', () => {
-      addProjectConfig({
-        path: 'libs/b/button',
-        config: { name: 'named-otherwise', sourceRoot: 'namedRoot' },
-      });
-      addProjectConfig({
-        path: 'libs/a/button',
-        config: { ...myProjectConfig, sourceRoot: 'namelessRoot' },
-      });
+    // the order two sibling directories are traversed in is the file system's to
+    // decide, so both arrangements are covered to make sure the ranking is what
+    // resolves the tie rather than whichever config happens to come first
+    it.each([
+      ['libs/a/button', 'libs/b/button'],
+      ['libs/b/button', 'libs/a/button'],
+    ])(
+      'should prefer a nameless config over one named otherwise (%s)',
+      (namelessPath, namedPath) => {
+        addProjectConfig({
+          path: namedPath,
+          config: { name: 'named-otherwise', sourceRoot: 'namedRoot' },
+        });
+        addProjectConfig({
+          path: namelessPath,
+          config: { ...myProjectConfig, sourceRoot: 'namelessRoot' },
+        });
 
-      // must hold whichever of the two the file system yields first
-      expect(resolveProjectBasePath('button').projectBasePath).toBe(
-        'namelessRoot',
-      );
-    });
+        expect(resolveProjectBasePath('button').projectBasePath).toBe(
+          'namelessRoot',
+        );
+      },
+    );
   });
 
   describe('Malformed configs', () => {
