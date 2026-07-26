@@ -86,22 +86,38 @@ export function resolveProjectBasePath(projectName?: string): {
  * is commonly named `booking-ui-button`. Therefore every `project.json` is matched
  * against its `name`, preferring it over the directory name, which is what a config
  * omitting the `name` is named after.
+ *
+ * Falling back to the nearest config is limited to the cases it can actually
+ * answer, otherwise an unknown name would resolve to whichever project happens
+ * to sit closest to the cwd.
  */
 function resolveProjectConfig(projectName?: string) {
   if (projectName) {
+    const namePattern = new RegExp(
+      `"name"\\s*:\\s*"${escapeRegExp(projectName)}"`,
+    );
     let directoryMatch: Record<string, any> | undefined;
 
     for (const configPath of normalizedGlob(`**/${projectConfigFile}`)) {
-      const config = jsoncParser(configPath, readFile(configPath));
+      // a config omitting the `name` is named after the directory holding it
+      const isDirectoryMatch =
+        !directoryMatch &&
+        path.basename(path.dirname(path.resolve(configPath))) === projectName;
+      const content = readFile(configPath);
+
+      // a workspace can hold hundreds of configs, none of which are worth
+      // parsing unless their raw content mentions the name we are after
+      if (!isDirectoryMatch && !namePattern.test(content)) {
+        continue;
+      }
+
+      const config = parseProjectConfig(configPath, content);
 
       if (config?.name === projectName) {
         return config;
       }
 
-      if (
-        !directoryMatch &&
-        path.basename(path.dirname(configPath)) === projectName
-      ) {
+      if (isDirectoryMatch) {
         directoryMatch = config;
       }
     }
@@ -111,8 +127,28 @@ function resolveProjectConfig(projectName?: string) {
     }
   }
 
-  // a root level config holding a `projects` map, resolved by `resolveProject`
-  return searchConfig(projectConfigFile);
+  // only a root level config holding a `projects` map can point at another project
+  const nearestConfig = searchConfig(projectConfigFile);
+
+  return !projectName || nearestConfig?.projects ? nearestConfig : undefined;
+}
+
+/**
+ * A single unparsable config shouldn't take down the whole scan, it may well
+ * belong to a project unrelated to the one we are resolving.
+ */
+function parseProjectConfig(configPath: string, content: string) {
+  try {
+    return jsoncParser(configPath, content);
+  } catch (e: any) {
+    console.warn('Skipping the config at "%s":', configPath, e.message);
+
+    return undefined;
+  }
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function resolveProject(

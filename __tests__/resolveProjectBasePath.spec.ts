@@ -11,6 +11,7 @@ import {
 } from 'vitest';
 
 import { resolveProjectBasePath } from '../src/utils/resolve-project-base-path';
+import { isString } from '../src/utils/validators.utils';
 
 import { spyOnConsole } from './spec-utils';
 
@@ -153,6 +154,91 @@ describe('resolveProjectBasePath', () => {
       expect(projectBasePath).toBe('sharedRoot');
       expect(projectType).toBe('library');
     });
+
+    it('should match a name regardless of how the config is formatted', () => {
+      addProjectConfig({
+        path: 'libs/pretty',
+        config: `{
+  "name" : "pretty-printed-lib",
+  "projectType": "library",
+  "sourceRoot": "prettyRoot"
+}`,
+      });
+
+      expect(resolveProjectBasePath('pretty-printed-lib').projectBasePath).toBe(
+        'prettyRoot',
+      );
+    });
+  });
+
+  describe('Malformed configs', () => {
+    const healthy = 'libs/healthy';
+    const broken = 'libs/broken';
+
+    afterEach(() => {
+      removeProjectConfig(healthy);
+    });
+
+    it('should skip a malformed config belonging to another project', () => {
+      // resolved through the directory fallback, which visits every config,
+      // so the malformed one below is reached no matter the traversal order
+      addProjectConfig({ path: healthy, config: myProjectConfig });
+      // mentions the name we are after, so it is never filtered out before parsing
+      addProjectConfig({ path: broken, config: '{ "name": "healthy" oops' });
+      const spy = spyOnConsole('warn');
+
+      const { projectBasePath, projectType } =
+        resolveProjectBasePath('healthy');
+      expect(projectBasePath).toBe('myRoot');
+      expect(projectType).toBe('library');
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it('should warn instead of throwing when the config is malformed', () => {
+      addProjectConfig({ path: healthy, config: '{ "name": oops' });
+      const warn = spyOnConsole('warn');
+      const log = spyOnConsole('log');
+
+      expect(resolveProjectBasePath('healthy').projectBasePath).toBe('src');
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('Skipping the config at'),
+        expect.stringContaining('project.json'),
+        expect.stringContaining('Failed to parse'),
+      );
+      warn.mockRestore();
+      log.mockRestore();
+    });
+  });
+
+  describe('Resolving from within a project directory', () => {
+    const projectPath = 'libs/foo';
+    const cwd = process.cwd();
+
+    beforeEach(() => {
+      addProjectConfig({
+        path: projectPath,
+        config: { projectType: 'library', sourceRoot: 'fooRoot' },
+      });
+      process.chdir(path.resolve(cwd, projectPath));
+    });
+
+    afterEach(() => {
+      process.chdir(cwd);
+      removeProjectConfig(projectPath);
+    });
+
+    it('should resolve a nameless config sitting at the cwd by its directory', () => {
+      const { projectBasePath, projectType } = resolveProjectBasePath('foo');
+      expect(projectBasePath).toBe('fooRoot');
+      expect(projectType).toBe('library');
+    });
+
+    it('should not resolve an unknown project to the nearest config', () => {
+      const spy = spyOnConsole('log');
+      expect(resolveProjectBasePath('unknown').projectBasePath).toBe('src');
+      spy.mockRestore();
+    });
   });
 
   supportedConfigs.forEach((configType) => {
@@ -195,7 +281,8 @@ function addProjectConfig({
   fs.mkdirsSync(resolvePath(path));
   fs.writeFileSync(
     jsonFile('project', path),
-    '// comment\n' + JSON.stringify(config),
+    // a raw string lets a spec control the exact formatting written to disk
+    '// comment\n' + (isString(config) ? config : JSON.stringify(config)),
   );
 }
 
