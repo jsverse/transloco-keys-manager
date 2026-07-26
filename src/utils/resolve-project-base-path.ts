@@ -96,10 +96,12 @@ function resolveProjectConfig(projectName?: string) {
     const namePattern = new RegExp(
       `"name"\\s*:\\s*"${escapeRegExp(projectName)}"`,
     );
+    // a config omitting the `name` is named after the directory holding it, which
+    // makes it a stronger match than one naming itself something else entirely
     let directoryMatch: Record<string, any> | undefined;
+    let renamedDirectoryMatch: Record<string, any> | undefined;
 
     for (const configPath of normalizedGlob(`**/${projectConfigFile}`)) {
-      // a config omitting the `name` is named after the directory holding it
       const isDirectoryMatch =
         !directoryMatch &&
         path.basename(path.dirname(path.resolve(configPath))) === projectName;
@@ -118,12 +120,18 @@ function resolveProjectConfig(projectName?: string) {
       }
 
       if (isDirectoryMatch) {
-        directoryMatch = config;
+        if (config?.name) {
+          renamedDirectoryMatch ??= config;
+        } else {
+          directoryMatch = config;
+        }
       }
     }
 
-    if (directoryMatch) {
-      return directoryMatch;
+    const fallback = directoryMatch ?? renamedDirectoryMatch;
+
+    if (fallback) {
+      return fallback;
     }
   }
 

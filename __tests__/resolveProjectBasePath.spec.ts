@@ -171,6 +171,38 @@ describe('resolveProjectBasePath', () => {
     });
   });
 
+  describe('Directory name matches', () => {
+    afterEach(() => {
+      removeProjectConfig('libs/a');
+    });
+
+    it('should match on the directory even when the config is named otherwise', () => {
+      addProjectConfig({
+        path: 'libs/a/button',
+        config: { ...myProjectConfig, name: 'booking-ui-button' },
+      });
+
+      // the directory is all we have to go on, same as before the name lookup
+      expect(resolveProjectBasePath('button').projectBasePath).toBe('myRoot');
+    });
+
+    it('should prefer a nameless config over one named otherwise', () => {
+      addProjectConfig({
+        path: 'libs/b/button',
+        config: { name: 'named-otherwise', sourceRoot: 'namedRoot' },
+      });
+      addProjectConfig({
+        path: 'libs/a/button',
+        config: { ...myProjectConfig, sourceRoot: 'namelessRoot' },
+      });
+
+      // must hold whichever of the two the file system yields first
+      expect(resolveProjectBasePath('button').projectBasePath).toBe(
+        'namelessRoot',
+      );
+    });
+  });
+
   describe('Malformed configs', () => {
     const healthy = 'libs/healthy';
     const broken = 'libs/broken';
