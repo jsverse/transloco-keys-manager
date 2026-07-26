@@ -6,6 +6,7 @@ import { optionDefinitions, sections } from './cli-options';
 import { buildTranslationFiles } from './keys-builder';
 import { findMissingKeys } from './keys-detective';
 import { Config } from './types';
+import { warnUnsupportedOptions } from './utils/warn-unsupported-options';
 
 const mainDefinitions = [{ name: 'command', defaultOption: true }];
 
@@ -34,8 +35,10 @@ const resolvedConfig = {
 } as Config;
 
 if (resolvedConfig.command === 'extract') {
+  warnUnsupportedOptions('extract', config);
   buildTranslationFiles(resolvedConfig);
 } else if (resolvedConfig.command === 'find') {
+  warnUnsupportedOptions('find', config);
   findMissingKeys(resolvedConfig);
 } else {
   console.log(`Please provide an action...`);
