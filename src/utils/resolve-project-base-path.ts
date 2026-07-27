@@ -101,7 +101,9 @@ function resolveProjectConfig(projectName?: string) {
     let directoryMatch: Record<string, any> | undefined;
     let renamedDirectoryMatch: Record<string, any> | undefined;
 
-    for (const configPath of normalizedGlob(`**/${projectConfigFile}`)) {
+    // sorted so that ties between equally good matches break the same way
+    // everywhere, the traversal order is otherwise the file system's to pick
+    for (const configPath of normalizedGlob(`**/${projectConfigFile}`).sort()) {
       const isDirectoryMatch =
         !directoryMatch &&
         path.basename(path.dirname(path.resolve(configPath))) === projectName;

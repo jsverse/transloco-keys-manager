@@ -187,9 +187,8 @@ describe('resolveProjectBasePath', () => {
       expect(resolveProjectBasePath('button').projectBasePath).toBe('myRoot');
     });
 
-    // the order two sibling directories are traversed in is the file system's to
-    // decide, so both arrangements are covered to make sure the ranking is what
-    // resolves the tie rather than whichever config happens to come first
+    // covered from both sides so the ranking is what resolves the tie, rather
+    // than the nameless config merely happening to be looked at first
     it.each([
       ['libs/a/button', 'libs/b/button'],
       ['libs/b/button', 'libs/a/button'],
@@ -207,6 +206,27 @@ describe('resolveProjectBasePath', () => {
 
         expect(resolveProjectBasePath('button').projectBasePath).toBe(
           'namelessRoot',
+        );
+      },
+    );
+
+    // nothing distinguishes two renamed configs sharing a directory, so the only
+    // thing to guarantee is that the same one wins on every machine
+    it.each([
+      ['libs/a/button', 'libs/b/button'],
+      ['libs/b/button', 'libs/a/button'],
+    ])(
+      'should break a tie between renamed configs the same way (%s first)',
+      (first, second) => {
+        for (const projectPath of [first, second]) {
+          addProjectConfig({
+            path: projectPath,
+            config: { name: `${projectPath}-name`, sourceRoot: projectPath },
+          });
+        }
+
+        expect(resolveProjectBasePath('button').projectBasePath).toBe(
+          'libs/a/button',
         );
       },
     );
