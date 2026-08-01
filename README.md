@@ -1,4 +1,6 @@
 > [!IMPORTANT]  
+> **This repository is now read-only / archived.** The codebase has moved to the [jsverse/transloco](https://github.com/jsverse/transloco) monorepo. Don't panic — development on this package continues, just with its friends! Please open new issues, discussions, and pull requests there instead of here.
+>
 > The Transloco packages are now published under the **@jsverse** scope, update your dependencies to get the latest features 🚀
 
 <p align="center">
